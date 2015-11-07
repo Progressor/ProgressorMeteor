@@ -1,14 +1,18 @@
 <head>
-  <title>hello</title>
+	<title>Progressor - The Programming Professor</title>
+
+	<noscript>
+		<meta http-equiv="refresh" content="0;url=http://www.google.com/search?q=how+do+i+activate+javascript">
+	</noscript>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+	{{> exec}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="exec">
+	<textarea name="frag">public boolean simplyReturn(boolean isTrue) { return isTrue; }</textarea>
+	<button type="submit">Calculate</button>
+
+	<p>Result: {{result}}</p>
 </template>
