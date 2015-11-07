@@ -21,8 +21,11 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
+
 	Meteor.startup(function () {
 	});
+
+	var exeCon = null;
 
 	Meteor.methods(
 		{
@@ -39,7 +42,9 @@ if (Meteor.isServer) {
 				case2.outputTypes = case2.inputTypes = [ ttypes.TypeBoolean ];
 				case2.expectedOutputValues = case2.inputValues = [ 'false' ];
 
-				var client = thrift.createClient(Executor, thrift.createConnection('localhost', 9090));
+				if (exeCon === null)
+					exeCon = thrift.createConnection('localhost', 9090);
+				var client = thrift.createClient(Executor, exeCon);
 				return Meteor.wrapAsync(client.execute, client)('java', frag, [ case1, case2 ]);
 			}
 		});
