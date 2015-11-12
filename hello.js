@@ -11,6 +11,7 @@ if (Meteor.isClient) {
 	Template.exec.events(
 		{
 			'click button': function () {
+				Session.set('result', 'waiting for result...');
 				Meteor.call('exec',
 										$('[name=frag]').val(),
 										function (err, res) {
