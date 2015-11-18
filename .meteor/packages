@@ -20,3 +20,12 @@ autopublish             # Publish all data to the clients (for prototyping)
 insecure                # Allow all DB writes from clients (for prototyping)
 thrift
 check
+less
+accounts-password
+accounts-ui
+audit-argument-checks
+random
+iron:router
+nemo64:bootstrap
+useraccounts:bootstrap
+anti:i18n

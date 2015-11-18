@@ -1,0 +1,55 @@
+<template name="layout">
+	<header class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+					<span class="sr-only">#{texts.NavigationToggle}</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="/" class="navbar-brand">{{i18n "layout.title"}}</a>
+			</div>
+			<div id="navbar-collapse" class="collapse navbar-collapse">
+				<nav>
+					<ul class="nav navbar-nav">
+						<li class="active">
+							<a href="/">{{i18n "home.title"}}</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="navbar-right">
+					<ul class="nav navbar-nav">
+						{{#each languages}}
+							<li class={{#if isActive}}active{{/if}}>
+								<a href="?lang={{id}}" class="i18n lang" data-lang="{{id}}">{{name}}</a>
+							</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<main class={{#if showAside}}col-lg-9{{else}}col-lg-12{{/if}} >
+				{{#unless customTitle}}
+					<h1 class="default">{{i18n "layout.title"}}</h1>
+				{{/unless}}
+				{{> yield}}
+			</main>
+			{{#if showAside}}
+				<aside class="col-lg-3">
+					{{> yield "aside"}}
+				</aside>
+			{{/if}}
+		</div>
+	</div>
+	<footer class="navbar navbar-default navbar-fixed-bottom">
+		<div class="container">
+			<p class="navbar-text">
+				&#169; 2015 Bern University of Applied Sciences
+			</p>
+		</div>
+	</footer>
+</template>
