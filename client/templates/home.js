@@ -12,7 +12,7 @@ Template.home.events(
 		'click button': function () {
 			Session.set('result', 'waiting for result...');
 			Meteor.call('executeFragment',
-									$('[name=fragment]').val(),
+									$('#fragment').val(),
 									function (err, res) {
 										Session.set('result', err ? 'error' : JSON.stringify(res));
 									});
