@@ -26,6 +26,6 @@ accounts-ui
 audit-argument-checks
 random
 iron:router
-nemo64:bootstrap
 useraccounts:bootstrap
 anti:i18n
+huttonr:bootstrap3

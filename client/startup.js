@@ -1,7 +1,13 @@
 Meteor.startup(function () {
 
-	//var localeFromBrowser = window.navigator.userLanguage || window.navigator.language;
-
-	i18n.setDefaultLanguage(i18n.defaultLanguage = 'en');
-	i18n.setLanguage(i18n.defaultLanguage);
+	var browserLanguages = navigator.languages || [ navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage ];
+	_.some(browserLanguages, function (browserLanguage) {
+		return _.some(i18n.languages, function (languageName, languageCode) {
+			if (browserLanguage.startsWith(languageCode)) {
+				i18n.setLanguage(languageCode);
+				return true;
+			}
+			return false;
+		});
+	});
 });
