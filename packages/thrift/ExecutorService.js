@@ -7,6 +7,127 @@
 Executor = {};
 //HELPER FUNCTIONS AND STRUCTURES
 
+ExecutorService_getBlacklist_args = function (args) {
+	this.language = null;
+	if (args) {
+		if (args.language !== undefined && args.language !== null) {
+			this.language = args.language;
+		}
+	}
+};
+ExecutorService_getBlacklist_args.prototype = {};
+ExecutorService_getBlacklist_args.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 1:
+				if (ftype == Thrift.Type.STRING) {
+					this.language = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 0:
+				input.skip(ftype);
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+ExecutorService_getBlacklist_args.prototype.write = function (output) {
+	output.writeStructBegin('ExecutorService_getBlacklist_args');
+	if (this.language !== null && this.language !== undefined) {
+		output.writeFieldBegin('language', Thrift.Type.STRING, 1);
+		output.writeString(this.language);
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
+ExecutorService_getBlacklist_result = function (args) {
+	this.success = null;
+	if (args) {
+		if (args.success !== undefined && args.success !== null) {
+			this.success = Thrift.copyList(args.success, [ null ]);
+		}
+	}
+};
+ExecutorService_getBlacklist_result.prototype = {};
+ExecutorService_getBlacklist_result.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 0:
+				if (ftype == Thrift.Type.LIST) {
+					var _size32 = 0;
+					var _rtmp336;
+					this.success = [];
+					var _etype35 = 0;
+					_rtmp336 = input.readListBegin();
+					_etype35 = _rtmp336.etype;
+					_size32 = _rtmp336.size;
+					for (var _i37 = 0; _i37 < _size32; ++_i37) {
+						var elem38 = null;
+						elem38 = input.readString();
+						this.success.push(elem38);
+					}
+					input.readListEnd();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 0:
+				input.skip(ftype);
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+ExecutorService_getBlacklist_result.prototype.write = function (output) {
+	output.writeStructBegin('ExecutorService_getBlacklist_result');
+	if (this.success !== null && this.success !== undefined) {
+		output.writeFieldBegin('success', Thrift.Type.LIST, 0);
+		output.writeListBegin(Thrift.Type.STRING, this.success.length);
+		for (var iter39 in this.success) {
+			if (this.success.hasOwnProperty(iter39)) {
+				iter39 = this.success[ iter39 ];
+				output.writeString(iter39);
+			}
+		}
+		output.writeListEnd();
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
 ExecutorService_execute_args = function (args) {
 	this.language = null;
 	this.fragment = null;
@@ -51,18 +172,18 @@ ExecutorService_execute_args.prototype.read = function (input) {
 				break;
 			case 3:
 				if (ftype == Thrift.Type.LIST) {
-					var _size32 = 0;
-					var _rtmp336;
+					var _size40 = 0;
+					var _rtmp344;
 					this.testCases = [];
-					var _etype35 = 0;
-					_rtmp336 = input.readListBegin();
-					_etype35 = _rtmp336.etype;
-					_size32 = _rtmp336.size;
-					for (var _i37 = 0; _i37 < _size32; ++_i37) {
-						var elem38 = null;
-						elem38 = new ttypes.TestCase();
-						elem38.read(input);
-						this.testCases.push(elem38);
+					var _etype43 = 0;
+					_rtmp344 = input.readListBegin();
+					_etype43 = _rtmp344.etype;
+					_size40 = _rtmp344.size;
+					for (var _i45 = 0; _i45 < _size40; ++_i45) {
+						var elem46 = null;
+						elem46 = new ttypes.TestCase();
+						elem46.read(input);
+						this.testCases.push(elem46);
 					}
 					input.readListEnd();
 				} else {
@@ -93,10 +214,10 @@ ExecutorService_execute_args.prototype.write = function (output) {
 	if (this.testCases !== null && this.testCases !== undefined) {
 		output.writeFieldBegin('testCases', Thrift.Type.LIST, 3);
 		output.writeListBegin(Thrift.Type.STRUCT, this.testCases.length);
-		for (var iter39 in this.testCases) {
-			if (this.testCases.hasOwnProperty(iter39)) {
-				iter39 = this.testCases[ iter39 ];
-				iter39.write(output);
+		for (var iter47 in this.testCases) {
+			if (this.testCases.hasOwnProperty(iter47)) {
+				iter47 = this.testCases[ iter47 ];
+				iter47.write(output);
 			}
 		}
 		output.writeListEnd();
@@ -129,18 +250,18 @@ ExecutorService_execute_result.prototype.read = function (input) {
 		switch (fid) {
 			case 0:
 				if (ftype == Thrift.Type.LIST) {
-					var _size40 = 0;
-					var _rtmp344;
+					var _size48 = 0;
+					var _rtmp352;
 					this.success = [];
-					var _etype43 = 0;
-					_rtmp344 = input.readListBegin();
-					_etype43 = _rtmp344.etype;
-					_size40 = _rtmp344.size;
-					for (var _i45 = 0; _i45 < _size40; ++_i45) {
-						var elem46 = null;
-						elem46 = new ttypes.Result();
-						elem46.read(input);
-						this.success.push(elem46);
+					var _etype51 = 0;
+					_rtmp352 = input.readListBegin();
+					_etype51 = _rtmp352.etype;
+					_size48 = _rtmp352.size;
+					for (var _i53 = 0; _i53 < _size48; ++_i53) {
+						var elem54 = null;
+						elem54 = new ttypes.Result();
+						elem54.read(input);
+						this.success.push(elem54);
 					}
 					input.readListEnd();
 				} else {
@@ -164,10 +285,10 @@ ExecutorService_execute_result.prototype.write = function (output) {
 	if (this.success !== null && this.success !== undefined) {
 		output.writeFieldBegin('success', Thrift.Type.LIST, 0);
 		output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-		for (var iter47 in this.success) {
-			if (this.success.hasOwnProperty(iter47)) {
-				iter47 = this.success[ iter47 ];
-				iter47.write(output);
+		for (var iter55 in this.success) {
+			if (this.success.hasOwnProperty(iter55)) {
+				iter55 = this.success[ iter55 ];
+				iter55.write(output);
 			}
 		}
 		output.writeListEnd();
@@ -191,6 +312,54 @@ ExecutorServiceClient.prototype.seqid = function () {
 ExecutorServiceClient.prototype.new_seqid = function () {
 	return this._seqid += 1;
 }
+ExecutorServiceClient.prototype.getBlacklist = function (language, callback) {
+	this._seqid = this.new_seqid();
+	if (callback === undefined) {
+		var _defer = Q.defer();
+		this._reqs[ this.seqid() ] = function (error, result) {
+			if (error) {
+				_defer.reject(error);
+			} else {
+				_defer.resolve(result);
+			}
+		};
+		this.send_getBlacklist(language);
+		return _defer.promise;
+	} else {
+		this._reqs[ this.seqid() ] = callback;
+		this.send_getBlacklist(language);
+	}
+};
+
+ExecutorServiceClient.prototype.send_getBlacklist = function (language) {
+	var output = new this.pClass(this.output);
+	output.writeMessageBegin('getBlacklist', Thrift.MessageType.CALL, this.seqid());
+	var args = new ExecutorService_getBlacklist_args();
+	args.language = language;
+	args.write(output);
+	output.writeMessageEnd();
+	return this.output.flush();
+};
+
+ExecutorServiceClient.prototype.recv_getBlacklist = function (input, mtype, rseqid) {
+	var callback = this._reqs[ rseqid ] || function () {
+		};
+	delete this._reqs[ rseqid ];
+	if (mtype == Thrift.MessageType.EXCEPTION) {
+		var x = new Thrift.TApplicationException();
+		x.read(input);
+		input.readMessageEnd();
+		return callback(x);
+	}
+	var result = new ExecutorService_getBlacklist_result();
+	result.read(input);
+	input.readMessageEnd();
+
+	if (null !== result.success) {
+		return callback(null, result.success);
+	}
+	return callback('getBlacklist failed: unknown result');
+};
 ExecutorServiceClient.prototype.execute = function (language, fragment, testCases, callback) {
 	this._seqid = this.new_seqid();
 	if (callback === undefined) {
@@ -256,6 +425,41 @@ ExecutorServiceProcessor.prototype.process = function (input, output) {
 		x.write(output);
 		output.writeMessageEnd();
 		output.flush();
+	}
+}
+
+ExecutorServiceProcessor.prototype.process_getBlacklist = function (seqid, input, output) {
+	var args = new ExecutorService_getBlacklist_args();
+	args.read(input);
+	input.readMessageEnd();
+	if (this._handler.getBlacklist.length === 1) {
+		Q.fcall(this._handler.getBlacklist, args.language)
+			.then(function (result) {
+				var result = new ExecutorService_getBlacklist_result({ success: result });
+				output.writeMessageBegin("getBlacklist", Thrift.MessageType.REPLY, seqid);
+				result.write(output);
+				output.writeMessageEnd();
+				output.flush();
+			}, function (err) {
+				var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+				output.writeMessageBegin("getBlacklist", Thrift.MessageType.EXCEPTION, seqid);
+				result.write(output);
+				output.writeMessageEnd();
+				output.flush();
+			});
+	} else {
+		this._handler.getBlacklist(args.language, function (err, result) {
+			if (err == null) {
+				var result = new ExecutorService_getBlacklist_result((err != null ? err : { success: result }));
+				output.writeMessageBegin("getBlacklist", Thrift.MessageType.REPLY, seqid);
+			} else {
+				var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+				output.writeMessageBegin("getBlacklist", Thrift.MessageType.EXCEPTION, seqid);
+			}
+			result.write(output);
+			output.writeMessageEnd();
+			output.flush();
+		});
 	}
 }
 

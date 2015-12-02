@@ -199,12 +199,16 @@ TestCase.prototype.write = function (output) {
 Result = ttypes.Result = function (args) {
 	this.success = null;
 	this.result = null;
+	this.performance = null;
 	if (args) {
 		if (args.success !== undefined && args.success !== null) {
 			this.success = args.success;
 		}
 		if (args.result !== undefined && args.result !== null) {
 			this.result = args.result;
+		}
+		if (args.performance !== undefined && args.performance !== null) {
+			this.performance = new ttypes.PerformanceIndicators(args.performance);
 		}
 	}
 };
@@ -234,6 +238,14 @@ Result.prototype.read = function (input) {
 					input.skip(ftype);
 				}
 				break;
+			case 3:
+				if (ftype == Thrift.Type.STRUCT) {
+					this.performance = new ttypes.PerformanceIndicators();
+					this.performance.read(input);
+				} else {
+					input.skip(ftype);
+				}
+				break;
 			default:
 				input.skip(ftype);
 		}
@@ -253,6 +265,62 @@ Result.prototype.write = function (output) {
 	if (this.result !== null && this.result !== undefined) {
 		output.writeFieldBegin('result', Thrift.Type.STRING, 2);
 		output.writeString(this.result);
+		output.writeFieldEnd();
+	}
+	if (this.performance !== null && this.performance !== undefined) {
+		output.writeFieldBegin('performance', Thrift.Type.STRUCT, 3);
+		this.performance.write(output);
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
+PerformanceIndicators = ttypes.PerformanceIndicators = function (args) {
+	this.runtimeMilliSeconds = null;
+	if (args) {
+		if (args.runtimeMilliSeconds !== undefined && args.runtimeMilliSeconds !== null) {
+			this.runtimeMilliSeconds = args.runtimeMilliSeconds;
+		}
+	}
+};
+PerformanceIndicators.prototype = {};
+PerformanceIndicators.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 1:
+				if (ftype == Thrift.Type.I64) {
+					this.runtimeMilliSeconds = input.readI64();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 0:
+				input.skip(ftype);
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+PerformanceIndicators.prototype.write = function (output) {
+	output.writeStructBegin('PerformanceIndicators');
+	if (this.runtimeMilliSeconds !== null && this.runtimeMilliSeconds !== undefined) {
+		output.writeFieldBegin('runtimeMilliSeconds', Thrift.Type.I64, 1);
+		output.writeI64(this.runtimeMilliSeconds);
 		output.writeFieldEnd();
 	}
 	output.writeFieldStop();
