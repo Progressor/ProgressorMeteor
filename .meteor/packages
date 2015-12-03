@@ -22,10 +22,10 @@ thrift
 check
 less
 accounts-password
-accounts-ui
 audit-argument-checks
 random
 iron:router
 useraccounts:bootstrap
 anti:i18n
 huttonr:bootstrap3
+accounts-ui

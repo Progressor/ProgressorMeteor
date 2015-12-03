@@ -25,6 +25,12 @@
 								<a href="?lang={{id}}" class="i18n lang" data-lang="{{id}}">{{name}}</a>
 							</li>
 						{{/each}}
+						<li role="separator" class="divider-vertical"></li>
+						{{#if currentUser}}
+							<li><a href="/account">{{i18n "account.title"}}</a></li>
+						{{else}}
+							<li><a href="/login">{{i18n "login.title"}}</a></li>
+						{{/if}}
 					</ul>
 				</div>
 			</div>

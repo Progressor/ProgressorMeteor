@@ -1,3 +1,23 @@
 
 body { padding: 70px 0; }
+
 h1.default { display: none; }
+
+/*Seperator between language and login*/
+.navbar .divider-vertical {
+	height: 50px;
+	margin: 0 9px;
+	border-right: 1px solid #FFFFFF;
+	border-left: 1px solid #F2F2F2;
+}
+
+.navbar-inverse .divider-vertical {
+	border-right-color: #222222;
+	border-left-color: #111111;
+}
+
+@media (max-width: 767px) {
+	.navbar-collapse .nav > .divider-vertical {
+		display: none;
+	}
+}
