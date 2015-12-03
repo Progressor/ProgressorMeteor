@@ -278,10 +278,10 @@ Result.prototype.write = function (output) {
 };
 
 PerformanceIndicators = ttypes.PerformanceIndicators = function (args) {
-	this.runtimeMilliSeconds = null;
+	this.runtimeMilliseconds = null;
 	if (args) {
-		if (args.runtimeMilliSeconds !== undefined && args.runtimeMilliSeconds !== null) {
-			this.runtimeMilliSeconds = args.runtimeMilliSeconds;
+		if (args.runtimeMilliseconds !== undefined && args.runtimeMilliseconds !== null) {
+			this.runtimeMilliseconds = args.runtimeMilliseconds;
 		}
 	}
 };
@@ -298,8 +298,8 @@ PerformanceIndicators.prototype.read = function (input) {
 		}
 		switch (fid) {
 			case 1:
-				if (ftype == Thrift.Type.I64) {
-					this.runtimeMilliSeconds = input.readI64();
+				if (ftype == Thrift.Type.I32) {
+					this.runtimeMilliseconds = input.readI32();
 				} else {
 					input.skip(ftype);
 				}
@@ -318,9 +318,9 @@ PerformanceIndicators.prototype.read = function (input) {
 
 PerformanceIndicators.prototype.write = function (output) {
 	output.writeStructBegin('PerformanceIndicators');
-	if (this.runtimeMilliSeconds !== null && this.runtimeMilliSeconds !== undefined) {
-		output.writeFieldBegin('runtimeMilliSeconds', Thrift.Type.I64, 1);
-		output.writeI64(this.runtimeMilliSeconds);
+	if (this.runtimeMilliseconds !== null && this.runtimeMilliseconds !== undefined) {
+		output.writeFieldBegin('runtimeMilliseconds', Thrift.Type.I32, 1);
+		output.writeI32(this.runtimeMilliseconds);
 		output.writeFieldEnd();
 	}
 	output.writeFieldStop();

@@ -18,6 +18,9 @@ Meteor.methods(
 			if (executorConnection === null)
 				executorConnection = thrift.createConnection('localhost', 9090);
 			var client = thrift.createClient(Executor, executorConnection);
-			return Meteor.wrapAsync(client.execute, client)('java', fragment, [ case1, case2 ]);
+			return {
+				blacklist: Meteor.wrapAsync(client.getBlacklist, client)('java'),
+				results: Meteor.wrapAsync(client.execute, client)('java', fragment, [ case1, case2 ])
+			};
 		}
 	});
