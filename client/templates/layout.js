@@ -1,5 +1,9 @@
 Template.layout.helpers(
 	{
+		language: function () {
+
+			return i18n.languages[i18n.getLanguage()];
+		},
 		languages: function () {
 
 			return $.map(i18n.languages, function (name, id) {

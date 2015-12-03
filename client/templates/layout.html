@@ -20,11 +20,20 @@
 				</nav>
 				<div class="navbar-right">
 					<ul class="nav navbar-nav">
-						{{#each languages}}
-							<li class={{#if isActive}}active{{/if}}>
-								<a href="?lang={{id}}" class="i18n lang" data-lang="{{id}}">{{name}}</a>
-							</li>
-						{{/each}}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<span class="glyphicon glyphicon-globe"></span>
+								{{language}}
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								{{#each languages}}
+									<li class={{#if isActive}}active{{/if}}>
+										<a href="?lang={{id}}" class="i18n lang" data-lang="{{id}}">{{name}}</a>
+									</li>
+								{{/each}}
+							</ul>
+						</li>
 						<li role="separator" class="divider-vertical"></li>
 						{{#if currentUser}}
 							<li><a href="/account">{{i18n "account.title"}}</a></li>
