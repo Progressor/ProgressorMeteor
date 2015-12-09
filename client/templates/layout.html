@@ -36,7 +36,7 @@
 						</li>
 						<li role="separator" class="divider-vertical"></li>
 						{{#if currentUser}}
-							<li><a href="/account">{{i18n "account.title"}}</a></li>
+							<li><a href="{{pathFor 'account'}}">{{i18n "account.title"}}</a></li>
 						{{else}}
 							<li><a href="/login">{{i18n "login.title"}}</a></li>
 						{{/if}}
