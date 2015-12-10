@@ -298,8 +298,8 @@ PerformanceIndicators.prototype.read = function (input) {
 		}
 		switch (fid) {
 			case 1:
-				if (ftype == Thrift.Type.I32) {
-					this.runtimeMilliseconds = input.readI32();
+				if (ftype == Thrift.Type.DOUBLE) {
+					this.runtimeMilliseconds = input.readDouble();
 				} else {
 					input.skip(ftype);
 				}
@@ -319,8 +319,8 @@ PerformanceIndicators.prototype.read = function (input) {
 PerformanceIndicators.prototype.write = function (output) {
 	output.writeStructBegin('PerformanceIndicators');
 	if (this.runtimeMilliseconds !== null && this.runtimeMilliseconds !== undefined) {
-		output.writeFieldBegin('runtimeMilliseconds', Thrift.Type.I32, 1);
-		output.writeI32(this.runtimeMilliseconds);
+		output.writeFieldBegin('runtimeMilliseconds', Thrift.Type.DOUBLE, 1);
+		output.writeDouble(this.runtimeMilliseconds);
 		output.writeFieldEnd();
 	}
 	output.writeFieldStop();

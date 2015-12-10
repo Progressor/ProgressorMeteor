@@ -20,6 +20,7 @@ Meteor.methods(
 			var client = thrift.createClient(Executor, executorConnection);
 			return {
 				blacklist: Meteor.wrapAsync(client.getBlacklist, client)('java'),
+				defaultFragment: Meteor.wrapAsync(client.getFragment, client)('java', [ case1, case2 ]),
 				results: Meteor.wrapAsync(client.execute, client)('java', fragment, [ case1, case2 ])
 			};
 		}

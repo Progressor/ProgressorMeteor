@@ -128,6 +128,141 @@ ExecutorService_getBlacklist_result.prototype.write = function (output) {
 	return;
 };
 
+ExecutorService_getFragment_args = function (args) {
+	this.language = null;
+	this.testCases = null;
+	if (args) {
+		if (args.language !== undefined && args.language !== null) {
+			this.language = args.language;
+		}
+		if (args.testCases !== undefined && args.testCases !== null) {
+			this.testCases = Thrift.copyList(args.testCases, [ ttypes.TestCase ]);
+		}
+	}
+};
+ExecutorService_getFragment_args.prototype = {};
+ExecutorService_getFragment_args.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 1:
+				if (ftype == Thrift.Type.STRING) {
+					this.language = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 3:
+				if (ftype == Thrift.Type.LIST) {
+					var _size40 = 0;
+					var _rtmp344;
+					this.testCases = [];
+					var _etype43 = 0;
+					_rtmp344 = input.readListBegin();
+					_etype43 = _rtmp344.etype;
+					_size40 = _rtmp344.size;
+					for (var _i45 = 0; _i45 < _size40; ++_i45) {
+						var elem46 = null;
+						elem46 = new ttypes.TestCase();
+						elem46.read(input);
+						this.testCases.push(elem46);
+					}
+					input.readListEnd();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+ExecutorService_getFragment_args.prototype.write = function (output) {
+	output.writeStructBegin('ExecutorService_getFragment_args');
+	if (this.language !== null && this.language !== undefined) {
+		output.writeFieldBegin('language', Thrift.Type.STRING, 1);
+		output.writeString(this.language);
+		output.writeFieldEnd();
+	}
+	if (this.testCases !== null && this.testCases !== undefined) {
+		output.writeFieldBegin('testCases', Thrift.Type.LIST, 3);
+		output.writeListBegin(Thrift.Type.STRUCT, this.testCases.length);
+		for (var iter47 in this.testCases) {
+			if (this.testCases.hasOwnProperty(iter47)) {
+				iter47 = this.testCases[ iter47 ];
+				iter47.write(output);
+			}
+		}
+		output.writeListEnd();
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
+ExecutorService_getFragment_result = function (args) {
+	this.success = null;
+	if (args) {
+		if (args.success !== undefined && args.success !== null) {
+			this.success = args.success;
+		}
+	}
+};
+ExecutorService_getFragment_result.prototype = {};
+ExecutorService_getFragment_result.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 0:
+				if (ftype == Thrift.Type.STRING) {
+					this.success = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 0:
+				input.skip(ftype);
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+ExecutorService_getFragment_result.prototype.write = function (output) {
+	output.writeStructBegin('ExecutorService_getFragment_result');
+	if (this.success !== null && this.success !== undefined) {
+		output.writeFieldBegin('success', Thrift.Type.STRING, 0);
+		output.writeString(this.success);
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
 ExecutorService_execute_args = function (args) {
 	this.language = null;
 	this.fragment = null;
@@ -172,18 +307,18 @@ ExecutorService_execute_args.prototype.read = function (input) {
 				break;
 			case 3:
 				if (ftype == Thrift.Type.LIST) {
-					var _size40 = 0;
-					var _rtmp344;
+					var _size48 = 0;
+					var _rtmp352;
 					this.testCases = [];
-					var _etype43 = 0;
-					_rtmp344 = input.readListBegin();
-					_etype43 = _rtmp344.etype;
-					_size40 = _rtmp344.size;
-					for (var _i45 = 0; _i45 < _size40; ++_i45) {
-						var elem46 = null;
-						elem46 = new ttypes.TestCase();
-						elem46.read(input);
-						this.testCases.push(elem46);
+					var _etype51 = 0;
+					_rtmp352 = input.readListBegin();
+					_etype51 = _rtmp352.etype;
+					_size48 = _rtmp352.size;
+					for (var _i53 = 0; _i53 < _size48; ++_i53) {
+						var elem54 = null;
+						elem54 = new ttypes.TestCase();
+						elem54.read(input);
+						this.testCases.push(elem54);
 					}
 					input.readListEnd();
 				} else {
@@ -214,10 +349,10 @@ ExecutorService_execute_args.prototype.write = function (output) {
 	if (this.testCases !== null && this.testCases !== undefined) {
 		output.writeFieldBegin('testCases', Thrift.Type.LIST, 3);
 		output.writeListBegin(Thrift.Type.STRUCT, this.testCases.length);
-		for (var iter47 in this.testCases) {
-			if (this.testCases.hasOwnProperty(iter47)) {
-				iter47 = this.testCases[ iter47 ];
-				iter47.write(output);
+		for (var iter55 in this.testCases) {
+			if (this.testCases.hasOwnProperty(iter55)) {
+				iter55 = this.testCases[ iter55 ];
+				iter55.write(output);
 			}
 		}
 		output.writeListEnd();
@@ -250,18 +385,18 @@ ExecutorService_execute_result.prototype.read = function (input) {
 		switch (fid) {
 			case 0:
 				if (ftype == Thrift.Type.LIST) {
-					var _size48 = 0;
-					var _rtmp352;
+					var _size56 = 0;
+					var _rtmp360;
 					this.success = [];
-					var _etype51 = 0;
-					_rtmp352 = input.readListBegin();
-					_etype51 = _rtmp352.etype;
-					_size48 = _rtmp352.size;
-					for (var _i53 = 0; _i53 < _size48; ++_i53) {
-						var elem54 = null;
-						elem54 = new ttypes.Result();
-						elem54.read(input);
-						this.success.push(elem54);
+					var _etype59 = 0;
+					_rtmp360 = input.readListBegin();
+					_etype59 = _rtmp360.etype;
+					_size56 = _rtmp360.size;
+					for (var _i61 = 0; _i61 < _size56; ++_i61) {
+						var elem62 = null;
+						elem62 = new ttypes.Result();
+						elem62.read(input);
+						this.success.push(elem62);
 					}
 					input.readListEnd();
 				} else {
@@ -285,10 +420,10 @@ ExecutorService_execute_result.prototype.write = function (output) {
 	if (this.success !== null && this.success !== undefined) {
 		output.writeFieldBegin('success', Thrift.Type.LIST, 0);
 		output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
-		for (var iter55 in this.success) {
-			if (this.success.hasOwnProperty(iter55)) {
-				iter55 = this.success[ iter55 ];
-				iter55.write(output);
+		for (var iter63 in this.success) {
+			if (this.success.hasOwnProperty(iter63)) {
+				iter63 = this.success[ iter63 ];
+				iter63.write(output);
 			}
 		}
 		output.writeListEnd();
@@ -359,6 +494,55 @@ ExecutorServiceClient.prototype.recv_getBlacklist = function (input, mtype, rseq
 		return callback(null, result.success);
 	}
 	return callback('getBlacklist failed: unknown result');
+};
+ExecutorServiceClient.prototype.getFragment = function (language, testCases, callback) {
+	this._seqid = this.new_seqid();
+	if (callback === undefined) {
+		var _defer = Q.defer();
+		this._reqs[ this.seqid() ] = function (error, result) {
+			if (error) {
+				_defer.reject(error);
+			} else {
+				_defer.resolve(result);
+			}
+		};
+		this.send_getFragment(language, testCases);
+		return _defer.promise;
+	} else {
+		this._reqs[ this.seqid() ] = callback;
+		this.send_getFragment(language, testCases);
+	}
+};
+
+ExecutorServiceClient.prototype.send_getFragment = function (language, testCases) {
+	var output = new this.pClass(this.output);
+	output.writeMessageBegin('getFragment', Thrift.MessageType.CALL, this.seqid());
+	var args = new ExecutorService_getFragment_args();
+	args.language = language;
+	args.testCases = testCases;
+	args.write(output);
+	output.writeMessageEnd();
+	return this.output.flush();
+};
+
+ExecutorServiceClient.prototype.recv_getFragment = function (input, mtype, rseqid) {
+	var callback = this._reqs[ rseqid ] || function () {
+		};
+	delete this._reqs[ rseqid ];
+	if (mtype == Thrift.MessageType.EXCEPTION) {
+		var x = new Thrift.TApplicationException();
+		x.read(input);
+		input.readMessageEnd();
+		return callback(x);
+	}
+	var result = new ExecutorService_getFragment_result();
+	result.read(input);
+	input.readMessageEnd();
+
+	if (null !== result.success) {
+		return callback(null, result.success);
+	}
+	return callback('getFragment failed: unknown result');
 };
 ExecutorServiceClient.prototype.execute = function (language, fragment, testCases, callback) {
 	this._seqid = this.new_seqid();
@@ -455,6 +639,41 @@ ExecutorServiceProcessor.prototype.process_getBlacklist = function (seqid, input
 			} else {
 				var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
 				output.writeMessageBegin("getBlacklist", Thrift.MessageType.EXCEPTION, seqid);
+			}
+			result.write(output);
+			output.writeMessageEnd();
+			output.flush();
+		});
+	}
+}
+
+ExecutorServiceProcessor.prototype.process_getFragment = function (seqid, input, output) {
+	var args = new ExecutorService_getFragment_args();
+	args.read(input);
+	input.readMessageEnd();
+	if (this._handler.getFragment.length === 2) {
+		Q.fcall(this._handler.getFragment, args.language, args.testCases)
+			.then(function (result) {
+				var result = new ExecutorService_getFragment_result({ success: result });
+				output.writeMessageBegin("getFragment", Thrift.MessageType.REPLY, seqid);
+				result.write(output);
+				output.writeMessageEnd();
+				output.flush();
+			}, function (err) {
+				var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+				output.writeMessageBegin("getFragment", Thrift.MessageType.EXCEPTION, seqid);
+				result.write(output);
+				output.writeMessageEnd();
+				output.flush();
+			});
+	} else {
+		this._handler.getFragment(args.language, args.testCases, function (err, result) {
+			if (err == null) {
+				var result = new ExecutorService_getFragment_result((err != null ? err : { success: result }));
+				output.writeMessageBegin("getFragment", Thrift.MessageType.REPLY, seqid);
+			} else {
+				var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+				output.writeMessageBegin("getFragment", Thrift.MessageType.EXCEPTION, seqid);
 			}
 			result.write(output);
 			output.writeMessageEnd();
