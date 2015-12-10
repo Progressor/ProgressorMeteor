@@ -16,6 +16,12 @@
 						<li class="active">
 							<a href="/">{{i18n "home.title"}}</a>
 						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{i18n "programmingLang.title"}}<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/java">{{i18n "progammingLangList.title"}}</a></li>
+							</ul>
+						</li>
 					</ul>
 				</nav>
 				<div class="navbar-right">
@@ -29,14 +35,14 @@
 							<ul class="dropdown-menu">
 								{{#each languages}}
 									<li class={{#if isActive}}active{{/if}}>
-										<a href="?lang={{id}}" class="i18n lang" data-lang="{{id}}">{{name}}</a>
+										<a href="?lang={{id}}" class="i18n lang" data-lang={{id}}>{{name}}</a>
 									</li>
 								{{/each}}
 							</ul>
 						</li>
 						<li role="separator" class="divider-vertical"></li>
 						{{#if currentUser}}
-							<li><a href="{{pathFor 'account'}}">{{i18n "account.title"}}</a></li>
+							<li><a href={{pathFor 'account'}}>{{i18n "account.title"}}</a></li>
 						{{else}}
 							<li><a href="/login">{{i18n "login.title"}}</a></li>
 						{{/if}}

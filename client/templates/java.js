@@ -1,13 +1,13 @@
 Session.setDefault('result', 'waiting for input...');
 
-Template.home.helpers(
+Template.java.helpers(
 	{
 		result: function () {
 			return Session.get('result');
 		}
 	});
 
-Template.home.events(
+Template.java.events(
 	{
 		'click button': function () {
 			Session.set('result', 'waiting for result...');
