@@ -5,24 +5,26 @@
 			<small>{{i18n "layout.explanation"}}</small>
 		</h1>
 	</header>
-	<section class="form-horizontal">
-		<div class="form-group">
-			<label for="fragment" class="col-sm-2 control-label">Java Fragment</label>
-			<div class="col-sm-10">
-					<textarea id="fragment" rows="10" cols="40" class="form-control">public boolean simplyReturn(boolean isTrue) {
-	return isTrue;
-}
-</textarea>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="panel panel-default lang">
+				<div class="panel-heading">
+					<h3 class="panel-title">Java</h3>
+				</div>
+				<div class="panel-body">
+					A popular object oriented programming language. Widely spread in Industry!
+				</div>
 			</div>
 		</div>
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<button class="btn btn-default">Calculate</button>
+		<div class="col-md-3">
+			<div class="panel panel-default lang">
+				<div class="panel-heading">
+					<h3 class="panel-title">C++</h3>
+				</div>
+				<div class="panel-body">
+					A popular programming language widely spread for graphical programming.
+				</div>
 			</div>
 		</div>
-	</section>
-	<section>
-		<h2>Result</h2>
-		{{result}}
-	</section>
+	</div>
 </template>

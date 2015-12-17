@@ -1,20 +1,7 @@
-Session.setDefault('result', 'waiting for input...');
 
-Template.home.helpers(
+Template.java.events(
 	{
-		result: function () {
-			return Session.get('result');
-		}
-	});
+		'click .lang': function () {
 
-Template.home.events(
-	{
-		'click button': function () {
-			Session.set('result', 'waiting for result...');
-			Meteor.call('executeFragment',
-									$('#fragment').val(),
-									function (err, res) {
-										Session.set('result', err ? 'error' : JSON.stringify(res));
-									});
 		}
 	});
