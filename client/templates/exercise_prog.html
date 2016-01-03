@@ -1,0 +1,108 @@
+<template name="exercise_prog">
+	<ol class="breadcrumb">
+		<li><a href="#">Home</a></li>
+		<li><a href="#">Java</a></li>
+		<li class="active">Exercise 1</li>
+	</ol>
+	<div class="row">
+		<div class="col-md-5">
+			<h2 class="page-title"> Exercise name </h2>
+		</div>
+		<div class="col-md-7">
+			<nav>
+				<ul class="pager pull-right">
+					<li><a href="#">Previous</a></li>
+					<li><a href="#">Next</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="well exercise-text">
+				Given an array of ints, is it possible to choose a group of some of the ints, such that the group sums to the given target?
+				This is a classic backtracking recursion problem. Once you understand the recursive backtracking strategy in this problem, you can use the same pattern for many problems to search a space of choices.
+				Rather than looking at the whole array, our convention is to consider the part of the array starting at index start and continuing to the end of the array. The caller can specify the whole array simply by passing start as 0.
+				No loops are needed - the recursive calls progress down the array.
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title text-center"><strong>Your Solution</strong></h3>
+				</div>
+				<div class="panel-body">
+					<section class="form-horizontal">
+						<div class="form-group">
+					<textarea id="fragment" rows="10" cols="20" class="form-control">public boolean simplyReturn(boolean isTrue) {
+	return isTrue;
+}
+					</textarea>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<!-- <Strong>Result:</Strong> {//{result}} -->
+								<button class="btn btn-default">calculate</button>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title text-center">Test Cases</h3>
+				</div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Test Case</th>
+							<th>Expected Result</th>
+							<th>Actual Result</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>groupSum(0, {2, 4, 8}, 10)</td>
+							<td>True</td>
+							<td>Ok</td>
+						</tr>
+						<tr>
+							<td>groupSum(0, {2, 4, 8}, 14)</td>
+							<td>True</td>
+							<td>Error</td>
+						</tr>
+						<tr>
+							<td>groupSum(0, {2, 4, 8}, 9)</td>
+							<td>False</td>
+							<td>Ok</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<h4><strong>Resources</strong></h4>
+					<ul>
+						<li>Java API
+							<a href="http://docs.oracle.com/javase/8/docs/api">http://docs.oracle.com/javase/8/docs/api </a></li>
+						<li>JavaFX API
+							<a href="http://docs.oracle.com/javase/8/javafx/api">http://docs.oracle.com/javase/8/javafx/api </a></li>
+						<li>JavaFX CSS Reference
+							<a href="http://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html">http://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html </a>
+						</li>
+						<li>JavaEE Reference <a href="http://docs.oracle.com/javaee/7/api">http://docs.oracle.com/javaee/7/api </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
