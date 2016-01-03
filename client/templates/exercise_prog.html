@@ -1,24 +1,30 @@
 <template name="exercise_prog">
 	<ol class="breadcrumb">
-		<li><a href="#">Home</a></li>
+		<li><a href="#">{{i18n "home.title"}}</a></li>
+
+		<!-- ToDo: Load from database -->
 		<li><a href="#">Java</a></li>
-		<li class="active">Exercise 1</li>
+		<li class="active">Exercise name</li>
 	</ol>
 	<div class="row">
 		<div class="col-md-5">
+
+			<!-- ToDo: Load from database -->
 			<h2 class="page-title"> Exercise name </h2>
 		</div>
 		<div class="col-md-7">
 			<nav>
 				<ul class="pager pull-right">
-					<li><a href="#">Previous</a></li>
-					<li><a href="#">Next</a></li>
+					<li><a href="#">{{i18n "previous.title"}}</a></li>
+					<li><a href="#">{{i18n "next.title"}}</a></li>
 				</ul>
 			</nav>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
+
+			<!-- ToDo: Load from database -->
 			<div class="well exercise-text">
 				Given an array of ints, is it possible to choose a group of some of the ints, such that the group sums to the given target?
 				This is a classic backtracking recursion problem. Once you understand the recursive backtracking strategy in this problem, you can use the same pattern for many problems to search a space of choices.
@@ -28,14 +34,16 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center"><strong>Your Solution</strong></h3>
+					<h3 class="panel-title text-center"><strong>{{i18n "code.title"}}</strong></h3>
 				</div>
 				<div class="panel-body">
 					<section class="form-horizontal">
 						<div class="form-group">
+
+							<!-- ToDo: Load from database -->
 					<textarea id="fragment" rows="10" cols="20" class="form-control">public boolean simplyReturn(boolean isTrue) {
 	return isTrue;
 }
@@ -44,26 +52,28 @@
 						<div class="form-group">
 							<div class="col-md-12">
 								<!-- <Strong>Result:</Strong> {//{result}} -->
-								<button class="btn btn-default">calculate</button>
+								<button class="btn btn-default">{{i18n "compile.title"}}</button>
 							</div>
 						</div>
 					</section>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-5">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">Test Cases</h3>
+					<h3 class="panel-title text-center">{{i18n "testCase.titlePlural"}}</h3>
 				</div>
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th>Test Case</th>
-							<th>Expected Result</th>
-							<th>Actual Result</th>
+							<th>{{i18n "testCase.title"}}</th>
+							<th>{{i18n "expectedResult.title"}}</th>
+							<th>{{i18n "actualResult.title"}}</th>
 						</tr>
 					</thead>
+
+					<!-- ToDo: Load from database -->
 					<tbody>
 						<tr>
 							<td>groupSum(0, {2, 4, 8}, 10)</td>
@@ -89,7 +99,9 @@
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<h4><strong>Resources</strong></h4>
+					<h4><strong>{{i18n "resources.title"}}</strong></h4>
+
+					<!-- ToDo: Load from database -->
 					<ul>
 						<li>Java API
 							<a href="http://docs.oracle.com/javase/8/docs/api">http://docs.oracle.com/javase/8/docs/api </a></li>

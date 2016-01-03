@@ -1,18 +1,20 @@
 <template name="exercise_search">
 	<ol class="breadcrumb">
-		<li><a href="#">Home</a></li>
+		<li><a href="#">{{i18n "home.title"}}</a></li>
 		<li class="active">Java</li>
 	</ol>
 	<div class="page-title">
-		<h2>Java Exercises</h2>
+		<h2>Java {{i18n "exercise.titlePluralLowerCase"}}</h2>
 	</div>
 	<div class="row">
 		<div class="col-md-5">
 			<form class=" well form-horizontal">
 				<fieldset>
-					<legend>Search for exercises</legend>
+					<legend>{{i18n "legendSearchExercise.title"}}</legend>
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label">Level:</label>
+						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
+
+						<!--ToDo: Load from database -->
 						<div class="col-md-10">
 							<select class="form-control" id="select-level">
 								<option>All</option>
@@ -24,7 +26,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label">Topic:</label>
+						<label for="select" class="col-md-2 control-label text-left">{{i18n "topic.title"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-topic">
 								<option>All</option>
@@ -36,24 +38,28 @@
 						</div>
 					</div>
 				</fieldset>
-				<a href="#" class="btn btn-success pull-right">Search</a>
+				<a href="#" class="btn btn-success pull-right">{{i18n "search.title"}}</a>
 				<br><br> <!-- Workaround: button inside well -->
 			</form>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
-						<div class="panel-heading"><h5><strong>Search results</strong></h5></div>
+						<div class="panel-heading"><h5><strong>{{i18n "searchResults.title"}}</strong></h5></div>
 						<div class="panel-body">
-							<input class="form-control" id="inputFIlter" placeholder="Filter by title" type="text">
+							<input class="form-control" id="inputFIlter" placeholder="{{i18n "filterByTitle.title"}}" type="text">
 						</div>
 						<table class="table table-hover table-striped">
+
+							<!--ToDo: List sortable by headers -->
 							<thead>
 								<tr>
-									<th>Title</th>
-									<th>Topic</th>
-									<th>Level</th>
+									<th>{{i18n "title.title"}}</th>
+									<th>{{i18n "topic.title"}}</th>
+									<th>{{i18n "level.title"}}</th>
 								</tr>
 							</thead>
+
+							<!--ToDo: Load from database -->
 							<tbody>
 								<tr>
 									<td>Sort with Arrays</td>
@@ -76,6 +82,9 @@
 				</div>
 			</div>
 		</div>
+
+		<!--ToDo: Load level titels from database -->
+		<!--ToDo: Load exercises from database -->
 		<div class="col-md-6 col-md-offset-1">
 			<div class="panel-group" id="accordion">
 				<div class="panel panel-default">
