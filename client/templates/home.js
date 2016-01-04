@@ -1,12 +1,9 @@
-
 Template.home.events(
 	{
-		'mouseover .lang': function () {
-			//$(this._id).addClass('panel-primary');
-
+		'mouseover .panel': function (ev) {
+			$(ev.currentTarget).removeClass('panel-default').addClass('panel-primary');
 		},
-		'mouseout .lang': function (ev) {
-			//$(this._id).removeClass('panel-primary');
+		'mouseout .panel': function (ev) {
+			$(ev.currentTarget).removeClass('panel-primary').addClass('panel-default');
 		}
 	});
-
