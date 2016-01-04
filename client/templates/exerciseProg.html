@@ -25,7 +25,7 @@
 		<div class="col-md-12">
 
 			<!-- ToDo: Load from database -->
-			<div class="well exercise-text">
+			<div class="well margin-panel">
 				Given an array of ints, is it possible to choose a group of some of the ints, such that the group sums to the given target?
 				This is a classic backtracking recursion problem. Once you understand the recursive backtracking strategy in this problem, you can use the same pattern for many problems to search a space of choices.
 				Rather than looking at the whole array, our convention is to consider the part of the array starting at index start and continuing to the end of the array. The caller can specify the whole array simply by passing start as 0.
@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<div class="col-md-12">
 								<!-- <Strong>Result:</Strong> {//{result}} -->
-								<button class="btn btn-default">{{i18n "compile.title"}}</button>
+								<button id="btn-compile" class="btn btn-default">{{i18n "compile.title"}}</button>
 							</div>
 						</div>
 					</section>

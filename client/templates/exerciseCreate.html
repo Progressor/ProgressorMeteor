@@ -1,0 +1,110 @@
+<!--ToDo: implement creation for: Multiple Choice, Free text -->
+<!--ToDo: i18n -->
+<!--ToDo: Load data from database -->
+<template name="exerciseCreate">
+	<div class="row">
+		<div class="col-md-12">
+			<h2 class="page-header">Create an exercise</h2>
+			<form class=" well form-horizontal">
+				<fieldset>
+					<legend>Porgramming exercise</legend>
+					<div class="form-group">
+						<label for="exercise-type" class="col-md-2 control-label">Type of exercise</label>
+						<div class="col-md-8">
+							<label class="radio-inline">
+								<input type="radio" name="typeOfExercise" id="radioProgramming" value="programming" checked> Programming
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="typeOfExercise" id="radioMultipleChoice" value="multipleChoice"> Multiple Choice
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="typeOfExercise" id="radioFreeText" value="freetext"> Free text
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exercise-type" class="col-md-2 control-label">Exercise Name</label>
+						<div class="col-md-5">
+							<input class="form-control" id="input-exName" type="text">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="exercise" class="col-md-2 control-label">Specifications</label>
+						<div class="col-md-2">
+							<select class="form-control" id="select-language">
+								<option disabled selected style="display: none;">Language</option>
+								<option>Java</option>
+								<option>C++</option>
+								<option>C#</option>
+							</select>
+						</div>
+						<div class="text-center  col-md-1"><span class="control-label glyphicon glyphicon-menu-right"></span></div>
+						<div class="col-md-2">
+							<select class="form-control" id="select-topic">
+								<option disabled selected style="display: none;">Topic</option>
+								<option>String</option>
+								<option>Arrays</option>
+								<option>Recursion</option>
+							</select>
+						</div>
+						<div class="text-center col-md-1"><span class="control-label glyphicon glyphicon-menu-right"></span></div>
+						<div class="col-md-2">
+							<select class="form-control" id="select-topic">
+								<option disabled selected style="display: none;">Level</option>
+								<option>Beginner</option>
+								<option>Intermediate</option>
+								<option>Expert</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-10 col-md-offset-1">
+							<textarea class="form-control" rows="6" placeholder="Exercise description"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="functionName" class="col-md-2 control-label">Function Name</label>
+						<div class="col-md-3">
+							<input class="form-control" id="input-funcName" type="text">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="ParameterName" class="col-md-2 control-label">Parameter(s)</label>
+						<div class="col-md-3">
+							<input class="form-control" id="input-funcName" type="text" placeholder="Name">
+						</div>
+						<div class="col-md-3">
+							<select class="form-control" id="select-topic">
+								<option disabled selected style="display: none;">Type</option>
+								<option>String</option>
+								<option>Array</option>
+								<option>Array list</option>
+							</select>
+						</div>
+						<div class="col-md-1">
+							<button class="btn btn-default" type=""><span class="glyphicon glyphicon-plus"></span></button>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="ParameterName" class="col-md-2 control-label">Return type</label>
+						<div class="col-md-3">
+							<select class="form-control" id="select-topic">
+								<option>Void</option>
+								<option>String</option>
+								<option>Int</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-10 col-md-offset-1">
+							<textarea class="form-control" rows="4" placeholder="Resources"></textarea>
+						</div>
+					</div>
+					<div class="col-md-10 col-md-offset-1">
+					<button class="btn btn-success pull-right" type="">Publish</button>
+						</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</template>
