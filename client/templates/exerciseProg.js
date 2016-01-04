@@ -1,13 +1,13 @@
 Session.setDefault('result', 'waiting for input...');
 
-Template.exercise_prog.helpers(
+Template.exerciseProg.helpers(
 	{
 		result: function () {
 			return Session.get('result');
 		}
 	});
 
-Template.exercise_prog.events(
+Template.exerciseProg.events(
 	{
 		'click button': function () {
 			Session.set('result', 'waiting for result...');

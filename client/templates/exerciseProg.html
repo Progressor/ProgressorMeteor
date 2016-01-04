@@ -1,9 +1,9 @@
-<template name="exercise_prog">
+<template name="exerciseProg">
 	<ol class="breadcrumb">
-		<li><a href="#">{{i18n "home.title"}}</a></li>
+		<li><a href="{{pathFor 'home'}}">{{i18n "home.title"}}</a></li>
 
 		<!-- ToDo: Load from database -->
-		<li><a href="#">Java</a></li>
+		<li><a href="{{pathFor 'exerciseSearch'}}">Java</a></li>
 		<li class="active">Exercise name</li>
 	</ol>
 	<div class="row">
