@@ -1,19 +1,20 @@
 <template name="exerciseSearch">
-	<ol class="breadcrumb">
-		<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
-		<li class="active">Java</li>
-	</ol>
+	<header>
+		<ol class="breadcrumb">
+			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
+			<li class="active">Java</li>
+		</ol>
+	</header>
 	<div class="page-title">
 		<h2>Java {{i18n "exercise.titlePluralLowerCase"}}</h2>
 	</div>
 	<div class="row">
-		<div class="col-md-5">
+		<section class="col-md-5">
 			<form class=" well form-horizontal">
 				<fieldset>
 					<legend>{{i18n "legendSearchExercise.title"}}</legend>
 					<div class="form-group">
 						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
-
 						<!--ToDo: Load from database -->
 						<div class="col-md-10">
 							<select class="form-control" id="select-level">
@@ -49,7 +50,6 @@
 							<input class="form-control" id="inputFIlter" placeholder="{{i18n "filterByTitle.title"}}" type="text">
 						</div>
 						<table class="table table-hover table-striped">
-
 							<!--ToDo: List sortable by headers -->
 							<thead>
 								<tr>
@@ -58,7 +58,6 @@
 									<th>{{i18n "level.title"}}</th>
 								</tr>
 							</thead>
-
 							<!--ToDo: Load from database -->
 							<tbody>
 								<tr>
@@ -81,11 +80,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
+		</section>
 		<!--ToDo: Load level titels from database -->
 		<!--ToDo: Load exercises from database -->
-		<div class="col-md-6 col-md-offset-1">
+		<section class="col-md-6 col-md-offset-1">
 			<div class="panel-group" id="accordion">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -190,6 +188,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 	</div>
 </template>
