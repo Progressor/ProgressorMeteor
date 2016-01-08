@@ -1,0 +1,117 @@
+<template name="exerciseSearch">
+	<header>
+		<ol class="breadcrumb">
+			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
+			<li class="active">Java</li>
+		</ol>
+	</header>
+	<div class="page-title">
+		<h2>Java {{i18n "exercise.titlePluralLowerCase"}}</h2>
+	</div>
+	<div class="row">
+		<section class="col-md-6">
+			<div class="panel-group" id="accordion">
+							{{#each difficulty in dificulties}}
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{difficulty}}">
+									{{i18nDificulty difficulty}} <!--ToDo: i18n -->
+									</a>
+							</h4>
+						</div>
+						<div id="collapse{{difficulty}}" class="panel-collapse collapse">
+							<div class="panel-body">
+								<div class="multiColumn">
+									<ul>
+										{{#each exercises difficulty}}
+											<a href="{{pathFor "exerciseProg"}}">
+												<li>{{names.[i18n "dbLanguageSelector"].name}}</li>
+											</a>
+										{{/each}}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				{{/each}}
+			</div>
+		</section>
+
+
+		<section class="col-md-5 col-md-offset-1">
+			<form class=" well form-horizontal">
+				<fieldset>
+					<legend>{{i18n "legendSearchExercise.title"}}</legend>
+					<div class="form-group">
+						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
+						<div class="col-md-10">
+							<select class="form-control" id="select-level">
+
+								<option>All</option>
+								{{#each exercises difficulty}}
+								<option>{{i18n difficulty}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="select" class="col-md-2 control-label text-left">{{i18n "topic.title"}}:</label>
+						<div class="col-md-10">
+							<select class="form-control" id="select-topic">
+								<option>All</option>
+								<option>Arrays</option>
+								<option>Strings</option>
+								<option>Logic</option>
+								<option>Recursion</option>
+							</select>
+						</div>
+					</div>
+				</fieldset>
+				<a href="#" class="btn btn-success pull-right">{{i18n "search.title"}}</a>
+				<br><br> <!-- Workaround: button inside well -->
+			</form>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading"><h5><strong>{{i18n "searchResults.title"}}</strong></h5>
+						</div> <!-- ToDo: Change h5 -->
+						<div class="panel-body">
+							<input class="form-control" id="inputFIlter" placeholder="{{i18n "filterByTitle.title"}}" type="text">
+						</div>
+						<table class="table table-hover table-striped">
+							<!--ToDo: List sortable by headers -->
+							<thead>
+								<tr>
+									<th>{{i18n "title.title"}}</th>
+									<th>{{i18n "topic.title"}}</th>
+									<th>{{i18n "level.title"}}</th>
+								</tr>
+							</thead>
+							<!--ToDo: Load from database -->
+							<tbody>
+								<tr>
+									<td>Sort with Arrays</td>
+									<td>Arrays</td>
+									<td>Beginner</td>
+								</tr>
+								<tr>
+									<td>String functionality</td>
+									<td>Strings</td>
+									<td>Expert</td>
+								</tr>
+								<tr>
+									<td>...</td>
+									<td>...</td>
+									<td>...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--ToDo: Load level titels from database -->
+		<!--ToDo: Load exercises from database -->
+	</div>
+</template>
