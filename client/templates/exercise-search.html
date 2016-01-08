@@ -11,22 +11,22 @@
 	<div class="row">
 		<section class="col-md-6">
 			<div class="panel-group" id="accordion">
-							{{#each difficulty in dificulties}}
+				{{#each difficulty in difficulties}}
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
 								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{difficulty}}">
-									{{i18nDificulty difficulty}} <!--ToDo: i18n -->
-									</a>
+									{{i18nDifficulty difficulty}} <!--ToDo: i18n -->
+								</a>
 							</h4>
 						</div>
 						<div id="collapse{{difficulty}}" class="panel-collapse collapse">
 							<div class="panel-body">
 								<div class="multiColumn">
 									<ul>
-										{{#each exercises difficulty}}
+										{{#each exercise in exercises difficulty}}
 											<a href="{{pathFor "exerciseProg"}}">
-												<li>{{i18nExercises}}</li>
+												<li>{{i18nExerciseName exercise}}</li>
 											</a>
 										{{/each}}
 									</ul>
@@ -37,8 +37,6 @@
 				{{/each}}
 			</div>
 		</section>
-
-
 		<section class="col-md-5 col-md-offset-1">
 			<form class=" well form-horizontal">
 				<fieldset>
@@ -47,10 +45,9 @@
 						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-level">
-
 								<option>All</option>
-								{{#each exercises difficulty}}
-								<option>{{i18n difficulty}}</option>
+								{{#each difficulty in difficulties}}
+									<option>{{i18nDifficulty difficulty}}</option>
 								{{/each}}
 							</select>
 						</div>
