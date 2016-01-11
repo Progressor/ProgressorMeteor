@@ -14,6 +14,7 @@ Template.home.helpers(
 		}
 	}
 );
+//{{pathFor "exerciseSearch" data=this}}
 
 Template.home.events(
 	{
@@ -26,5 +27,11 @@ Template.home.events(
 			if (!$(ev.currentTarget).hasClass('disabled')) {
 				$(ev.currentTarget).removeClass('panel-primary').addClass('panel-default');
 			}
-		}
+		},
+		'click .panel': function (ev) {
+			if (!$(ev.currentTarget).hasClass('disabled')) {
+				Router.go('/language/'+ $(ev.currentTarget).id);
+			}
+		},
+
 	});
