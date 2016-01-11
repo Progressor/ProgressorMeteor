@@ -17,6 +17,11 @@ Template.layout.helpers(
 
 			return this.id === i18n.getLanguage();
 		},
+
+		programmingLanguageName: function (langauge) {
+			return i18n('programmingLang.'+ langauge +'.title');
+		},
+
 		i18nProgrammingLanguages: function () {
 
 			return _.map(programmingLanguages, function (id) {

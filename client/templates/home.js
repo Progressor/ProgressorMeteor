@@ -1,5 +1,11 @@
 Template.home.helpers(
 	{
+		programmingLanguageName: function (langauge) {
+			return i18n('programmingLang.'+ langauge +'.title');
+		},
+		programmingLanguageDescription: function(langauge) {
+			return i18n('programmingLang.'+ langauge +'.description');
+		},
 		programmingLanguages: function () {
 			return programmingLanguages;
 		},

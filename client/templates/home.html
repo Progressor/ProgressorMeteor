@@ -2,8 +2,8 @@
 	<header class="page-header">
 		<div class="jumbotron">
 			<h1>
-				{{i18n "layout.title"}}
-				<small>{{i18n "layout.explanation"}}</small>
+				{{i18n "application.title"}}
+				<small>{{i18n "application.subhead"}}</small>
 			</h1>
 		</div>
 	</header>
@@ -12,10 +12,10 @@
 			<div class="col-md-3">
 				<div id="{{programmingLanguage}}-panel" class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">{{programmingLanguage}}</h3>
+						<h3 class="panel-title">{{programmingLanguageName programmingLanguage}}</h3>
 					</div>
 					<div class="panel-body">
-						Some text comes here!!
+						{{programmingLanguageDescription programmingLanguage}}
 					</div>
 				</div>
 			</div>
@@ -24,10 +24,10 @@
 			<div class="col-md-3">
 				<div id="{{programmingLanguage}}-panel" class="panel panel-default disabled">
 					<div class="panel-heading">
-						<h3 class="panel-title">{{programmingLanguage}}</h3>
+						<h3 class="panel-title">{{programmingLanguageName programmingLanguage}}</h3>
 					</div>
 					<div class="panel-body">
-						Upcoming text comes here!!
+						{{programmingLanguageDescription programmingLanguage}}
 					</div>
 				</div>
 			</div>

@@ -3,33 +3,33 @@
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
-					<span class="sr-only">{{i18n "layout.navigationToggle"}}</span>
+					<span class="sr-only">{{i18n "layout.navigationToggle"}}</span> <!-- ToDO: layout.navigationToggle??? -->
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="{{pathFor "home"}}" class="navbar-brand">{{i18n "layout.title"}}</a>
+				<a href="{{pathFor "home"}}" class="navbar-brand">{{i18n "application.title"}}</a>
 			</div>
 			<div id="navbar-collapse" class="collapse navbar-collapse">
 				<nav>
 					<ul class="nav navbar-nav">
 						<li>
-							<a href="{{pathFor "home"}}">{{i18n "home.title"}}</a>
+							<a href="{{pathFor "home"}}">{{i18n "navigation.home"}}</a>
 						</li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{i18n "programmingLang.title"}}
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{i18n "navigation.programmingLanguages"}}
 								<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								{{#each i18nProgrammingLanguages}}
-									<li><a href="{{pathFor "exerciseSearch" data=this}}">{{name}}</a></li>
+									<li><a href="{{pathFor "exerciseSearch" data=this}}">{{programmingLanguageName name}}</a></li>
 								{{/each}}
 							</ul>
 						</li>
 						<li>
-							<a href="{{pathFor "exerciseCreate"}}">Create exercise</a>
+							<a href="{{pathFor "programmingEdit"}}">{{i18n "navigation.createExercise"}}</a>
 						</li>
 						<li>
-							<a href="/admin">MongoDB Admin</a>
+							<a href="{{pathFor "admin"}}">{{i18n "navigation.mongoDBAdmin"}}</a>
 						</li>
 					</ul>
 				</nav>
@@ -51,9 +51,9 @@
 						</li>
 						<li role="separator" class="divider-vertical"></li>
 						{{#if currentUser}}
-							<li><a href={{pathFor "account"}}>{{i18n "account.title"}}</a></li>
+							<li><a href={{pathFor "account"}}>{{i18n "navigation.myAccount"}}</a></li>
 						{{else}}
-							<li><a href="{{pathFor "login"}}">{{i18n "login.title"}}</a></li>
+							<li><a href="{{pathFor "login"}}">{{i18n "navigation.login"}}</a></li>
 						{{/if}}
 					</ul>
 				</nav>
@@ -64,7 +64,7 @@
 		<div class="row">
 			<main class={{#if showAside}}col-lg-9{{else}}col-lg-12{{/if}} >
 				{{#unless customTitle}}
-					<h1 class="default">{{i18n "layout.title"}}</h1>
+					<h1 class="default">{{i18n "application.title"}}</h1>
 				{{/unless}}
 				{{> yield}}
 			</main>

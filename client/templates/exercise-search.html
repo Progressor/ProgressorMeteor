@@ -1,12 +1,12 @@
 <template name="exerciseSearch">
 	<header>
 		<ol class="breadcrumb">
-			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
+			<li><a href="{{pathFor "home"}}">{{i18n "navigation.home"}}</a></li>
 			<li class="active">Java</li>
 		</ol>
 	</header>
 	<div class="page-title">
-		<h2>Java {{i18n "exercise.titlePluralLowerCase"}}</h2>
+		<h2>Java {{i18n "exercise.exercises"}}</h2>
 	</div>
 	<div class="row">
 		<section class="col-md-6">
@@ -42,9 +42,9 @@
 		<section class="col-md-5 col-md-offset-1">
 			<form class=" well form-horizontal">
 				<fieldset>
-					<legend>{{i18n "legendSearchExercise.title"}}</legend>
+					<legend>{{i18n "legend.searchExercise"}}</legend>
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
+						<label for="select" class="col-md-2 control-label">{{i18n "exercise.level"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-level">
 								<option value="all">All</option>
@@ -55,33 +55,33 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label text-left">{{i18n "topic.title"}}:</label>
+						<label for="select" class="col-md-2 control-label text-left">{{i18n "exercise.topic"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-topic">
-								<option value="all">All</option>
+								<option value="0">{{i18n "difficulty.0"}}</option>
 								{{#each category in categories}}
 									<option value="{{categoryID category}}">{{i18nCategoryName category}}</option>
 								{{/each}}
 							</select>
 						</div>
 					</div>
-					<input type="submit" value="{{i18n "search.title"}}" id="search-btn" class="btn btn-success pull-right" />
+					<input type="submit" value="{{i18n "button.search"}}" id="search-btn" class="btn btn-success pull-right" />
 				</fieldset>
 			</form>
 			<div id="results-div" class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
-						<div class="panel-heading"><h5><strong>{{i18n "searchResults.title"}}</strong></h5>
+						<div class="panel-heading"><h5><strong>{{i18n "legend.searchResults"}}</strong></h5>
 						</div> <!-- ToDo: Change h5 -->
 						<div class="panel-body">
-							<input class="form-control" id="inputFIlter" placeholder="{{i18n "filterByTitle.title"}}" type="text">
+							<input class="form-control" id="inputFIlter" placeholder="{{i18n "legend.filterByTitle"}}" type="text">
 						</div>
 						<table id="results-table" class="table table-hover table-striped">
 							<thead>
 								<tr>
-									<th>{{i18n "title.title"}}</th>
-									<th>{{i18n "topic.title"}}</th>
-									<th>{{i18n "level.title"}}</th>
+									<th>{{i18n "exercise.title"}}</th>
+									<th>{{i18n "exercise.topic"}}</th>
+									<th>{{i18n "exercise.level"}}</th>
 								</tr>
 							</thead>
 							<tbody>
