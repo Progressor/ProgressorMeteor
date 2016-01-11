@@ -3,14 +3,14 @@
 		<ol class="breadcrumb">
 			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
 			<!-- ToDo: Load from database -->
-			<li><a href="{{pathFor "exerciseSearch"}}">Java</a></li>
+			<li><a href="{{pathFor "exerciseSearch"}}">{{programmingLanguage}}</a></li>
 			<li class="active">Exercise name</li>
 		</ol>
 	</header>
 	<div class="row">
 		<div class="col-md-5">
 			<!-- ToDo: Load from database -->
-			<h2 class="page-title"> Exercise name </h2>
+			<h2 class="page-title"> {{i18nExerciseName this}} </h2>
 		</div>
 		<div class="col-md-7">
 			<nav>

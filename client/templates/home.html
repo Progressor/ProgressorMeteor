@@ -8,28 +8,29 @@
 		</div>
 	</header>
 	<section class="row home-langs">
-
-		<!-- ToDo: Insert panels dynamically corresponding data in i18n.js -->
-		<div class="col-md-3">
-			<div id="java-panel" class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Java</h3>
-				</div>
-				<div class="panel-body">
-					A popular object oriented programming language. Widely spread in Industry!
-				</div>
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div id="c++-panel" class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">C++</h3>
-				</div>
-				<div class="panel-body">
-					 A popular programming language widely spread for graphical programming.
+		{{#each programmingLanguage in programmingLanguages}}
+			<div class="col-md-3">
+				<div id="{{programmingLanguage}}-panel" class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{programmingLanguage}}</h3>
+					</div>
+					<div class="panel-body">
+						Some text comes here!!
+					</div>
 				</div>
 			</div>
-		</div>
-
+		{{/each}}
+		{{#each programmingLanguage in programmingLanguagesUpcoming}}
+			<div class="col-md-3">
+				<div id="{{programmingLanguage}}-panel" class="panel panel-default disabled">
+					<div class="panel-heading">
+						<h3 class="panel-title">{{programmingLanguage}}</h3>
+					</div>
+					<div class="panel-body">
+						Upcoming text comes here!!
+					</div>
+				</div>
+			</div>
+		{{/each}}
 	</section>
 </template>

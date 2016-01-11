@@ -16,7 +16,7 @@
 						<div class="panel-heading">
 							<h4 class="panel-title">
 								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{difficulty}}">
-									{{i18nDifficulty difficulty}} <!--ToDo: i18n -->
+									{{i18nDifficulty difficulty}}
 								</a>
 							</h4>
 						</div>
@@ -25,9 +25,11 @@
 								<div class="multiColumn">
 									<ul>
 										{{#each exercise in exercises difficulty}}
-											<a href="{{pathFor "exerciseProg"}}">
-												<li>{{i18nExerciseName exercise}}</li>
-											</a>
+											<li>
+												<a href={{pathFor "programmingSolve" data=exercise}}>
+													{{i18nExerciseName exercise}}
+												</a>
+											</li>
 										{{/each}}
 									</ul>
 								</div>
@@ -45,9 +47,9 @@
 						<label for="select" class="col-md-2 control-label">{{i18n "level.title"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-level">
-								<option>All</option>
+								<option value="all">All</option>
 								{{#each difficulty in difficulties}}
-									<option>{{i18nDifficulty difficulty}}</option>
+									<option value="{{difficulty}}">{{i18nDifficulty difficulty}}</option>
 								{{/each}}
 							</select>
 						</div>
@@ -56,19 +58,17 @@
 						<label for="select" class="col-md-2 control-label text-left">{{i18n "topic.title"}}:</label>
 						<div class="col-md-10">
 							<select class="form-control" id="select-topic">
-								<option>All</option>
-								<option>Arrays</option>
-								<option>Strings</option>
-								<option>Logic</option>
-								<option>Recursion</option>
+								<option value="all">All</option>
+								{{#each category in categories}}
+									<option value="{{categoryID category}}">{{i18nCategoryName category}}</option>
+								{{/each}}
 							</select>
 						</div>
 					</div>
+					<input type="submit" value="{{i18n "search.title"}}" id="search-btn" class="btn btn-success pull-right" />
 				</fieldset>
-				<a href="#" class="btn btn-success pull-right">{{i18n "search.title"}}</a>
-				<br><br> <!-- Workaround: button inside well -->
 			</form>
-			<div class="row">
+			<div id="results-div" class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
 						<div class="panel-heading"><h5><strong>{{i18n "searchResults.title"}}</strong></h5>
@@ -76,8 +76,7 @@
 						<div class="panel-body">
 							<input class="form-control" id="inputFIlter" placeholder="{{i18n "filterByTitle.title"}}" type="text">
 						</div>
-						<table class="table table-hover table-striped">
-							<!--ToDo: List sortable by headers -->
+						<table id="results-table" class="table table-hover table-striped">
 							<thead>
 								<tr>
 									<th>{{i18n "title.title"}}</th>
@@ -85,30 +84,12 @@
 									<th>{{i18n "level.title"}}</th>
 								</tr>
 							</thead>
-							<!--ToDo: Load from database -->
 							<tbody>
-								<tr>
-									<td>Sort with Arrays</td>
-									<td>Arrays</td>
-									<td>Beginner</td>
-								</tr>
-								<tr>
-									<td>String functionality</td>
-									<td>Strings</td>
-									<td>Expert</td>
-								</tr>
-								<tr>
-									<td>...</td>
-									<td>...</td>
-									<td>...</td>
-								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
 		</section>
-		<!--ToDo: Load level titels from database -->
-		<!--ToDo: Load exercises from database -->
 	</div>
 </template>

@@ -1,10 +1,19 @@
 Session.setDefault('result', 'waiting for input...');
 
+function i18nName(elem) {
+	return (_.findWhere(elem.names, { language: i18n.getLanguage() })
+					|| _.findWhere(elem.names, { language: i18n.getDefaultLanguage() })).name;
+}
+
 Template.programmingSolve.helpers(
 	{
 		result: function () {
 			return Session.get('result');
-		}
+		},
+		exerciseID: function () {
+			return params._id;
+		},
+		i18nExerciseName: i18nName,
 	});
 
 Template.programmingSolve.events(
