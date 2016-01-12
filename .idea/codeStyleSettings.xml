@@ -33,6 +33,7 @@
             <package name="" withSubpackages="true" static="true" />
           </value>
         </option>
+        <option name="RIGHT_MARGIN" value="200" />
         <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
         <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
         <option name="JD_KEEP_INVALID_TAGS" value="false" />
@@ -59,6 +60,7 @@
           <option name="KEEP_SINGLE_LINE_BLOCKS" value="true" />
         </CssCodeStyleSettings>
         <JSCodeStyleSettings>
+          <option name="USE_DOUBLE_QUOTES" value="false" />
           <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
         </JSCodeStyleSettings>
         <TypeScriptCodeStyleSettings>

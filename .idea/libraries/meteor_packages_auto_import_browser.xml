@@ -25,6 +25,7 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/tokenize.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/utils.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/charref.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/huttonr_bootstrap3/3.3.6/web.browser/check-settings.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/parse.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/html.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/visitors.js" />
@@ -128,7 +129,6 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/flash_message.coffee" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/admin_nav.coffee" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/custom_actions.coffee" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/huttonr_bootstrap3/3.3.5_10/web.browser/check-settings.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/lai_collection-extensions/0.1.4/web.browser/packages/lai_collection-extensions.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/softwarerero_accounts-t9n/1.1.7/web.browser/t9n.coffee" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/anti_i18n/0.4.3/web.browser/packages/anti_i18n.js" />
@@ -277,6 +277,7 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/tokenize.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/utils.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/charref.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/huttonr_bootstrap3/3.3.6/web.browser/check-settings.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/html-tools/1.0.5/web.browser/parse.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/html.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/visitors.js" />
@@ -380,7 +381,6 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/flash_message.coffee" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/admin_nav.coffee" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/houston_admin/2.0.6/web.browser/client/partials/custom_actions.coffee" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/huttonr_bootstrap3/3.3.5_10/web.browser/check-settings.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/lai_collection-extensions/0.1.4/web.browser/packages/lai_collection-extensions.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/softwarerero_accounts-t9n/1.1.7/web.browser/t9n.coffee" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/anti_i18n/0.4.3/web.browser/packages/anti_i18n.js" />

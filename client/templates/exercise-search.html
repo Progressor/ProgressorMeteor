@@ -30,55 +30,58 @@
 		</section>
 		<section class="col-md-5 col-md-offset-1">
 			<h3>{{i18n "exercise.searchSubtitle"}}</h3>
-			<section class="panel panel-default">
-				<div class="panel-body form-horizontal">
-					<div class="form-group">
-						<label for="select-difficulty" class="col-md-3 control-label">{{i18n "exercise.difficultyLabel"}}</label>
-						<div class="col-md-9">
-							<select class="form-control" id="select-difficulty">
-								<option>{{i18n "form.filterAll"}}</option>
-								{{#each difficulties}}
-									<option value="{{_id}}">{{i18nDifficulty _id}}</option>
-								{{/each}}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="select-category" class="col-md-3 control-label">{{i18n "exercise.categoryLabel"}}</label>
-						<div class="col-md-9">
-							<select class="form-control" id="select-category">
-								<option>{{i18n "form.filterAll"}}</option>
-								{{#each categories}}
-									<option value="{{_id}}">{{i18nCategoryName this}}</option>
-								{{/each}}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-3 col-md-9">
-							<input type="submit" id="bnt-search" class="btn btn-success" value="{{i18n "form.search"}}" />
-						</div>
+			<div class="well form-horizontal">
+				<div class="form-group">
+					<label for="input-name" class="col-md-3 control-label">{{i18n "exercise.nameLabel"}}</label>
+					<div class="col-md-9">
+						<input type="text" id="input-name" class="form-control" placeholder="{{i18n "form.textFilter"}}" />
 					</div>
 				</div>
-			</section>
-			<section class="panel panel-default" style="display: none;">
-				<div class="panel-body">
-					<input class="form-control" type="text" id="inputFIlter" placeholder="{{i18n "form.textFilter"}}">
+				<div class="form-group">
+					<label for="select-category" class="col-md-3 control-label">{{i18n "exercise.categoryLabel"}}</label>
+					<div class="col-md-9">
+						<select id="select-category" class="form-control">
+							<option value="">{{i18n "form.filterAll"}}</option>
+							{{#each categories}}
+								<option value="{{_id}}">{{i18nCategoryName this}}</option>
+							{{/each}}
+						</select>
+					</div>
 				</div>
-				<div class="panel-body">
-					<table id="results-table" class="table table-condensed table-striped table-hover">
-						<thead>
+				<div class="form-group">
+					<label for="select-difficulty" class="col-md-3 control-label">{{i18n "exercise.difficultyLabel"}}</label>
+					<div class="col-md-9">
+						<select id="select-difficulty" class="form-control">
+							<option value="">{{i18n "form.filterAll"}}</option>
+							{{#each difficulties}}
+								<option value="{{_id}}">{{i18nDifficulty _id}}</option>
+							{{/each}}
+						</select>
+					</div>
+				</div>
+			</div>
+			{{#if results}}
+				<table class="table table-condensed table-striped">
+					<thead>
+						<tr>
+							<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+							<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+							<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each results}}
 							<tr>
-								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								<td>{{i18nExerciseName this}}</td>
+								<td>{{i18nCategoryName category}}</td>
+								<td>{{i18nDifficulty difficulty}}</td>
 							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-			</section>
+						{{/each}}
+					</tbody>
+				</table>
+			{{else}}
+				<div class="text-muted">{{i18n "form.noResults"}}</div>
+			{{/if}}
 		</section>
 	</div>
 </template>

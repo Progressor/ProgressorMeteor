@@ -16,17 +16,21 @@ standard-minifiers      # JS/CSS minifiers run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
-autopublish             # Publish all data to the clients (for prototyping)
-insecure                # Allow all DB writes from clients (for prototyping)
-thrift
-check
-less
-accounts-password
-audit-argument-checks
-random
-iron:router
-useraccounts:bootstrap
-anti:i18n
-huttonr:bootstrap3
-accounts-ui
-houston:admin
+# autopublish           # Publish all data to the clients (for prototyping)
+# insecure              # Allow all DB writes from clients (for prototyping)
+
+random                  # The random package provides several functions for generating random numbers.
+check                   # enables method arguments checks
+audit-argument-checks   # This package causes Meteor to require that all arguments passed to methods and publish functions are checked.
+iron:router             # A router that works on the server and the browser, designed specifically for Meteor
+accounts-password       # email - password login provider
+accounts-ui             # A turn-key user interface for Meteor Accounts.
+underscore              # underscore.js library
+less                    # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
+
+anti:i18n               # A simple (The simplest possible? Perhaps) i18n package for Meteor.
+huttonr:bootstrap3      # Bootstrap 3 for Meteor - Modular, configurable, customizable.
+useraccounts:bootstrap  # Meteor sign up and sign in templates (and much more!) styled for twitter Bootstrap
+houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
+
+thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation

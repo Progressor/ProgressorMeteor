@@ -1,7 +1,9 @@
 (function () {
 	'use strict';
 
-	var searchResults;
+	Session.setDefault('ExerciseSearchName', null);
+	Session.setDefault('ExerciseSearchCategory', null);
+	Session.setDefault('ExerciseSearchDifficulty', null);
 
 	Template.exerciseSearch.helpers(
 		{
@@ -9,38 +11,28 @@
 			i18nProgrammingLanguage: excs => i18n.getProgrammingLanguage(excs[0].programmingLanguage),
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
-			i18nDifficulty: i18n.getDifficulty
-		});
+			i18nDifficulty: i18n.getDifficulty,
+			results() {
+				var qry = {};
+				if (Session.get('ExerciseSearchName') && Session.get('ExerciseSearchName').length > 2)
+					qry.names = { $elemMatch: { name: new RegExp(Session.get('ExerciseSearchName').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
+				if (Session.get('ExerciseSearchCategory'))
+					qry.category_id = Session.get('ExerciseSearchCategory');
+				if (Session.get('ExerciseSearchDifficulty'))
+					qry.difficulty = Session.get('ExerciseSearchDifficulty');
+				if (_.keys(qry).length)
+					return Progressor.exercises.find(qry, { limit: 25 }).map(exc => _.extend(exc, {
+						category: Progressor.categories.findOne({ _id: exc.category_id })
+					}));
+			}
+		})
+	;
 
 	Template.exerciseSearch.events(
 		{
-			'submit form'(ev) {
-				ev.preventDefault();
-				$('#results-table > tbody').empty();
-
-				/* ToDo: hidden result table
-				 if ($('#results-div').style.visibility = 'hidden') {
-				 $('#results-div').style.visibility = 'visible';
-				 }
-				 */
-
-				var difficulty = parseInt($("#select-level").val());
-				var category = $("#select-topic").val();
-
-				searchResults = Exercises.find({
-																				 difficulty: difficulty,
-																				 category_id: category
-																			 }).fetch();
-
-				searchResults.forEach(function (result) {
-					var name = (_.findWhere(result.names, { language: i18n.getLanguage() }) || _.findWhere(result.names, { language: i18n.getDefaultLanguage() })).name;
-					var topic = Categories.findOne({ _id: result.category_id });
-					//ToDo: List sortable by headers
-					var level = result.difficulty;
-					$('#results-table > tbody:last-child').append("<tr><td>" + name + "</td><td>" + i18nName(topic) + "</td><td>" + i18nDifficulty(level) + "</td></tr>");
-				});
-
-			}
+			'keyup #input-name': _.debounce(ev => Session.set('ExerciseSearchName', $(ev.currentTarget).val()), 250),
+			'change #select-category': ev => Session.set('ExerciseSearchCategory', $(ev.currentTarget).val()),
+			'change #select-difficulty': ev => Session.set('ExerciseSearchDifficulty', parseInt($(ev.currentTarget).val()))
 		});
 
 })();
