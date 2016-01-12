@@ -3,6 +3,11 @@ body { padding: 70px 0; }
 
 h1.default { display: none; }
 
+h2 {
+	margin-top: 0;
+	margin-bottom: .5em;
+}
+
 /* separator between language and login */
 .navbar .divider-vertical {
 	height: 60px;
@@ -21,11 +26,11 @@ h1.default { display: none; }
 	}
 }
 
-/* center input field labels */
-.col-center { margin-top: 2%; }
+/* mock link */
+[data-href] { cursor: pointer; }
 
 /* multi column list */
-.multiColumn {
+.multi-col-2 {
 	-moz-column-count: 2;
 	-moz-column-gap: 10px;
 	-webkit-column-count: 2;
@@ -33,15 +38,3 @@ h1.default { display: none; }
 	column-count: 2;
 	column-gap: 10px;
 }
-
-/* page title h2 */
-.page-title {
-	margin-top: 0;
-	margin-bottom: 2%;
-}
-
-/* workaround pager */
-.pager { margin: 0; }
-
-/* margin page title - panel*/
-.margin-panel { margin-top: 1%; }

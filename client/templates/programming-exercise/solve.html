@@ -1,28 +1,34 @@
 <template name="programmingSolve">
 	<header>
 		<ol class="breadcrumb">
-			<li><a href="{{pathFor "home"}}">{{i18n "navigation.home"}}</a></li>
+			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
+			<!-- ToDo: Load from database -->
 			<li><a href="{{pathFor "exerciseSearch"}}">{{programmingLanguage}}</a></li>
-			<li class="active">{{i18nExerciseName this}}</li>
+			<li class="active">Exercise name</li>
 		</ol>
 	</header>
 	<div class="row">
 		<div class="col-md-5">
-			<h2 class="page-title"> {{i18nExerciseName this}} </h2>
+			<!-- ToDo: Load from database -->
+			<h2> {{i18nExerciseName this}} </h2>
 		</div>
 		<div class="col-md-7">
 			<nav>
 				<ul class="pager pull-right">
-					<li><a href="#">{{i18n "navigation.previous"}}</a></li>
-					<li><a href="#">{{i18n "navigation.next"}}</a></li>
+					<li><a href="#">{{i18n "previous.title"}}</a></li>
+					<li><a href="#">{{i18n "next.title"}}</a></li>
 				</ul>
 			</nav>
 		</div>
 	</div>
 	<section class="row">
 		<div class="col-md-12">
+			<!-- ToDo: Load from database -->
 			<div class="well margin-panel">
-				{{i18nDescription this}}.
+				Given an array of ints, is it possible to choose a group of some of the ints, such that the group sums to the given target?
+				This is a classic backtracking recursion problem. Once you understand the recursive backtracking strategy in this problem, you can use the same pattern for many problems to search a space of choices.
+				Rather than looking at the whole array, our convention is to consider the part of the array starting at index start and continuing to the end of the array. The caller can specify the whole array simply by passing start as 0.
+				No loops are needed - the recursive calls progress down the array.
 			</div>
 		</div>
 	</section>
@@ -30,18 +36,21 @@
 		<section class="col-md-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center"><strong>{{i18n "exercise.code"}}</strong></h3>
+					<h3 class="panel-title text-center"><strong>{{i18n "code.title"}}</strong></h3>
 				</div>
 				<div class="panel-body">
 					<section class="form-horizontal">
 						<div class="form-group">
 							<!-- ToDo: Load from database -->
-					<textarea id="fragment" rows="10" cols="20" class="form-control">{{fragTest}}</textarea>
+					<textarea id="fragment" rows="10" cols="20" class="form-control">public boolean simplyReturn(boolean isTrue) {
+	return isTrue;
+}
+					</textarea>
 						</div>
 						<div class="form-group">
 							<div class="col-md-12">
 								<!-- <Strong>Result:</Strong> {//{result}} -->
-								<button id="btn-compile" class="btn btn-default pull-right">{{i18n "button.compile"}}</button>
+								<button id="btn-compile" class="btn btn-default">{{i18n "compile.title"}}</button>
 							</div>
 						</div>
 					</section>
@@ -51,14 +60,14 @@
 		<section class="col-md-5">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">{{i18n "legend.testCases"}}</h3>
+					<h3 class="panel-title text-center">{{i18n "testCase.titlePlural"}}</h3>
 				</div>
 				<table id="execResult" class="table table-bordered">
 					<thead>
 						<tr>
-							<th>{{i18n "legend.testCase"}}</th>
-							<th>{{i18n "legend.expectedResult"}}</th>
-							<th>{{i18n "legend.actualResult"}}</th>
+							<th>{{i18n "testCase.title"}}</th>
+							<th>{{i18n "expectedResult.title"}}</th>
+							<th>{{i18n "actualResult.title"}}</th>
 						</tr>
 					</thead>
 					<!-- ToDo: Load from database -->
@@ -87,7 +96,7 @@
 		<section class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<h4><strong>{{i18n "exercise.resources"}}</strong></h4>
+					<h4><strong>{{i18n "resources.title"}}</strong></h4>
 					<!-- ToDo: Load from database -->
 					<ul>
 						<li>Java API

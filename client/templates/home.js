@@ -1,37 +1,28 @@
-Template.home.helpers(
-	{
-		programmingLanguageName: function (langauge) {
-			return i18n('programmingLang.'+ langauge +'.title');
-		},
-		programmingLanguageDescription: function(langauge) {
-			return i18n('programmingLang.'+ langauge +'.description');
-		},
-		programmingLanguages: function () {
-			return programmingLanguages;
-		},
-		programmingLanguagesUpcoming: function () {
-			return programmingLanguagesUpcoming;
+(function () {
+	'use strict';
+
+	var programmingLanguages = _.union(
+		_.map(Progressor.getProgrammingLanguages(), lng => ({ _id: lng })),
+		_.map(Progressor.getProgrammingLanguagesUpcoming(), lng => ({ _id: lng, isUpcoming: true })));
+
+	Template.home.helpers(
+		{
+			programmingLanguages: () => programmingLanguages,
+			nofExercises(lng) {
+				var cnt = Progressor.exercises.find({ programmingLanguage: lng }).count(),
+					txt = `exercise.exercise${cnt != 1 ? 's' : ''}`
+				return `${cnt} ${i18n(txt)}`;
+			},
+			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
+			i18nProgrammingLanguageDescription: i18n.getProgrammingLanguageDescription
 		}
-	}
-);
-//{{pathFor "exerciseSearch" data=this}}
+	);
 
-Template.home.events(
-	{
-		'mouseover .panel': function (ev) {
-			if (!$(ev.currentTarget).hasClass('disabled')) {
-				$(ev.currentTarget).removeClass('panel-default').addClass('panel-primary');
-			}
-		},
-		'mouseout .panel': function (ev) {
-			if (!$(ev.currentTarget).hasClass('disabled')) {
-				$(ev.currentTarget).removeClass('panel-primary').addClass('panel-default');
-			}
-		},
-		'click .panel': function (ev) {
-			if (!$(ev.currentTarget).hasClass('disabled')) {
-				Router.go('/language/'+ $(ev.currentTarget).id);
-			}
-		},
+	Template.home.events(
+		{
+			'click [data-href]': (ev) => Router.go('exerciseSearch', { _id: $(ev.currentTarget).data('href') }),
+			'mouseover .panel-primary': (ev) => $(ev.currentTarget).removeClass('panel-primary').addClass('panel-info'),
+			'mouseout .panel-info': (ev) => $(ev.currentTarget).removeClass('panel-info').addClass('panel-primary')
+		});
 
-	});
+})();

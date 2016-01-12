@@ -1,95 +1,84 @@
 <template name="exerciseSearch">
 	<header>
-		<ol class="breadcrumb">
-			<li><a href="{{pathFor "home"}}">{{i18n "navigation.home"}}</a></li>
-			<li class="active">Java</li>
-		</ol>
+		<nav>
+			<ol class="breadcrumb">
+				<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+				<li class="active">{{i18nProgrammingLanguage exercises}}</li>
+			</ol>
+		</nav>
+		<h2>{{i18n "exercise.searchTitle" (i18nProgrammingLanguage exercises)}}</h2>
 	</header>
-	<div class="page-title">
-		<h2>Java {{i18n "exercise.exercises"}}</h2>
-	</div>
 	<div class="row">
 		<section class="col-md-6">
-			<div class="panel-group" id="accordion">
-				{{#each difficulty in difficulties}}
+			<h3>{{i18n "exercise.difficultiesSubtitle"}}</h3>
+			<div class="panel-group">
+				{{#each difficulties}}
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h4 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{difficulty}}">
-									{{i18nDifficulty difficulty}}
-								</a>
-							</h4>
+							<h4 class="panel-title">{{i18nDifficulty _id}}</h4>
 						</div>
-						<div id="collapse{{difficulty}}" class="panel-collapse collapse">
-							<div class="panel-body">
-								<div class="multiColumn">
-									<ul>
-										{{#each exercise in exercises difficulty}}
-											<li>
-												<a href={{pathFor "programmingSolve" data=exercise}}>
-													{{i18nExerciseName exercise}}
-												</a>
-											</li>
-										{{/each}}
-									</ul>
-								</div>
-							</div>
+						<div class="panel-body multi-col-2">
+							<ul>
+								{{#each exercises}}
+									<li>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+								{{/each}}
+							</ul>
 						</div>
 					</div>
 				{{/each}}
 			</div>
 		</section>
 		<section class="col-md-5 col-md-offset-1">
-			<form class=" well form-horizontal">
-				<fieldset>
-					<legend>{{i18n "legend.searchExercise"}}</legend>
+			<h3>{{i18n "exercise.searchSubtitle"}}</h3>
+			<section class="panel panel-default">
+				<div class="panel-body form-horizontal">
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label">{{i18n "exercise.level"}}:</label>
-						<div class="col-md-10">
-							<select class="form-control" id="select-level">
-								<option value="all">All</option>
-								{{#each difficulty in difficulties}}
-									<option value="{{difficulty}}">{{i18nDifficulty difficulty}}</option>
+						<label for="select-difficulty" class="col-md-3 control-label">{{i18n "exercise.difficultyLabel"}}</label>
+						<div class="col-md-9">
+							<select class="form-control" id="select-difficulty">
+								<option>{{i18n "form.filterAll"}}</option>
+								{{#each difficulties}}
+									<option value="{{_id}}">{{i18nDifficulty _id}}</option>
 								{{/each}}
 							</select>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="select" class="col-md-2 control-label text-left">{{i18n "exercise.topic"}}:</label>
-						<div class="col-md-10">
-							<select class="form-control" id="select-topic">
-								<option value="0">{{i18n "difficulty.0"}}</option>
-								{{#each category in categories}}
-									<option value="{{categoryID category}}">{{i18nCategoryName category}}</option>
+						<label for="select-category" class="col-md-3 control-label">{{i18n "exercise.categoryLabel"}}</label>
+						<div class="col-md-9">
+							<select class="form-control" id="select-category">
+								<option>{{i18n "form.filterAll"}}</option>
+								{{#each categories}}
+									<option value="{{_id}}">{{i18nCategoryName this}}</option>
 								{{/each}}
 							</select>
 						</div>
 					</div>
-					<input type="submit" value="{{i18n "button.search"}}" id="search-btn" class="btn btn-success pull-right" />
-				</fieldset>
-			</form>
-			<div id="results-div" class="row">
-				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading"><h5><strong>{{i18n "legend.searchResults"}}</strong></h5>
-						</div> <!-- ToDo: Change h5 -->
-						<div class="panel-body">
-							<input class="form-control" id="inputFIlter" placeholder="{{i18n "legend.filterByTitle"}}" type="text">
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-md-9">
+							<input type="submit" id="bnt-search" class="btn btn-success" value="{{i18n "form.search"}}" />
 						</div>
-						<table id="results-table" class="table table-hover table-striped">
-							<thead>
-								<tr>
-									<th>{{i18n "exercise.title"}}</th>
-									<th>{{i18n "exercise.topic"}}</th>
-									<th>{{i18n "exercise.level"}}</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
 					</div>
 				</div>
-			</div>
+			</section>
+			<section class="panel panel-default" style="display: none;">
+				<div class="panel-body">
+					<input class="form-control" type="text" id="inputFIlter" placeholder="{{i18n "form.textFilter"}}">
+				</div>
+				<div class="panel-body">
+					<table id="results-table" class="table table-condensed table-striped table-hover">
+						<thead>
+							<tr>
+								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</section>
 		</section>
 	</div>
 </template>

@@ -1,34 +1,23 @@
 <template name="home">
-	<header class="page-header">
+	<header>
 		<div class="jumbotron">
 			<h1>
-				{{i18n "application.title"}}
-				<small>{{i18n "application.subhead"}}</small>
+				{{i18n "layout.title"}}
+				<small>{{i18n "layout.explanation"}}</small>
 			</h1>
 		</div>
 	</header>
-	<section class="row home-langs">
-		{{#each programmingLanguage in programmingLanguages}}
-			<div class="col-md-3">
-				<div id="{{programmingLanguage}}-panel" class="panel panel-default">
+	<section class="row">
+		{{#each programmingLanguages}}
+			<div class="col-xs-6 col-sm-4 col-md-3">
+				<div class="panel panel-{{#if isUpcoming}}default{{else}}primary{{/if}}" data-href="{{#unless isUpcoming}}{{_id}}{{/unless}}">
 					<div class="panel-heading">
-						<h3 class="panel-title">{{programmingLanguageName programmingLanguage}}</h3>
+						<h2 class="panel-title">{{i18nProgrammingLanguage _id}}</h2>
 					</div>
-					<div class="panel-body">
-						{{programmingLanguageDescription programmingLanguage}}
-					</div>
-				</div>
-			</div>
-		{{/each}}
-		{{#each programmingLanguage in programmingLanguagesUpcoming}}
-			<div class="col-md-3">
-				<div id="{{programmingLanguage}}" class="panel panel-default disabled">
-					<div class="panel-heading">
-						<h3 class="panel-title">{{programmingLanguageName programmingLanguage}}</h3>
-					</div>
-					<div class="panel-body">
-						{{programmingLanguageDescription programmingLanguage}}
-					</div>
+					<div class="panel-body">{{i18nProgrammingLanguageDescription _id}}</div>
+					{{#unless isUpcoming}}
+						<div class="panel-footer">{{nofExercises _id}}</div>
+					{{/unless}}
 				</div>
 			</div>
 		{{/each}}

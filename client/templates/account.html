@@ -1,0 +1,8 @@
+<template name="account">
+	{{#if currentUser}}
+		<h2>{{i18n "account.title"}}</h2>
+	{{else}}
+		<h2>{{i18n "account.loginTitle"}}</h2>
+		{{> atForm}}
+	{{/if}}
+</template>

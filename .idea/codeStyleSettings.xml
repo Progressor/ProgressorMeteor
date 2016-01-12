@@ -112,7 +112,6 @@
           <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="true" />
           <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true" />
           <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
-          <option name="SPACE_WITHIN_BRACKETS" value="true" />
           <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
           <option name="PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE" value="true" />
           <indentOptions>
@@ -170,6 +169,5 @@
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
-    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Custom" />
   </component>
 </project>
