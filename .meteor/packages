@@ -27,6 +27,7 @@ accounts-password       # email - password login provider
 accounts-ui             # A turn-key user interface for Meteor Accounts.
 underscore              # underscore.js library
 less                    # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
+markdown                # markdown support
 
 anti:i18n               # A simple (The simplest possible? Perhaps) i18n package for Meteor.
 huttonr:bootstrap3      # Bootstrap 3 for Meteor - Modular, configurable, customizable.

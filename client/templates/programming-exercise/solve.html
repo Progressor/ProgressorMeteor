@@ -1,116 +1,73 @@
 <template name="programmingSolve">
 	<header>
-		<ol class="breadcrumb">
-			<li><a href="{{pathFor "home"}}">{{i18n "home.title"}}</a></li>
-			<!-- ToDo: Load from database -->
-			<li><a href="{{pathFor "exerciseSearch"}}">{{programmingLanguage}}</a></li>
-			<li class="active">Exercise name</li>
-		</ol>
-	</header>
-	<div class="row">
-		<div class="col-md-5">
-			<!-- ToDo: Load from database -->
-			<h2> {{i18nExerciseName this}} </h2>
-		</div>
-		<div class="col-md-7">
-			<nav>
+		<nav>
+			<ol class="breadcrumb">
+				<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+				<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
+				<li class="active">{{i18nCategoryName category}}</li>
+				<li class="active">{{i18nDifficulty difficulty}}</li>
+				<li class="active">{{i18nExerciseName this}}</li>
+			</ol>
+		</nav>
+		<div class="row">
+			<div class="col-sm-9">
+				<h2> {{i18nExerciseName this}} </h2>
+			</div>
+			<!--<div class="col-sm-3">
 				<ul class="pager pull-right">
-					<li><a href="#">{{i18n "previous.title"}}</a></li>
-					<li><a href="#">{{i18n "next.title"}}</a></li>
+					<li><a href="#">{{i18n "exercise.previousButton"}}</a></li>
+					<li><a href="#">{{i18n "exercise.nextButton"}}</a></li>
 				</ul>
-			</nav>
+			</div>-->
 		</div>
-	</div>
-	<section class="row">
-		<div class="col-md-12">
-			<!-- ToDo: Load from database -->
-			<div class="well margin-panel">
-				Given an array of ints, is it possible to choose a group of some of the ints, such that the group sums to the given target?
-				This is a classic backtracking recursion problem. Once you understand the recursive backtracking strategy in this problem, you can use the same pattern for many problems to search a space of choices.
-				Rather than looking at the whole array, our convention is to consider the part of the array starting at index start and continuing to the end of the array. The caller can specify the whole array simply by passing start as 0.
-				No loops are needed - the recursive calls progress down the array.
+	</header>
+	<section>
+		<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
+		<p class="well">
+			{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
+		</p>
+		<div class="row">
+			<div class="col-md-7">
+				<div class="form-group">
+					<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
+					<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}"></textarea>
+				</div>
+				<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
 			</div>
-		</div>
-	</section>
-	<div class="row">
-		<section class="col-md-7">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title text-center"><strong>{{i18n "code.title"}}</strong></h3>
-				</div>
-				<div class="panel-body">
-					<section class="form-horizontal">
-						<div class="form-group">
-							<!-- ToDo: Load from database -->
-					<textarea id="fragment" rows="10" cols="20" class="form-control">public boolean simplyReturn(boolean isTrue) {
-	return isTrue;
-}
-					</textarea>
-						</div>
-						<div class="form-group">
-							<div class="col-md-12">
-								<!-- <Strong>Result:</Strong> {//{result}} -->
-								<button id="btn-compile" class="btn btn-default">{{i18n "compile.title"}}</button>
-							</div>
-						</div>
-					</section>
-				</div>
-			</div>
-		</section>
-		<section class="col-md-5">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title text-center">{{i18n "testCase.titlePlural"}}</h3>
-				</div>
-				<table id="execResult" class="table table-bordered">
+			<div class="col-md-5">
+				<table id="execResult" class="table table-condensed table-striped">
 					<thead>
 						<tr>
-							<th>{{i18n "testCase.title"}}</th>
-							<th>{{i18n "expectedResult.title"}}</th>
-							<th>{{i18n "actualResult.title"}}</th>
+							<th scope="col" colspan="2">{{i18n "exercise.testCase.descriptionLabel"}}</th>
+							<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
+							<th scope="col">{{i18n "exercise.testCase.resultLabel"}}</th>
 						</tr>
 					</thead>
-					<!-- ToDo: Load from database -->
 					<tbody>
-						<tr>
-							<td>groupSum(0, {2, 4, 8}, 10)</td>
-							<td>True</td>
-							<td>Ok</td>
-						</tr>
-						<tr>
-							<td>groupSum(0, {2, 4, 8}, 14)</td>
-							<td>True</td>
-							<td>Error</td>
-						</tr>
-						<tr>
-							<td>groupSum(0, {2, 4, 8}, 9)</td>
-							<td>False</td>
-							<td>Ok</td>
-						</tr>
+						{{#each testCases}}
+							{{#if visible}}
+								<tr>
+									<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
+									<td>{{testCaseSignature this}}</td>
+									<td>
+										<pre>{{testCaseExpectedOutput this}}</pre>
+									</td>
+									<td>
+										<pre>{{testCaseActualOutput this}}</pre>
+									</td>
+								</tr>
+							{{/if}}
+						{{/each}}
 					</tbody>
 				</table>
 			</div>
-		</section>
-	</div>
-	<div class="row">
-		<section class="col-md-12">
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<h4><strong>{{i18n "resources.title"}}</strong></h4>
-					<!-- ToDo: Load from database -->
-					<ul>
-						<li>Java API
-							<a href="http://docs.oracle.com/javase/8/docs/api">http://docs.oracle.com/javase/8/docs/api </a></li>
-						<li>JavaFX API
-							<a href="http://docs.oracle.com/javase/8/javafx/api">http://docs.oracle.com/javase/8/javafx/api </a></li>
-						<li>JavaFX CSS Reference
-							<a href="http://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html">http://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html </a>
-						</li>
-						<li>JavaEE Reference <a href="http://docs.oracle.com/javaee/7/api">http://docs.oracle.com/javaee/7/api </a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</div>
+		</div>
+	</section>
+	<hr />
+	<section>
+		<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nCategoryName category)}}</h3>
+		<p>
+			{{#markdown}}{{i18nCategoryDescription category}}{{/markdown}}
+		</p>
+	</section>
 </template>

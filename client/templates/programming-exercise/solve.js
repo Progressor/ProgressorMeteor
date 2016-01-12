@@ -1,47 +1,50 @@
+(function () {
+	'use strict';
 
-function i18nName(elem) {
-	return (_.findWhere(elem.names, { language: i18n.getLanguage() })
-					|| _.findWhere(elem.names, { language: i18n.getDefaultLanguage() })).name;
-}
-function i18nDescription(elem) {
-	return (_.findWhere(elem.descriptions, { language: i18n.getLanguage() })
-					|| _.findWhere(elem.descriptions, { language: i18n.getDefaultLanguage() })).description;
-}
+	var exercise;
 
-Template.programmingSolve.helpers(
-	{
-		result: function () {
-			return Session.get('result');
-		},
-		exerciseID: function () {
-			return params._id;
-		},
-		i18nExerciseName: i18nName,
-		i18nDescription: i18nDescription,
-		fragment: function () {
-			Meteor.call('getFragment',
-									this.programmingLanguage,
-									this,
-									function (res) {
-										return res;
-									})
-		},
-		fragTest: function () {
-			return JSON.stringify(this);
-		}
+	Template.programmingSolve.onCreated(function () {
+		exercise = Progressor.exercises.findOne();
+		Session.set('ExecuteResult', null);
 	});
 
-Template.programmingSolve.events(
-	{
-		'click #btn-compile': function () {
-			var ex = Exercises.findOne({_id: this._id});
-			Meteor.call('execute',
-									ex.programmingLanguage,
-									ex,
-									$('#fragment').val(),
-									function (err, res) {
-										$('#execResult').append(err ? 'error' : JSON.stringify(res));
-									});
-		}
+	Template.programmingSolve.onRendered(function () {
+		var res = Progressor.results.findOne();
+		if (res)
+			$('#textarea-fragment').val(res.fragment);
+		else
+			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
+				var $fragment = $('#textarea-fragment');
+				if (!err && !$fragment.val().length)
+					$fragment.val(res);
+			});
 	});
 
+	Template.programmingSolve.helpers(
+		{
+			exerciseSearchData: () => ({ _id: exercise.programmingLanguage }),
+			i18nProgrammingLanguage: exc => i18n.getProgrammingLanguage(exc.programmingLanguage),
+			i18nCategoryName: i18n.getName,
+			i18nCategoryDescription: i18n.getDescription,
+			i18nExerciseName: i18n.getName,
+			i18nExerciseDescription: i18n.getDescription,
+			i18nDifficulty: i18n.getDifficulty,
+			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
+			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
+			testCaseSuccess: cas => Progressor.isSuccess(exercise, cas, Session.get('ExecuteResult')),
+			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise, cas, Session.get('ExecuteResult'))
+		});
+
+	Template.programmingSolve.events(
+		{
+			'click #button-execute': function () {
+				var frg = $('#textarea-fragment').val();
+				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, function (err, res) {
+					Session.set('ExecuteResult', err ? null : res);
+					if (!err && Meteor.userId())
+						Meteor.call('saveResult', exercise, frg, res);
+				});
+			}
+		});
+
+})();

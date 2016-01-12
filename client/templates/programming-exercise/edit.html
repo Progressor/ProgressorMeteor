@@ -1,10 +1,22 @@
-<!--ToDo: implement creation for: Multiple Choice, Free text -->
-<!--ToDo: i18n -->
-<!--ToDo: Load data from database -->
 <template name="programmingEdit">
+	<header>
+		{{#if this}}
+			<nav>
+				<ol class="breadcrumb">
+					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
+					<li class="active">{{i18nCategoryName category}}</li>
+					<li class="active">{{i18nDifficulty difficulty}}</li>
+					<li class="active">{{i18nExerciseName this}}</li>
+				</ol>
+			</nav>
+			<h2>{{i18n "exercise.editTitle" (i18nExerciseName this)}}</h2>
+		{{else}}
+			<h2>{{i18n "exercise.createTitle"}}</h2>
+		{{/if}}
+	</header>
 	<div class="row">
 		<div class="col-md-12">
-			<h2>Create an exercise</h2>
 			<section>
 				<form class=" well form-horizontal">
 					<fieldset>

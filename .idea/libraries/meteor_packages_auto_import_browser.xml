@@ -38,6 +38,8 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jquery/1.11.4/web.browser/post.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/launch-screen/1.0.4/web.browser/default-behavior.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/launch-screen/1.0.4/web.browser/mobile-launch-screen.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/showdown.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/template-integration.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/logging/1.0.8/web.browser/logging.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/accounts-base/1.2.2/web.browser/url_client.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/accounts-base/1.2.2/web.browser/accounts_client.js" />
@@ -290,6 +292,8 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jquery/1.11.4/web.browser/post.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/launch-screen/1.0.4/web.browser/default-behavior.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/launch-screen/1.0.4/web.browser/mobile-launch-screen.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/showdown.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/template-integration.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/logging/1.0.8/web.browser/logging.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/accounts-base/1.2.2/web.browser/url_client.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/accounts-base/1.2.2/web.browser/accounts_client.js" />

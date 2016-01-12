@@ -1,9 +1,11 @@
 (function () {
 	'use strict';
 
-	Session.setDefault('ExerciseSearchName', null);
-	Session.setDefault('ExerciseSearchCategory', null);
-	Session.setDefault('ExerciseSearchDifficulty', null);
+	Template.programmingSolve.onCreated(function () {
+		Session.set('ExerciseSearchName', null);
+		Session.set('ExerciseSearchCategory', null);
+		Session.set('ExerciseSearchDifficulty', null);
+	});
 
 	Template.exerciseSearch.helpers(
 		{
@@ -21,12 +23,9 @@
 				if (Session.get('ExerciseSearchDifficulty'))
 					qry.difficulty = Session.get('ExerciseSearchDifficulty');
 				if (_.keys(qry).length)
-					return Progressor.exercises.find(qry, { limit: 25 }).map(exc => _.extend(exc, {
-						category: Progressor.categories.findOne({ _id: exc.category_id })
-					}));
+					return Progressor.exercises.find(qry, { limit: 25 })
 			}
-		})
-	;
+		});
 
 	Template.exerciseSearch.events(
 		{

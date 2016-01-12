@@ -9,7 +9,7 @@
 			executorConnection = thrift.createConnection('localhost', 9090);
 		return thrift.createClient(Executor, executorConnection);
 	}
-
+	
 	Meteor.methods(
 		{
 			getBlacklist(language) {
