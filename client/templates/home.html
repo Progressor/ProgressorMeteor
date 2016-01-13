@@ -14,7 +14,12 @@
 					<div class="panel-heading">
 						<h2 class="panel-title">{{i18nProgrammingLanguage _id}}</h2>
 					</div>
-					<div class="panel-body">{{i18nProgrammingLanguageDescription _id}}</div>
+					<div class="panel-body">
+						<p>{{i18nProgrammingLanguageDescription _id}}</p>
+						{{#if isUpcoming}}
+							<em>{{i18n "exercise.upcoming"}}</em>
+						{{/if}}
+					</div>
 					{{#unless isUpcoming}}
 						<div class="panel-footer">{{nofExercises _id}}</div>
 					{{/unless}}

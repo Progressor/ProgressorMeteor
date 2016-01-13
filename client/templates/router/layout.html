@@ -46,7 +46,21 @@
 							</ul>
 						</li>
 						<li role="separator" class="divider-vertical"></li>
-						<li>{{#linkTo route="account"}}{{#if currentUser}}{{i18n "account.title"}}{{else}}{{i18n "account.loginTitle"}}{{/if}}{{/linkTo}}</li>
+						<li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								{{#if currentUser}}{{i18n "account.title"}}{{else}}{{i18n "account.loginTitle"}}{{/if}}
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								{{#if currentUser}}
+									<li>{{#linkTo route="account"}}{{currentUserName}}{{/linkTo}}</li>
+									<li>{{#linkTo route="account" query="action=logout" id="link-logout"}}{{i18n "account.logoutButton"}}{{/linkTo}}</li>
+								{{else}}
+									<li>{{#linkTo route="account"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
+									<li>{{#linkTo route="account"}}{{i18n "account.registerButton"}}{{/linkTo}}</li>
+								{{/if}}
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>

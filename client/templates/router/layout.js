@@ -8,13 +8,13 @@
 				var act = i18n.getLanguage();
 				return { _id: id, name: name, isActive: id === act };
 			}),
-			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), function (id) {
-				return { _id: id, name: i18n.getProgrammingLanguage(id) };
-			})
+			currentUserName: () => Meteor.user().emails[0].address,
+			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), id => ({ _id: id, name: i18n.getProgrammingLanguage(id) }))
 		});
 
 	Template.layout.events(
 		{
+			'click #link-logout': () => Meteor.logout(),
 			'click .i18n.lang'(ev) {
 				ev.preventDefault();
 				i18n.setLanguage($(ev.currentTarget).data('lang'));

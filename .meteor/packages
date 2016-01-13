@@ -30,6 +30,7 @@ less                    # LESS extends CSS with dynamic behavior such as variabl
 markdown                # markdown support
 
 anti:i18n               # A simple (The simplest possible? Perhaps) i18n package for Meteor.
+momentjs:moment         # A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.
 huttonr:bootstrap3      # Bootstrap 3 for Meteor - Modular, configurable, customizable.
 useraccounts:bootstrap  # Meteor sign up and sign in templates (and much more!) styled for twitter Bootstrap
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.

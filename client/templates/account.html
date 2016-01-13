@@ -1,8 +1,48 @@
 <template name="account">
-	{{#if currentUser}}
-		<h2>{{i18n "account.title"}}</h2>
-	{{else}}
-		<h2>{{i18n "account.loginTitle"}}</h2>
-		{{> atForm}}
-	{{/if}}
+	<header>
+		<h2>{{#if currentUser}}{{i18n "account.title"}}{{else}}{{i18n "account.loginTitle"}}{{/if}}</h2>
+	</header>
+	<div class="row">
+		{{#if currentUser}}
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">{{currentUserName}}</div>
+					{{#if exercises}}
+						<table class="table table-condensed table-striped">
+							<thead>
+								<tr>
+									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">{{i18n "exercise.solvedLabel"}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each exercises}}
+									<tr>
+										<td>{{i18nExerciseName exercise}}</td> <!-- linkTo route="programmingSolve" data=(programmingSolveData this) ### may have been changed -->
+										<td>{{i18nCategoryName exercise.category}}</td>
+										<td>{{i18nDifficulty exercise.difficulty}}</td>
+										<td>{{i18nDateTime solved}}</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					{{else}}
+						<div class="panel-body">{{i18n "form.noResults"}}</div>
+					{{/if}}
+				</div>
+			</div>
+			<div class="col-md-3 text-right">
+				<div class="btn-group-vertical">
+					<button id="button-logout" class="btn btn-default btn-sm">{{i18n "account.logoutButton"}}</button>
+					<button id="button-logout-others" class="btn btn-default btn-sm">{{i18n "account.logoutOtherClientsButton"}}</button>
+				</div>
+			</div>
+		{{else}}
+			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+				{{> atForm}}
+			</div>
+		{{/if}}
+	</div>
 </template>
