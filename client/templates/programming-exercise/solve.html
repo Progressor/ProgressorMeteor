@@ -32,7 +32,14 @@
 					<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
 					<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}"></textarea>
 				</div>
-				<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+				<div class="row">
+					<div class="col-sm-4">
+						<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+					</div>
+					<div class="col-sm-8 text-danger text-right">
+						{{blackListMessage}}
+					</div>
+				</div>
 			</div>
 			<div class="col-md-5">
 				<table id="execResult" class="table table-condensed table-striped">

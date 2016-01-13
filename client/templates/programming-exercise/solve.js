@@ -1,11 +1,12 @@
 (function () {
 	'use strict';
 
-	var exercise;
+	var exercise, blacklist, blacklistLoading;
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
 		Session.set('ExecuteResult', null);
+		Session.set('BlacklistMatch', null);
 	});
 
 	Template.programmingSolve.onRendered(function () {
@@ -29,6 +30,7 @@
 			i18nExerciseName: i18n.getName,
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
+			blackListMessage: () => Session.get('BlacklistMatch') ? i18n('exercise.blacklistMatch', Session.get('BlacklistMatch')) : null,
 			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
 			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
 			testCaseSuccess: cas => Progressor.isSuccess(exercise, cas, Session.get('ExecuteResult')),
@@ -37,14 +39,26 @@
 
 	Template.programmingSolve.events(
 		{
-			'click #button-execute': function () {
+			'click #button-execute'() {
 				var frg = $('#textarea-fragment').val();
 				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, function (err, res) {
 					Session.set('ExecuteResult', err ? null : res);
 					if (!err && Meteor.userId())
 						Meteor.call('saveResult', exercise, frg, res);
 				});
-			}
+			},
+			'keyup #textarea-fragment': _.throttle(function () {
+				if (!blacklist && !blacklistLoading) {
+					blacklistLoading = true;
+					Meteor.call('getBlacklist', exercise.programmingLanguage, function (err, res) {
+						blacklistLoading = false;
+						if (!err) blacklist = res;
+					});
+				} else if (blacklist) {
+					var frg = $('#textarea-fragment').val();
+					Session.set('BlacklistMatch', _.find(blacklist, blk => frg.indexOf(blk) >= 0));
+				}
+			}, 500)
 		});
 
 })();
