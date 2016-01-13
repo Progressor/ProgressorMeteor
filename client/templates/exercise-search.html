@@ -34,6 +34,7 @@
 					<label for="input-name" class="col-md-3 control-label">{{i18n "exercise.nameLabel"}}</label>
 					<div class="col-md-9">
 						<input type="text" id="input-name" class="form-control" placeholder="{{i18n "form.textFilter"}}" />
+						<span class="help-block">{{i18n "form.minLength" 3}}</span>
 					</div>
 				</div>
 				<div class="form-group">
@@ -71,7 +72,7 @@
 					<tbody>
 						{{#each results}}
 							<tr>
-								<td>{{i18nExerciseName this}}</td>
+								<td>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
 								<td>{{i18nCategoryName category}}</td>
 								<td>{{i18nDifficulty difficulty}}</td>
 							</tr>
@@ -79,7 +80,7 @@
 					</tbody>
 				</table>
 			{{else}}
-				<div class="text-muted">{{i18n "form.noResults"}}</div>
+				<div class="text-muted">{{message}}</div>
 			{{/if}}
 		</section>
 	</div>

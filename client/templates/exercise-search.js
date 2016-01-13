@@ -24,6 +24,14 @@
 					qry.difficulty = Session.get('ExerciseSearchDifficulty');
 				if (_.keys(qry).length)
 					return Progressor.exercises.find(qry, { limit: 25 })
+			},
+			message() {
+				if (Session.get('ExerciseSearchName') && Session.get('ExerciseSearchName').length > 2
+						|| Session.get('ExerciseSearchCategory')
+						|| Session.get('ExerciseSearchDifficulty'))
+					return i18n('form.noResults');
+				else
+				return i18n('form.noQuery');
 			}
 		});
 
