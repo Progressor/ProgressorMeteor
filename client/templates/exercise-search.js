@@ -23,7 +23,7 @@
 				if (Session.get('ExerciseSearchDifficulty'))
 					qry.difficulty = Session.get('ExerciseSearchDifficulty');
 				if (_.keys(qry).length)
-					return Progressor.exercises.find(qry, { limit: 25 })
+					return Progressor.exercises.find(qry, { limit: 25 }).fetch()
 			},
 			message() {
 				if (Session.get('ExerciseSearchName') && Session.get('ExerciseSearchName').length > 2
