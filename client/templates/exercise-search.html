@@ -41,7 +41,7 @@
 					<label for="select-category" class="col-md-3 control-label">{{i18n "exercise.categoryLabel"}}</label>
 					<div class="col-md-9">
 						<select id="select-category" class="form-control">
-							<option value="">{{i18n "form.filterAll"}}</option>
+							<option value="">{{i18n "form.selectAll"}}</option>
 							{{#each categories}}
 								<option value="{{_id}}">{{i18nCategoryName this}}</option>
 							{{/each}}
@@ -52,7 +52,7 @@
 					<label for="select-difficulty" class="col-md-3 control-label">{{i18n "exercise.difficultyLabel"}}</label>
 					<div class="col-md-9">
 						<select id="select-difficulty" class="form-control">
-							<option value="">{{i18n "form.filterAll"}}</option>
+							<option value="">{{i18n "form.selectAll"}}</option>
 							{{#each difficulties}}
 								<option value="{{_id}}">{{i18nDifficulty _id}}</option>
 							{{/each}}

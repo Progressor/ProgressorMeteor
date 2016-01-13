@@ -4,10 +4,11 @@
 			<nav>
 				<ol class="breadcrumb">
 					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
+					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
 					<li class="active">{{i18nCategoryName category}}</li>
 					<li class="active">{{i18nDifficulty difficulty}}</li>
-					<li class="active">{{i18nExerciseName this}}</li>
+					<li>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+					<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
 				</ol>
 			</nav>
 			<h2>{{i18n "exercise.editTitle" (i18nExerciseName this)}}</h2>
@@ -16,110 +17,141 @@
 		{{/if}}
 	</header>
 	<div class="row">
-		<div class="col-md-12">
-			<section>
-				<form class=" well form-horizontal">
-					<fieldset>
-						<legend>Porgramming exercise</legend>
-						<div class="form-group">
-							<label for="exercise-type" class="col-md-2 control-label">Type of exercise</label>
-							<div class="col-md-8">
-								<label class="radio-inline">
-									<input type="radio" name="typeOfExercise" id="radioProgramming" value="programming" checked> Programming
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="typeOfExercise" id="radioMultipleChoice" value="multipleChoice"> Multiple Choice
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="typeOfExercise" id="radioFreeText" value="freetext"> Free text
-								</label>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="exercise-type" class="col-md-2 control-label">Exercise Name</label>
-							<div class="col-md-5">
-								<input class="form-control" id="input-exName" type="text">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="exercise" class="col-md-2 control-label">Specifications</label>
-							<div class="col-md-2">
-								<select class="form-control" id="select-language">
-									<option disabled selected style="display: none;">Language</option>
-									<option>Java</option>
-									<option>C++</option>
-									<option>C#</option>
-								</select>
-							</div>
-							<div class="text-center  col-md-1"><span class="control-label glyphicon glyphicon-menu-right"></span>
-							</div>
-							<div class="col-md-2">
-								<select class="form-control" id="select-topic">
-									<option disabled selected style="display: none;">Topic</option>
-									<option>String</option>
-									<option>Arrays</option>
-									<option>Recursion</option>
-								</select>
-							</div>
-							<div class="text-center col-md-1"><span class="control-label glyphicon glyphicon-menu-right"></span></div>
-							<div class="col-md-2">
-								<select class="form-control" id="select-topic">
-									<option disabled selected style="display: none;">Level</option>
-									<option>Beginner</option>
-									<option>Intermediate</option>
-									<option>Expert</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-10 col-md-offset-1">
-								<textarea class="form-control" rows="6" placeholder="Exercise description"></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="functionName" class="col-md-2 control-label">Function Name</label>
-							<div class="col-md-3">
-								<input class="form-control" id="input-funcName" type="text">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="ParameterName" class="col-md-2 control-label">Parameter(s)</label>
-							<div class="col-md-3">
-								<input class="form-control" id="input-funcName" type="text" placeholder="Name">
-							</div>
-							<div class="col-md-3">
-								<select class="form-control" id="select-topic">
-									<option disabled selected style="display: none;">Type</option>
-									<option>String</option>
-									<option>Array</option>
-									<option>Array list</option>
-								</select>
-							</div>
-							<div class="col-md-1">
-								<button class="btn btn-default" type=""><span class="glyphicon glyphicon-plus"></span></button>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="ParameterName" class="col-md-2 control-label">Return type</label>
-							<div class="col-md-3">
-								<select class="form-control" id="select-topic">
-									<option>Void</option>
-									<option>String</option>
-									<option>Int</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-10 col-md-offset-1">
-								<textarea class="form-control" rows="4" placeholder="Resources"></textarea>
-							</div>
-						</div>
-						<div class="col-md-10 col-md-offset-1">
-							<button class="btn btn-success pull-right" type="">Publish</button>
-						</div>
-					</fieldset>
-				</form>
-			</section>
+		<div class="col-md-offset-4 col-md-8">
+			<ul class="nav nav-tabs" role="tablist">
+				{{#each languages}}
+					<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{name}}</a></li>
+				{{/each}}
+			</ul>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group form-group-sm">
+				<label for="select-language">{{i18n "exercise.programmingLanguageLabel"}}</label>
+				<select id="select-language" class="form-control">
+					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+					{{#each i18nProgrammingLanguages}}
+						<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-group form-group-sm">
+				<label for="select-category">{{i18n "exercise.categoryLabel"}}</label>
+				<select id="select-category" class="form-control">
+					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+					{{#each i18nCategories}}
+						<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-group form-group-sm">
+				<label for="select-difficulty">{{i18n "exercise.difficultyLabel"}}</label>
+				<select id="select-difficulty" class="form-control">
+					<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
+					{{#each i18nDifficulties}}
+						<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+					{{/each}}
+				</select>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="tab-content">
+				{{#each languages}}
+					<div role="tabpanel" id="tab-{{_id}}" class="tab-pane {{#if isActive}}active{{/if}}">
+						<div class="form-group form-group-sm">
+							<label for="input-name-{{_id}}">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+							<input type="text" id="input-name-{{_id}}" class="form-control" value="{{exerciseName}}" />
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="textarea-name-{{_id}}">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
+							<textarea id="textarea-name-{{_id}}" rows="5" cols="40" class="form-control">{{exerciseDescription}}</textarea>
+							<div class="help-block">
+								{{i18n "form.supportsMarkdown"}}
+								<a href="https://help.github.com/articles/markdown-basics/#styling-text" target="_blank"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+							</div>
+						</div>
+					</div>
+				{{/each}}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<section class="col-md-4">
+			<h3>{{i18n "exercise.functionsSubtitle"}}</h3>
+			<div class="dyn-repeatable">
+				<div class="form-group form-group-sm">
+					<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+					<label for="input-function-name">{{i18n "exercise.function.nameLabel"}}</label>
+					<input type="text" id="input-function-name" class="form-control" />
+				</div>
+				<div class="form-group form-group-sm">
+					<label for="input-function-type">{{i18n "exercise.function.returnTypeLabel"}}</label>
+					<input type="text" id="input-function-type" class="form-control" />
+				</div>
+				<div class="dyn-repeatable">
+					<div class="form-group form-group-sm">
+						<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+						<label for="input-parameter-name">{{i18n "exercise.function.parameterNameLabel"}}</label>
+						<input type="text" id="input-parameter-name" class="form-control" />
+					</div>
+					<div class="form-group form-group-sm left-indent">
+						<label for="input-parameter-type">{{i18n "exercise.function.parameterTypeLabel"}}</label>
+						<input type="text" id="input-parameter-type" class="form-control" />
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="col-md-8">
+			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
+			<div class="dyn-repeatable">
+				<div class="form-group form-group-sm">
+					<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+					<label for="select-testcase-function">{{i18n "exercise.testCase.functionLabel"}}</label>
+					<select id="select-testcase-function" class="form-control">
+						<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
+					</select>
+				</div>
+				<div class="form-group form-group-sm left-indent">
+					<label for="input-testcase-input">{{i18n "exercise.testCase.inputLabel"}}</label>
+					<input type="text" id="input-testcase-input" class="form-control" />
+				</div>
+				<div class="form-group form-group-sm left-indent">
+					<label for="input-testcase-expectedoutput">{{i18n "exercise.testCase.expectedOutputLabel"}}</label>
+					<input type="text" id="input-testcase-expectedoutput" class="form-control" />
+				</div>
+				<div class="checkbox left-indent">
+					<label>
+						<input type="checkbox" id="checkbox-testcase-visible" /> {{i18n "exercise.testCase.visibleLabel"}}
+					</label>
+				</div>
+			</div>
+		</section>
+	</div>
+	<aside class="row">
+		<div class="col-md-4">
+			<div class="help-block">
+				<em>{{i18n "exercise.help.types"}}</em>
+				<ul class="list-inline">
+					{{#each executorTypes}}
+						<li>{{label}}</li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="help-block">
+				<em>{{i18n "exercise.help.values"}}</em>
+				<ul class="list-inline">
+					<li>Progressor</li>
+					<li>Bern University of Applied Sciences</li>
+					<li>2015</li>
+					<li>3.141592653</li>
+					<li>-1,0,1,2</li>
+					<li>strut1,touwm1,weidj1</li>
+					<li>strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann</li>
+				</ul>
+			</div>
+		</div>
+	</aside>
 </template>

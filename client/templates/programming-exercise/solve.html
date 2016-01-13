@@ -1,13 +1,20 @@
 <template name="programmingSolve">
 	<header>
-		<nav>
-			<ol class="breadcrumb">
-				<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-				<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
-				<li class="active">{{i18nCategoryName category}}</li>
-				<li class="active">{{i18nDifficulty difficulty}}</li>
-				<li class="active">{{i18nExerciseName this}}</li>
-			</ol>
+		<nav class="row">
+			<div class="col-sm-8">
+				<ol class="breadcrumb">
+					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
+					<li class="active">{{i18nCategoryName category}}</li>
+					<li class="active">{{i18nDifficulty difficulty}}</li>
+					<li class="active">{{i18nExerciseName this}}</li>
+				</ol>
+			</div>
+			<div class="col-sm-4 text-right">
+				<ul class="breadcrumb">
+					<li>{{#linkTo route="programmingEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
+				</ul>
+			</div>
 		</nav>
 		<div class="row">
 			<div class="col-sm-9">

@@ -4,10 +4,7 @@
 	Template.layout.helpers(
 		{
 			language: () => i18n.getLanguages()[i18n.getLanguage()],
-			languages: () => _.map(i18n.getLanguages(), function (name, id) {
-				var act = i18n.getLanguage();
-				return { _id: id, name: name, isActive: id === act };
-			}),
+			languages: () => _.map(i18n.getLanguages(), (nam, id) =>({ _id: id, name: nam, isActive: id === i18n.getLanguage() })),
 			currentUserName: () => Meteor.user().emails[0].address,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), id => ({ _id: id, name: i18n.getProgrammingLanguage(id) }))
 		});

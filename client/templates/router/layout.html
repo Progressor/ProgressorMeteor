@@ -68,10 +68,10 @@
 	</header>
 	<div class="container">
 		<div class="row">
+			{{#unless customTitle}}
+				<h1 class="hidden">{{i18n "layout.title"}}</h1>
+			{{/unless}}
 			<main class="{{#if showAside}}col-lg-9{{else}}col-lg-12{{/if}}">
-				{{#unless customTitle}}
-					<h1 class="hidden">{{i18n "layout.title"}}</h1>
-				{{/unless}}
 				{{> yield}}
 			</main>
 			{{#if showAside}}
