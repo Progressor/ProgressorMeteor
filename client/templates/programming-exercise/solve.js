@@ -40,8 +40,12 @@
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
-				var frg = $('#textarea-fragment').val();
-				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => Session.set('ExecuteResult', err ? null : res));
+				var frg = $('#textarea-fragment').val(), $res = $('#table-testcases').css('opacity', 0.333);
+				//$res.find('.glyphicon').removeClass('text-success text-danger');
+				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
+					Session.set('ExecuteResult', err ? null : res);
+					$('#table-testcases').css('opacity', 1);
+				});
 			},
 			'keyup #textarea-fragment': _.throttle(function () {
 				if (!blacklist && !blacklistLoading) {
