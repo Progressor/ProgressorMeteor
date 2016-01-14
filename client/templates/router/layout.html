@@ -1,6 +1,6 @@
 <template name="layout">
 	<header class="navbar navbar-default navbar-fixed-top">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
 					<span class="sr-only">{{i18n "layout.navigationToggle"}}</span>
@@ -66,7 +66,7 @@
 			</div>
 		</div>
 	</header>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
 			{{#unless customTitle}}
 				<h1 class="hidden">{{i18n "layout.title"}}</h1>
