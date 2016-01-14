@@ -85,7 +85,15 @@
 					testCases = _.map(exercise.testCases, (cas) => new ttypes.TestCase(cas));
 
 				var client = getExecutorClient();
-				return Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+				var results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+
+				if (this.userId) {
+					var qry = { user_id: this.userId, exercise_id: exercise._id };
+					var del = Progressor.results.findOne(qry);
+					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), fragment: fragment, results: results, solved: new Date() }));
+				}
+
+				return results;
 			}
 		});
 

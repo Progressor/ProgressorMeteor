@@ -41,11 +41,7 @@
 		{
 			'click #button-execute'() {
 				var frg = $('#textarea-fragment').val();
-				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, function (err, res) {
-					Session.set('ExecuteResult', err ? null : res);
-					if (!err && Meteor.userId())
-						Meteor.call('saveResult', exercise, frg, res);
-				});
+				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => Session.set('ExecuteResult', err ? null : res));
 			},
 			'keyup #textarea-fragment': _.throttle(function () {
 				if (!blacklist && !blacklistLoading) {
