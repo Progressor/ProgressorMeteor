@@ -1,87 +1,103 @@
 <template name="programmingSolve">
-	<header>
-		<nav class="row">
-			<div class="col-sm-8">
-				<ol class="breadcrumb">
-					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage this}}{{/linkTo}}</li>
-					<li class="active">{{i18nCategoryName category}}</li>
-					<li class="active">{{i18nDifficulty difficulty}}</li>
-					<li class="active">{{i18nExerciseName this}}</li>
-				</ol>
-			</div>
-			<div class="col-sm-4 text-right">
-				<ul class="breadcrumb">
-					<li>{{#linkTo route="programmingEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
-				</ul>
-			</div>
-		</nav>
-		<div class="row">
-			<div class="col-sm-9">
-				<h2> {{i18nExerciseName this}} </h2>
-			</div>
-			<!--<div class="col-sm-3">
+	{{#with safeExercise}}
+		<header>
+			<nav class="row">
+				<div class="col-sm-8">
+					<ol class="breadcrumb">
+						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
+						<li class="active">{{i18nCategoryName category}}</li>
+						<li class="active">{{i18nDifficulty difficulty}}</li>
+						{{#unless isResult}}
+							<li class="active">{{i18nExerciseName this}}</li>
+						{{else}}
+							<li>{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}</li>
+						{{/unless}}
+					</ol>
+				</div>
+				{{#unless isResult}}
+					<div class="col-sm-4 text-right">
+						<ul class="breadcrumb">
+							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
+						</ul>
+					</div>
+				{{/unless}}
+			</nav>
+			<div class="row">
+				<div class="col-sm-9">
+					<h2> {{i18nExerciseName this}} </h2>
+				</div>
+				<!--<div class="col-sm-3">
 				<ul class="pager pull-right">
 					<li><a href="#">{{i18n "exercise.previousButton"}}</a></li>
 					<li><a href="#">{{i18n "exercise.nextButton"}}</a></li>
 				</ul>
 			</div>-->
-		</div>
-	</header>
-	<section>
-		<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
-		<p class="well">
-			{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
-		</p>
-		<div class="row">
-			<div class="col-md-5">
-				<div class="form-group">
-					<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
-					<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}"></textarea>
-				</div>
-				<div class="row">
-					<div class="col-sm-4">
-						<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
-					</div>
-					<div class="col-sm-8 text-danger text-right">
-						{{blackListMessage}}
-					</div>
-				</div>
 			</div>
-			<div class="col-md-7">
-				<table id="table-testcases" class="table table-condensed table-striped">
-					<thead>
-						<tr>
-							<th scope="col" colspan="2">{{i18n "exercise.testCase.descriptionLabel"}}</th>
-							<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
-							<th scope="col">{{i18n "exercise.testCase.resultLabel"}}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{{#each testCases}}
-							{{#if visible}}
+		</header>
+		<section>
+			<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
+			<p class="well">
+				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
+			</p>
+			<div class="row">
+				<div class="col-md-5">
+					<div class="form-group">
+						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
+						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}"></textarea>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+						</div>
+						<div class="col-sm-8 text-danger text-right">
+							{{blackListMessage}}
+						</div>
+					</div>
+				</div>
+				<div class="col-md-7">
+					<table id="table-testcases" class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col" colspan="2">{{i18n "exercise.testCase.descriptionLabel"}}</th>
+								<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
+								<th scope="col">{{i18n "exercise.testCase.resultLabel"}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each testCases}}
+								{{#if visible}}
+									<tr>
+										<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
+										<td>{{testCaseSignature this}}</td>
+										<td>
+											<pre>{{testCaseExpectedOutput this}}</pre>
+										</td>
+										<td>
+											<pre>{{testCaseActualOutput this}}</pre>
+										</td>
+									</tr>
+								{{/if}}
+							{{/each}}
+							{{#if invisibleTestCases}}
 								<tr>
-									<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
-									<td>{{testCaseSignature this}}</td>
-									<td>
-										<pre>{{testCaseExpectedOutput this}}</pre>
-									</td>
-									<td>
-										<pre>{{testCaseActualOutput this}}</pre>
-									</td>
+									<td><span class="glyphicon glyphicon-{{#if invisibleTestCasesSuccess}}ok{{else}}remove{{/if}} text-{{#if invisibleTestCasesSuccess}}success{{else}}danger{{/if}}"></span></td>
+									<td>{{i18n "exercise.testCase.others"}}</td>
+									<td></td>
+									<td></td>
 								</tr>
 							{{/if}}
-						{{/each}}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</div>
-	</section>
-	<hr />
-	<section>
-		<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nCategoryName category)}}</h3>
-		<p>
-			{{#markdown}}{{i18nCategoryDescription category}}{{/markdown}}
-		</p>
-	</section>
+		</section>
+		<hr />
+		<section>
+			<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nCategoryName category)}}</h3>
+			<p>
+				{{#markdown}}{{i18nCategoryDescription category}}{{/markdown}}
+			</p>
+		</section>
+	{{/with}}
 </template>

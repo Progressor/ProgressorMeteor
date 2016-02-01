@@ -19,7 +19,7 @@
 						<div class="panel-body multi-col-2">
 							<ul>
 								{{#each exercises}}
-									<li>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+									<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
 								{{/each}}
 							</ul>
 						</div>
@@ -72,7 +72,7 @@
 					<tbody>
 						{{#each results}}
 							<tr>
-								<td>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+								<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
 								<td>{{i18nCategoryName category}}</td>
 								<td>{{i18nDifficulty difficulty}}</td>
 							</tr>

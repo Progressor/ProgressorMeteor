@@ -7,7 +7,7 @@
 					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
 					<li class="active">{{i18nCategoryName category}}</li>
 					<li class="active">{{i18nDifficulty difficulty}}</li>
-					<li>{{#linkTo route="programmingSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+					<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
 					<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
 				</ol>
 			</nav>
@@ -79,16 +79,14 @@
 			</div>
 			<div class="help-block">
 				{{i18n "form.supportsMarkdown"}}
-				<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text" target="_blank"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+				<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text" title="{{i18n "exercise.help.showButton"}}" target="_blank"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
 			</div>
 		</div>
 	</div>
 	<div id="collapseHelp" class="panel-collapse collapse">
 		<aside class="panel panel-info">
 			<div class="panel-heading">
-				<h4 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a>
-				</h4>
+				<h3 class="panel-title"><a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a></h3>
 			</div>
 			<div class="panel-body">
 				<div class="row">
@@ -122,47 +120,55 @@
 	<div class="row">
 		<section class="col-md-4">
 			<h3>{{i18n "exercise.functionsSubtitle"}}</h3>
+			<div class="row">
+				<div class="col-sm-6">
+					<label class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
+				</div>
+				<div class="col-sm-5">
+					<label class="control-label">
+						{{i18n "exercise.function.returnTypeLabel"}}
+						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+					</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-offset-1 col-sm-5">
+					<label class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
+				</div>
+				<div class="col-sm-6">
+					<label class="control-label">
+						{{i18n "exercise.function.parameterTypeLabel"}}
+						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+					</label>
+				</div>
+			</div>
 			{{#each functions}}
-				<div class="dyn-repeatable container-function" data-var="i" data-index="0">
+				<div class="dyn-repeatable container-function">
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group form-group-sm">
-								<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
-								<label for="input-function-name-0" class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
-								<input type="text" id="input-function-name-0" data-id="input-function-name-{i}" value="{{name}}" class="form-control" />
+								<input type="text" value="{{name}}" class="input-function-name form-control" placeholder="{{i18n "exercise.function.namePlaceholder"}}" />
 							</div>
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-5">
 							<div class="form-group form-group-sm">
-								<label for="input-function-type-0" class="control-label">
-									{{i18n "exercise.function.returnTypeLabel"}}
-									<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
-								</label>
-								<input type="text" id="input-function-type-0" data-id="input-function-type-{i}" value="{{outputType}}" class="form-control exec-type" />
+								<input type="text" value="{{outputType}}" class="input-function-type form-control exec-type" placeholder="{{i18n "exercise.function.returnTypePlaceholder"}}" />
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-offset-1 col-sm-5">
-							<label for="input-parameter-name-0-0" class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
-						</div>
-						<div class="col-sm-6">
-							<label for="input-parameter-type-0-0" class="control-label">
-								{{i18n "exercise.function.parameterTypeLabel"}}
-								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
-							</label>
+						<div class="col-sm-1">
+							<button class="btn btn-success btn-sm dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
 						</div>
 					</div>
 					{{#each inputs}}
-						<div class="row dyn-repeatable container-parameter" data-var="j" data-index="0">
+						<div class="row dyn-repeatable container-parameter">
 							<div class="col-sm-offset-1 col-sm-5">
 								<div class="form-group form-group-sm">
-									<input type="text" id="input-parameter-name-0-0" data-id="input-parameter-name-{i}-{j}" class="form-control" />
+									<input type="text" value="{{name}}" class="input-parameter-name form-control" placeholder="{{i18n "exercise.function.parameterNamePlaceholder"}}" />
 								</div>
 							</div>
 							<div class="col-sm-5">
 								<div class="form-group form-group-sm">
-									<input type="text" id="input-parameter-type-0-0" data-id="input-parameter-type-{i}-{j}" class="form-control exec-type" />
+									<input type="text" value="{{type}}" class="input-parameter-type form-control exec-type" placeholder="{{i18n "exercise.function.parameterTypePlaceholder"}}" />
 								</div>
 							</div>
 							<div class="col-sm-1">
@@ -175,42 +181,62 @@
 		</section>
 		<section class="col-md-8">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
+			<div class="row">
+				<div class="col-sm-2">
+					<label class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
+				</div>
+				<div class="col-sm-4">
+					<label class="control-label">
+						{{i18n "exercise.testCase.inputLabel"}}
+						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+					</label>
+				</div>
+				<div class="col-sm-5">
+					<label class="control-label">
+						{{i18n "exercise.testCase.expectedOutputLabel"}}
+						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+					</label>
+				</div>
+			</div>
 			{{#each testCases}}
-				<div class="dyn-repeatable" data-var="i" data-index="0">
-					<div class="form-group form-group-sm">
-						<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
-						<label for="select-testcase-function-0" class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
-						<select id="select-testcase-function-0" data-id="select-testcase-function-{i}" class="form-control">
-							<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-							{{#each functions this}}
-								{{#if name}}
-									<option selected={{isActive}}>{{name}}</option>
-								{{/if}}
-							{{/each}}
-						</select>
+				<div class="row dyn-repeatable">
+					<div class="col-sm-2">
+						<div class="form-group form-group-sm">
+							<select class="select-testcase-function form-control">
+								<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+								{{#each functions this}}
+									{{#if name}}
+										<option selected={{isActive}}>{{name}}</option>
+									{{/if}}
+								{{/each}}
+							</select>
+						</div>
+						<div class="checkbox">
+							<label class="control-label">
+								<input type="checkbox" class="checkbox-testcase-visible" checked={{visible}} /> {{i18n "exercise.testCase.visibleLabel"}}
+							</label>
+						</div>
 					</div>
-					{{#each inputValues}}
-						<div class="form-group form-group-sm">
-							<label for="input-testcase-input-0-{{@index}}" class="control-label">
-								{{i18n "exercise.testCase.inputLabel"}}
-								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
-							</label>
-							<input type="text" id="input-testcase-input-0-{{@index}}" data-id="input-testcase-input-{i}-{{@index}}" value="{{this}}" class="form-control" />
-						</div>
-					{{/each}}
-					{{#each expectedOutputValues}}
-						<div class="form-group form-group-sm">
-							<label for="input-testcase-expectedoutput-0-{{@index}}" class="control-label">
-								{{i18n "exercise.testCase.expectedOutputLabel"}}
-								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
-							</label>
-							<input type="text" id="input-testcase-expectedoutput-0-{{@index}}" data-id="input-testcase-expectedoutput-{i}-{{@index}}" value="{{this}}" class="form-control" />
-						</div>
-					{{/each}}
-					<div class="checkbox">
-						<label class="control-label">
-							<input type="checkbox" id="checkbox-testcase-visible-0" data-id="checkbox-testcase-visible-{i}" checked={{visible}} /> {{i18n "exercise.testCase.visibleLabel"}}
-						</label>
+					<div class="col-sm-4">
+						{{#each inputValues}}
+							<div class="form-group form-group-sm">
+								<input type="text" value="{{this}}" class="input-testcase-input form-control" />
+							</div>
+						{{else}}
+							<span class="text-muted">{{i18n "form.noResults"}}</span>
+						{{/each}}
+					</div>
+					<div class="col-sm-5">
+						{{#each expectedOutputValues}}
+							<div class="form-group form-group-sm">
+								<input type="text" value="{{this}}" class="input-testcase-expectedoutput form-control" />
+							</div>
+						{{else}}
+							<span class="text-muted">{{i18n "form.noResults"}}</span>
+						{{/each}}
+					</div>
+					<div class="col-sm-1">
+						<button class="btn btn-success btn-sm dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
 					</div>
 				</div>
 			{{/each}}

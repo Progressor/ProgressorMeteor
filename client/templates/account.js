@@ -9,7 +9,7 @@
 	Template.account.helpers(
 		{
 			currentUserName: () => Meteor.user().emails[0].address,
-			programmingSolveData: res => ({ _id: res.exercise_id }),
+			resultViewData: res => ({ _id: res._id }),
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,

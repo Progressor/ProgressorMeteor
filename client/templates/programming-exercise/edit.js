@@ -1,12 +1,12 @@
 (function () {
 	'use strict';
 
-	var defExercise = {
-		functions: [{ inputNames: [''] }],
+	const defExercise = {
+		functions: [{ inputNames: [null], outputTypes: [null] }],
 		testCases: [{}]
 	};
 
-	var exercise, depExercise = new Tracker.Dependency();
+	var exercise = defExercise, depExercise = new Tracker.Dependency();
 	var executorTypes, depExecutorTypes = new Tracker.Dependency();
 
 	function testExecutorIdentifier(val) {
@@ -93,11 +93,11 @@
 			},
 			functions(cas) {
 				depExercise.depend();
-				return _.map(exercise.functions, ex => {
-					return _.extend(ex, {
-						outputType: ex.outputTypes ? ex.outputTypes[0] : null,
-						inputs: _.map(ex.inputNames && ex.inputNames.length ? ex.inputNames : [{}], (nme, idx) => ({ name: nme, type: ex.inputTypes ? ex.inputTypes[idx] : null })),
-						isActive: cas && cas.functionName === ex.name
+				return _.map(exercise.functions, fun => {
+					return _.extend(fun, {
+						outputType: fun.outputTypes[0],
+						inputs: _.map(fun.inputNames.length ? fun.inputNames : [null], (nme, idx) => ({ name: nme, type: fun.inputTypes ? fun.inputTypes[idx] : null })),
+						isActive: cas && cas.functionName === fun.name
 					});
 				});
 			},

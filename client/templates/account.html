@@ -20,7 +20,7 @@
 							<tbody>
 								{{#each exercises}}
 									<tr>
-										<td>{{i18nExerciseName exercise}}</td> <!-- linkTo route="programmingSolve" data=(programmingSolveData this) ### may have been changed -->
+										<td>{{#linkTo route="resultView" data=(resultViewData this)}}{{i18nExerciseName exercise}}{{/linkTo}}</td>
 										<td>{{i18nCategoryName exercise.category}}</td>
 										<td>{{i18nDifficulty exercise.difficulty}}</td>
 										<td>{{i18nDateTime solved}}</td>

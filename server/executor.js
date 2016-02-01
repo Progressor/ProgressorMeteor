@@ -33,7 +33,7 @@
 					values: [
 						{ types: [ttypes.TypeString], values: ['Progressor', 'Bern University of Applied Sciences'] },
 						{ types: [ttypes.TypeCharacter], values: ['p', 'P', '<'] },
-						{ types: [ttypes.TypeBoolean], values: [true, false] },
+						{ types: [ttypes.TypeBoolean], values: ['true', 'false'] },
 						{ types: [ttypes.TypeByte, ttypes.TypeShort, ttypes.TypeInteger, ttypes.TypeLong], values: [-25, 0, 1, new Date().getYear()] },
 						{ types: [ttypes.TypeSingle, ttypes.TypeDouble, ttypes.TypeDecimal], values: [-3.141592653, 0, 1, 3.141592653] },
 						{ types: [ttypes.TypeContainerArray, ttypes.TypeContainerList, ttypes.TypeContainerSet], values: ['-1,0,1,2', 'strut1,touwm1,weidj1'] },

@@ -1,11 +1,14 @@
 (function () {
 	'use strict';
 
-	var exercise, blacklist, blacklistLoading;
+	var exercise, result, blacklist, blacklistLoading;
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
-		Session.set('ExecuteResult', null);
+		if (!exercise)
+			exercise = (result = Progressor.results.findOne()).exercise;
+
+		Session.set('ExecuteResult', result ? result.results : null);
 		Session.set('BlacklistMatch', null);
 	});
 
@@ -23,8 +26,11 @@
 
 	Template.programmingSolve.helpers(
 		{
+			safeExercise: () => exercise,
+			isResult: () => !!result,
 			exerciseSearchData: () => ({ _id: exercise.programmingLanguage }),
-			i18nProgrammingLanguage: exc => i18n.getProgrammingLanguage(exc.programmingLanguage),
+			exerciseSolveData: () => ({ _id: result ? result.exercise_id : exercise._id }),
+			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.programmingLanguage),
 			i18nCategoryName: i18n.getName,
 			i18nCategoryDescription: i18n.getDescription,
 			i18nExerciseName: i18n.getName,
@@ -34,7 +40,9 @@
 			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
 			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
 			testCaseSuccess: cas => Progressor.isSuccess(exercise, cas, Session.get('ExecuteResult')),
-			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise, cas, Session.get('ExecuteResult'))
+			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise, cas, Session.get('ExecuteResult')),
+			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise),
+			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(exercise, Session.get('ExecuteResult'))
 		});
 
 	Template.programmingSolve.events(
