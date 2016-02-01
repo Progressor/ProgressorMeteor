@@ -5,7 +5,9 @@
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
-		if (!exercise)
+		if (exercise)
+			result = null;
+		else
 			exercise = (result = Progressor.results.findOne()).exercise;
 
 		Session.set('ExecuteResult', result ? result.results : null);
