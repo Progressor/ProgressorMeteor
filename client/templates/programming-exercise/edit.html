@@ -16,11 +16,11 @@
 			<h2>{{i18n "exercise.createTitle"}}</h2>
 		{{/if}}
 	</header>
-	<div class="row">
+	<div class="row visible-md-block visible-lg-block">
 		<div class="col-md-offset-4 col-md-8">
 			<ul class="nav nav-tabs" role="tablist">
-				{{#each languages}}
-					<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{name}}</a></li>
+				{{#each i18nExerciseNamesDescriptions}}
+					<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
 				{{/each}}
 			</ul>
 		</div>
@@ -28,7 +28,7 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group form-group-sm">
-				<label for="select-language">{{i18n "exercise.programmingLanguageLabel"}}</label>
+				<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
 				<select id="select-language" class="form-control">
 					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nProgrammingLanguages}}
@@ -37,7 +37,7 @@
 				</select>
 			</div>
 			<div class="form-group form-group-sm">
-				<label for="select-category">{{i18n "exercise.categoryLabel"}}</label>
+				<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
 				<select id="select-category" class="form-control">
 					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nCategories}}
@@ -46,7 +46,7 @@
 				</select>
 			</div>
 			<div class="form-group form-group-sm">
-				<label for="select-difficulty">{{i18n "exercise.difficultyLabel"}}</label>
+				<label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
 				<select id="select-difficulty" class="form-control">
 					<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nDifficulties}}
@@ -56,102 +56,164 @@
 			</div>
 		</div>
 		<div class="col-md-8">
+			<div class="visible-xs-block visible-sm-block">
+				<ul class="nav nav-tabs" role="tablist">
+					{{#each i18nExerciseNamesDescriptions}}
+						<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+					{{/each}}
+				</ul>
+			</div>
 			<div class="tab-content">
-				{{#each languages}}
+				{{#each i18nExerciseNamesDescriptions}}
 					<div role="tabpanel" id="tab-{{_id}}" class="tab-pane {{#if isActive}}active{{/if}}">
 						<div class="form-group form-group-sm">
-							<label for="input-name-{{_id}}">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-							<input type="text" id="input-name-{{_id}}" class="form-control" value="{{exerciseName}}" />
+							<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+							<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
 						</div>
 						<div class="form-group form-group-sm">
-							<label for="textarea-name-{{_id}}">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
-							<textarea id="textarea-name-{{_id}}" rows="5" cols="40" class="form-control">{{exerciseDescription}}</textarea>
-							<div class="help-block">
-								{{i18n "form.supportsMarkdown"}}
-								<a href="https://help.github.com/articles/markdown-basics/#styling-text" target="_blank"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
-							</div>
+							<label for="textarea-name-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
+							<textarea id="textarea-name-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
 						</div>
 					</div>
 				{{/each}}
 			</div>
+			<div class="help-block">
+				{{i18n "form.supportsMarkdown"}}
+				<a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text" target="_blank"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+			</div>
 		</div>
+	</div>
+	<div id="collapseHelp" class="panel-collapse collapse">
+		<aside class="panel panel-info">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="help-block">
+							<em>{{i18n "exercise.help.types"}}</em>
+							<ul>
+								{{#each executorTypes}}
+									<li>{{label}}</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="help-block">
+							<em>{{i18n "exercise.help.values"}}</em>
+							<dl class="dl-horizontal">
+								{{#each executorValues}}
+									<dt>{{typeLabels}}</dt>
+									{{#each values}}
+										<dd>{{this}}</dd>
+									{{/each}}
+								{{/each}}
+							</dl>
+						</div>
+					</div>
+				</div>
+			</div>
+		</aside>
 	</div>
 	<div class="row">
 		<section class="col-md-4">
 			<h3>{{i18n "exercise.functionsSubtitle"}}</h3>
-			<div class="dyn-repeatable">
-				<div class="form-group form-group-sm">
-					<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
-					<label for="input-function-name">{{i18n "exercise.function.nameLabel"}}</label>
-					<input type="text" id="input-function-name" class="form-control" />
-				</div>
-				<div class="form-group form-group-sm">
-					<label for="input-function-type">{{i18n "exercise.function.returnTypeLabel"}}</label>
-					<input type="text" id="input-function-type" class="form-control" />
-				</div>
-				<div class="dyn-repeatable">
-					<div class="form-group form-group-sm">
-						<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
-						<label for="input-parameter-name">{{i18n "exercise.function.parameterNameLabel"}}</label>
-						<input type="text" id="input-parameter-name" class="form-control" />
+			{{#each functions}}
+				<div class="dyn-repeatable container-function" data-var="i" data-index="0">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group form-group-sm">
+								<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+								<label for="input-function-name-0" class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
+								<input type="text" id="input-function-name-0" data-id="input-function-name-{i}" value="{{name}}" class="form-control" />
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group form-group-sm">
+								<label for="input-function-type-0" class="control-label">
+									{{i18n "exercise.function.returnTypeLabel"}}
+									<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+								</label>
+								<input type="text" id="input-function-type-0" data-id="input-function-type-{i}" value="{{outputType}}" class="form-control exec-type" />
+							</div>
+						</div>
 					</div>
-					<div class="form-group form-group-sm left-indent">
-						<label for="input-parameter-type">{{i18n "exercise.function.parameterTypeLabel"}}</label>
-						<input type="text" id="input-parameter-type" class="form-control" />
+					<div class="row">
+						<div class="col-sm-offset-1 col-sm-5">
+							<label for="input-parameter-name-0-0" class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
+						</div>
+						<div class="col-sm-6">
+							<label for="input-parameter-type-0-0" class="control-label">
+								{{i18n "exercise.function.parameterTypeLabel"}}
+								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+							</label>
+						</div>
 					</div>
+					{{#each inputs}}
+						<div class="row dyn-repeatable container-parameter" data-var="j" data-index="0">
+							<div class="col-sm-offset-1 col-sm-5">
+								<div class="form-group form-group-sm">
+									<input type="text" id="input-parameter-name-0-0" data-id="input-parameter-name-{i}-{j}" class="form-control" />
+								</div>
+							</div>
+							<div class="col-sm-5">
+								<div class="form-group form-group-sm">
+									<input type="text" id="input-parameter-type-0-0" data-id="input-parameter-type-{i}-{j}" class="form-control exec-type" />
+								</div>
+							</div>
+							<div class="col-sm-1">
+								<button class="btn btn-success btn-sm dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+							</div>
+						</div>
+					{{/each}}
 				</div>
-			</div>
+			{{/each}}
 		</section>
 		<section class="col-md-8">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
-			<div class="dyn-repeatable">
-				<div class="form-group form-group-sm">
-					<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
-					<label for="select-testcase-function">{{i18n "exercise.testCase.functionLabel"}}</label>
-					<select id="select-testcase-function" class="form-control">
-						<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
-					</select>
+			{{#each testCases}}
+				<div class="dyn-repeatable" data-var="i" data-index="0">
+					<div class="form-group form-group-sm">
+						<button class="btn btn-success btn-xs pull-right dyn-repeat"><span class="glyphicon glyphicon-plus-sign"></span></button>
+						<label for="select-testcase-function-0" class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
+						<select id="select-testcase-function-0" data-id="select-testcase-function-{i}" class="form-control">
+							<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+							{{#each functions this}}
+								{{#if name}}
+									<option selected={{isActive}}>{{name}}</option>
+								{{/if}}
+							{{/each}}
+						</select>
+					</div>
+					{{#each inputValues}}
+						<div class="form-group form-group-sm">
+							<label for="input-testcase-input-0-{{@index}}" class="control-label">
+								{{i18n "exercise.testCase.inputLabel"}}
+								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+							</label>
+							<input type="text" id="input-testcase-input-0-{{@index}}" data-id="input-testcase-input-{i}-{{@index}}" value="{{this}}" class="form-control" />
+						</div>
+					{{/each}}
+					{{#each expectedOutputValues}}
+						<div class="form-group form-group-sm">
+							<label for="input-testcase-expectedoutput-0-{{@index}}" class="control-label">
+								{{i18n "exercise.testCase.expectedOutputLabel"}}
+								<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
+							</label>
+							<input type="text" id="input-testcase-expectedoutput-0-{{@index}}" data-id="input-testcase-expectedoutput-{i}-{{@index}}" value="{{this}}" class="form-control" />
+						</div>
+					{{/each}}
+					<div class="checkbox">
+						<label class="control-label">
+							<input type="checkbox" id="checkbox-testcase-visible-0" data-id="checkbox-testcase-visible-{i}" checked={{visible}} /> {{i18n "exercise.testCase.visibleLabel"}}
+						</label>
+					</div>
 				</div>
-				<div class="form-group form-group-sm left-indent">
-					<label for="input-testcase-input">{{i18n "exercise.testCase.inputLabel"}}</label>
-					<input type="text" id="input-testcase-input" class="form-control" />
-				</div>
-				<div class="form-group form-group-sm left-indent">
-					<label for="input-testcase-expectedoutput">{{i18n "exercise.testCase.expectedOutputLabel"}}</label>
-					<input type="text" id="input-testcase-expectedoutput" class="form-control" />
-				</div>
-				<div class="checkbox left-indent">
-					<label>
-						<input type="checkbox" id="checkbox-testcase-visible" /> {{i18n "exercise.testCase.visibleLabel"}}
-					</label>
-				</div>
-			</div>
+			{{/each}}
 		</section>
 	</div>
-	<aside class="row">
-		<div class="col-md-4">
-			<div class="help-block">
-				<em>{{i18n "exercise.help.types"}}</em>
-				<ul class="list-inline">
-					{{#each executorTypes}}
-						<li>{{label}}</li>
-					{{/each}}
-				</ul>
-			</div>
-		</div>
-		<div class="col-md-8">
-			<div class="help-block">
-				<em>{{i18n "exercise.help.values"}}</em>
-				<ul class="list-inline">
-					<li>Progressor</li>
-					<li>Bern University of Applied Sciences</li>
-					<li>2015</li>
-					<li>3.141592653</li>
-					<li>-1,0,1,2</li>
-					<li>strut1,touwm1,weidj1</li>
-					<li>strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann</li>
-				</ul>
-			</div>
-		</div>
-	</aside>
 </template>
