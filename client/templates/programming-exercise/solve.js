@@ -5,17 +5,15 @@
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
-		if (exercise)
-			result = null;
-		else
-			exercise = (result = Progressor.results.findOne()).exercise;
+		if (exercise) result = null;
+		else exercise = (result = Progressor.results.findOne()).exercise;
 
 		Session.set('ExecuteResult', result ? result.results : null);
 		Session.set('BlacklistMatch', null);
 	});
 
 	Template.programmingSolve.onRendered(function () {
-		var res = Progressor.results.findOne();
+		var res = result || Progressor.results.findOne();
 		if (res)
 			$('#textarea-fragment').val(res.fragment);
 		else
@@ -38,6 +36,7 @@
 			i18nExerciseName: i18n.getName,
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
+			i18nResultDateTime: () => i18n.formatDate(result.solved, 'L LT'),
 			blackListMessage: () => Session.get('BlacklistMatch') ? i18n('exercise.blacklistMatch', Session.get('BlacklistMatch')) : null,
 			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
 			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),

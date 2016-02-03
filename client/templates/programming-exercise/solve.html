@@ -25,14 +25,19 @@
 			</nav>
 			<div class="row">
 				<div class="col-sm-9">
-					<h2> {{i18nExerciseName this}} </h2>
+					<h2>
+						{{i18nExerciseName this}}
+						{{#if isResult}}
+							<small>({{i18nResultDateTime}})</small>
+						{{/if}}
+					</h2>
 				</div>
 				<!--<div class="col-sm-3">
-				<ul class="pager pull-right">
-					<li><a href="#">{{i18n "exercise.previousButton"}}</a></li>
-					<li><a href="#">{{i18n "exercise.nextButton"}}</a></li>
-				</ul>
-			</div>-->
+					<ul class="pager pull-right">
+						<li><a href="#">{{i18n "exercise.previousButton"}}</a></li>
+						<li><a href="#">{{i18n "exercise.nextButton"}}</a></li>
+					</ul>
+				</div>-->
 			</div>
 		</header>
 		<section>

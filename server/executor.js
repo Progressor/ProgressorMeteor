@@ -59,8 +59,7 @@
 									inputTypes: [String],
 									outputNames: [String],
 									outputTypes: [String]
-								})
-						]
+								})]
 					}));
 
 				var functions = _.map(exercise.functions, (fun) => new ttypes.FunctionSignature(fun));
@@ -87,8 +86,7 @@
 									functionName: String,
 									inputValues: [String],
 									expectedOutputValues: [String]
-								})
-						]
+								})]
 					}));
 				check(fragment, String);
 
