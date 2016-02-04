@@ -12,7 +12,11 @@
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
-			testCases: [{}]
+			testCases: [{
+				inputValues: [],
+				expectedOutputValues: [],
+				visible: false
+			}]
 		};
 	}
 
@@ -168,7 +172,7 @@
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
-			'click .btn-save': () => Router.go('exerciseSolve', { _id: Meteor.call('saveExercise', exercise) })
+			'click .btn-save': () => Meteor.call('saveExercise', exercise, (err, id) => err || Router.go('exerciseSolve', { _id: id }))
 		});
 
 })();
