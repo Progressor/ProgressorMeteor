@@ -95,10 +95,8 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/location.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/react.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/compiler.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.1/web.browser/moment.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/templatetag.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/codegen.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.1/web.browser/meteor/export.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/optimizer.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/iron_core.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/templating-tools.js" />
@@ -249,6 +247,8 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/html.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/visitors.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/preamble.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.2/web.browser/moment.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.2/web.browser/meteor/export.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/deprecated.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/httpcall_common.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/httpcall_client.js" />
@@ -351,10 +351,8 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/location.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/react.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/compiler.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.1/web.browser/moment.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/templatetag.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/codegen.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.1/web.browser/meteor/export.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/optimizer.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/iron_core.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/templating-tools.js" />
@@ -505,6 +503,8 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/html.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/visitors.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/htmljs/1.0.5/web.browser/preamble.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.2/web.browser/moment.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/momentjs_moment/2.11.2/web.browser/meteor/export.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/deprecated.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/httpcall_common.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/http/1.1.1/web.browser/httpcall_client.js" />
