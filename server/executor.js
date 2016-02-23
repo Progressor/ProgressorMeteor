@@ -44,8 +44,7 @@
 			getBlacklist(language) {
 				check(language, String);
 
-				var client = getExecutorClient();
-				return Meteor.wrapAsync(client.getBlacklist, client)(language);
+				return getExecutorClient().getBlacklist(language);
 			},
 			getFragment(language, exercise) {
 				check(language, String);
@@ -62,10 +61,9 @@
 								})]
 					}));
 
-				var functions = _.map(exercise.functions, (fun) => new ttypes.FunctionSignature(fun));
+				var functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun));
 
-				var client = getExecutorClient();
-				return Meteor.wrapAsync(client.getFragment, client)(language, functions);
+				return getExecutorClient().getFragment(language, functions);
 			},
 			execute(language, exercise, fragment) {
 				check(language, String);
@@ -93,8 +91,7 @@
 				var functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun)),
 					testCases = _.map(exercise.testCases, cas => new ttypes.TestCase(cas));
 
-				var client = getExecutorClient();
-				var results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+				var results = getExecutorClient().execute(language, fragment, functions, testCases);
 
 				if (this.userId) {
 					var qry = { user_id: this.userId, exercise_id: exercise._id };
