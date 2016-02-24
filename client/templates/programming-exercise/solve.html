@@ -49,16 +49,18 @@
 				<div class="col-md-5">
 					<div class="form-group">
 						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
-						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}"></textarea>
+						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}" readonly={{isResult}}></textarea>
 					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+					{{#unless isResult}}
+						<div class="row">
+							<div class="col-sm-4">
+								<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+							</div>
+							<div class="col-sm-8 text-danger text-right">
+								{{blackListMessage}}
+							</div>
 						</div>
-						<div class="col-sm-8 text-danger text-right">
-							{{blackListMessage}}
-						</div>
-					</div>
+					{{/unless}}
 				</div>
 				<div class="col-md-7">
 					<table id="table-testcases" class="table table-condensed table-striped">

@@ -19,7 +19,7 @@
 	<div class="btn-group">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
 		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
-		<button class="btn btn-danger btn-delete" disabled>{{i18n "form.deleteButton"}}</button>
+		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 	</div>
 	<div class="row visible-md-block visible-lg-block">
 		<div class="col-md-offset-4 col-md-8">
@@ -225,7 +225,7 @@
 					<div class="col-sm-4">
 						{{#each inputValues}}
 							<div class="form-group form-group-sm container-inputvalue">
-								<input type="text" value="{{this}}" class="input-testcase-input form-control" />
+								<input type="text" value="{{value}}" class="input-testcase-input form-control exec-value" data-type="{{type}}" />
 							</div>
 						{{else}}
 							<span class="text-muted">{{i18n "form.noResults"}}</span>
@@ -234,7 +234,7 @@
 					<div class="col-sm-5">
 						{{#each expectedOutputValues}}
 							<div class="form-group form-group-sm container-outputvalue">
-								<input type="text" value="{{this}}" class="input-testcase-expectedoutput form-control" />
+								<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" data-type="{{type}}" />
 							</div>
 						{{else}}
 							<span class="text-muted">{{i18n "form.noResults"}}</span>
@@ -250,6 +250,6 @@
 	<div class="btn-group">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
 		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
-		<button class="btn btn-danger btn-delete" disabled>{{i18n "form.deleteButton"}}</button>
+		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 	</div>
 </template>

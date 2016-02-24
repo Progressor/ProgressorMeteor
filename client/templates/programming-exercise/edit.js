@@ -27,22 +27,54 @@
 		return val.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(val);
 	}
 
-	function testExecutorType(val, rec) {
-		var typ = _.find(executorTypes.types, typ => val.substr(0, typ._id.length) === typ._id), idx = typ ? typ._id.length : 0;
-		if (!typ) return false;
-		else if (typ.parameterCount > 0) {
-			if (val.substr(idx, 1) !== "<") return false;
-			idx += 1;
-			for (var i = 0; i < typ.parameterCount; i++) {
-				var dlm = i === typ.parameterCount - 1 ? '>' : ',', inc;
-				if (i > 0) idx += val.substr(idx).match(/^\s?/)[0].length;
-				if ((inc = testExecutorType(val.substr(idx), true)) === false) return false;
-				idx += inc;
-				if (val.substr(idx, 1) !== dlm) return false;
-				idx += dlm.length;
+	function testExecutorType(typ, rec) {
+		var xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, idx = xtp ? xtp._id.length : 0;
+		if (!xtp) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
+		else if (xtp.parameterCount > 0) { //if the type has parameters
+			if (typ.substr(idx, 1) !== "<") return false; //verify the next character is the generic open bracket
+			idx++; //move index forward
+			for (var i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
+				var dlm = i === xtp.parameterCount - 1 ? '>' : ',', inc; //determine the delimiter expected after this type parameter
+				if (i > 0) idx += typ.substr(idx).match(/^\s?/)[0].length; //skip optional whitespace after separator
+				if ((inc = testExecutorType(typ.substr(idx), true)) === false) return false; //verify parameter is a valid type
+				idx += inc; //move index forward
+				if (typ.substr(idx, 1) !== dlm) return false; //verify the next character is the defined delimiter
+				idx += dlm.length; //move index forward
 			}
 		}
-		return rec ? idx : idx === val.length;
+		return rec ? idx : idx === typ.length; //recursive: return new index, otherwise: verify end is reached
+	}
+
+	function testExecutorValue(val, typ, rec, sep) {
+		var xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, typIdx = xtp ? xtp._id.length : 0, valIdx = 0, mtc, num;
+		if (xtp.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
+			if (!(mtc = val.match(sep ? `^(${xtp.pattern}?(?=${sep})|${xtp.pattern})` : `^${xtp.pattern}`))) return false; //verify the pattern
+			valIdx += mtc[0].length; //move index forward //_: verify the number range
+			if (xtp.max && !(Number.isFinite(num = (Number.isInteger(xtp.max) ? parseInt : parseFloat)(mtc[0])) && -xtp.max - 1 <= num && num <= xtp.max)) return false;
+		}
+		if (xtp.parameterCount > 0) { //if the type as parameters
+			typIdx++; //skip generic open bracket
+			var _typIdx = typIdx; //remember initial type index position
+			for (var j = 0; valIdx !== val.length; j++) { //repeat until all collection items have been processed
+				if (j > 0) { //if item is not the first one
+					typIdx = _typIdx; //reset type index
+					if (xtp.patternSeparator && !(mtc = val.substr(valIdx).match(`^${xtp.patternSeparator}`))) return false; //verify item separator
+					valIdx += mtc[0].length; //move index forward
+				}
+				for (var i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
+					if (i > 0) typIdx += typ.substr(typIdx).match(/^\s?/)[0].length; //skip optional whitespace after separator //_: recursive call (pass next separator)
+					var inc = testExecutorValue(val.substr(valIdx), typ.substr(typIdx), true, i < xtp.parameterCount - 1 && xtp.patternInternalSeparators && xtp.patternInternalSeparators[i] ? xtp.patternInternalSeparators[i] : xtp.patternSeparator ? xtp.patternSeparator : null);
+					typIdx += inc.typIdx; //move index forward
+					valIdx += inc.valIdx; //move index forward
+					typIdx++; //skip delimiter
+					if (i < xtp.parameterCount - 1) { //if there are more parameters to come //_: verify internal separator
+						if (xtp.patternInternalSeparators && xtp.patternInternalSeparators[i] && !(mtc = val.substr(valIdx).match(`^${xtp.patternInternalSeparators[i]}`))) return false;
+						valIdx += mtc[0].length; //move index forward
+					}
+				}
+			}
+		}
+		return rec ? { typIdx: typIdx, valIdx: valIdx } : (typIdx === typ.length || xtp.parameterCount > 0) && valIdx === val.length; //recursive: return new indexes, otherwise: verify end is reached
 	}
 
 	function changeExercise(cb) {
@@ -106,7 +138,10 @@
 				inputs: _.map(fun.inputNames.length ? fun.inputNames : getDefaultExercise().functions[0].inputNames, (nme, idx) => ({ name: nme, type: fun.inputTypes ? fun.inputTypes[idx] : null })),
 				isActive: cas && cas.functionName === fun.name
 			}))),
-			testCases: dependOnExercise(() => exercise.testCases),
+			testCases: dependOnExercise(() => _.map(exercise.testCases, cas => _.extend({}, cas, {
+				inputValues: _.map(cas.inputValues, (val, idx) => ({ value: val, type: _.find(exercise.functions, fun => fun.name === cas.functionName).inputTypes[idx] })),
+				expectedOutputValues: _.map(cas.expectedOutputValues, (val, idx) => ({ value: val, type: _.find(exercise.functions, fun => fun.name === cas.functionName).outputTypes[idx] }))
+			}))),
 			executorTypes: dependOnExecutorTypes(() => executorTypes ? executorTypes.types : []),
 			executorValues: dependOnExecutorTypes(() => executorTypes ? _.map(executorTypes.values, val => _.extend({}, val, { typeLabels: val.types.join(', ') })) : [])
 		});
@@ -151,11 +186,16 @@
 					$grp.addClass('has-error');
 				_.each(_.flatten(_.filter(_.groupBy($grps, elm => $(elm).val()), grp => grp.length > 1)), elm => $(elm).closest('.form-group').addClass('has-error'));
 			},
-			'keyup .exec-type'(ev) {
+			'keyup .exec-type': dependOnExecutorTypes((ev) => {
 				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorType($this.val()))
 					$grp.addClass('has-error');
-			},
+			}),
+			'keyup .exec-value': dependOnExecutorTypes((ev) => {
+				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
+				if (!testExecutorValue($this.val(), $this.data('type')))
+					$grp.addClass('has-error');
+			}),
 			'change #select-language': changeExercise((ev, $this) => exercise.programmingLanguage = $this.val()),
 			'change #select-category': changeExercise((ev, $this) => exercise.category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.difficulty = parseInt($this.val())),
@@ -172,7 +212,8 @@
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
-			'click .btn-save': () => Meteor.call('saveExercise', exercise, (err, id) => err || Router.go('exerciseSolve', { _id: id }))
+			'click .btn-save': () => Meteor.call('saveExercise', exercise, (err, id) => err || Router.go('exerciseSolve', { _id: id })),
+			'click .btn-delete': () => Meteor.call('deleteExercise', exercise, err => err || Router.go('exerciseSearch', { _id: exercise.programmingLanguage }))
 		});
 
 })();
