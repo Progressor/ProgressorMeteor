@@ -35,8 +35,8 @@
 	Template.home.events(
 		{
 			'click [data-href]': (ev) => Router.go('exerciseSearch', { _id: $(ev.currentTarget).data('href') }),
-			'mouseover .panel-primary': (ev) => $(ev.currentTarget).removeClass('panel-primary').addClass('panel-info'),
-			'mouseout .panel-info': (ev) => $(ev.currentTarget).removeClass('panel-info').addClass('panel-primary')
+			'mouseover .panel-primary': (ev) => $(ev.currentTarget).removeClass('panel-primary').addClass('panel-info green'),
+			'mouseout .panel-info': (ev) => $(ev.currentTarget).removeClass('panel-info green').addClass('panel-primary')
 		});
 
 })();

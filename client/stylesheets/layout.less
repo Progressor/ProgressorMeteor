@@ -24,8 +24,13 @@ dt::after { content: ":"; }
 /*
  * HOME PAGE PROGRESSOR INTRO
  */
-#intro{	font-family: "Lucida Console"; white-space: nowrap;	overflow: hidden;	width: 30em;	animation: type 5s steps(60, end); }
+#intro{	font-family: "Lucida Console"; white-space: nowrap;	overflow: hidden;	width: 20em;	animation: type 5s steps(60, end); }
 #intro:nth-child(2){ animation: type2 9s steps(60, end); }
 @keyframes type{ from { width: 0; } }
 @keyframes type2{	0%{width: 0;}	50%{width: 0;} }
+/*
+ * CUSTOM GREEN PANEL
+ */
+.panel.green { border-color: #18BC9C; }
+.panel.green > .panel-heading { background-color: #18BC9C;	border-color: #18BC9C;}
 
