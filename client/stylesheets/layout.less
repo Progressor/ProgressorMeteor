@@ -21,3 +21,11 @@ h2, .well > h3 { margin-top: 0; }
 [data-href] { cursor: pointer; }
 .multi-col-2 { -moz-column-count: 2; -moz-column-gap: 10px; -webkit-column-count: 2; -webkit-column-gap: 10px; column-count: 2; column-gap: 10px; }
 dt::after { content: ":"; }
+/*
+ * HOME PAGE PROGRESSOR INTRO
+ */
+#intro{	font-family: "Lucida Console"; white-space: nowrap;	overflow: hidden;	width: 30em;	animation: type 5s steps(60, end); }
+#intro:nth-child(2){ animation: type2 9s steps(60, end); }
+@keyframes type{ from { width: 0; } }
+@keyframes type2{	0%{width: 0;}	50%{width: 0;} }
+

@@ -1,6 +1,12 @@
 (function () {
 	'use strict';
 
+	function blinker() {
+		$('#underlineChar').fadeOut(500);
+		$('#underlineChar').fadeIn(500);
+	}
+	setInterval(blinker, 1000);
+
 	const cols = { xs: 6, sm: 4, md: 3, lg: 2 };
 
 	function getSeparators(idx) {

@@ -15,6 +15,7 @@
 			'click .i18n.lang'(ev) {
 				ev.preventDefault();
 				i18n.setLanguage($(ev.currentTarget).data('lang'));
-			}
+			},
+
 		});
 })();
