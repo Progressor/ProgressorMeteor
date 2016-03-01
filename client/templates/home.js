@@ -8,11 +8,12 @@
 		return _.filter(_.map(cols, (no, cod) => (idx + 1) % (12 / no) === 0 ? cod : null), cod => !!cod);
 	}
 
-	Template.home.onRendered(() => {
+	Template.home.onRendered(
+		() => {
 		var introIndex = 0;
 		var introInterval = setInterval(function () {
 			if (introIndex < introTexts[0].length)
-				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
+				$('#intro').text(introTexts[0].substr(0, ++introIndex) + ' '); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {
 				if (introIndex == introTexts[0].length)
 					$('<small id="introExplanation"></small>').appendTo($('#intro')); //create & animate explanation
