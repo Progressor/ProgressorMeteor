@@ -8,8 +8,9 @@ body { padding: 70px 0; }
 h2, .well > h3 { margin-top: 0; }
 .mono { font-family: @font-family-monospace; }
 /*
- * NAVIGATION SEPARATOR BETWEEN LANGUAGE AND ACCOUNT
+ * NAVIGATION BAR
  */
+#imageLogo { margin-top: -7px; }
 .navbar .divider-vertical { height: 60px; margin: 0 9px; border-right: 1px solid #FFFFFF; }
 .navbar-inverse .divider-vertical { border-right-color: #222222; border-left-color: #111111; }
 @media (max-width: 767px) {
@@ -19,18 +20,17 @@ h2, .well > h3 { margin-top: 0; }
  * MISCELLANEOUS
  */
 [data-href] { cursor: pointer; }
+div.languageLogo { text-align: center; }
+img.languageLogo { max-width: 15em; max-height: 15em; }
 .multi-col-2 { -moz-column-count: 2; -moz-column-gap: 10px; -webkit-column-count: 2; -webkit-column-gap: 10px; column-count: 2; column-gap: 10px; }
 dt::after { content: ":"; }
-/*
- * HOME PAGE PROGRESSOR INTRO
- */
-#intro{	font-family: "Lucida Console"; white-space: nowrap;	overflow: hidden;	width: 20em;	animation: type 5s steps(60, end); }
-#intro:nth-child(2){ animation: type2 9s steps(60, end); }
-@keyframes type{ from { width: 0; } }
-@keyframes type2{	0%{width: 0;}	50%{width: 0;} }
-/*
- * CUSTOM GREEN PANEL
- */
-.panel.green { border-color: #18BC9C; }
-.panel.green > .panel-heading { background-color: #18BC9C;	border-color: #18BC9C;}
-
+///*
+// * HOME PAGE PROGRESSOR INTRO
+// */
+@font-face {
+	font-family: OCRAEXT;
+	src: url("/fonts/OCRAEXT.TTF") format('truetype');
+}
+#intro {
+	font-family: OCRAEXT, "Lucida Console", monospace;
+}
