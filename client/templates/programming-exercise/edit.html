@@ -34,7 +34,7 @@
 		<div class="col-md-5">
 			<div class="form-group form-group-sm">
 				<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-				<select id="select-language" class="form-control">
+				<select id="select-language" class="form-control" disabled={{disableLanguage}}>
 					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nProgrammingLanguages}}
 						<option value="{{_id}}" selected={{isActive}}>{{name}}</option>

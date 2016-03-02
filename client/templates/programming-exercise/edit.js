@@ -111,6 +111,7 @@
 
 	Template.programmingEdit.helpers(
 		{
+			disableLanguage: () => !!exercise._id,
 			exerciseSearchData: dependOnExercise(() => ({ _id: exercise.programmingLanguage })),
 			i18nProgrammingLanguage: dependOnExercise(() => i18n.getProgrammingLanguage(exercise.programmingLanguage)),
 			i18nExerciseName: i18n.getName,
@@ -217,7 +218,7 @@
 			'click .btn-remove-function': removeExerciseCollectionItem('functions', 'container-function'),
 			'click .btn-remove-parameter': removeExerciseSubcollectionItems('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
 			'click .btn-remove-testcase': removeExerciseCollectionItem('testCases', 'container-testcase'),
-			'change #select-language': changeExercise((ev, $this) => exercise.programmingLanguage = $this.val()),
+			'change #select-language': changeExercise((ev, $this) => !exercise._id ? exercise.programmingLanguage = $this.val() : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.difficulty = parseInt($this.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
