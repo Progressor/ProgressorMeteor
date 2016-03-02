@@ -116,9 +116,9 @@
 			i18nExerciseName: i18n.getName,
 			i18nCategoryName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,
-			i18nProgrammingLanguages: dependOnExercise(() => _.map(Progressor.getProgrammingLanguages(), lng => ({
-				_id: lng, name: i18n.getProgrammingLanguage(lng),
-				isActive: exercise && lng === exercise.programmingLanguage
+			i18nProgrammingLanguages: dependOnExercise(() => _.map(Progressor.getProgrammingLanguages(), lng => _.extend({}, lng, {
+				name: i18n.getProgrammingLanguage(lng._id),
+				isActive: exercise && lng._id === exercise.programmingLanguage
 			}))),
 			i18nCategories: dependOnExercise(() => Progressor.categories.find({ programmingLanguage: exercise.programmingLanguage }).map(cat => _.extend({}, cat, {
 				name: i18n.getName(cat),

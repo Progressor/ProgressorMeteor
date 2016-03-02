@@ -31,15 +31,13 @@
 			programmingLanguages() {
 				var cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
 				return _.union(
-					_.map(cur, (lng, idx) => ({ _id: lng, separators: getSeparators(idx) })),
-					_.map(upc, (lng, idx) => ({ _id: lng, isUpcoming: true, separators: getSeparators(cur.length + idx) })));
+					_.map(cur, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(idx) })),
+					_.map(upc, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(cur.length + idx), isUpcoming: true })));
 			},
 			nofExercises(lng) {
 				var cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
 				return `${cnt} ${i18n(`exercise.exercise${cnt != 1 ? 's' : ''}`)}`;
-			},
-			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
-			i18nProgrammingLanguageDescription: i18n.getProgrammingLanguageDescription
+			}
 		}
 	);
 

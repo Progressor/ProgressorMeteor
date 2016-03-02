@@ -1,5 +1,6 @@
 @import "../lib/bootstrap-variables.less";
 @import "../lib/bootstrap-mixins.less";
+@import "../lib/devicon.css";
 /*
  * GENERAL FORMATTING
  */
@@ -29,7 +30,9 @@ h2, .well > h3 { margin-top: 0; }
 .intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
 [data-href] { cursor: pointer; }
 div.languageLogo { text-align: center; }
-img.languageLogo { max-width: 10em; max-height: 10em; }
+i.languageLogo { font-size: 10em; }
+.panel-default i.languageLogo { color: @brand-primary; }
+.panel-primary i.languageLogo { color: #FFFFFF; }
 /*
  * MISCELLANEOUS
  */

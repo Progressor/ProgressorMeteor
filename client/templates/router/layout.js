@@ -6,7 +6,7 @@
 			language: () => i18n.getLanguages()[i18n.getLanguage()],
 			languages: () => _.map(i18n.getLanguages(), (nam, id) =>({ _id: id, name: nam, isActive: id === i18n.getLanguage() })),
 			currentUserName: () => Meteor.user().emails[0].address,
-			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), id => ({ _id: id, name: i18n.getProgrammingLanguage(id) }))
+			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), lng => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id) }))
 		});
 
 	Template.layout.events(
@@ -15,7 +15,7 @@
 			'click .i18n.lang'(ev) {
 				ev.preventDefault();
 				i18n.setLanguage($(ev.currentTarget).data('lang'));
-			},
-
+			}
 		});
+
 })();
