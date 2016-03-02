@@ -171,11 +171,22 @@
 		return changeExercise((ev, $this) => exercise[col][$this.closest('.' + cls1).prevAll('.' + cls1).length][prp][$this.closest('.' + cls2).prevAll('.' + cls2).length] = $this.val());
 	}
 
+	function removeExerciseCollectionItem(col, cls) {
+		return changeExercise(function (ev, $this) {
+			let remIdx = $this.closest('.' + cls).prevAll('.' + cls).length;
+			exercise[col] = _.filter(exercise[col], (itm, idx) => idx !== remIdx);
+		});
+	}
+
+	function removeExerciseSubcollectionItems(col, cls1, prps, cls2) {
+		return changeExercise(function (ev, $this) {
+			let excCol = exercise[col][$this.closest('.' + cls1).prevAll('.' + cls1).length], remIdx = $this.closest('.' + cls2).prevAll('.' + cls2).length;
+			_.each(prps, prp => excCol[prp] = _.filter(excCol[prp], (itm, idx) => idx !== remIdx));
+		});
+	}
+
 	Template.programmingEdit.events(
 		{
-			'click .btn-add-function': changeExercise(() => exercise.functions.push(getDefaultExercise().functions[0])),
-			'click .btn-add-parameter': changeExercise((ev, $this) => exercise.functions[$this.closest('.container-function').prevAll('.container-function').length].inputTypes.push(null)),
-			'click .btn-add-testcase': changeExercise(() => exercise.testCases.push(getDefaultExercise().testCases[0])),
 			'keyup .input-function-name'(ev) {
 				let $this = $(ev.currentTarget), $grp = $this.closest('.form-group');
 				let $grps = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
@@ -200,6 +211,12 @@
 				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
 					$grp.addClass('has-error');
 			}),
+			'click .btn-add-function': changeExercise(() => exercise.functions.push(getDefaultExercise().functions[0])),
+			'click .btn-add-parameter': changeExercise((ev, $this) => exercise.functions[$this.closest('.container-function').prevAll('.container-function').length].inputTypes.push(null)),
+			'click .btn-add-testcase': changeExercise(() => exercise.testCases.push(getDefaultExercise().testCases[0])),
+			'click .btn-remove-function': removeExerciseCollectionItem('functions', 'container-function'),
+			'click .btn-remove-parameter': removeExerciseSubcollectionItems('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
+			'click .btn-remove-testcase': removeExerciseCollectionItem('testCases', 'container-testcase'),
 			'change #select-language': changeExercise((ev, $this) => exercise.programmingLanguage = $this.val()),
 			'change #select-category': changeExercise((ev, $this) => exercise.category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.difficulty = parseInt($this.val())),

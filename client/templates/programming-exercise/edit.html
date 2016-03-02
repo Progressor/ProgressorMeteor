@@ -22,7 +22,7 @@
 		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 	</div>
 	<div class="row visible-md-block visible-lg-block">
-		<div class="col-md-offset-4 col-md-8">
+		<div class="col-md-offset-5 col-md-7">
 			<ul class="nav nav-tabs" role="tablist">
 				{{#each i18nExerciseNamesDescriptions}}
 					<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<div class="form-group form-group-sm">
 				<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
 				<select id="select-language" class="form-control">
@@ -60,7 +60,7 @@
 				</select>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-7">
 			<div class="visible-xs-block visible-sm-block">
 				<ul class="nav nav-tabs" role="tablist">
 					{{#each i18nExerciseNamesDescriptions}}
@@ -95,7 +95,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<div class="help-block">
 							<em>{{i18n "exercise.help.types"}}</em>
 							<ul>
@@ -105,7 +105,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-7">
 						<div class="help-block">
 							<em>{{i18n "exercise.help.values"}}</em>
 							<dl class="dl-horizontal">
@@ -123,10 +123,10 @@
 		</aside>
 	</div>
 	<div class="row">
-		<section class="col-md-4">
+		<section class="col-md-5">
 			<h3>{{i18n "exercise.functionsSubtitle"}}</h3>
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-5">
 					<label class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
 				</div>
 				<div class="col-sm-5">
@@ -137,10 +137,10 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-offset-1 col-sm-5">
+				<div class="col-sm-offset-1 col-sm-4">
 					<label class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-5">
 					<label class="control-label">
 						{{i18n "exercise.function.parameterTypeLabel"}}
 						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
@@ -150,7 +150,7 @@
 			{{#each functions}}
 				<div class="container-function">
 					<div class="row">
-						<div class="col-sm-6">
+						<div class="col-sm-5">
 							<div class="form-group form-group-sm">
 								<input type="text" value="{{name}}" class="input-function-name form-control" placeholder="{{i18n "exercise.function.namePlaceholder"}}" />
 							</div>
@@ -160,13 +160,14 @@
 								<input type="text" value="{{outputType}}" class="input-function-type form-control exec-type" placeholder="{{i18n "exercise.function.returnTypePlaceholder"}}" />
 							</div>
 						</div>
-						<div class="col-sm-1">
+						<div class="col-sm-2">
 							<button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-plus-sign"></span></button>
+							<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign"></span></button>
 						</div>
 					</div>
 					{{#each inputs}}
 						<div class="row container-parameter">
-							<div class="col-sm-offset-1 col-sm-5">
+							<div class="col-sm-offset-1 col-sm-4">
 								<div class="form-group form-group-sm">
 									<input type="text" value="{{name}}" class="input-parameter-name form-control" placeholder="{{i18n "exercise.function.parameterNamePlaceholder"}}" />
 								</div>
@@ -176,15 +177,16 @@
 									<input type="text" value="{{type}}" class="input-parameter-type form-control exec-type" placeholder="{{i18n "exercise.function.parameterTypePlaceholder"}}" />
 								</div>
 							</div>
-							<div class="col-sm-1">
+							<div class="col-sm-2">
 								<button class="btn btn-success btn-sm btn-add-parameter"><span class="glyphicon glyphicon-plus-sign"></span></button>
+								<button class="btn btn-danger btn-sm btn-remove-parameter"><span class="glyphicon glyphicon-minus-sign"></span></button>
 							</div>
 						</div>
 					{{/each}}
 				</div>
 			{{/each}}
 		</section>
-		<section class="col-md-8">
+		<section class="col-md-7">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
 			<div class="row">
 				<div class="col-sm-2">
@@ -196,7 +198,7 @@
 						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
 					</label>
 				</div>
-				<div class="col-sm-5">
+				<div class="col-sm-4">
 					<label class="control-label">
 						{{i18n "exercise.testCase.expectedOutputLabel"}}
 						<a role="button" title="{{i18n "exercise.help.showButton"}}" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info"></span></a>
@@ -231,7 +233,7 @@
 							<span class="text-muted">{{i18n "form.noResults"}}</span>
 						{{/each}}
 					</div>
-					<div class="col-sm-5">
+					<div class="col-sm-4">
 						{{#each expectedOutputValues}}
 							<div class="form-group form-group-sm container-outputvalue">
 								<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" data-type="{{type}}" />
@@ -240,8 +242,9 @@
 							<span class="text-muted">{{i18n "form.noResults"}}</span>
 						{{/each}}
 					</div>
-					<div class="col-sm-1">
+					<div class="col-sm-2">
 						<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign"></span></button>
+						<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign"></span></button>
 					</div>
 				</div>
 			{{/each}}
