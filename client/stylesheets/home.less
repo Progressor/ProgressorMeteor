@@ -1,0 +1,40 @@
+@import "../lib/bootstrap-variables.less";
+@import "../lib/bootstrap-mixins.less";
+/*
+ * INTRO
+ */
+@font-face {
+	font-family: OCRAEXT;
+	src: url("/fonts/OCRAEXT.TTF") format('truetype'); //source: http://fontzone.net/font-details/ocr-a-extended
+}
+#intro { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; }
+.jumbotron.intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
+.pulsate { -webkit-animation: pulsate 1s infinite linear; -moz-animation: pulsate 1s infinite linear; -o-animation: pulsate 1s infinite linear; animation: pulsate 1s infinite linear; }
+@-webkit-keyframes pulsate {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-moz-keyframes pulsate {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-o-keyframes pulsate {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@keyframes pulsate {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+/*
+ * PROGRAMMING LANGUAGES
+ */
+[data-href] { cursor: pointer; }
+div.languageLogo { text-align: center; }
+i.languageLogo { font-size: 10em; }
+.panel-default i.languageLogo { color: @brand-primary; }
+.panel-primary i.languageLogo { color: #FFFFFF; }

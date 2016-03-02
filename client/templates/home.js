@@ -19,8 +19,7 @@
 				$('#introExplanation').text(introTexts[1].substr(0, ++introIndex - introTexts[0].length));
 			} else {
 				clearInterval(introInterval); //clear animation interval
-				$('<span id="introUnderscore">_</span>').hide().fadeIn(500).appendTo($('#introExplanation'));
-				setInterval(() => $('#introUnderscore').fadeOut(500).fadeIn(500), 1000); //create & animate underscore
+				$('<span class="pulsate">_</span>').appendTo($('#introExplanation'));
 			}
 		}, 150);
 	});

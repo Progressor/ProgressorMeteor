@@ -1,6 +1,5 @@
 @import "../lib/bootstrap-variables.less";
 @import "../lib/bootstrap-mixins.less";
-@import "../lib/devicon.css";
 /*
  * GENERAL FORMATTING
  */
@@ -17,22 +16,6 @@ h2, .well > h3 { margin-top: 0; }
 @media (max-width: 767px) {
 	.navbar-collapse .nav > .divider-vertical { display: none; }
 }
-/*
- * HOME PAGE
- */
-@font-face {
-	font-family: OCRAEXT;
-	src: url("/fonts/OCRAEXT.TTF") format('truetype'); //source: http://fontzone.net/font-details/ocr-a-extended
-}
-#intro {
-	font-family: OCRAEXT, Consolas, "Lucida Console", monospace;
-}
-.intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
-[data-href] { cursor: pointer; }
-div.languageLogo { text-align: center; }
-i.languageLogo { font-size: 10em; }
-.panel-default i.languageLogo { color: @brand-primary; }
-.panel-primary i.languageLogo { color: #FFFFFF; }
 /*
  * MISCELLANEOUS
  */
