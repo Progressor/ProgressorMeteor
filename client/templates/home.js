@@ -9,8 +9,8 @@
 	}
 
 	Template.home.onRendered(() => {
-		var introIndex = 0;
-		var introInterval = setInterval(function () {
+		let introIndex = 0;
+		let introInterval = setInterval(function () {
 			if (introIndex < introTexts[0].length)
 				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {
@@ -28,13 +28,13 @@
 		{
 			nofColumns: cod => cols[cod],
 			programmingLanguages() {
-				var cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
+				let cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
 				return _.union(
 					_.map(cur, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(idx) })),
 					_.map(upc, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(cur.length + idx), isUpcoming: true })));
 			},
 			nofExercises(lng) {
-				var cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
+				let cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
 				return `${cnt} ${i18n(`exercise.exercise${cnt != 1 ? 's' : ''}`)}`;
 			}
 		}
