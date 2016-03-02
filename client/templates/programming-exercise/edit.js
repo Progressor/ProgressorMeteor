@@ -8,7 +8,7 @@
 			descriptions: [],
 			functions: [{
 				inputNames: [null],
-				inputTypes: [],
+				inputTypes: [null],
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
@@ -20,21 +20,21 @@
 		};
 	}
 
-	var exercise = getDefaultExercise(), depExercise = new Tracker.Dependency();
-	var executorTypes, depExecutorTypes = new Tracker.Dependency();
+	let exercise = getDefaultExercise(), executorTypes;
+	const depExercise = new Tracker.Dependency(), depExecutorTypes = new Tracker.Dependency();
 
 	function testExecutorIdentifier(val) {
 		return val.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(val);
 	}
 
 	function testExecutorType(typ, rec) {
-		var xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, idx = xtp ? xtp._id.length : 0;
+		let xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, idx = xtp ? xtp._id.length : 0;
 		if (!xtp) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
 		else if (xtp.parameterCount > 0) { //if the type has parameters
 			if (typ.substr(idx, 1) !== "<") return false; //verify the next character is the generic open bracket
 			idx++; //move index forward
-			for (var i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
-				var dlm = i === xtp.parameterCount - 1 ? '>' : ',', inc; //determine the delimiter expected after this type parameter
+			for (let i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
+				let dlm = i === xtp.parameterCount - 1 ? '>' : ',', inc; //determine the delimiter expected after this type parameter
 				if (i > 0) idx += typ.substr(idx).match(/^\s?/)[0].length; //skip optional whitespace after separator
 				if ((inc = testExecutorType(typ.substr(idx), true)) === false) return false; //verify parameter is a valid type
 				idx += inc; //move index forward
@@ -46,7 +46,7 @@
 	}
 
 	function testExecutorValue(val, typ, rec, sep) {
-		var xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, typIdx = xtp ? xtp._id.length : 0, valIdx = 0, mtc, num;
+		let xtp = executorTypes ? _.find(executorTypes.types, xtp => typ.substr(0, xtp._id.length) === xtp._id) : null, typIdx = xtp ? xtp._id.length : 0, valIdx = 0, mtc, num;
 		if (xtp.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
 			if (!(mtc = val.match(sep ? `^(${xtp.pattern}?(?=${sep})|${xtp.pattern})` : `^${xtp.pattern}`))) return false; //verify the pattern
 			valIdx += mtc[0].length; //move index forward //_: verify the number range
@@ -54,16 +54,16 @@
 		}
 		if (xtp.parameterCount > 0) { //if the type as parameters
 			typIdx++; //skip generic open bracket
-			var _typIdx = typIdx; //remember initial type index position
-			for (var j = 0; valIdx !== val.length; j++) { //repeat until all collection items have been processed
+			let _typIdx = typIdx; //remember initial type index position
+			for (let j = 0; valIdx !== val.length; j++) { //repeat until all collection items have been processed
 				if (j > 0) { //if item is not the first one
 					typIdx = _typIdx; //reset type index
 					if (xtp.patternSeparator && !(mtc = val.substr(valIdx).match(`^${xtp.patternSeparator}`))) return false; //verify item separator
 					valIdx += mtc[0].length; //move index forward
 				}
-				for (var i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
+				for (let i = 0; i < xtp.parameterCount; i++) { //repeat check for each type parameter
 					if (i > 0) typIdx += typ.substr(typIdx).match(/^\s?/)[0].length; //skip optional whitespace after separator //_: recursive call (pass next separator)
-					var inc = testExecutorValue(val.substr(valIdx), typ.substr(typIdx), true, i < xtp.parameterCount - 1 && xtp.patternInternalSeparators && xtp.patternInternalSeparators[i] ? xtp.patternInternalSeparators[i] : xtp.patternSeparator ? xtp.patternSeparator : null);
+					let inc = testExecutorValue(val.substr(valIdx), typ.substr(typIdx), true, i < xtp.parameterCount - 1 && xtp.patternInternalSeparators && xtp.patternInternalSeparators[i] ? xtp.patternInternalSeparators[i] : xtp.patternSeparator ? xtp.patternSeparator : null);
 					typIdx += inc.typIdx; //move index forward
 					valIdx += inc.valIdx; //move index forward
 					typIdx++; //skip delimiter
@@ -79,7 +79,7 @@
 
 	function changeExercise(cb) {
 		return function (ev) {
-			var ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
+			let ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
 			depExercise.changed();
 			return ret;
 		}
@@ -135,20 +135,24 @@
 			}))),
 			functions: dependOnExercise(cas => _.map(exercise.functions, fun => _.extend({}, fun, {
 				outputType: fun.outputTypes[0],
-				inputs: _.map(fun.inputNames.length ? fun.inputNames : getDefaultExercise().functions[0].inputNames, (nme, idx) => ({ name: nme, type: fun.inputTypes ? fun.inputTypes[idx] : null })),
+				inputs: _.map(fun.inputTypes.length ? fun.inputTypes : getDefaultExercise().functions[0].inputTypes, (typ, idx) => ({ type: typ, name: fun.inputNames ? fun.inputNames[idx] : null })),
 				isActive: cas && cas.functionName === fun.name
 			}))),
-			testCases: dependOnExercise(() => _.map(exercise.testCases, cas => _.extend({}, cas, {
-				inputValues: _.map(cas.inputValues, (val, idx) => ({ value: val, type: _.find(exercise.functions, fun => fun.name === cas.functionName).inputTypes[idx] })),
-				expectedOutputValues: _.map(cas.expectedOutputValues, (val, idx) => ({ value: val, type: _.find(exercise.functions, fun => fun.name === cas.functionName).outputTypes[idx] }))
-			}))),
+			testCases: dependOnExercise(() => _.map(exercise.testCases, cas => {
+				let fun = _.find(exercise.functions, fun => fun.name === cas.functionName);
+				let fillValues = (vals, typs) => typs ? _.chain(vals).union(_.range(typs.length)).first(typs.length).map((val, idx) => ({ value: typeof(val) === 'string' ? val : null, type: typs[idx] })).value() : _.map(vals, (val, idx) => ({ value: val }));
+				return _.extend({}, cas, {
+					inputValues: fillValues(cas.inputValues, fun ? fun.inputTypes : null),
+					expectedOutputValues: fillValues(cas.expectedOutputValues, fun ? fun.outputTypes : null)
+				});
+			})),
 			executorTypes: dependOnExecutorTypes(() => executorTypes ? executorTypes.types : []),
 			executorValues: dependOnExecutorTypes(() => executorTypes ? _.map(executorTypes.values, val => _.extend({}, val, { typeLabels: val.types.join(', ') })) : [])
 		});
 
 	function changeExerciseTranslation(trs) {
 		return changeExercise(function (ev, $this) {
-			var elm = _.find(exercise[trs + 's'], elm => elm.language === $this.data('lang'));
+			let elm = _.find(exercise[trs + 's'], elm => elm.language === $this.data('lang'));
 			if (elm)
 				elm[trs] = $this.val();
 			else {
@@ -170,30 +174,30 @@
 	Template.programmingEdit.events(
 		{
 			'click .btn-add-function': changeExercise(() => exercise.functions.push(getDefaultExercise().functions[0])),
-			'click .btn-add-parameter': changeExercise((ev, $this) => exercise.functions[$this.closest('.container-function').prevAll('.container-function').length].inputNames.push(null)),
+			'click .btn-add-parameter': changeExercise((ev, $this) => exercise.functions[$this.closest('.container-function').prevAll('.container-function').length].inputTypes.push(null)),
 			'click .btn-add-testcase': changeExercise(() => exercise.testCases.push(getDefaultExercise().testCases[0])),
 			'keyup .input-function-name'(ev) {
-				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group');
-				var $grps = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
+				let $this = $(ev.currentTarget), $grp = $this.closest('.form-group');
+				let $grps = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$grp.addClass('has-error');
-				_.each(_.flatten(_.filter(_.groupBy($grps, elm => $(elm).val()), grp => grp.length > 1)), elm => $(elm).closest('.form-group').addClass('has-error'));
+				_.chain($grps).groupBy(elm => $(elm).val()).filter(grp => grp.length > 1).flatten().each(elm => $(elm).closest('.form-group').addClass('has-error'));
 			},
 			'keyup .input-parameter-name'(ev) {
-				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group'), $fnc = $this.closest('.container-function');
-				var $grps = $fnc.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
+				let $this = $(ev.currentTarget), $grp = $this.closest('.form-group'), $fnc = $this.closest('.container-function');
+				let $grps = $fnc.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$grp.addClass('has-error');
-				_.each(_.flatten(_.filter(_.groupBy($grps, elm => $(elm).val()), grp => grp.length > 1)), elm => $(elm).closest('.form-group').addClass('has-error'));
+				_.chain($grps).groupBy(elm => $(elm).val()).filter(grp => grp.length > 1).flatten().each(elm => $(elm).closest('.form-group').addClass('has-error'));
 			},
 			'keyup .exec-type': dependOnExecutorTypes((ev) => {
-				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
+				let $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorType($this.val()))
 					$grp.addClass('has-error');
 			}),
 			'keyup .exec-value': dependOnExecutorTypes((ev) => {
-				var $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
-				if (!testExecutorValue($this.val(), $this.data('type')))
+				let $this = $(ev.currentTarget), $grp = $this.closest('.form-group').removeClass('has-error');
+				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
 					$grp.addClass('has-error');
 			}),
 			'change #select-language': changeExercise((ev, $this) => exercise.programmingLanguage = $this.val()),
@@ -205,10 +209,7 @@
 			'change .input-function-type': changeExerciseCollection('functions', 'container-function', (ev, $this) => ({ outputNames: ['return'], outputTypes: [$this.val()] })),
 			'change .input-parameter-name': changeExerciseSubcollection('functions', 'container-function', 'inputNames', 'container-parameter'),
 			'change .input-parameter-type': changeExerciseSubcollection('functions', 'container-function', 'inputTypes', 'container-parameter'),
-			'change .select-testcase-function': changeExerciseCollection('testCases', 'container-testcase', function (ev, $this) {
-				var fnc = _.find(exercise.functions, fnc => fnc.name === $this.val());
-				if (fnc) return { functionName: $this.val(), inputValues: _.map(_.range(fnc.inputNames.length), () => null), expectedOutputValues: getDefaultExercise().functions[0].outputTypes };
-			}),
+			'change .select-testcase-function': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ functionName: $this.val() })),
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
