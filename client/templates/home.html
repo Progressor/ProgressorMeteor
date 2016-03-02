@@ -1,6 +1,6 @@
 <template name="home">
 	<header>
-		<div class="jumbotron">
+		<div class="jumbotron intro">
 			<h1 id="intro">
 				&nbsp; {{! {i18n "layout.logo"} <small>{i18n "layout.explanation"}<span id="underlineChar">_</span></small> }}
 			</h1>
@@ -14,6 +14,7 @@
 						<img src="/images/languages/{{_id}}.svg" alt="{{i18nProgrammingLanguage _id}}" class="languageLogo" />
 					</div>
 					<div class="panel-body">
+						<div class="panel-title">{{i18nProgrammingLanguage _id}}</div>
 						<p>{{i18nProgrammingLanguageDescription _id}}</p>
 						{{#if isUpcoming}}
 							<em>{{i18n "exercise.upcoming"}}</em>
