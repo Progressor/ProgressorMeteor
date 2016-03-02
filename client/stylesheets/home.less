@@ -9,27 +9,16 @@
 }
 #intro { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; }
 .jumbotron.intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
-.pulsate { -webkit-animation: pulsate 1s infinite linear; -moz-animation: pulsate 1s infinite linear; -o-animation: pulsate 1s infinite linear; animation: pulsate 1s infinite linear; }
-@-webkit-keyframes pulsate {
+.pulsate { .animation(pulsate 1s infinite linear); }
+.keyframes-pulsate() {
 	0% { opacity: 0; }
 	50% { opacity: 1; }
 	100% { opacity: 0; }
 }
-@-moz-keyframes pulsate {
-	0% { opacity: 0; }
-	50% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@-o-keyframes pulsate {
-	0% { opacity: 0; }
-	50% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@keyframes pulsate {
-	0% { opacity: 0; }
-	50% { opacity: 1; }
-	100% { opacity: 0; }
-}
+@-webkit-keyframes pulsate { .keyframes-pulsate(); }
+@-moz-keyframes pulsate { .keyframes-pulsate(); }
+@-o-keyframes pulsate { .keyframes-pulsate(); }
+@keyframes pulsate { .keyframes-pulsate(); }
 /*
  * PROGRAMMING LANGUAGES
  */
