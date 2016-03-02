@@ -1,36 +1,29 @@
 (function () {
 	'use strict';
 
-	var init = false;
+	let init = false;
+
+	function setLanguage(lng) {
+		return _.some(i18n.getLanguages(), function (nme, cod) {
+			if (lng.startsWith(cod)) {
+				i18n.setLanguage(cod, true);
+				return true;
+			}
+			return false;
+		});
+	}
 
 	Meteor.startup(function () {
 
-		if (!init) {
-			var languages = navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage];
-			_.some(languages, function (lng) {
-				return _.some(i18n.getLanguages(), function (nme, cod) {
-					if (lng.startsWith(cod)) {
-						i18n.setLanguage(cod, true);
-						return true;
-					}
-					return false;
-				});
-			});
-		}
+		if (!init)
+			_.some(navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage], setLanguage);
 	});
 
 	Tracker.autorun(function () {
 
-		var usr;
-		if ((usr = Meteor.user()) && usr.profile && usr.profile.language)
-			_.some(i18n.getLanguages(), function (nme, cod) {
-				if (usr.profile.language.startsWith(cod)) {
-					i18n.setLanguage(cod);
-					init = true;
-					return true;
-				}
-				return false;
-			});
+		let usr = Meteor.user();
+		if (usr && usr.profile && usr.profile.language)
+			setLanguage(usr.profile.language);
 	});
 
 })();

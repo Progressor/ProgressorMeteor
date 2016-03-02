@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	var exercise, result, blacklist, blacklistLoading;
+	let exercise, result, blacklist, blacklistLoading;
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
@@ -13,12 +13,12 @@
 	});
 
 	Template.programmingSolve.onRendered(function () {
-		var res = result || Progressor.results.findOne();
+		let res = result || Progressor.results.findOne();
 		if (res)
 			$('#textarea-fragment').val(res.fragment);
 		else
 			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
-				var $fragment = $('#textarea-fragment');
+				let $fragment = $('#textarea-fragment');
 				if (!err && !$fragment.val().length)
 					$fragment.val(res);
 			});
@@ -49,7 +49,7 @@
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
-				var frg = $('#textarea-fragment').val(), $res = $('#table-testcases').css('opacity', 0.333);
+				let frg = $('#textarea-fragment').val(), $res = $('#table-testcases').css('opacity', 0.333);
 				//$res.find('.glyphicon').removeClass('text-success text-danger');
 				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
 					Session.set('ExecuteResult', err ? null : res);
@@ -64,7 +64,7 @@
 						if (!err) blacklist = res;
 					});
 				} else if (blacklist) {
-					var frg = $('#textarea-fragment').val();
+					let frg = $('#textarea-fragment').val();
 					Session.set('BlacklistMatch', _.find(blacklist, blk => frg.indexOf(blk) >= 0));
 				}
 			}, 500)

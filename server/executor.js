@@ -63,8 +63,7 @@
 								})]
 					}));
 
-				var functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun));
-
+				let functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun));
 				return getExecutorClient().getFragment(language, functions);
 			},
 			execute(language, exercise, fragment) {
@@ -90,14 +89,14 @@
 					}));
 				check(fragment, String);
 
-				var functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun)),
+				let functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun)),
 					testCases = _.map(exercise.testCases, cas => new ttypes.TestCase(cas));
 
-				var results = getExecutorClient().execute(language, fragment, functions, testCases);
+				let results = getExecutorClient().execute(language, fragment, functions, testCases);
 
 				if (this.userId) {
-					var qry = { user_id: this.userId, exercise_id: exercise._id };
-					var del = Progressor.results.findOne(qry);
+					let qry = { user_id: this.userId, exercise_id: exercise._id };
+					let del = Progressor.results.findOne(qry);
 					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), fragment: fragment, results: results, solved: new Date() }));
 				}
 

@@ -15,7 +15,7 @@
 			i18nExerciseName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,
 			results() {
-				var qry = {};
+				let qry = {};
 				if (Session.get('ExerciseSearchName') && Session.get('ExerciseSearchName').length > 2)
 					qry.names = { $elemMatch: { name: new RegExp(Session.get('ExerciseSearchName').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
 				if (Session.get('ExerciseSearchCategory'))
