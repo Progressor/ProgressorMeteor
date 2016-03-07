@@ -75,7 +75,7 @@
 							{{#each testCases}}
 								{{#if visible}}
 									<tr>
-										<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
+										<td><span id="success" class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
 										<td>{{testCaseSignature this}}</td>
 										<td>
 											<pre>{{testCaseExpectedOutput this}}</pre>

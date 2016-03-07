@@ -1,6 +1,11 @@
 (function () {
 	'use strict';
 
+	function showSuccess (show) {
+		if (show) $("#success").show();
+		if (!show) $("#success").hide();
+	}
+
 	let exercise, result, blacklist, blacklistLoading;
 
 	Template.programmingSolve.onCreated(function () {
@@ -14,14 +19,17 @@
 
 	Template.programmingSolve.onRendered(function () {
 		let res = result || Progressor.results.findOne();
-		if (res)
+		if (res) {
 			$('#textarea-fragment').val(res.fragment);
-		else
+			showSuccess(true);
+		} else {
 			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
 				let $fragment = $('#textarea-fragment');
 				if (!err && !$fragment.val().length)
 					$fragment.val(res);
 			});
+			showSuccess(false);
+		}
 	});
 
 	Template.programmingSolve.helpers(
@@ -54,6 +62,7 @@
 				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
 					Session.set('ExecuteResult', err ? null : res);
 					$('#table-testcases').css('opacity', 1);
+					showSuccess(true);
 				});
 			},
 			'keyup #textarea-fragment': _.throttle(function () {

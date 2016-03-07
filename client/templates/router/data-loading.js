@@ -1,6 +1,6 @@
 /*
-	Configuration of Spinner
-  https://atmospherejs.com/sacha/spin
+ * Configuration of Spinner
+ * https://atmospherejs.com/sacha/spin
  */
 Meteor.Spinner.options = {
 	lines: 14,
