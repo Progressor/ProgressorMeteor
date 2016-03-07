@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	function showSuccess (show) {
+	function showSuccessIcon (show) {
 		if (show) $("#successIcon").show();
 		if (!show) $("#successIcon").hide();
 	}
@@ -21,14 +21,14 @@
 		let res = result || Progressor.results.findOne();
 		if (res) {
 			$('#textarea-fragment').val(res.fragment);
-			showSuccess(true);
+			showSuccessIcon(true);
 		} else {
 			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
 				let $fragment = $('#textarea-fragment');
 				if (!err && !$fragment.val().length)
 					$fragment.val(res);
 			});
-			showSuccess(false);
+			showSuccessIcon(false);
 		}
 	});
 
@@ -62,7 +62,7 @@
 				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
 					Session.set('ExecuteResult', err ? null : res);
 					$('#table-testcases').css('opacity', 1);
-					showSuccess(true);
+					showSuccessIcon(true);
 				});
 			},
 			'keyup #textarea-fragment': _.throttle(function () {
