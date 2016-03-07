@@ -2,8 +2,8 @@
 	'use strict';
 
 	function showSuccess (show) {
-		if (show) $("#success").show();
-		if (!show) $("#success").hide();
+		if (show) $("#successIcon").show();
+		if (!show) $("#successIcon").hide();
 	}
 
 	let exercise, result, blacklist, blacklistLoading;
