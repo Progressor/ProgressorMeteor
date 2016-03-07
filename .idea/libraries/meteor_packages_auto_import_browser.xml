@@ -93,11 +93,13 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/logging/1.0.8/web.browser/logging.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/mongo-id/1.0.1/web.browser/id.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/observe-sequence/1.0.7/web.browser/observe_sequence.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/sacha_spin/2.3.1/web.browser/packages/sacha_spin/lib/spinner.css" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/ordered-dict/1.0.4/web.browser/ordered_dict.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_layout/1.0.12/web.browser/version_conflict_errors.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/version_conflict_error.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/dynamic_template.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/blaze_overrides.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/sacha_spin/2.3.1/web.browser/packages/sacha_spin.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/version_conflict_error.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/iron_core.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/reactive-var/1.0.6/web.browser/reactive-var.js" />
@@ -349,11 +351,13 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/logging/1.0.8/web.browser/logging.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/mongo-id/1.0.1/web.browser/id.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/observe-sequence/1.0.7/web.browser/observe_sequence.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/sacha_spin/2.3.1/web.browser/packages/sacha_spin/lib/spinner.css" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/ordered-dict/1.0.4/web.browser/ordered_dict.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_layout/1.0.12/web.browser/version_conflict_errors.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/version_conflict_error.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/dynamic_template.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_dynamic-template/1.0.12/web.browser/blaze_overrides.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/sacha_spin/2.3.1/web.browser/packages/sacha_spin.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/version_conflict_error.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_core/1.0.11/web.browser/lib/iron_core.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/reactive-var/1.0.6/web.browser/reactive-var.js" />

@@ -36,3 +36,4 @@ useraccounts:bootstrap  # Meteor sign up and sign in templates (and much more!) 
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
 
 thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation
+sacha:spin
