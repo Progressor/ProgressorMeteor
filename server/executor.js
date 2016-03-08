@@ -92,7 +92,7 @@
 				let functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun)),
 					testCases = _.map(exercise.testCases, cas => new ttypes.TestCase(cas));
 
-				let results = getExecutorClient().execute(language, fragment, functions, testCases);
+				let client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
 
 				if (this.userId) {
 					let qry = { user_id: this.userId, exercise_id: exercise._id };

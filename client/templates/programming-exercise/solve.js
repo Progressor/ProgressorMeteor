@@ -1,36 +1,43 @@
 (function () {
 	'use strict';
 
-	function showSuccessIcon (show) {
-		if (show) $("#successIcon").show();
-		if (!show) $("#successIcon").hide();
-	}
-
-	let exercise, result, blacklist, blacklistLoading;
+	let exercise, result, exectionResults, blacklist, blacklistMatches;
+	const depExecutionResults = new Tracker.Dependency(), depBlacklistMatches = new Tracker.Dependency();
 
 	Template.programmingSolve.onCreated(function () {
 		exercise = Progressor.exercises.findOne();
 		if (exercise) result = null;
 		else exercise = (result = Progressor.results.findOne()).exercise;
 
-		Session.set('ExecuteResult', result ? result.results : null);
-		Session.set('BlacklistMatch', null);
+		exectionResults = result ? result.results : null;
 	});
 
 	Template.programmingSolve.onRendered(function () {
 		let res = result || Progressor.results.findOne();
 		if (res) {
 			$('#textarea-fragment').val(res.fragment);
-			showSuccessIcon(true);
 		} else {
 			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
 				let $fragment = $('#textarea-fragment');
 				if (!err && !$fragment.val().length)
 					$fragment.val(res);
 			});
-			showSuccessIcon(false);
 		}
 	});
+
+	function dependOnExecutionResults(cb) {
+		return function (ev) {
+			depExecutionResults.depend();
+			return cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
+		}
+	}
+
+	function dependOnBlacklistMatches(cb) {
+		return function (ev) {
+			depBlacklistMatches.depend();
+			return cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
+		}
+	}
 
 	Template.programmingSolve.helpers(
 		{
@@ -45,36 +52,36 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(result.solved, 'L LT'),
-			blackListMessage: () => Session.get('BlacklistMatch') ? i18n('exercise.blacklistMatch', Session.get('BlacklistMatch')) : null,
+			blackListMessage: dependOnBlacklistMatches(() => blacklistMatches ? i18n('exercise.blacklistMatch', blacklistMatches) : null),
 			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
 			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
-			testCaseSuccess: cas => Progressor.isSuccess(exercise, cas, Session.get('ExecuteResult')),
-			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise, cas, Session.get('ExecuteResult')),
+			testCasesEvaluated: dependOnExecutionResults(() => !!exectionResults),
+			testCaseSuccess: dependOnExecutionResults(cas => Progressor.isSuccess(exercise, cas, exectionResults)),
+			testCaseActualOutput: dependOnExecutionResults(cas => Progressor.getActualTestCaseOutput(exercise, cas, exectionResults)),
 			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise),
-			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(exercise, Session.get('ExecuteResult'))
+			invisibleTestCasesSuccess: dependOnExecutionResults(() => Progressor.isInvisibleSuccess(exercise, exectionResults))
 		});
 
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
 				let frg = $('#textarea-fragment').val(), $res = $('#table-testcases').css('opacity', 0.333);
-				//$res.find('.glyphicon').removeClass('text-success text-danger');
 				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
-					Session.set('ExecuteResult', err ? null : res);
+					exectionResults = !err ? res : null;
+					depExecutionResults.changed();
 					$('#table-testcases').css('opacity', 1);
-					showSuccessIcon(true);
 				});
 			},
 			'keyup #textarea-fragment': _.throttle(function () {
-				if (!blacklist && !blacklistLoading) {
-					blacklistLoading = true;
+				if (!blacklist) {
+					blacklist = [];
 					Meteor.call('getBlacklist', exercise.programmingLanguage, function (err, res) {
-						blacklistLoading = false;
-						if (!err) blacklist = res;
+						blacklist = !err ? res : null;
 					});
 				} else if (blacklist) {
 					let frg = $('#textarea-fragment').val();
-					Session.set('BlacklistMatch', _.find(blacklist, blk => frg.indexOf(blk) >= 0));
+					blacklistMatches = _.find(blacklist, blk => frg.indexOf(blk) >= 0);
+					depBlacklistMatches.changed();
 				}
 			}, 500)
 		});

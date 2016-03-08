@@ -34,6 +34,6 @@ momentjs:moment         # A lightweight JavaScript date library for parsing, val
 huttonr:bootstrap3      # Bootstrap 3 for Meteor - Modular, configurable, customizable.
 useraccounts:bootstrap  # Meteor sign up and sign in templates (and much more!) styled for twitter Bootstrap
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
+sacha:spin              # A Meteor package wrapper for Spin.js via Npm.depends(). - A spinning activity indicator http://spin.js.org.
 
 thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation
-sacha:spin
