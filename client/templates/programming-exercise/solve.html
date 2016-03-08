@@ -46,7 +46,7 @@
 				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
 			</p>
 			<div class="row">
-				<div class="col-md-5">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
 						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="{{i18n "exercise.codeFragment"}}" readonly={{isResult}}></textarea>
@@ -62,13 +62,12 @@
 						</div>
 					{{/unless}}
 				</div>
-				<div class="col-md-7">
+				<div class="col-md-6">
 					<table id="table-testcases" class="table table-condensed table-striped">
 						<thead>
 							<tr>
 								<th scope="col" colspan="{{#if testCasesEvaluated}}2{{else}}1{{/if}}">{{i18n "exercise.testCase.descriptionLabel"}}</th>
 								<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
-								<th scope="col">{{i18n "exercise.testCase.resultLabel"}}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -81,9 +80,12 @@
 										<td>{{testCaseSignature this}}</td>
 										<td>
 											<pre>{{testCaseExpectedOutput this}}</pre>
-										</td>
-										<td>
-											<pre>{{testCaseActualOutput this}}</pre>
+											{{#if testCasesEvaluated}}
+												{{#unless testCaseSuccess this}}
+													<small>{{i18n "exercise.testCase.resultLabel"}}:</small>
+													<pre class="text-danger">{{testCaseActualOutput this}}</pre>
+												{{/unless}}
+											{{/if}}
 										</td>
 									</tr>
 								{{/if}}
@@ -94,7 +96,6 @@
 										<td><span class="glyphicon glyphicon-{{#if invisibleTestCasesSuccess}}ok{{else}}remove{{/if}} text-{{#if invisibleTestCasesSuccess}}success{{else}}danger{{/if}}"></span></td>
 									{{/if}}
 									<td>{{i18n "exercise.testCase.others"}}</td>
-									<td></td>
 									<td></td>
 								</tr>
 							{{/if}}
