@@ -16,8 +16,8 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">{{i18nDifficulty _id}}</h3>
 						</div>
-						<div class="panel-body multi-col-2">
-							<ul>
+						<div class="panel-body">
+							<ul class="multi-col-2">
 								{{#each exercises}}
 									<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
 								{{/each}}
