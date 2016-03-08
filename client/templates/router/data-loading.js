@@ -4,7 +4,8 @@
 	Meteor.Spinner.options = {
 		lines: 14,
 		length: 15,
-		radius: 20
+		radius: 20,
+		top: 0 //in layout.less
 	};
 
 	//lines: 13, // The number of lines to draw
