@@ -71,14 +71,9 @@
 			{{#unless customTitle}}
 				<h1 class="hidden">{{i18n "layout.title"}}</h1>
 			{{/unless}}
-			<main class="{{#if showAside}}col-lg-9{{else}}col-lg-12{{/if}}">
+			<main>
 				{{> yield}}
 			</main>
-			{{#if showAside}}
-				<aside class="col-lg-3">
-					{{> yield "aside"}}
-				</aside>
-			{{/if}}
 		</div>
 	</div>
 </template>
