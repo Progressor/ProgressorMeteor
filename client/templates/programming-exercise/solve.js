@@ -5,11 +5,13 @@
 	const depExecutionResults = new Tracker.Dependency(), depBlacklistMatches = new Tracker.Dependency();
 
 	Template.programmingSolve.onCreated(function () {
-		exercise = Progressor.exercises.findOne();
-		if (exercise) result = null;
-		else exercise = (result = Progressor.results.findOne()).exercise;
+		this.autorun(function () {
+			exercise = Progressor.exercises.findOne();
+			if (exercise) result = null;
+			else exercise = (result = Progressor.results.findOne()).exercise;
 
-		exectionResults = result ? result.results : null;
+			exectionResults = result ? result.results : null;
+		});
 	});
 
 	Template.programmingSolve.onRendered(function () {

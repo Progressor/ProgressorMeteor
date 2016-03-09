@@ -99,13 +99,15 @@
 		}
 	}
 
-	Template.programmingEdit.onCreated(() => {
-		exercise = Progressor.exercises.findOne() || getDefaultExercise();
-		depExercise.changed();
+	Template.programmingEdit.onCreated(function () {
+		this.autorun(function () {
+			exercise = Progressor.exercises.findOne() || getDefaultExercise();
+			depExercise.changed();
 
-		Meteor.call('getExecutorTypes', (err, res) => {
-			executorTypes = res;
-			depExecutorTypes.changed();
+			Meteor.call('getExecutorTypes', (err, res) => {
+				executorTypes = res;
+				depExecutorTypes.changed();
+			});
 		});
 	});
 
