@@ -25,8 +25,10 @@
 								{{/each}}
 							</ul>
 						</li>
+ 						{{#if currentUser}}
 						<li>{{#linkTo route="exerciseCreate"}}{{i18n "layout.createExerciseTitle"}}{{/linkTo}}</li>
 						<li><a href="/admin">{{i18n "layout.mongoDBAdminTitle"}}</a></li>
+						{{/if}}
 					</ul>
 				</nav>
 				<div class="navbar-right">
