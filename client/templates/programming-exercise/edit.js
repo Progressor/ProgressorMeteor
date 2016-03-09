@@ -113,7 +113,7 @@
 
 	Template.programmingEdit.helpers(
 		{
-			disableLanguage: () => !!exercise._id,
+			disableLanguage: dependOnExercise(() => !!exercise._id),
 			exerciseSearchData: dependOnExercise(() => ({ _id: exercise.programmingLanguage })),
 			i18nProgrammingLanguage: dependOnExercise(() => i18n.getProgrammingLanguage(exercise.programmingLanguage)),
 			i18nExerciseName: i18n.getName,

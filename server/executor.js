@@ -100,6 +100,10 @@
 					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), fragment: fragment, results: results, solved: new Date() }));
 				}
 
+				//let pubResults = Progressor.getVisibleResults(exercise, results);
+				//if (Progressor.hasInvisibleTestCases(exercise))
+				//	pubResults.push({ invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) });
+
 				return results;
 			}
 		});
