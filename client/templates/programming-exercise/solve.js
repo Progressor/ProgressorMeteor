@@ -1,90 +1,76 @@
 (function () {
 	'use strict';
 
-	let exercise, result, exectionResults, blacklist, blacklistMatches;
-	const depExecutionResults = new Tracker.Dependency(), depBlacklistMatches = new Tracker.Dependency();
+	const exercise = new ReactiveVar(null), result = new ReactiveVar(null);
+	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
 
 	Template.programmingSolve.onCreated(function () {
 		this.autorun(function () {
-			exercise = Progressor.exercises.findOne();
-			if (exercise) result = null;
-			else exercise = (result = Progressor.results.findOne()).exercise;
+			exercise.set(Progressor.exercises.findOne());
 
-			exectionResults = result ? result.results : null;
+			if (!exercise.get()) {
+				result.set(Progressor.results.findOne());
+				exercise.set(result.get().exercise);
+			}
+
+			if (result.get())
+				executionResults.set(result.get().results);
 		});
 	});
 
 	Template.programmingSolve.onRendered(function () {
-		let res = result || Progressor.results.findOne();
-		if (res) {
-			$('#textarea-fragment').val(res.fragment);
-		} else {
-			Meteor.call('getFragment', exercise.programmingLanguage, exercise, function (err, res) {
+		let _result = result.get() || Progressor.results.findOne();
+		if (_result)
+			$('#textarea-fragment').val(_result.fragment);
+		else
+			Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
 				let $fragment = $('#textarea-fragment');
-				if (!err && !$fragment.val().length)
-					$fragment.val(res);
+				if (!error && !$fragment.val().length)
+					$fragment.val(result);
 			});
-		}
 	});
-
-	function dependOnExecutionResults(cb) {
-		return function (ev) {
-			depExecutionResults.depend();
-			return cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
-		}
-	}
-
-	function dependOnBlacklistMatches(cb) {
-		return function (ev) {
-			depBlacklistMatches.depend();
-			return cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
-		}
-	}
 
 	Template.programmingSolve.helpers(
 		{
-			safeExercise: () => exercise,
-			isResult: () => !!result,
-			exerciseSearchData: () => ({ _id: exercise.programmingLanguage }),
-			exerciseSolveData: () => ({ _id: result ? result.exercise_id : exercise._id }),
-			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.programmingLanguage),
+			safeExercise: () => exercise.get(),
+			isResult: () => !!result.get(),
+			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
+			exerciseSolveData: () => ({ _id: result.get() ? result.get().exercise_id : exercise.get()._id }),
+			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
 			i18nCategoryName: i18n.getName,
 			i18nCategoryDescription: i18n.getDescription,
 			i18nExerciseName: i18n.getName,
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
-			i18nResultDateTime: () => i18n.formatDate(result.solved, 'L LT'),
-			blackListMessage: dependOnBlacklistMatches(() => blacklistMatches ? i18n('exercise.blacklistMatch', blacklistMatches) : null),
-			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
-			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
-			testCasesEvaluated: dependOnExecutionResults(() => Progressor.isExerciseEvaluated(exercise, exectionResults)),
-			testCaseSuccess: dependOnExecutionResults(cas => Progressor.isTestCaseSuccess(exercise, cas, exectionResults)),
-			testCaseActualOutput: dependOnExecutionResults(cas => Progressor.getActualTestCaseOutput(exercise, cas, exectionResults)),
-			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise),
-			invisibleTestCasesSuccess: dependOnExecutionResults(() => Progressor.isInvisibleSuccess(exercise, exectionResults)),
-			executionFatal: dependOnExecutionResults(() => Progressor.isExecutionFatal(exercise, exectionResults))
+			i18nResultDateTime: () => i18n.formatDate(result.get().solved, 'L LT'),
+			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
+			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise.get(), cas),
+			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise.get(), cas),
+			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
+			testCaseSuccess: cas => Progressor.isTestCaseSuccess(exercise.get(), cas, executionResults.get()),
+			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise.get(), cas, executionResults.get()),
+			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise.get()),
+			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(exercise.get(), executionResults.get()),
+			executionFatal: () => Progressor.isExecutionFatal(exercise.get(), executionResults.get())
 		});
 
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
-				let frg = $('#textarea-fragment').val(), $res = $('#table-testcases').css('opacity', 0.333);
-				Meteor.call('execute', exercise.programmingLanguage, exercise, frg, (err, res) => {
-					exectionResults = !err ? res : null;
-					depExecutionResults.changed();
-					$('#table-testcases').css('opacity', 1);
+				let fragment = $('#textarea-fragment').val(), $result = $('#table-testcases').css('opacity', 0.333);
+				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), fragment, (error, result) => {
+					executionResults.set(!error ? result : null);
+					$result.css('opacity', 1);
 				});
 			},
 			'keyup #textarea-fragment': _.throttle(function () {
-				if (!blacklist) {
-					blacklist = [];
-					Meteor.call('getBlacklist', exercise.programmingLanguage, function (err, res) {
-						blacklist = !err ? res : null;
-					});
-				} else if (blacklist) {
-					let frg = $('#textarea-fragment').val();
-					blacklistMatches = _.find(blacklist, blk => frg.indexOf(blk) >= 0);
-					depBlacklistMatches.changed();
+				if (!blacklist.get()) {
+					blacklist.set([]);
+					Meteor.call('getBlacklist', exercise.get().programmingLanguage, (error, result) => blacklist.set(!error ? result : null));
+				} else {
+					let fragment = $('#textarea-fragment').val();
+					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));
+					$('#button-execute').prop('disabled', blacklistMatches.get().length);
 				}
 			}, 500)
 		});

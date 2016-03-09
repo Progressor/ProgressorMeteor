@@ -22,6 +22,8 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 random                  # The random package provides several functions for generating random numbers.
 check                   # enables method arguments checks
 audit-argument-checks   # This package causes Meteor to require that all arguments passed to methods and publish functions are checked.
+reactive-var            # This package provide ReactiveVar, a general-purpose reactive datatype for use with tracker.
+reactive-dict           # This package provide ReactiveDict, a general-purpose reactive datatype for use with tracker.
 iron:router             # A router that works on the server and the browser, designed specifically for Meteor
 accounts-password       # email - password login provider
 accounts-ui             # A turn-key user interface for Meteor Accounts.
