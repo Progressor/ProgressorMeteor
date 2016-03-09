@@ -35,6 +35,8 @@ anti:i18n               # A simple (The simplest possible? Perhaps) i18n package
 momentjs:moment         # A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.
 huttonr:bootstrap3      # Bootstrap 3 for Meteor - Modular, configurable, customizable.
 useraccounts:bootstrap  # Meteor sign up and sign in templates (and much more!) styled for twitter Bootstrap
+zimme:iron-router-auth	# Auth plugin and hooks for Iron.Router
+alanning:roles					# Authorization package for Meteor - compatible with built-in accounts package.
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
 sacha:spin              # A Meteor package wrapper for Spin.js via Npm.depends(). - A spinning activity indicator http://spin.js.org.
 
