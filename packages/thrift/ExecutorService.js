@@ -3,6 +3,7 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
+
 Executor = {};
 //HELPER FUNCTIONS AND STRUCTURES
 
@@ -61,7 +62,7 @@ ExecutorService_getBlacklist_result = function (args) {
 	this.success = null;
 	if (args) {
 		if (args.success !== undefined && args.success !== null) {
-			this.success = Thrift.copyList(args.success, [ null ]);
+			this.success = Thrift.copyList(args.success, [null]);
 		}
 	}
 };
@@ -115,7 +116,7 @@ ExecutorService_getBlacklist_result.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.success.length);
 		for (var iter55 in this.success) {
 			if (this.success.hasOwnProperty(iter55)) {
-				iter55 = this.success[ iter55 ];
+				iter55 = this.success[iter55];
 				output.writeString(iter55);
 			}
 		}
@@ -135,7 +136,7 @@ ExecutorService_getFragment_args = function (args) {
 			this.language = args.language;
 		}
 		if (args.functions !== undefined && args.functions !== null) {
-			this.functions = Thrift.copyList(args.functions, [ ttypes.FunctionSignature ]);
+			this.functions = Thrift.copyList(args.functions, [ttypes.FunctionSignature]);
 		}
 	}
 };
@@ -199,7 +200,7 @@ ExecutorService_getFragment_args.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRUCT, this.functions.length);
 		for (var iter63 in this.functions) {
 			if (this.functions.hasOwnProperty(iter63)) {
-				iter63 = this.functions[ iter63 ];
+				iter63 = this.functions[iter63];
 				iter63.write(output);
 			}
 		}
@@ -275,10 +276,10 @@ ExecutorService_execute_args = function (args) {
 			this.fragment = args.fragment;
 		}
 		if (args.functions !== undefined && args.functions !== null) {
-			this.functions = Thrift.copyList(args.functions, [ ttypes.FunctionSignature ]);
+			this.functions = Thrift.copyList(args.functions, [ttypes.FunctionSignature]);
 		}
 		if (args.testCases !== undefined && args.testCases !== null) {
-			this.testCases = Thrift.copyList(args.testCases, [ ttypes.TestCase ]);
+			this.testCases = Thrift.copyList(args.testCases, [ttypes.TestCase]);
 		}
 	}
 };
@@ -374,7 +375,7 @@ ExecutorService_execute_args.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRUCT, this.functions.length);
 		for (var iter78 in this.functions) {
 			if (this.functions.hasOwnProperty(iter78)) {
-				iter78 = this.functions[ iter78 ];
+				iter78 = this.functions[iter78];
 				iter78.write(output);
 			}
 		}
@@ -386,7 +387,7 @@ ExecutorService_execute_args.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRUCT, this.testCases.length);
 		for (var iter79 in this.testCases) {
 			if (this.testCases.hasOwnProperty(iter79)) {
-				iter79 = this.testCases[ iter79 ];
+				iter79 = this.testCases[iter79];
 				iter79.write(output);
 			}
 		}
@@ -402,7 +403,7 @@ ExecutorService_execute_result = function (args) {
 	this.success = null;
 	if (args) {
 		if (args.success !== undefined && args.success !== null) {
-			this.success = Thrift.copyList(args.success, [ ttypes.Result ]);
+			this.success = Thrift.copyList(args.success, [ttypes.Result]);
 		}
 	}
 };
@@ -457,7 +458,7 @@ ExecutorService_execute_result.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRUCT, this.success.length);
 		for (var iter87 in this.success) {
 			if (this.success.hasOwnProperty(iter87)) {
-				iter87 = this.success[ iter87 ];
+				iter87 = this.success[iter87];
 				iter87.write(output);
 			}
 		}
@@ -486,7 +487,7 @@ ExecutorServiceClient.prototype.getBlacklist = function (language, callback) {
 	this._seqid = this.new_seqid();
 	if (callback === undefined) {
 		var _defer = Q.defer();
-		this._reqs[ this.seqid() ] = function (error, result) {
+		this._reqs[this.seqid()] = function (error, result) {
 			if (error) {
 				_defer.reject(error);
 			} else {
@@ -496,7 +497,7 @@ ExecutorServiceClient.prototype.getBlacklist = function (language, callback) {
 		this.send_getBlacklist(language);
 		return _defer.promise;
 	} else {
-		this._reqs[ this.seqid() ] = callback;
+		this._reqs[this.seqid()] = callback;
 		this.send_getBlacklist(language);
 	}
 };
@@ -512,9 +513,9 @@ ExecutorServiceClient.prototype.send_getBlacklist = function (language) {
 };
 
 ExecutorServiceClient.prototype.recv_getBlacklist = function (input, mtype, rseqid) {
-	var callback = this._reqs[ rseqid ] || function () {
+	var callback = this._reqs[rseqid] || function () {
 		};
-	delete this._reqs[ rseqid ];
+	delete this._reqs[rseqid];
 	if (mtype == Thrift.MessageType.EXCEPTION) {
 		var x = new Thrift.TApplicationException();
 		x.read(input);
@@ -534,7 +535,7 @@ ExecutorServiceClient.prototype.getFragment = function (language, functions, cal
 	this._seqid = this.new_seqid();
 	if (callback === undefined) {
 		var _defer = Q.defer();
-		this._reqs[ this.seqid() ] = function (error, result) {
+		this._reqs[this.seqid()] = function (error, result) {
 			if (error) {
 				_defer.reject(error);
 			} else {
@@ -544,7 +545,7 @@ ExecutorServiceClient.prototype.getFragment = function (language, functions, cal
 		this.send_getFragment(language, functions);
 		return _defer.promise;
 	} else {
-		this._reqs[ this.seqid() ] = callback;
+		this._reqs[this.seqid()] = callback;
 		this.send_getFragment(language, functions);
 	}
 };
@@ -561,9 +562,9 @@ ExecutorServiceClient.prototype.send_getFragment = function (language, functions
 };
 
 ExecutorServiceClient.prototype.recv_getFragment = function (input, mtype, rseqid) {
-	var callback = this._reqs[ rseqid ] || function () {
+	var callback = this._reqs[rseqid] || function () {
 		};
-	delete this._reqs[ rseqid ];
+	delete this._reqs[rseqid];
 	if (mtype == Thrift.MessageType.EXCEPTION) {
 		var x = new Thrift.TApplicationException();
 		x.read(input);
@@ -583,7 +584,7 @@ ExecutorServiceClient.prototype.execute = function (language, fragment, function
 	this._seqid = this.new_seqid();
 	if (callback === undefined) {
 		var _defer = Q.defer();
-		this._reqs[ this.seqid() ] = function (error, result) {
+		this._reqs[this.seqid()] = function (error, result) {
 			if (error) {
 				_defer.reject(error);
 			} else {
@@ -593,7 +594,7 @@ ExecutorServiceClient.prototype.execute = function (language, fragment, function
 		this.send_execute(language, fragment, functions, testCases);
 		return _defer.promise;
 	} else {
-		this._reqs[ this.seqid() ] = callback;
+		this._reqs[this.seqid()] = callback;
 		this.send_execute(language, fragment, functions, testCases);
 	}
 };
@@ -612,9 +613,9 @@ ExecutorServiceClient.prototype.send_execute = function (language, fragment, fun
 };
 
 ExecutorServiceClient.prototype.recv_execute = function (input, mtype, rseqid) {
-	var callback = this._reqs[ rseqid ] || function () {
+	var callback = this._reqs[rseqid] || function () {
 		};
-	delete this._reqs[ rseqid ];
+	delete this._reqs[rseqid];
 	if (mtype == Thrift.MessageType.EXCEPTION) {
 		var x = new Thrift.TApplicationException();
 		x.read(input);
@@ -635,8 +636,8 @@ ExecutorServiceProcessor = Executor.Processor = function (handler) {
 }
 ExecutorServiceProcessor.prototype.process = function (input, output) {
 	var r = input.readMessageBegin();
-	if (this[ 'process_' + r.fname ]) {
-		return this[ 'process_' + r.fname ].call(this, r.rseqid, input, output);
+	if (this['process_' + r.fname]) {
+		return this['process_' + r.fname].call(this, r.rseqid, input, output);
 	} else {
 		input.skip(Thrift.Type.STRUCT);
 		input.readMessageEnd();

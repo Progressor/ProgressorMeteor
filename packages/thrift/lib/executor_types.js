@@ -19,16 +19,16 @@ FunctionSignature = ttypes.FunctionSignature = function (args) {
 			this.name = args.name;
 		}
 		if (args.inputNames !== undefined && args.inputNames !== null) {
-			this.inputNames = Thrift.copyList(args.inputNames, [ null ]);
+			this.inputNames = Thrift.copyList(args.inputNames, [null]);
 		}
 		if (args.inputTypes !== undefined && args.inputTypes !== null) {
-			this.inputTypes = Thrift.copyList(args.inputTypes, [ null ]);
+			this.inputTypes = Thrift.copyList(args.inputTypes, [null]);
 		}
 		if (args.outputNames !== undefined && args.outputNames !== null) {
-			this.outputNames = Thrift.copyList(args.outputNames, [ null ]);
+			this.outputNames = Thrift.copyList(args.outputNames, [null]);
 		}
 		if (args.outputTypes !== undefined && args.outputTypes !== null) {
-			this.outputTypes = Thrift.copyList(args.outputTypes, [ null ]);
+			this.outputTypes = Thrift.copyList(args.outputTypes, [null]);
 		}
 	}
 };
@@ -148,7 +148,7 @@ FunctionSignature.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.inputNames.length);
 		for (var iter28 in this.inputNames) {
 			if (this.inputNames.hasOwnProperty(iter28)) {
-				iter28 = this.inputNames[ iter28 ];
+				iter28 = this.inputNames[iter28];
 				output.writeString(iter28);
 			}
 		}
@@ -160,7 +160,7 @@ FunctionSignature.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.inputTypes.length);
 		for (var iter29 in this.inputTypes) {
 			if (this.inputTypes.hasOwnProperty(iter29)) {
-				iter29 = this.inputTypes[ iter29 ];
+				iter29 = this.inputTypes[iter29];
 				output.writeString(iter29);
 			}
 		}
@@ -172,7 +172,7 @@ FunctionSignature.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.outputNames.length);
 		for (var iter30 in this.outputNames) {
 			if (this.outputNames.hasOwnProperty(iter30)) {
-				iter30 = this.outputNames[ iter30 ];
+				iter30 = this.outputNames[iter30];
 				output.writeString(iter30);
 			}
 		}
@@ -184,7 +184,7 @@ FunctionSignature.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.outputTypes.length);
 		for (var iter31 in this.outputTypes) {
 			if (this.outputTypes.hasOwnProperty(iter31)) {
-				iter31 = this.outputTypes[ iter31 ];
+				iter31 = this.outputTypes[iter31];
 				output.writeString(iter31);
 			}
 		}
@@ -205,10 +205,10 @@ TestCase = ttypes.TestCase = function (args) {
 			this.functionName = args.functionName;
 		}
 		if (args.inputValues !== undefined && args.inputValues !== null) {
-			this.inputValues = Thrift.copyList(args.inputValues, [ null ]);
+			this.inputValues = Thrift.copyList(args.inputValues, [null]);
 		}
 		if (args.expectedOutputValues !== undefined && args.expectedOutputValues !== null) {
-			this.expectedOutputValues = Thrift.copyList(args.expectedOutputValues, [ null ]);
+			this.expectedOutputValues = Thrift.copyList(args.expectedOutputValues, [null]);
 		}
 	}
 };
@@ -290,7 +290,7 @@ TestCase.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.inputValues.length);
 		for (var iter46 in this.inputValues) {
 			if (this.inputValues.hasOwnProperty(iter46)) {
-				iter46 = this.inputValues[ iter46 ];
+				iter46 = this.inputValues[iter46];
 				output.writeString(iter46);
 			}
 		}
@@ -302,7 +302,7 @@ TestCase.prototype.write = function (output) {
 		output.writeListBegin(Thrift.Type.STRING, this.expectedOutputValues.length);
 		for (var iter47 in this.expectedOutputValues) {
 			if (this.expectedOutputValues.hasOwnProperty(iter47)) {
-				iter47 = this.expectedOutputValues[ iter47 ];
+				iter47 = this.expectedOutputValues[iter47];
 				output.writeString(iter47);
 			}
 		}
@@ -316,11 +316,15 @@ TestCase.prototype.write = function (output) {
 
 Result = ttypes.Result = function (args) {
 	this.success = null;
+	this.fatal = null;
 	this.result = null;
 	this.performance = null;
 	if (args) {
 		if (args.success !== undefined && args.success !== null) {
 			this.success = args.success;
+		}
+		if (args.fatal !== undefined && args.fatal !== null) {
+			this.fatal = args.fatal;
 		}
 		if (args.result !== undefined && args.result !== null) {
 			this.result = args.result;
@@ -350,13 +354,20 @@ Result.prototype.read = function (input) {
 				}
 				break;
 			case 2:
+				if (ftype == Thrift.Type.BOOL) {
+					this.fatal = input.readBool();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 3:
 				if (ftype == Thrift.Type.STRING) {
 					this.result = input.readString();
 				} else {
 					input.skip(ftype);
 				}
 				break;
-			case 3:
+			case 4:
 				if (ftype == Thrift.Type.STRUCT) {
 					this.performance = new ttypes.PerformanceIndicators();
 					this.performance.read(input);
@@ -380,13 +391,18 @@ Result.prototype.write = function (output) {
 		output.writeBool(this.success);
 		output.writeFieldEnd();
 	}
+	if (this.fatal !== null && this.fatal !== undefined) {
+		output.writeFieldBegin('fatal', Thrift.Type.BOOL, 2);
+		output.writeBool(this.fatal);
+		output.writeFieldEnd();
+	}
 	if (this.result !== null && this.result !== undefined) {
-		output.writeFieldBegin('result', Thrift.Type.STRING, 2);
+		output.writeFieldBegin('result', Thrift.Type.STRING, 3);
 		output.writeString(this.result);
 		output.writeFieldEnd();
 	}
 	if (this.performance !== null && this.performance !== undefined) {
-		output.writeFieldBegin('performance', Thrift.Type.STRUCT, 3);
+		output.writeFieldBegin('performance', Thrift.Type.STRUCT, 4);
 		this.performance.write(output);
 		output.writeFieldEnd();
 	}
