@@ -63,44 +63,49 @@
 					{{/unless}}
 				</div>
 				<div class="col-md-6">
-					<table id="table-testcases" class="table table-condensed table-striped">
-						<thead>
-							<tr>
-								<th scope="col" colspan="{{#if testCasesEvaluated}}2{{else}}1{{/if}}">{{i18n "exercise.testCase.descriptionLabel"}}</th>
-								<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each testCases}}
-								{{#if visible}}
+					{{#unless executionFatal}}
+						<table id="table-testcases" class="table table-condensed table-striped">
+							<thead>
+								<tr>
+									<th scope="col" colspan="{{#if testCasesEvaluated}}2{{else}}1{{/if}}">{{i18n "exercise.testCase.descriptionLabel"}}</th>
+									<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each testCases}}
+									{{#if visible}}
+										<tr>
+											{{#if testCasesEvaluated}}
+												<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
+											{{/if}}
+											<td>{{testCaseSignature this}}</td>
+											<td>
+												<pre>{{testCaseExpectedOutput this}}</pre>
+												{{#if testCasesEvaluated}}
+													{{#unless testCaseSuccess this}}
+														<small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
+														<pre class="text-danger">{{testCaseActualOutput this}}</pre>
+													{{/unless}}
+												{{/if}}
+											</td>
+										</tr>
+									{{/if}}
+								{{/each}}
+								{{#if invisibleTestCases}}
 									<tr>
 										{{#if testCasesEvaluated}}
-											<td><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></td>
+											<td><span class="glyphicon glyphicon-{{#if invisibleTestCasesSuccess}}ok{{else}}remove{{/if}} text-{{#if invisibleTestCasesSuccess}}success{{else}}danger{{/if}}"></span></td>
 										{{/if}}
-										<td>{{testCaseSignature this}}</td>
-										<td>
-											<pre>{{testCaseExpectedOutput this}}</pre>
-											{{#if testCasesEvaluated}}
-												{{#unless testCaseSuccess this}}
-													<small>{{i18n "exercise.testCase.resultLabel"}}:</small>
-													<pre class="text-danger">{{testCaseActualOutput this}}</pre>
-												{{/unless}}
-											{{/if}}
-										</td>
+										<td>{{i18n "exercise.testCase.others"}}</td>
+										<td></td>
 									</tr>
 								{{/if}}
-							{{/each}}
-							{{#if invisibleTestCases}}
-								<tr>
-									{{#if testCasesEvaluated}}
-										<td><span class="glyphicon glyphicon-{{#if invisibleTestCasesSuccess}}ok{{else}}remove{{/if}} text-{{#if invisibleTestCasesSuccess}}success{{else}}danger{{/if}}"></span></td>
-									{{/if}}
-									<td>{{i18n "exercise.testCase.others"}}</td>
-									<td></td>
-								</tr>
-							{{/if}}
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					{{else}}
+						<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+						<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+					{{/unless}}
 				</div>
 			</div>
 		</section>

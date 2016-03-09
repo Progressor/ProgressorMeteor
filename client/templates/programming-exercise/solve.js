@@ -55,11 +55,12 @@
 			blackListMessage: dependOnBlacklistMatches(() => blacklistMatches ? i18n('exercise.blacklistMatch', blacklistMatches) : null),
 			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise, cas),
 			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise, cas),
-			testCasesEvaluated: dependOnExecutionResults(() => !!exectionResults),
-			testCaseSuccess: dependOnExecutionResults(cas => Progressor.isSuccess(exercise, cas, exectionResults)),
+			testCasesEvaluated: dependOnExecutionResults(() => Progressor.isExerciseEvaluated(exercise, exectionResults)),
+			testCaseSuccess: dependOnExecutionResults(cas => Progressor.isTestCaseSuccess(exercise, cas, exectionResults)),
 			testCaseActualOutput: dependOnExecutionResults(cas => Progressor.getActualTestCaseOutput(exercise, cas, exectionResults)),
 			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise),
-			invisibleTestCasesSuccess: dependOnExecutionResults(() => Progressor.isInvisibleSuccess(exercise, exectionResults))
+			invisibleTestCasesSuccess: dependOnExecutionResults(() => Progressor.isInvisibleSuccess(exercise, exectionResults)),
+			executionFatal: dependOnExecutionResults(() => Progressor.isExecutionFatal(exercise, exectionResults))
 		});
 
 	Template.programmingSolve.events(
