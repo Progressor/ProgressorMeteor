@@ -1,7 +1,9 @@
 <template name="account">
-	<header>
-		<h2>{{#if currentUser}}{{i18n "account.title"}}{{/if}}</h2>
-	</header>
+	{{#if currentUser}}
+		<header>
+			<h2>{{i18n "account.title"}}</h2>
+		</header>
+	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-9">
