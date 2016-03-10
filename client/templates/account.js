@@ -1,11 +1,6 @@
 (function () {
 	'use strict';
 
-	Template.account.onRendered(function () {
-		if (location.hash === '#logout')
-			$('#button-logout').click();
-	});
-
 	Template.account.helpers(
 		{
 			currentUserName: () => Meteor.user().emails[0].address,
