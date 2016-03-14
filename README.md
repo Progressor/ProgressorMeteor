@@ -60,4 +60,6 @@ To initialise and inspect the database, simply perform the following steps.
 You need to run the **Executor** to be able to solve exercises.
 
 * You can either clone the repository and build the artifact yourself
-* or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the package `thrift`.
+* or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
+  * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
+    otherwise *Meteor* will recognise the files temporarily created and continuously restart the server.

@@ -1,13 +1,18 @@
 (function () {
 	'use strict';
 
-	var executorConnection = null;
+	const executorInstances = [
+		{ host: 'localhost', port: 9090 }
+	];
+
+	let executorConnections;
 
 	function getExecutorClient() {
 
-		if (executorConnection === null)
-			executorConnection = thrift.createConnection('localhost', 9090);
-		return thrift.createClient(Executor, executorConnection);
+		if (!executorConnections)
+			executorConnections = _.map(executorInstances, i => thrift.createConnection(i.host, i.port));
+
+		return thrift.createClient(Executor, Random.choice(executorConnections));
 	}
 
 	Meteor.methods(
