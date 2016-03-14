@@ -1,12 +1,29 @@
+<template name="categoryExercises">
+	{{> exerciseSearch}}
+</template>
 <template name="exerciseSearch">
 	<header>
-		<nav>
-			<ol class="breadcrumb">
-				<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-				<li class="active">{{i18nProgrammingLanguage exercises}}</li>
-			</ol>
+		<nav class="row">
+			<div class="col-sm-8">
+				<ol class="breadcrumb">
+					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+					{{#unless isCategory}}
+						<li class="active">{{i18nProgrammingLanguage programmingLanguage}}</li>
+					{{else}}
+						<li>{{#linkTo route="exerciseSearch" data=(exerciseSearchData programmingLanguage)}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+						<li class="active">{{i18nCategoryName categories.[0]}}</li>
+					{{/unless}}
+				</ol>
+			</div>
+			{{#if isCategory}}
+				<div class="col-sm-4 text-right">
+					<ul class="breadcrumb">
+						<li>{{#linkTo route="categoryEdit" data=categories.[0]}}{{i18n "category.editButton"}}{{/linkTo}}</li>
+					</ul>
+				</div>
+			{{/if}}
 		</nav>
-		<h2>{{i18n "exercise.searchTitle" (i18nProgrammingLanguage exercises)}}</h2>
+		<h2>{{i18n "exercise.searchTitle" (i18nPageTitle isCategory programmingLanguage categories)}}</h2>
 	</header>
 	<div class="row">
 		<section class="col-sm-6 col-md-6 col-lg-7">
@@ -46,8 +63,10 @@
 				<div class="form-group">
 					<label for="select-category" class="col-md-3 control-label">{{i18n "exercise.categoryLabel"}}</label>
 					<div class="col-md-9">
-						<select id="select-category" class="form-control">
-							<option value="">{{i18n "form.selectAll"}}</option>
+						<select id="select-category" class="form-control" disabled={{isCategory}}>
+							{{#unless isCategory}}
+								<option value="">{{i18n "form.selectAll"}}</option>
+							{{/unless}}
 							{{#each categories}}
 								<option value="{{_id}}">{{i18nCategoryName this}}</option>
 							{{/each}}

@@ -7,6 +7,7 @@
 	Template.exerciseSearch.helpers(
 		{
 			columnWidth: () => 12 / numberOfColumns,
+			exerciseSearchData: l => () => ({ _id: l }),
 			difficultiesExercises(difficulties, exercises) {
 				let exercisesSorted = _.chain(exercises).sortBy(i18n.getName);
 				return _.map(difficulties, function (d) {
@@ -19,7 +20,11 @@
 				});
 			},
 			categories: () => Progressor.categories.find().fetch(),
-			i18nProgrammingLanguage: e => i18n.getProgrammingLanguage(e[0].programmingLanguage),
+			i18nPageTitle (i, l, c) {
+				if (!i) return i18n.getProgrammingLanguage(l);
+				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
+			},
+			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,

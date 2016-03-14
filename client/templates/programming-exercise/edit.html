@@ -42,7 +42,11 @@
 				</select>
 			</div>
 			<div class="form-group form-group-sm">
-				<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
+				<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label> &mdash;
+				{{#if categoryEditData}}
+					{{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}} &mdash;
+				{{/if}}
+				{{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
 				<select id="select-category" class="form-control">
 					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nCategories}}

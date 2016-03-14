@@ -88,6 +88,7 @@
 		{
 			disableLanguage: () => !!exercise.get()._id,
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
+			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
 			i18nExerciseName: i18n.getName,
 			i18nCategoryName: i18n.getName,
@@ -126,25 +127,28 @@
 			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({}, v, { typeLabels: v.types.join(', ') })) : []
 		});
 
-	function changeExerciseTranslation(translationName) {
-		return function (ev) {
-			let $this = $(ev.currentTarget), element = _.find(exercise.get()[translationName + 's'], e => e.language === $this.data('lang'));
-			if (element)
-				element[translationName] = $this.val();
-			else {
-				element = { language: $this.data('lang') };
-				element[translationName] = $this.val();
-				exercise.get()[translationName + 's'].push(element);
-			}
-		};
-	}
-
 	function changeExercise(cb) {
 		return function (ev) {
 			let ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
 			exercise.dep.changed();
 			return ret;
 		};
+	}
+
+	function changeExerciseTranslation(translationName) {
+		return changeExercise(function (ev) {
+			let $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'], elementIndex = -1;
+			let element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
+			if (!value)
+				elements.splice(elementIndex, 1);
+			else if (element)
+				element[translationName] = value;
+			else {
+				element = { language: $this.data('lang') };
+				element[translationName] = value;
+				elements.push(element);
+			}
+		});
 	}
 
 	function changeExerciseCollection(collectionName, cssClass, propertiesFunction) {
