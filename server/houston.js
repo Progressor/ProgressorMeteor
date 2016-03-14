@@ -3,13 +3,19 @@
 
 	Houston.add_collection(Meteor.users);
 
-	Houston.methods('exercises', {
-		release(doc) {
-			check(doc, Match.ObjectIncluding({ _id: String }));
+	function toggleFlag(collection, flag, elementName, setName, unsetName) {
+		return function (document) {
+			check(document, Match.ObjectIncluding({ _id: String }));
 
-			let upd = Progressor.exercises.update(doc._id, { $set: { released: true } });
-			return upd === 1 ? `Exercise '${doc._id}' released successfully.` : `Could not successfully release exercise '${doc._id}'!`;
+			return Progressor[collection].update(document._id, _.object([[document[flag] !== true ? '$set' : '$unset', _.object([[flag, true]])]])) === 1
+				? `${elementName} '${document._id}' successfully ${document[flag] !== true ? setName : unsetName}.`
+				: `${elementName} '${document._id}' could NOT successfully be ${document[flag] !== true ? setName : unsetName}!`;
 		}
+	}
+
+	Houston.methods('exercises', {
+		'Release/Hide': toggleFlag('exercises', 'released', 'Exercise', 'released', 'hidden'),
+		'Archive/Restore': toggleFlag('exercises', 'archived', 'Exercise', 'archived', 'restored')
 	});
 
 })();
