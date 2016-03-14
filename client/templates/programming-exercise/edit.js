@@ -79,8 +79,7 @@
 	Template.programmingEdit.onCreated(function () {
 		this.autorun(function () {
 			exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
-
-			Meteor.call('getExecutorTypes', (error, result) => executorTypes.set(result));
+			Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
 		});
 	});
 
