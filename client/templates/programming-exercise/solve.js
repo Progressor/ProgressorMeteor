@@ -6,13 +6,12 @@
 
 	Template.programmingSolve.onCreated(function () {
 		this.autorun(function () {
-			exercise.set(Progressor.exercises.findOne());
-
-			if (!exercise.get()) {
-				result.set(Progressor.results.findOne());
+			let _exercise = Progressor.exercises.findOne(), _result = Progressor.results.findOne();
+			exercise.set(_exercise);
+			if (!_exercise) {
+				result.set(_result);
 				exercise.set(result.get().exercise);
 			}
-
 			if (result.get())
 				executionResults.set(result.get().results);
 		});
