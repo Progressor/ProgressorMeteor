@@ -43,11 +43,11 @@
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(result.get().solved, 'L LT'),
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
-			testCaseSignature: cas => Progressor.getTestCaseSignature(exercise.get(), cas),
-			testCaseExpectedOutput: cas => Progressor.getExpectedTestCaseOutput(exercise.get(), cas),
+			testCaseSignature: c => Progressor.getTestCaseSignature(exercise.get(), c),
+			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(exercise.get(), c),
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
-			testCaseSuccess: cas => Progressor.isTestCaseSuccess(exercise.get(), cas, executionResults.get()),
-			testCaseActualOutput: cas => Progressor.getActualTestCaseOutput(exercise.get(), cas, executionResults.get()),
+			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c, executionResults.get()),
+			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(exercise.get(), c, executionResults.get()),
 			invisibleTestCases: () => Progressor.hasInvisibleTestCases(exercise.get()),
 			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(exercise.get(), executionResults.get()),
 			executionFatal: () => Progressor.isExecutionFatal(exercise.get(), executionResults.get())
@@ -62,6 +62,7 @@
 					$result.css('opacity', 1);
 				});
 			},
+			'click #button-solution': () => $('#textarea-fragment').val(exercise.get().solution),
 			'keyup #textarea-fragment': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);

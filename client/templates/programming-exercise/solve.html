@@ -106,6 +106,9 @@
 						<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
 						<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
 					{{/unless}}
+					{{#if solutionVisible}}
+						<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button> {{!<br /><pre>{solution}</pre>}}
+					{{/if}}
 				</div>
 			</div>
 		</section>
