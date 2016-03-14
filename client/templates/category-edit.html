@@ -17,6 +17,14 @@
 			<h2>{{i18n "category.createTitle"}}</h2>
 		{{/if}}
 	</header>
+	<div class="help-block">
+		<small class="text-muted">
+			{{i18n "form.createdBy"}} {{userName author_id}}
+			{{#if lastEditor_id}}
+				&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+			{{/if}}
+		</small>
+	</div>
 	<div class="row">
 		<div class="col-md-8 col-lg-5">
 			<div class="form-group form-group-sm">
@@ -48,7 +56,7 @@
 				</div>
 				<div class="form-group form-group-sm">
 					<label for="textarea-description-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
-					<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control" data-lang="{{_id}}">{{description}}</textarea>
+					<textarea id="textarea-description-{{_id}}" rows="20" cols="40" class="form-control" data-lang="{{_id}}">{{description}}</textarea>
 				</div>
 			</div>
 		{{/each}}

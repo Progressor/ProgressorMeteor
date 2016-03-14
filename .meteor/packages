@@ -29,7 +29,7 @@ accounts-password       # email - password login provider
 accounts-ui             # A turn-key user interface for Meteor Accounts.
 underscore              # underscore.js library
 less                    # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
-markdown                # markdown support
+# markdown              # basic markdown support
 
 anti:i18n               # A simple (The simplest possible? Perhaps) i18n package for Meteor.
 momentjs:moment         # A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.
@@ -39,5 +39,6 @@ zimme:iron-router-auth	# Auth plugin and hooks for Iron.Router
 alanning:roles					# Authorization package for Meteor - compatible with built-in accounts package.
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
 sacha:spin              # A Meteor package wrapper for Spin.js via Npm.depends(). - A spinning activity indicator http://spin.js.org.
+chuangbo:marked         # A wrapper of marked. - A markdown parser and compiler. Built for speed.
 
 thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation

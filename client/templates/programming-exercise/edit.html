@@ -16,6 +16,14 @@
 			<h2>{{i18n "exercise.createTitle"}}</h2>
 		{{/if}}
 	</header>
+	<div class="help-block">
+		<small class="text-muted">
+			{{i18n "form.createdBy"}} {{userName author_id}}
+			{{#if lastEditor_id}}
+				&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+			{{/if}}
+		</small>
+	</div>
 	<div class="btn-group">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
 		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
