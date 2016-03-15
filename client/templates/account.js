@@ -3,12 +3,12 @@
 
 	Template.account.helpers(
 		{
-			currentUserName: () => Meteor.user().emails[0].address,
-			resultViewData: res => ({ _id: res._id }),
+			currentUserName: () => Progressor.getUserName(Meteor.user()),
+			userName: Progressor.getUserName,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,
-			i18nDateTime: dat => i18n.formatDate(dat, 'L LT')
+			i18nDateTime: d => i18n.formatDate(d, 'L LT')
 		});
 
 	Template.account.events(

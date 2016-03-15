@@ -1,15 +1,15 @@
 <template name="account">
 	{{#if currentUser}}
 		<header>
-			<h2>{{i18n "account.title"}}</h2>
+			<h2 style="margin: 10px 0 20px 0">{{i18n "account.title"}}</h2>
 		</header>
 	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-9">
 				<div class="panel panel-default">
-					<div class="panel-heading">{{currentUserName}}</div>
-					{{#if exercises}}
+					<div class="panel-heading">Gelöste Aufgaben</div>
+					{{#if results}}
 						<table class="table table-condensed table-striped">
 							<thead>
 								<tr>
@@ -20,12 +20,41 @@
 								</tr>
 							</thead>
 							<tbody>
-								{{#each exercises}}
+								{{#each results}}
 									<tr>
-										<td>{{#linkTo route="resultView" data=(resultViewData this)}}{{i18nExerciseName exercise}}{{/linkTo}}</td>
+										<td>{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}</td>
 										<td>{{i18nCategoryName exercise.category}}</td>
 										<td>{{i18nDifficulty exercise.difficulty}}</td>
 										<td>{{i18nDateTime solved}}</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					{{else}}
+						<div class="panel-body">{{i18n "form.noResults"}}</div>
+					{{/if}}
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">Erstellte Aufgaben</div>
+					{{#if authoredExercises}}
+						<table class="table table-condensed table-striped">
+							<thead>
+								<tr>
+									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">Zuletzt Bearbeitet</th>
+									<th scope="col">Bearbeiter</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each authoredExercises}}
+									<tr>
+										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+										<td>{{i18nCategoryName category}}</td>
+										<td>{{i18nDifficulty difficulty}}</td>
+										<td>{{i18nDateTime lastEdited}}</td>
+										<td>{{userName lastEditor_id}}</td>
 									</tr>
 								{{/each}}
 							</tbody>

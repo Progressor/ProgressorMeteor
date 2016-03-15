@@ -58,8 +58,6 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/ejson/1.0.7/web.browser/stringify.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/ejson/1.0.7/web.browser/ejson.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/npm-bcrypt/0.7.8_2/web.browser/packages/npm-bcrypt.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/showdown.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/template-integration.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/location.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/state.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/utils.js" />
@@ -118,6 +116,7 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/templatetag.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/codegen.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/optimizer.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/chuangbo_marked/0.3.5_1/web.browser/packages/chuangbo_marked.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/templating-tools.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/compile-tags-with-spacebars.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/html-scanner.js" />
@@ -321,8 +320,6 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/ejson/1.0.7/web.browser/stringify.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/ejson/1.0.7/web.browser/ejson.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/npm-bcrypt/0.7.8_2/web.browser/packages/npm-bcrypt.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/showdown.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/markdown/1.0.5/web.browser/template-integration.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/location.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/state.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/iron_location/1.0.11/web.browser/lib/utils.js" />
@@ -381,6 +378,7 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/templatetag.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/codegen.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/spacebars-compiler/1.0.7/web.browser/optimizer.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/chuangbo_marked/0.3.5_1/web.browser/packages/chuangbo_marked.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/templating-tools.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/compile-tags-with-spacebars.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/templating-tools/1.0.0/web.browser/html-scanner.js" />
