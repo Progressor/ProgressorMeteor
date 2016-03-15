@@ -42,7 +42,7 @@ The [package documentation](packages/thrift/README.md) contains the instructions
 
 This application uses the included *MongoDB* engine.
 
-The default / sample documents are [included](server/startup.js) in the application.
+The default / example documents are [included](server/example-data.js) in the application.
 To initialise and inspect the database, simply perform the following steps.
 
 1. Run the *Meteor* application.
