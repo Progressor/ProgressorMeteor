@@ -16,17 +16,26 @@
 			<h2>{{i18n "exercise.createTitle"}}</h2>
 		{{/if}}
 	</header>
-	<div class="help-block">
-		<small class="text-muted">
-			{{i18n "form.createdBy"}} {{userName author_id}}
-			{{#if lastEditor_id}}
-				&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
-			{{/if}}
-		</small>
-	</div>
+	{{#if this}}
+		<div class="help-block">
+			<small class="text-muted">
+				{{i18n "form.createdBy"}} {{userName author_id}}
+				{{#if lastEditor_id}}
+					&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+				{{/if}}
+			</small>
+		</div>
+	{{/if}}
 	<div class="btn-group">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
+		{{#if this}}
+			{{#unless released}}
+				<button class="btn btn-info btn-release">{{i18n "exercise.releaseButton"}}</button>
+			{{else}}
+				<button class="btn btn-info btn-unrelease">{{i18n "exercise.unreleaseButton"}}</button>
+			{{/unless}}
+			{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+		{{/if}}
 		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 	</div>
 	<div class="row visible-md-block visible-lg-block">
@@ -205,11 +214,11 @@
 					</div>
 					<div class="col-sm-8 text-right">
 						<div class="checkbox checkbox-nospacing">
-							<label><input type="checkbox" id="checkbox-solution-visible"> {{i18n "exercise.showSolutionLabel"}}</label>
+							<label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
 						</div>
 					</div>
 				</div>
-				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="..."></textarea>
+				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="...">{{solution}}</textarea>
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
@@ -219,6 +228,7 @@
 					{{blackListMessage}}
 				</div>
 			</div>
+			<div id="execution-results"></div>
 		</section>
 		<section class="col-md-7">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
@@ -301,12 +311,18 @@
 					<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
 				{{/if}}
 			{{/if}}
-			<div id="execution-results"></div>
 		</section>
 	</div>
 	<div class="btn-group separated-top">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
+		{{#if this}}
+			{{#unless released}}
+				<button class="btn btn-info btn-release">{{i18n "exercise.releaseButton"}}</button>
+			{{else}}
+				<button class="btn btn-info btn-unrelease">{{i18n "exercise.unreleaseButton"}}</button>
+			{{/unless}}
+			{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+		{{/if}}
 		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 	</div>
 </template>

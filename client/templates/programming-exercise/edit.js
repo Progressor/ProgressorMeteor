@@ -88,9 +88,7 @@
 	});
 
 	Template.programmingEdit.onRendered(function () {
-		if (exercise.get() && exercise.get().solution)
-			$('#textarea-solution').val(exercise.get().solution);
-		else
+		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
 				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
 					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
@@ -246,9 +244,13 @@
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
-			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
-			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
-			'click .btn-save': () => Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id })),
+			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
+			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
+			'click .btn-save, click .btn-release, click .btn-unrelease': changeExercise(function (ev, $this) {
+				if ($this.hasClass('btn-release')) exercise.get().released = true;
+				else if ($this.hasClass('btn-unrelease')) delete exercise.get().released;
+				Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id }));
+			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), error => error || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),
 
 			//execution
