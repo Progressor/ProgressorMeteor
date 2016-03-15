@@ -197,6 +197,28 @@
 					{{/each}}
 				</div>
 			{{/each}}
+			<hr />
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="textarea-solution">{{i18n "exercise.solutionFragmentLabel"}}</label>
+					</div>
+					<div class="col-sm-8 text-right">
+						<div class="checkbox checkbox-nospacing">
+							<label><input type="checkbox" id="checkbox-solution-visible"> {{i18n "exercise.showSolutionLabel"}}</label>
+						</div>
+					</div>
+				</div>
+				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="..."></textarea>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+				</div>
+				<div class="col-sm-8 text-danger text-right">
+					{{blackListMessage}}
+				</div>
+			</div>
 		</section>
 		<section class="col-md-7">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
@@ -253,16 +275,36 @@
 						{{else}}
 							<span class="text-muted">{{i18n "form.noResults"}}</span>
 						{{/each}}
+						{{#if testCasesEvaluated}}
+							{{#unless executionFatal}}
+								{{#unless testCaseSuccess this}}
+									<small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
+									<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+								{{/unless}}
+							{{/unless}}
+						{{/if}}
 					</div>
 					<div class="col-sm-2">
 						<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign"></span></button>
 						<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign"></span></button>
+						{{#if testCasesEvaluated}}
+							{{#unless executionFatal}}
+								<span class="btn btn-sm btn-spacing testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
+							{{/unless}}
+						{{/if}}
 					</div>
 				</div>
 			{{/each}}
+			{{#if testCasesEvaluated}}
+				{{#if executionFatal}}
+					<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+					<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+				{{/if}}
+			{{/if}}
+			<div id="execution-results"></div>
 		</section>
 	</div>
-	<div class="btn-group">
+	<div class="btn-group separated-top">
 		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
 		{{#if this}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
 		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>

@@ -68,7 +68,7 @@
 								})]
 					}));
 
-				let functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun));
+				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 				return getExecutorClient().getFragment(language, functions);
 			},
 			execute(language, exercise, fragment) {
@@ -94,8 +94,8 @@
 					}));
 				check(fragment, String);
 
-				let functions = _.map(exercise.functions, fun => new ttypes.FunctionSignature(fun)),
-					testCases = _.map(exercise.testCases, cas => new ttypes.TestCase(cas));
+				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
+					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
 
 				let client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
 

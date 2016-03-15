@@ -2,6 +2,8 @@
 	'use strict';
 
 	const exercise = new ReactiveVar(getDefaultExercise()), executorTypes = new ReactiveVar(null);
+	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
+	let solutionTyped = false;
 
 	function getDefaultExercise() {
 		return {
@@ -18,7 +20,9 @@
 				inputValues: [],
 				expectedOutputValues: [],
 				visible: false
-			}]
+			}],
+			solution: null,
+			solutionVisible: false
 		};
 	}
 
@@ -83,6 +87,20 @@
 		});
 	});
 
+	Template.programmingEdit.onRendered(function () {
+		if (exercise.get() && exercise.get().solution)
+			$('#textarea-solution').val(exercise.get().solution);
+		else
+			this.autorun(function () {
+				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
+						let $solution = $('#textarea-solution');
+						if (!error && !solutionTyped)
+							$solution.val(result);
+					});
+			});
+	});
+
 	Template.programmingEdit.helpers(
 		{
 			disableLanguage: () => !!exercise.get()._id,
@@ -112,20 +130,29 @@
 				description: i18n.getDescriptionForLanguage(exercise.get(), id)
 			})),
 			functions: testCase => _.map(exercise.get().functions, _function => _.extend({}, _function, {
+				original: _function,
 				outputType: _function.outputTypes[0],
 				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : getDefaultExercise().functions[0].inputTypes, (t, i) => ({ type: t, name: _function.inputNames ? _function.inputNames[i] : null })),
 				isActive: testCase && testCase.functionName === _function.name
 			})),
 			testCases: () => _.map(exercise.get().testCases, testCase => {
-				let _function = _.find(exercise.get().functions, f => f.name === testCase.functionName);
+				let _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
 				let fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof(v) === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
 				return _.extend({}, testCase, {
+					original: testCase,
 					inputValues: fillValues(testCase.inputValues, _function ? _function.inputTypes : null),
 					expectedOutputValues: fillValues(testCase.expectedOutputValues, _function ? _function.outputTypes : null)
 				});
 			}),
 			executorTypes: () => executorTypes.get() ? executorTypes.get().types : [],
-			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({}, v, { typeLabels: v.types.join(', ') })) : []
+			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({}, v, { typeLabels: v.types.join(', ') })) : [],
+
+			//execution
+			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
+			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
+			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c.original, executionResults.get()),
+			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(exercise.get(), c.original, executionResults.get()),
+			executionFatal: () => Progressor.isExecutionFatal(exercise.get(), executionResults.get())
 		});
 
 	function changeExercise(cb) {
@@ -219,8 +246,37 @@
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
+			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
+			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
 			'click .btn-save': () => Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id })),
-			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), error => error || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }))
+			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), error => error || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),
+
+			//execution
+			'click #button-execute'() {
+				let solution = $('#textarea-solution').val(), $result = $('.testcase-result').css('opacity', 0.333);
+				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), solution, (error, result) => {
+					let success = !error && Progressor.isExecutionSuccess(exercise.get(), result);
+					executionResults.set(!error ? result : null);
+					$result.css('opacity', 1);
+					$('.execution-result').alert('close');
+					let $alert = $(`<div class="alert alert-${success ? 'success' : 'danger'} fade execution-result" role="alert"></div>`).text(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`)).appendTo($('#execution-results'));
+					setTimeout(() => $alert.addClass('in'), 1);
+					setTimeout(() => $alert.alert('close'), 3000);
+				});
+			},
+			'click #button-solution': () => $('#textarea-solution').val(exercise.get().solution),
+			'keyup #textarea-solution': _.throttle(function () {
+				solutionTyped = true;
+				if (exercise.get().programmingLanguage)
+					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
+						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
+						Meteor.call('getBlacklist', exercise.get().programmingLanguage, (error, result) => blacklist.set(!error ? _.extend(blacklist.get(), { elements: result }) : null));
+					} else {
+						let solution = $('#textarea-solution').val();
+						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
+						$('#button-execute').prop('disabled', blacklistMatches.get().length);
+					}
+			}, 500)
 		});
 
 })();

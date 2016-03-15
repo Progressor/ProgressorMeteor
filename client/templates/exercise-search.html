@@ -79,7 +79,7 @@
 						<select id="select-difficulty" class="form-control">
 							<option value="">{{i18n "form.selectAll"}}</option>
 							{{#each difficulties}}
-								<option value="{{_id}}">{{i18nDifficulty _id}}</option>
+								<option value="{{this}}">{{i18nDifficulty this}}</option>
 							{{/each}}
 						</select>
 					</div>
