@@ -17,14 +17,16 @@
 			<h2>{{i18n "category.createTitle"}}</h2>
 		{{/if}}
 	</header>
-	<div class="help-block">
-		<small class="text-muted">
-			{{i18n "form.createdBy"}} {{userName author_id}}
-			{{#if lastEditor_id}}
-				&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
-			{{/if}}
-		</small>
-	</div>
+	{{#if this}}
+		<div class="help-block">
+			<small class="text-muted">
+				{{i18n "form.createdBy"}} {{userName author_id}}
+				{{#if lastEditor_id}}
+					&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+				{{/if}}
+			</small>
+		</div>
+	{{/if}}
 	<div class="row">
 		<div class="col-md-8 col-lg-5">
 			<div class="form-group form-group-sm">

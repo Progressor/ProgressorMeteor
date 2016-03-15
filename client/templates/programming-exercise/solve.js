@@ -7,13 +7,9 @@
 	Template.programmingSolve.onCreated(function () {
 		this.autorun(function () {
 			let _exercise = Progressor.exercises.findOne(), _result = Progressor.results.findOne();
-			if (_exercise)
-				exercise.set(_exercise);
-			else {
-				result.set(_result);
-				exercise.set(_result.exercise);
-				executionResults.set(_result.results);
-			}
+			exercise.set(!_exercise && _result ? _result.exercise : _exercise);
+			result.set(!_exercise ? _result : null);
+			executionResults.set(!_exercise && _result ? _result.results : null);
 		});
 	});
 

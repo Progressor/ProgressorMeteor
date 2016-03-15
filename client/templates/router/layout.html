@@ -69,13 +69,11 @@
 		</div>
 	</header>
 	<div class="container-fluid">
-		<div class="row">
-			{{#unless customTitle}}
-				<h1 class="hidden">{{i18n "layout.title"}}</h1>
-			{{/unless}}
-			<main>
-				{{> yield}}
-			</main>
-		</div>
+		{{#unless customTitle}}
+			<h1 class="hidden">{{i18n "layout.title"}}</h1>
+		{{/unless}}
+		<main>
+			{{> yield}}
+		</main>
 	</div>
 </template>
