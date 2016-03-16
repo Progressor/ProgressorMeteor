@@ -16,6 +16,17 @@
 	});
 
 	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, released: true }));
+	Meteor.publish('publicOrAuthoredExercises', function () {
+		return Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
+	});
+	Meteor.publish('publicExercise', function (id) {
+		check(id, String);
+		return Progressor.exercises.find({ _id: id, category_id: { $exists: true }, released: true });
+	});
+	Meteor.publish('publicOrAuthoredExercise', function (id) {
+		check(id, String);
+		return Progressor.exercises.find({ _id: id, category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
+	});
 	Meteor.publish('publicExercisesForCategory', function (cat) {
 		check(cat, String);
 		return Progressor.exercises.find({ category_id: cat, released: true });
@@ -24,21 +35,17 @@
 		check(lng, String);
 		return Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, released: true });
 	});
-	Meteor.publish('publicExercise', function (id) {
-		check(id, String);
-		return Progressor.exercises.find({ _id: id, category_id: { $exists: true }, released: true });
-	});
 
 	Meteor.publish('myResults', function () {
 		return Progressor.results.find({ user_id: this.userId });
 	});
-	Meteor.publish('myExerciseResult', function (id) {
-		check(id, String);
-		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
-	});
 	Meteor.publish('myResult', function (id) {
 		check(id, String);
 		return Progressor.results.find({ user_id: this.userId, _id: id });
+	});
+	Meteor.publish('myExerciseResult', function (id) {
+		check(id, String);
+		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
 	});
 
 	//////////////////////////
