@@ -7,9 +7,7 @@
 		return { names: [], descriptions: [] };
 	}
 
-	Template.categoryEdit.onCreated(function () {
-		this.autorun(() => category.set(Progressor.categories.findOne() || getDefaultCategory()));
-	});
+	Progressor.initaliseTemplate(Template.categoryEdit, () => category.set(Progressor.categories.findOne() || getDefaultCategory()));
 
 	Template.categoryEdit.helpers(
 		{

@@ -4,13 +4,11 @@
 	const exercise = new ReactiveVar(null), result = new ReactiveVar(null);
 	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
 
-	Template.programmingSolve.onCreated(function () {
-		this.autorun(function () {
-			let _exercise = Progressor.exercises.findOne(), _result = Progressor.results.findOne();
-			exercise.set(!_exercise && _result ? _result.exercise : _exercise);
-			result.set(!_exercise ? _result : null);
-			executionResults.set(!_exercise && _result ? _result.results : null);
-		});
+	Progressor.initaliseTemplate(Template.programmingSolve, function () {
+		let _exercise = Progressor.exercises.findOne(), _result = Progressor.results.findOne();
+		exercise.set(!_exercise && _result ? _result.exercise : _exercise);
+		result.set(!_exercise ? _result : null);
+		executionResults.set(!_exercise && _result ? _result.results : null);
 	});
 
 	Template.programmingSolve.onRendered(function () {

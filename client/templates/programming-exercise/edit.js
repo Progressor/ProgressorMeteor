@@ -80,11 +80,9 @@
 		return isRecursive ? { typIdx: typeIndex, valIdx: valueIndex } : (typeIndex === type.length || executorType.parameterCount > 0) && valueIndex === value.length; //recursive: return new indexes, otherwise: verify end is reached
 	}
 
-	Template.programmingEdit.onCreated(function () {
-		this.autorun(function () {
-			exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
-			Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
-		});
+	Progressor.initaliseTemplate(Template.programmingEdit, function () {
+		exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
+		Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
 	});
 
 	Template.programmingEdit.onRendered(function () {
