@@ -3,6 +3,7 @@
 
 	const exercise = new ReactiveVar(getDefaultExercise()), executorTypes = new ReactiveVar(null);
 	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
+
 	let solutionTyped = false;
 
 	function getDefaultExercise() {
@@ -80,9 +81,11 @@
 		return isRecursive ? { typIdx: typeIndex, valIdx: valueIndex } : (typeIndex === type.length || executorType.parameterCount > 0) && valueIndex === value.length; //recursive: return new indexes, otherwise: verify end is reached
 	}
 
-	Progressor.initaliseTemplate(Template.programmingEdit, function () {
-		exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
-		Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
+	Template.programmingEdit.onCreated(function () {
+		this.autorun(function () {
+			exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
+			Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
+		});
 	});
 
 	Template.programmingEdit.onRendered(function () {
