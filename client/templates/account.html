@@ -22,7 +22,10 @@
 							<tbody>
 								{{#each results}}
 									<tr>
-										<td>{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}</td>
+										<td>
+											{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
+											{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
+										</td>
 										<td>{{i18nCategoryName exercise.category}}</td>
 										<td>{{i18nDifficulty exercise.difficulty}}</td>
 										<td>{{i18nDateTime solved}}</td>
