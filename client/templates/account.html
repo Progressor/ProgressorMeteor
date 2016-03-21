@@ -6,7 +6,7 @@
 	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
-			<div class="col-md-9">
+			<div class="col-md-7">
 				<div class="panel panel-default">
 					<div class="panel-heading">Gelöste Aufgaben</div>
 					{{#if results}}
@@ -47,7 +47,6 @@
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 									<th scope="col">Zuletzt Bearbeitet / Bearbeiter</th>
-									<th scope="col">Archivieren</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -57,7 +56,7 @@
 										<td>{{i18nCategoryName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
-										<td><button class="btn btn-primary btn-xs button-archive" data-button="{{this._id}}">Archivieren</button></td>
+										<td><button class="btn btn-info btn-xs button-archive" data-button="{{this._id}}">Archivieren</button></td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -75,8 +74,7 @@
 									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">Zuletzt Bearbeitet</th>
-									<th scope="col">Bearbeiter</th>
+									<th scope="col">Zuletzt Bearbeitet / Bearbeiter</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -85,8 +83,8 @@
 										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
 										<td>{{i18nCategoryName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
-										<td>{{i18nDateTime lastEdited}}</td>
-										<td>{{userName lastEditor_id}}</td>
+										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
+										<td>Revert</td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -96,7 +94,7 @@
 					{{/if}}
 				</div>
 			</div>
-			<div class="col-md-3 text-right">
+			<div class="col-md-5 text-right">
 				<div class="btn-group-vertical">
 					<button id="button-logout" class="btn btn-default btn-sm">{{i18n "account.logoutButton"}}</button>
 					<button id="button-logout-others" class="btn btn-default btn-sm">{{i18n "account.logoutOtherClientsButton"}}</button>
