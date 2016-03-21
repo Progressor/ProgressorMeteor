@@ -105,7 +105,7 @@
 			disableLanguage: () => !!exercise.get()._id,
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
-			userName: Progressor.getUserName,
+			userName: Progressor.getUserEmail,
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
 			i18nExerciseName: i18n.getName,
 			i18nCategoryName: i18n.getName,

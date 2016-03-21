@@ -14,7 +14,7 @@
 	Template.categoryEdit.helpers(
 		{
 			exerciseSearchData: c => () => ({ _id: c.programmingLanguage }),
-			userName: Progressor.getUserName,
+			userName: Progressor.getUserEmail,
 			i18nProgrammingLanguage: c => i18n.getProgrammingLanguage(c.programmingLanguage),
 			i18nCategoryName: i18n.getName,
 			i18nDateTime: dat => i18n.formatDate(dat, 'L LT'),

@@ -55,7 +55,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								{{#if currentUser}}
-									<li>{{#linkTo route="account"}}{{currentUserName}}{{/linkTo}}</li>
+									<li>{{#linkTo route="account"}}{{currentUserEmail}}{{/linkTo}}</li>
 									<li>{{#linkTo route="home" query="action=logout" id="link-logout"}}{{i18n "account.logoutButton"}}{{/linkTo}}</li>
 								{{else}}
 									<li>{{#linkTo route="account"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
