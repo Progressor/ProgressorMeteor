@@ -89,7 +89,7 @@
 	});
 
 	Template.programmingEdit.onRendered(function () {
-		$('[data-toggle="tooltip"]').tooltip();
+		$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
 				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
@@ -264,8 +264,8 @@
 					$result.css('opacity', 1);
 					$('.execution-result').alert('close');
 					let $alert = $(`<div class="alert alert-${success ? 'success' : 'danger'} fade execution-result" role="alert"></div>`).text(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`)).appendTo($('#execution-results'));
-					setTimeout(() => $alert.addClass('in'), 1);
-					setTimeout(() => $alert.alert('close'), 3000);
+					Meteor.setTimeout(() => $alert.addClass('in'), 1);
+					Meteor.setTimeout(() => $alert.alert('close'), 3000);
 				});
 			},
 			'click #button-solution': () => $('#textarea-solution').val(exercise.get().solution),

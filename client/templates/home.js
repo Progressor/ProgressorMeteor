@@ -10,7 +10,7 @@
 
 	Template.home.onRendered(() => {
 		let introIndex = 0;
-		let introInterval = setInterval(function () {
+		let introInterval = Meteor.setInterval(function () {
 			if (introIndex < introTexts[0].length)
 				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {
@@ -18,7 +18,7 @@
 					$('<small id="introExplanation"></small>').appendTo($('#intro')); //create & animate explanation
 				$('#introExplanation').text(introTexts[1].substr(0, ++introIndex - introTexts[0].length));
 			} else {
-				clearInterval(introInterval); //clear animation interval
+				Meteor.clearInterval(introInterval); //clear animation interval
 				$('<span class="pulsate">_</span>').appendTo($('#introExplanation'));
 			}
 		}, 150);

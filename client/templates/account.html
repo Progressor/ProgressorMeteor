@@ -56,7 +56,7 @@
 									<td>{{i18nDifficulty difficulty}}</td>
 									<td>{{userName lastEditor_id}}</td>
 									<td>{{i18nDateTime lastEdited}}</td>
-									<td><a role="button"><span class="glyphicon glyphicon-inbox" data-archive-id="{{this._id}}" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
+									<td><a role="button" data-archive-id="{{this._id}}"><span class="glyphicon glyphicon-inbox" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
 								</tr>
 							{{else}}
 								<tr>
@@ -87,7 +87,7 @@
 									<td>{{i18nDifficulty difficulty}}</td>
 									<td>{{userName lastEditor_id}}</td>
 									<td>{{i18nDateTime lastEdited}}</td>
-									<td><a role="button"><span class="glyphicon glyphicon-briefcase" data-unarchive-id="{{this._id}}" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+									<td><a role="button" data-unarchive-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
 								</tr>
 							{{else}}
 								<tr>

@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	Template.account.onRendered(() => $('[data-toggle="tooltip"]').tooltip());
+	Template.account.onRendered(() => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
 
 	Template.account.helpers(
 		{
@@ -25,7 +25,7 @@
 				let $this = $(ev.currentTarget), $group = $this.closest('.form-group');
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {
 					$group.addClass(!err ? 'has-success' : 'has-error');
-					setTimeout(() => $group.removeClass('has-success has-error'), 500);
+					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
 				});
 			}
 		});
