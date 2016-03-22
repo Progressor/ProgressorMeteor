@@ -20,8 +20,8 @@
 		{
 			'click #button-logout': () => Meteor.logout(),
 			'click #button-logout-others': () => Meteor.logoutOtherClients(),
-			'click .button-archive'(ev) {
-				let exercise = Progressor.exercises.findOne({ _id: $(ev.currentTarget).attr('data-button') });
+			'click .glyphicon-folder-close'(ev) {
+				let exercise = Progressor.exercises.findOne({ _id: $(ev.currentTarget).attr('archive-button') });
 				exercise.archived = true;
 				Meteor.call('saveExercise', exercise);
 			},
@@ -31,11 +31,13 @@
 				Meteor.call('saveExercise', exercise);
 			},
 			'click #userDat-save'() {
-				let firstName = $('#input-firstName').val();
-				let lastName = $('#input-lastName').val();
-
-				Meteor.users.update( Meteor.userId(), { $set: { "profile.firstname": firstName, "profile.lastname": lastName }  });
-				
+				let firstName = $('#input-firstName').val(), $fname = $('#input-firstName').css('opacity', 0.333);
+				let lastName = $('#input-lastName').val(), $lname = $('#input-lastName').css('opacity', 0.333);
+				Meteor.users.update(Meteor.userId(), { $set: { "profile.firstname": firstName, "profile.lastname": lastName } });
+				setTimeout(function() {
+					$fname.css('opacity', 1);
+					$lname.css('opacity', 1);
+				}, 500);
 			}
 		});
 

@@ -1,28 +1,28 @@
 <template name="account">
 	{{#if currentUser}}
-	<div class="row">
-		<div class="col-md-7">
-		<header>
-			<h2 style="margin: 10px 0 20px 0">{{i18n "account.title"}}</h2>
-		</header>
-		</div>
-		<div class="col-md-5 text-right">
-			<div class="btn-group" style="margin: 10px 0 20px 0">
-				<div class="btn-group" role="group">
-					<button id="button-logout" class="btn btn-success btn-sm" >{{i18n "account.logoutButton"}}</button>
-				</div>
-				<div class="btn-group" role="group">
-					<button id="button-logout-others" class="btn btn-default btn-sm">{{i18n "account.logoutOtherClientsButton"}}</button>
+		<div class="row">
+			<div class="col-md-7">
+				<header>
+					<h2 class="account-heading">{{i18n "account.title"}}</h2>
+				</header>
+			</div>
+			<div class="col-md-5 text-right">
+				<div class="btn-group account-heading">
+					<div class="btn-group" role="group">
+						<button id="button-logout" class="btn btn-success btn-sm">{{i18n "account.logoutButton"}}</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button id="button-logout-others" class="btn btn-default btn-sm">{{i18n "account.logoutOtherClientsButton"}}</button>
+					</div>
 				</div>
 			</div>
-		</div>
 		</div>
 	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-7">
 				<div class="panel panel-default">
-					<div class="panel-heading">Gelöste Aufgaben</div>
+					<div class="panel-heading"><h3 class="panel-title">Gelöste Aufgaben</h3></div>
 					{{#if results}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -52,7 +52,7 @@
 					{{/if}}
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading">Erstellte Aufgaben</div>
+					<div class="panel-heading"><h3 class="panel-title">Erstellte Aufgaben</h3></div>
 					{{#if authoredExercises}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -70,7 +70,9 @@
 										<td>{{i18nCategoryName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
-										<td><button class="btn btn-default btn-xs button-archive" data-button="{{this._id}}">Archivieren</button></td>
+										<td>
+											<span class="glyphicon glyphicon-folder-close" archive-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "archive"}}"></span>
+										</td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -80,7 +82,7 @@
 					{{/if}}
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading">Archivierte Aufgaben</div>
+					<div class="panel-heading"><h3 class="panel-title">Archivierte Aufgaben</h3></div>
 					{{#if archivedExercises}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -109,28 +111,29 @@
 				</div>
 			</div>
 			<div class="col-md-4 col-md-offset-1">
-				<p>Account Settings</p>
-				<form class="form-horizontal">
-					<div class="form-group">
-						<label for="inputEmail" class="col-md-3 control-label">Email</label>
-						<div class="col-md-9">
-							<input type="email" class="form-control" id="inputEmail" value="{{currentUserEmail}}" readonly>
+				<div class="well">
+					<div class="form-horizontal">
+						<legend>Account Settings <button id="userDat-save" class="btn btn-info btn-sm pull-right" data-toggle="tooltip" data-placement="top" title="{{i18n "save"}}"><span class=" glyphicon glyphicon-floppy-disk"></span></button></legend>
+						<div class="form-group">
+							<label for="Email" class="col-md-3 control-label">Email</label>
+							<div class="col-md-9">
+								<input type="email" class="form-control" id="input-Email" value="{{currentUserEmail}}" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstName" class="col-md-3 control-label">First Name</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="input-firstName" value="{{currentUserFirstName}}" placeholder="Wie lautet dein Vorname?">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastName" class="col-md-3 control-label">Last Name</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="input-lastName" value="{{currentUserLastName}}" placeholder="Wie lautet dein Nachname?">
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="firstName" class="col-md-3 control-label">First Name</label>
-						<div class="col-md-9">
-							<input type="text" class="form-control" id="input-firstName" value="{{currentUserFirstName}}" placeholder="Wie lautet dein Vorname?">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="lastName" class="col-md-3 control-label">Last Name</label>
-						<div class="col-md-9">
-							<input type="text" class="form-control" id="input-lastName" value="{{currentUserLastName}}" placeholder="Wie lautet dein Nachname?">
-						</div>
-					</div>
-				</form>
-				<button id="userDat-save" class="btn btn-primary btn-sm pull-right">Save</button>
+				</div>
 			</div>
 		{{else}}
 			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
