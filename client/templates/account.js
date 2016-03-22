@@ -33,7 +33,7 @@
 			'click #userDat-save'() {
 				let firstName = $('#input-firstName').val(), $fname = $('#input-firstName').css('opacity', 0.333);
 				let lastName = $('#input-lastName').val(), $lname = $('#input-lastName').css('opacity', 0.333);
-				Meteor.users.update(Meteor.userId(), { $set: { "profile.firstname": firstName, "profile.lastname": lastName } });
+				Meteor.users.update(Meteor.userId(), { $set: { "profile.firstName": firstName, "profile.lastName": lastName } });
 				setTimeout(function() {
 					$fname.css('opacity', 1);
 					$lname.css('opacity', 1);
