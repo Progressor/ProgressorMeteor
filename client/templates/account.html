@@ -22,7 +22,7 @@
 		{{#if currentUser}}
 			<div class="col-md-7">
 				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">Gelöste Aufgaben</h3></div>
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.solvedExercisesPanel"}}</h3></div>
 					{{#if results}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -52,7 +52,7 @@
 					{{/if}}
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">Erstellte Aufgaben</h3></div>
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.createdExercisesPanel"}}</h3></div>
 					{{#if authoredExercises}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -60,7 +60,7 @@
 									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">Zuletzt Bearbeitet / Bearbeiter</th>
+									<th scope="col">{{i18n "exercise.editedLabel"}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -71,7 +71,7 @@
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
 										<td>
-											<span class="glyphicon glyphicon-folder-close" archive-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "archive"}}"></span>
+											<span class="glyphicon glyphicon-folder-close" archive-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "account.archiveTooltip"}}"></span>
 										</td>
 									</tr>
 								{{/each}}
@@ -82,7 +82,7 @@
 					{{/if}}
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">Archivierte Aufgaben</h3></div>
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.archivedExercisesPanel"}}</h3></div>
 					{{#if archivedExercises}}
 						<table class="table table-condensed table-striped">
 							<thead>
@@ -90,7 +90,7 @@
 									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">Zuletzt Bearbeitet / Bearbeiter</th>
+									<th scope="col">{{i18n "exercise.editedLabel"}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -100,7 +100,7 @@
 										<td>{{i18nCategoryName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
-										<td><span class="glyphicon glyphicon-repeat" revert-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "revert"}}"></span></td>
+										<td><span class="glyphicon glyphicon-repeat" revert-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "account.revertArchiveTooltip"}}"></span></td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -113,23 +113,23 @@
 			<div class="col-md-4 col-md-offset-1">
 				<div class="well">
 					<div class="form-horizontal">
-						<legend>Account Settings <button id="userDat-save" class="btn btn-info btn-sm pull-right" data-toggle="tooltip" data-placement="top" title="{{i18n "save"}}"><span class=" glyphicon glyphicon-floppy-disk"></span></button></legend>
+						<legend>{{i18n "account.accountSettingsPanel"}} <button id="userDat-save" class="btn btn-info btn-sm pull-right" data-toggle="tooltip" data-placement="top" title="{{i18n "account.saveTooltip"}}"><span class=" glyphicon glyphicon-floppy-disk"></span></button></legend>
 						<div class="form-group">
-							<label for="Email" class="col-md-3 control-label">Email</label>
+							<label for="Email" class="col-md-3 control-label">{{i18n "account.emailLabel"}}</label>
 							<div class="col-md-9">
 								<input type="email" class="form-control" id="input-Email" value="{{currentUserEmail}}" readonly>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="firstName" class="col-md-3 control-label">First Name</label>
+							<label for="firstName" class="col-md-3 control-label">{{i18n "account.firstNameLabel"}}</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" id="input-firstName" value="{{currentUserFirstName}}" placeholder="Wie lautet dein Vorname?">
+								<input type="text" class="form-control" id="input-firstName" value="{{currentUserFirstName}}" placeholder="{{i18n "account.firstNamePlaceholder"}}">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="lastName" class="col-md-3 control-label">Last Name</label>
+							<label for="lastName" class="col-md-3 control-label">{{i18n "account.lastNameLabel"}}</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" id="input-lastName" value="{{currentUserLastName}}" placeholder="Wie lautet dein Nachname?">
+								<input type="text" class="form-control" id="input-lastName" value="{{currentUserLastName}}" placeholder="{{i18n "account.lastNamePlaceholder"}}">
 							</div>
 						</div>
 					</div>
