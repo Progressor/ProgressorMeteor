@@ -99,7 +99,7 @@
 
 				let client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
 
-				if (this.userId) {
+				if (exercise._id && this.userId) {
 					let qry = { user_id: this.userId, exercise_id: exercise._id };
 					let del = Progressor.results.findOne(qry);
 					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), fragment: fragment, results: results, solved: new Date() }));
