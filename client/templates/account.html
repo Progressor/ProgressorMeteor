@@ -1,139 +1,127 @@
 <template name="account">
 	{{#if currentUser}}
-		<div class="row">
-			<div class="col-md-7">
-				<header>
-					<h2 class="account-heading">{{i18n "account.title"}}</h2>
-				</header>
-			</div>
-			<div class="col-md-5 text-right">
-				<div class="btn-group account-heading">
-					<div class="btn-group" role="group">
-						<button id="button-logout" class="btn btn-success btn-sm">{{i18n "account.logoutButton"}}</button>
-					</div>
-					<div class="btn-group" role="group">
-						<button id="button-logout-others" class="btn btn-default btn-sm">{{i18n "account.logoutOtherClientsButton"}}</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<h2>{{i18n "account.title"}}</h2>
 	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-7">
-				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.solvedExercisesPanel"}}</h3></div>
-					{{#if results}}
-						<table class="table table-condensed table-striped">
-							<thead>
+				<section class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.solvedExercisesSubtitle"}}</h3></div>
+					<table class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								<th scope="col">{{i18n "exercise.solvedLabel"}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each results}}
 								<tr>
-									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">{{i18n "exercise.solvedLabel"}}</th>
+									<td>
+										{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
+										{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
+									</td>
+									<td>{{i18nCategoryName exercise.category}}</td>
+									<td>{{i18nDifficulty exercise.difficulty}}</td>
+									<td>{{i18nDateTime solved}}</td>
 								</tr>
-							</thead>
-							<tbody>
-								{{#each results}}
-									<tr>
-										<td>
-											{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
-											{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
-										</td>
-										<td>{{i18nCategoryName exercise.category}}</td>
-										<td>{{i18nDifficulty exercise.difficulty}}</td>
-										<td>{{i18nDateTime solved}}</td>
-									</tr>
-								{{/each}}
-							</tbody>
-						</table>
-					{{else}}
-						<div class="panel-body">{{i18n "form.noResults"}}</div>
-					{{/if}}
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.createdExercisesPanel"}}</h3></div>
-					{{#if authoredExercises}}
-						<table class="table table-condensed table-striped">
-							<thead>
+							{{else}}
 								<tr>
-									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">{{i18n "exercise.editedLabel"}}</th>
+									<td colspan="4" class="text-muted">{{i18n "form.noResults"}}</td>
 								</tr>
-							</thead>
-							<tbody>
-								{{#each authoredExercises}}
-									<tr>
-										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
-										<td>{{i18nCategoryName category}}</td>
-										<td>{{i18nDifficulty difficulty}}</td>
-										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
-										<td>
-											<span class="glyphicon glyphicon-folder-close" archive-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "account.archiveTooltip"}}"></span>
-										</td>
-									</tr>
-								{{/each}}
-							</tbody>
-						</table>
-					{{else}}
-						<div class="panel-body">{{i18n "form.noResults"}}</div>
-					{{/if}}
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.archivedExercisesPanel"}}</h3></div>
-					{{#if archivedExercises}}
-						<table class="table table-condensed table-striped">
-							<thead>
+							{{/each}}
+						</tbody>
+					</table>
+				</section>
+				<section class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.createdExercisesSubtitle"}}</h3></div>
+					<table class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								<th scope="col">{{i18n "form.editedByLabel"}}</th>
+								<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each authoredExercises}}
 								<tr>
-									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">{{i18n "exercise.editedLabel"}}</th>
+									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+									<td>{{i18nCategoryName category}}</td>
+									<td>{{i18nDifficulty difficulty}}</td>
+									<td>{{userName lastEditor_id}}</td>
+									<td>{{i18nDateTime lastEdited}}</td>
+									<td><a role="button"><span class="glyphicon glyphicon-inbox" data-archive-id="{{this._id}}" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
 								</tr>
-							</thead>
-							<tbody>
-								{{#each archivedExercises}}
-									<tr>
-										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
-										<td>{{i18nCategoryName category}}</td>
-										<td>{{i18nDifficulty difficulty}}</td>
-										<td>{{i18nDateTime lastEdited}} / {{userName lastEditor_id}}</td>
-										<td><span class="glyphicon glyphicon-repeat" revert-button="{{this._id}}" data-toggle="tooltip" data-placement="top" title="{{i18n "account.revertArchiveTooltip"}}"></span></td>
-									</tr>
-								{{/each}}
-							</tbody>
-						</table>
-					{{else}}
-						<div class="panel-body">{{i18n "form.noResults"}}</div>
-					{{/if}}
-				</div>
+							{{else}}
+								<tr>
+									<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</section>
+				<section class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.archivedExercisesSubtitle"}}</h3></div>
+					<table class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								<th scope="col">{{i18n "form.editedByLabel"}}</th>
+								<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each archivedExercises}}
+								<tr>
+									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+									<td>{{i18nCategoryName category}}</td>
+									<td>{{i18nDifficulty difficulty}}</td>
+									<td>{{userName lastEditor_id}}</td>
+									<td>{{i18nDateTime lastEdited}}</td>
+									<td><a role="button"><span class="glyphicon glyphicon-briefcase" data-unarchive-id="{{this._id}}" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+								</tr>
+							{{else}}
+								<tr>
+									<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</section>
 			</div>
 			<div class="col-md-4 col-md-offset-1">
-				<div class="well">
-					<div class="form-horizontal">
-						<legend>{{i18n "account.accountSettingsPanel"}} <button id="userDat-save" class="btn btn-info btn-sm pull-right" data-toggle="tooltip" data-placement="top" title="{{i18n "account.saveTooltip"}}"><span class=" glyphicon glyphicon-floppy-disk"></span></button></legend>
-						<div class="form-group">
-							<label for="Email" class="col-md-3 control-label">{{i18n "account.emailLabel"}}</label>
-							<div class="col-md-9">
-								<input type="email" class="form-control" id="input-Email" value="{{currentUserEmail}}" readonly>
-							</div>
+				<section class="well form-horizontal">
+					<h3>{{i18n "account.accountSettingsSubtitle"}}</h3>
+					<div class="form-group">
+						<label for="input-email" class="col-md-3 control-label">{{i18n "account.emailLabel"}}</label>
+						<div class="col-md-9">
+							<input type="email" class="form-control" id="input-email" value="{{currentUserEmail}}" readonly>
 						</div>
-						<div class="form-group">
-							<label for="firstName" class="col-md-3 control-label">{{i18n "account.firstNameLabel"}}</label>
-							<div class="col-md-9">
-								<input type="text" class="form-control" id="input-firstName" value="{{currentUserFirstName}}" placeholder="{{i18n "account.firstNamePlaceholder"}}">
-							</div>
+					</div>
+					<div class="form-group">
+						<label for="input-name" class="col-md-3 control-label">{{i18n "account.nameLabel"}}</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input-name" value="{{currentUserName}}">
 						</div>
-						<div class="form-group">
-							<label for="lastName" class="col-md-3 control-label">{{i18n "account.lastNameLabel"}}</label>
-							<div class="col-md-9">
-								<input type="text" class="form-control" id="input-lastName" value="{{currentUserLastName}}" placeholder="{{i18n "account.lastNamePlaceholder"}}">
+					</div>
+					<div class="form-group">
+						<div class="col-md-9 col-md-offset-3">
+							<div class="btn-group btn-group-sm separated-bottom">
+								<button id="button-logout" class="btn btn-success">{{i18n "account.logoutButton"}}</button>
+								<button id="button-logout-others" class="btn btn-default">{{i18n "account.logoutOtherClientsButton"}}</button>
 							</div>
 						</div>
 					</div>
-				</div>
+				</section>
 			</div>
 		{{else}}
 			<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">

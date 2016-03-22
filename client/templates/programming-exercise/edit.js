@@ -89,6 +89,7 @@
 	});
 
 	Template.programmingEdit.onRendered(function () {
+		$('[data-toggle="tooltip"]').tooltip();
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
 				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
@@ -105,7 +106,7 @@
 			disableLanguage: () => !!exercise.get()._id,
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
-			userName: Progressor.getUserEmail,
+			userName: Progressor.getUserName,
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
 			i18nExerciseName: i18n.getName,
 			i18nCategoryName: i18n.getName,
