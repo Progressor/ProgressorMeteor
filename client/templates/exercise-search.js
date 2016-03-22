@@ -2,7 +2,10 @@
 	'use strict';
 
 	const numberOfColumns = 3;
-	const filter = new ReactiveDict();
+	
+	let filter;
+
+	Template.exerciseSearch.onCreated(() => filter = new ReactiveDict());
 
 	Template.exerciseSearch.helpers(
 		{
