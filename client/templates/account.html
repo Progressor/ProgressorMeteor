@@ -22,7 +22,7 @@
 								<tr>
 									<td>
 										{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
-										{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
+										<span class="glyphicon {{#if solvedComplete exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
 									</td>
 									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
 									<td>{{i18nCategoryName exercise.category}}</td>
