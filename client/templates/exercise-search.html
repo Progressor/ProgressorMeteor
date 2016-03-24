@@ -39,7 +39,10 @@
 									<div class="col-md-{{columnWidth}}">
 										<ul>
 											{{#each exercises}}
-												<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+												<li>
+													{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}
+													{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
+												</li>
 											{{/each}}
 										</ul>
 									</div>
@@ -97,7 +100,9 @@
 					<tbody>
 						{{#each results}}
 							<tr>
-								<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+								<td>
+									{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}
+								</td>
 								<td>{{i18nCategoryName category}}</td>
 								<td>{{i18nDifficulty difficulty}}</td>
 							</tr>

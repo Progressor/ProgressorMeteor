@@ -27,6 +27,7 @@
 				if (!i) return i18n.getProgrammingLanguage(l);
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
+			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r),
 			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
