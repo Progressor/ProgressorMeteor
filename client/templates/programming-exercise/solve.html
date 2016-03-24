@@ -28,7 +28,7 @@
 					<h2>
 						{{i18nExerciseName this}}
 						{{#if isResult}}
-							<small>({{i18nResultDateTime}})</small>
+							<small>({{i18nResultDateTime}}){{#if changedMessage}}&nbsp;&nbsp;{{#linkTo route="exerciseSolve" data=exerciseSolveData}}<span class="glyphicon glyphicon-alert text-danger" title="{{changedMessage}}" data-toggle="tooltip"></span>{{/linkTo}}{{/if}}</small>
 						{{/if}}
 					</h2>
 				</div>

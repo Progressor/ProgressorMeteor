@@ -32,7 +32,7 @@
 				if (!error && !$fragment.val().length)
 					$fragment.val(result);
 			});
-	});
+	}, () => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
 
 	Template.programmingSolve.helpers(
 		{
@@ -47,6 +47,7 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(getResult().solved, 'L LT'),
+			changedMessage: () => getExercise().lastEdited.getTime() > getResult().solved.getTime() ? i18n('exercise.changedMessage', i18n.formatDate(getExercise().lastEdited, 'L LT')) : null,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
 			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
