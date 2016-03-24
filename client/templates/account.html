@@ -11,6 +11,7 @@
 						<thead>
 							<tr>
 								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 								<th scope="col">{{i18n "exercise.solvedLabel"}}</th>
@@ -23,6 +24,7 @@
 										{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
 										{{#if solvedComplete exercise results}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
 									</td>
+									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
 									<td>{{i18nCategoryName exercise.category}}</td>
 									<td>{{i18nDifficulty exercise.difficulty}}</td>
 									<td>{{i18nDateTime solved}}</td>
@@ -41,6 +43,7 @@
 						<thead>
 							<tr>
 								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 								<th scope="col">{{i18n "form.editedByLabel"}}</th>
@@ -52,6 +55,7 @@
 							{{#each authoredExercises}}
 								<tr>
 									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
 									<td>{{i18nCategoryName category}}</td>
 									<td>{{i18nDifficulty difficulty}}</td>
 									<td>{{userName lastEditor_id}}</td>
@@ -67,35 +71,44 @@
 					</table>
 				</section>
 				<section class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.archivedExercisesSubtitle"}}</h3></div>
-					<table class="table table-condensed table-striped">
-						<thead>
-							<tr>
-								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-								<th scope="col">{{i18n "form.editedByLabel"}}</th>
-								<th scope="col">{{i18n "form.editedAtLabel"}}</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each archivedExercises}}
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign"></span></a>
+							<a role="button" data-toggle="collapse" href="#collapseArchive">{{i18n "account.archivedExercisesSubtitle"}}</a>
+						</h3>
+					</div>
+					<div id="collapseArchive" class="panel-collapse collapse">
+						<table class="table table-condensed table-striped">
+							<thead>
 								<tr>
-									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
-									<td>{{i18nCategoryName category}}</td>
-									<td>{{i18nDifficulty difficulty}}</td>
-									<td>{{userName lastEditor_id}}</td>
-									<td>{{i18nDateTime lastEdited}}</td>
-									<td><a role="button" data-unarchive-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">{{i18n "form.editedByLabel"}}</th>
+									<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+									<th></th>
 								</tr>
-							{{else}}
-								<tr>
-									<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
-								</tr>
-							{{/each}}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{{#each archivedExercises}}
+									<tr>
+										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+										<td>{{i18nCategoryName category}}</td>
+										<td>{{i18nDifficulty difficulty}}</td>
+										<td>{{userName lastEditor_id}}</td>
+										<td>{{i18nDateTime lastEdited}}</td>
+										<td><a role="button" data-unarchive-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+									</tr>
+								{{else}}
+									<tr>
+										<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					</div>
 				</section>
 			</div>
 			<div class="col-md-4 col-md-offset-1">

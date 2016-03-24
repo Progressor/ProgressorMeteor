@@ -18,8 +18,8 @@
 	Meteor.methods(
 		{
 			getExecutorTypes() {
-				var rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
-				var rexSep = ',\\s?', rexKVS = ':\\s?';
+				let rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
+				let rexSep = ',\\s?', rexKVS = ':\\s?';
 				return {
 					types: [
 						{ _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },

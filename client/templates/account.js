@@ -1,7 +1,10 @@
 (function () {
 	'use strict';
 
-	Template.account.onRendered(() => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
+	Template.account.onRendered(function () {
+		$('body')//.tooltip({ selector: '[data-toggle="tooltip"]' })
+			.on('click', 'a[data-toggle="collapse"]', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+	});
 
 	Template.account.helpers(
 		{
@@ -9,6 +12,7 @@
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			userName: Progressor.getUserName,
 			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r),
+			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,

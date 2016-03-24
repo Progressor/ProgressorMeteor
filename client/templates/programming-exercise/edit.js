@@ -89,7 +89,7 @@
 	});
 
 	Template.programmingEdit.onRendered(function () {
-		$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
 				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))

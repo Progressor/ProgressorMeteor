@@ -1,5 +1,5 @@
 <template name="programmingSolve">
-	{{#with safeExercise}}
+	{{#with safeExercise this}}
 		<header>
 			<nav class="row">
 				<div class="col-sm-8">
@@ -11,7 +11,15 @@
 						{{#unless isResult}}
 							<li class="active">{{i18nExerciseName this}}</li>
 						{{else}}
-							<li>{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}</li>
+							<li>
+								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}
+								{{#if changedAfterSolved}}
+									<em class="text-info">
+										<span class="glyphicon glyphicon-star" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>
+										{{i18n "exercise.changedMessage"}}
+									</em>
+								{{/if}}
+							</li>
 						{{/unless}}
 					</ol>
 				</div>
@@ -28,16 +36,11 @@
 					<h2>
 						{{i18nExerciseName this}}
 						{{#if isResult}}
-							<small>({{i18nResultDateTime}}){{#if changedMessage}}&nbsp;&nbsp;{{#linkTo route="exerciseSolve" data=exerciseSolveData}}<span class="glyphicon glyphicon-alert text-danger" title="{{changedMessage}}" data-toggle="tooltip"></span>{{/linkTo}}{{/if}}</small>
+							<small>({{i18nResultDateTime}})</small>
+							{{#if changedAfterSolved}}<span class="glyphicon glyphicon-star text-info" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>{{/if}}
 						{{/if}}
 					</h2>
 				</div>
-				<!--<div class="col-sm-3">
-					<ul class="pager pull-right">
-						<li><a href="#">{{i18n "exercise.previousButton"}}</a></li>
-						<li><a href="#">{{i18n "exercise.nextButton"}}</a></li>
-					</ul>
-				</div>-->
 			</div>
 		</header>
 		<section>
@@ -49,7 +52,7 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
-						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus placeholder="..." readonly={{isResult}}></textarea>
+						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus readonly={{isResult}}>{{fragment}}</textarea>
 					</div>
 					{{#unless isResult}}
 						<div class="row">

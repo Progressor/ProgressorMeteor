@@ -23,9 +23,21 @@
 		check(id, String);
 		return Progressor.exercises.find({ _id: id, category_id: { $exists: true }, released: true });
 	});
+	Meteor.publish('publicExerciseByResult', function (id) {
+		check(id, String);
+		let result = Progressor.results.findOne({ user_id: this.userId, _id: id });
+		if (result)
+			return Progressor.exercises.find({ _id: result.exercise_id, category_id: { $exists: true } });
+	});
 	Meteor.publish('publicOrAuthoredExercise', function (id) {
 		check(id, String);
 		return Progressor.exercises.find({ _id: id, category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
+	});
+	Meteor.publish('publicOrAuthoredExerciseByResult', function (id) {
+		check(id, String);
+		let result = Progressor.results.findOne({ user_id: this.userId, _id: id });
+		if (result)
+			return Progressor.exercises.find({ _id: result.exercise_id, category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
 	});
 	Meteor.publish('publicExercisesForCategory', function (cat) {
 		check(cat, String);

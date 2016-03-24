@@ -1,43 +1,38 @@
 (function () {
 	'use strict';
 
-	let blacklist, blacklistMatches;
+	let isResult, blacklist, blacklistMatches, fragment;
 
-	function getExercise() {
-		return Progressor.exercises.findOne() || Progressor.results.findOne().exercise;
+	function getExercise(forceRefresh) {
+		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
 	function getResult() {
-		if (!Progressor.exercises.find().count())
+		if (isResult.get())
 			return Progressor.results.findOne();
 	}
 
 	function getExecutionResults() {
-		if (!Progressor.exercises.find().count() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+		if (isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
 			return Progressor.results.findOne().results;
 	}
 
 	Template.programmingSolve.onCreated(function () {
+		isResult = new ReactiveVar(false);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
+		fragment = new ReactiveVar(null);
 	});
 
-	Template.programmingSolve.onRendered(function () {
-		let result = getResult() || Progressor.results.findOne();
-		if (result)
-			$('#textarea-fragment').val(result.fragment);
-		else
-			Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), function (error, result) {
-				let $fragment = $('#textarea-fragment');
-				if (!error && !$fragment.val().length)
-					$fragment.val(result);
-			});
-	}, () => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
+	//Template.programmingSolve.onRendered(() => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
 
 	Template.programmingSolve.helpers(
 		{
-			safeExercise: () => getExercise(),
-			isResult: () => !!getResult(),
+			safeExercise(exerciseOrResult) {
+				isResult.set(exerciseOrResult.exercise_id);
+				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
+			},
+			isResult: () => isResult.get(),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(getExercise().programmingLanguage),
@@ -47,7 +42,13 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(getResult().solved, 'L LT'),
-			changedMessage: () => getExercise().lastEdited.getTime() > getResult().solved.getTime() ? i18n('exercise.changedMessage', i18n.formatDate(getExercise().lastEdited, 'L LT')) : null,
+			fragment() {
+				let result = Progressor.results.findOne();
+				if (result) return result.fragment;
+				else if (fragment.get()) return fragment.get();
+				else Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => fragment.set(!err ? res : null));
+			},
+			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
 			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),

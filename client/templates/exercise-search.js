@@ -2,7 +2,7 @@
 	'use strict';
 
 	const numberOfColumns = 3;
-	
+
 	let filter;
 
 	Template.exerciseSearch.onCreated(() => filter = new ReactiveDict());
@@ -23,11 +23,14 @@
 				});
 			},
 			categories: () => Progressor.categories.find().fetch(),
+			solvedComplete(exercise) {
+				let result = Progressor.results.findOne({ exercise_id: exercise._id });
+				return result && Progressor.isExecutionSuccess(exercise, result.results);
+			},
 			i18nPageTitle (i, l, c) {
 				if (!i) return i18n.getProgrammingLanguage(l);
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
-			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r),
 			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,
