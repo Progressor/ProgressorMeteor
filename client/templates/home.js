@@ -42,7 +42,13 @@
 
 	Template.home.events(
 		{
-			'click [data-href]': ev => Router.go('exerciseSearch', { _id: $(ev.currentTarget).data('href') }),
+			'mouseup [data-href]'(ev) {
+				ev.preventDefault();
+				if (ev.which === 1)
+					Router.go('exerciseSearch', { _id: $(ev.currentTarget).data('href') });
+				else if (ev.which === 2 || ev.which === 4)
+					window.open(Router.path('exerciseSearch', { _id: $(ev.currentTarget).data('href') }));
+			},
 			'mouseover .panel-default:not(.disabled)': ev => $(ev.currentTarget).removeClass('panel-default').addClass('panel-primary'),
 			'mouseout .panel-primary': ev => $(ev.currentTarget).removeClass('panel-primary').addClass('panel-default')
 		});

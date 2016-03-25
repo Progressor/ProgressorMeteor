@@ -92,11 +92,9 @@
 		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
-				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()) && !solutionTyped)
 					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
-						let $solution = $('#textarea-solution');
-						if (!error && !solutionTyped)
-							$solution.val(result);
+						if (!error) $('#textarea-solution').val(result);
 					});
 			});
 	});
