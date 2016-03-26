@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isResult, blacklist, blacklistMatches, fragment;
+	let isResult, executionStatus, executionResults, blacklist, blacklistMatches, fragment;
 
 	function getExercise(forceRefresh) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -15,10 +15,14 @@
 	function getExecutionResults() {
 		if (isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
 			return Progressor.results.findOne().results;
+		else
+			return executionResults.get();
 	}
 
 	Template.programmingSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
+		executionStatus = new ReactiveVar(0x0);
+		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
 		fragment = new ReactiveVar(null);
@@ -35,6 +39,7 @@
 			isResult: () => isResult.get(),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
+			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(getExercise().programmingLanguage),
 			i18nCategoryName: i18n.getName,
 			i18nCategoryDescription: i18n.getDescription,
@@ -48,7 +53,7 @@
 				else if (fragment.get()) return fragment.get();
 				else Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => fragment.set(!err ? res : null));
 			},
-			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
+			executionDisabled: () => executionStatus.get() !== 0x0,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
 			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
@@ -64,17 +69,23 @@
 		{
 			'click #button-execute'() {
 				let $fragment = $('#textarea-fragment'), $result = $('#table-testcases').css('opacity', 1 / 3);
-				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), $fragment.val(), () => $result.css('opacity', 1));
+				executionStatus.set(executionStatus.get() | 0x1);
+				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), $fragment.val(), function (error, result) {
+					if (!error)
+						executionResults.set(result);
+					$result.css('opacity', 1);
+					executionStatus.set(executionStatus.get() & ~0x1);
+				});
 			},
-			'click #button-solution': () => $('#textarea-fragment').val(getExercise().solution),
+			'click #button-solution': () => $('#textarea-fragment').val(getExercise().solution), //$(ev.currentTarget).slideUp(); $('#pre-solution').slideDown();,
 			'keyup #textarea-fragment': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);
-					Meteor.call('getBlacklist', getExercise().programmingLanguage, (error, result) => blacklist.set(!error ? result : null));
+					Meteor.call('getBlacklist', getExercise().programmingLanguage, (e, r) => blacklist.set(!e ? r : null));
 				} else {
 					let fragment = $('#textarea-fragment').val();
 					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));
-					$('#button-execute').prop('disabled', blacklistMatches.get().length);
+					executionStatus.set(blacklistMatches.get().length ? executionStatus.get() | 0x2 : executionStatus.get() & ~0x2);
 				}
 			}, 500)
 		});

@@ -5,14 +5,15 @@
 		{ host: 'localhost', port: 9090 }
 	];
 
-	let executorConnections;
+	let executorConnections, executorIndex = 0;
 
 	function getExecutorClient() {
 
 		if (!executorConnections)
 			executorConnections = _.map(executorInstances, i => thrift.createConnection(i.host, i.port));
 
-		return thrift.createClient(Executor, Random.choice(executorConnections));
+		//return thrift.createClient(Executor, Random.choice(executorConnections)); //Random
+		return thrift.createClient(Executor, executorConnections[executorIndex = ++executorIndex % executorConnections.length]); //round-robin
 	}
 
 	Meteor.methods(
