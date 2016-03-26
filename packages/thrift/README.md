@@ -1,34 +1,36 @@
-# Executor Connection using Apache Thrift
+# Executor Connection Using Apache Thrift
 
-This package contains a dependency to the *Apache Thrift* *npm*-package and the generated sources to connect to the *Executor* service.
+This package contains a dependency to the [*Apache Thrift*](https://thrift.apache.org/) [*npm*](https://www.npmjs.com/) package
+and the generated sources to connect to the **Executor** service.
 
 ## Instructions
 
-The *Thrift* generator generate *node.js* code which needs to be transformed into valid *Meteor* code in 5 simple steps.
+The *Thrift* generator generates [*Node.js*](https://nodejs.org/) code which needs to be transformed into valid [*Meteor*](https://www.meteor.com/) code in 5 simple steps.
 
-1. generate *node.js* code as described in the executor project
+1. Generate the *Node.js* code as described in the **Executor** project.
 
-2. copy the generated files to the correct locations
+   * [*Maven*](https://maven.apache.org/) will generate the code for you.
 
-   * `ExecutorService.js` to `.\packages\thrift`
-   * `executor_types.js` to `.\packages\thrift\lib`
-   * this forces Meteor to load the types before the service
+2. Copy the generated files to the correct locations.
 
-3. replace all `require(...)` calls by `Npm.require(...)`
+   * Copy `ExecutorService.js` to `.\packages\thrift`.
+   * Copy `executor_types.js` to `.\packages\thrift\lib`.
+   * This forces Meteor to load the types before the service.
 
-   * *npm* calls are encapsulated by *Meteor*
+3. Replace all `require(...)` calls by `Npm.require(...)`.
 
-4. change variable declarations in `executor_types.js`
+   * *npm* calls are encapsulated by *Meteor*.
 
-   * remove the keyword `var` for the declarations `var thrift = ...`, `var Thrift = ...` and `var Q = ...`
-   * remove the keyword `var` for the declaration `var ttypes = ...`
-   * replace `module.exports` by `ttypes`
-   * these changes allow the variables to be accessible in other code files of the same package and to be exported for futher use outside the package
+4. Change variable declarations in `executor_types.js`.
 
-4. change variable declarations in `ExecutorService.js`
+   * Remove the keyword `var` for the declarations `var thrift = ...`, `var Thrift = ...`, `var Q = ...` and var ttypes = ...`.
+   * Replace `module.exports` by `ttypes`.
+   * These changes allow the variables to be accessible in other code files of the same package and to be exported for futher use outside the package.
 
-   * remove the declarations `var thrift = ...`, `var Thrift = ...`, `var Q = ...` and `var ttypes = ...`
-   * this allows the code to use the variables already declared in the file above
-   * add a declaration `Executor = {}` before any code
-   * replace `exports` by `Executor`
-   * these changes allow the variables to be accessible in other code files of the same package and to be exported for futher use outside the package
+4. Change variable declarations in `ExecutorService.js`.
+
+   * Remove the declarations `var thrift = ...`, `var Thrift = ...`, `var Q = ...` and `var ttypes = ...`.
+   * This allows the code to use the variables already declared in the file above.
+   * Add a declaration `Executor = {}` before any code.
+   * Replace `exports` by `Executor`.
+   * These changes allow the variables to be accessible in other code files of the same package and to be exported for futher use outside the package.
