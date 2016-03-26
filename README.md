@@ -6,7 +6,7 @@ This is the web component of the project **Progressor - The Programming Professo
 
 This repository contains a reactive [*Meteor*](https://www.meteor.com/) web application created using [*WebStorm*](https://www.jetbrains.com/webstorm/).
 
-### Introuction
+### Introduction
 
 *Meteor* is an app platform.
 Web application run on a [*Node.js*](https://nodejs.org/) web server and use a [*MongoDB*](https://www.mongodb.org/) document-oriented database.
