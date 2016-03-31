@@ -52,6 +52,8 @@
 			getBlacklist(language) {
 				check(language, String);
 
+				this.unblock();
+
 				return getExecutorClient().getBlacklist(language);
 			},
 			getFragment(language, exercise) {
@@ -68,6 +70,8 @@
 									outputTypes: [String]
 								})]
 					}));
+
+				this.unblock();
 
 				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 				return getExecutorClient().getFragment(language, functions);
@@ -94,6 +98,8 @@
 								})]
 					}));
 				check(fragment, String);
+
+				this.unblock();
 
 				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
