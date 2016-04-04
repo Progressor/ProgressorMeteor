@@ -45,6 +45,11 @@ It also depends on a number of third-party *Meteor* packages.
 9. [houston:admin](https://atmospherejs.com/houston/admin)
    for the *MongoDB* admin frontend
 
+### Load Testing
+
+This application can be tested under heavy load using [*MeteorDown*](https://github.com/meteorhacks/meteor-down).
+The [specialised documentation](.meteor-down/README.md) contains the instructions to execute the load tests.
+
 ## Apache Thrift
 
 [*Thrift*](https://thrift.apache.org/) is a software framework for scalable cross-language services development.
