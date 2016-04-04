@@ -16,7 +16,7 @@
 	});
 
 	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, released: true }));
-	Meteor.publish('publicOrOwnExercises', function () {
+	Meteor.publish('publicOrMyExercises', function () {
 		return Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
 	});
 	Meteor.publish('exercise', function (id) {
