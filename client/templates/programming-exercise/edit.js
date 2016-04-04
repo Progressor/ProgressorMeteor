@@ -1,19 +1,19 @@
 (function () {
 	'use strict';
 
-	const exercise = new ReactiveVar(getDefaultExercise()), executorTypes = new ReactiveVar(null);
+	const exercise = new ReactiveVar(getDefaultExercise(false)), executorTypes = new ReactiveVar(null);
 	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
 
 	let solutionTyped = false;
 
-	function getDefaultExercise() {
+	function getDefaultExercise(initInput = true) {
 		return {
 			type: 1,
 			names: [],
 			descriptions: [],
 			functions: [{
-				inputNames: [null],
-				inputTypes: [null],
+				inputNames: initInput ? [null] : [],
+				inputTypes: initInput ? [null] : [],
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
@@ -27,8 +27,8 @@
 		};
 	}
 
-	function testExecutorIdentifier(val) {
-		return val.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(val);
+	function testExecutorIdentifier(value) {
+		return value.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
 
 	function testExecutorType(type, isRecursive) {
@@ -83,7 +83,7 @@
 
 	Template.programmingEdit.onCreated(function () {
 		this.autorun(function () {
-			exercise.set(Progressor.exercises.findOne() || getDefaultExercise());
+			exercise.set(Progressor.exercises.findOne() || getDefaultExercise(false));
 			Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
 		});
 	});
@@ -169,11 +169,8 @@
 				elements.splice(elementIndex, 1);
 			else if (element)
 				element[translationName] = value;
-			else {
-				element = { language: $this.data('lang') };
-				element[translationName] = value;
-				elements.push(element);
-			}
+			else
+				elements.push({ language: $this.data('lang'), [translationName]: value });
 		});
 	}
 

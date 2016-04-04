@@ -45,11 +45,8 @@
 				elements.splice(elementIndex, 1);
 			else if (element)
 				element[translationName] = value;
-			else {
-				element = { language: $this.data('lang') };
-				element[translationName] = value;
-				elements.push(element);
-			}
+			else
+				elements.push({ language: $this.data('lang'), [translationName]: value });
 		});
 	}
 
