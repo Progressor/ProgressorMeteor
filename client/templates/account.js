@@ -2,8 +2,8 @@
 	'use strict';
 
 	Template.account.onRendered(function () {
-		$('body')//.tooltip({ selector: '[data-toggle="tooltip"]' })
-			.on('click', 'a[data-toggle="collapse"]', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	Template.account.helpers(
