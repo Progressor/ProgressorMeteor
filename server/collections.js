@@ -6,10 +6,10 @@
 	///////////////////
 
 	function checked(checks, callback) {
-		return (...args) => {
+		return function (...args) {
 			for (let i = 0; i < args.length; i++)
 				check(args[i], checks[i])
-			return callback(...args);
+			return callback(...args, this.userId);
 		};
 	}
 
@@ -18,21 +18,21 @@
 	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
 
 	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
-	Meteor.publish('publicOrMyExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: Meteor.userId() }, { lastEditor_id: Meteor.userId() }] }));
+	Meteor.publish('publicOrMyExercises', userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] }));
 	Meteor.publish('publicExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
 	Meteor.publish('publicExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
 	Meteor.publish('unconfirmedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }));
 	Meteor.publish('exercise', checked([String], id => Progressor.exercises.find({ _id: id, category_id: { $exists: true } })));
 	Meteor.publish('exerciseByResult', function (id) {
 		check(id, String);
-		let result = Progressor.results.findOne({ user_id: Meteor.userId(), _id: id });
+		let result = Progressor.results.findOne({ user_id: this.userId, _id: id });
 		if (result)
 			return Progressor.exercises.find({ _id: result.exercise_id, category_id: { $exists: true } });
 	});
 
-	Meteor.publish('myResults', () => Progressor.results.find({ user_id: Meteor.userId() }));
-	Meteor.publish('myResult', checked([String], id => Progressor.results.find({ user_id: Meteor.userId(), _id: id })));
-	Meteor.publish('myExerciseResult', checked([String], id => Progressor.results.find({ user_id: Meteor.userId(), exercise_id: id })));
+	Meteor.publish('myResults', userId => Progressor.results.find({ user_id: userId }));
+	Meteor.publish('myResult', checked([String], (id, userId) => Progressor.results.find({ user_id: userId, _id: id })));
+	Meteor.publish('myExerciseResult', checked([String], (id, userId) => Progressor.results.find({ user_id: userId, exercise_id: id })));
 
 	//////////////////////////
 	// MODIFICATION METHODS //
