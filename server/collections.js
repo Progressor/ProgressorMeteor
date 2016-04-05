@@ -9,7 +9,7 @@
 		return (...args) => {
 			for (let i = 0; i < args.length; i++)
 				check(args[i], checks[i])
-			callback(...args);
+			return callback(...args);
 		};
 	}
 
