@@ -200,6 +200,167 @@ Meteor.startup(function () {
 					author_id: Meteor.users.findOne()._id,
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
+				},
+				{
+					names: [
+						{
+							language: 'en',
+							name: 'Java basics'
+						},
+						{
+							language: 'de',
+							name: 'Java Grundlagen'
+						}
+					],
+					programmingLanguage: 'java',
+					category_id: Progressor.categories.findOne()._id,
+					difficulty: 1,
+					type: 2,
+					descriptions: [
+						{
+							language: 'en',
+							description: 'What is the description of a quantity of operation values, which could be executed on these?',
+						},
+						{
+							language: 'de',
+							description: 'Wie nennt man eine Menge von Werten mit einer Menge von Operationen, die auf diese Werten ausgeführt werden können?',
+						}
+					],
+					options: [
+						{
+							language: 'en',
+							options: ['Constant', 'Number', 'Value', 'Type']
+						},
+						{
+							language: 'de',
+							options: ['Konstante', 'Zahl', 'Wert', 'Typ']
+						}
+					],
+					multipleSolutions: false,
+					solution: [3],
+					solutionVisible: true,
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
+				},
+				{
+					names: [
+						{
+							language: 'en',
+							name: 'Java basics'
+						},
+						{
+							language: 'de',
+							name: 'Java Grundlagen'
+						}
+					],
+					programmingLanguage: 'java',
+					category_id: Progressor.categories.findOne()._id,
+					difficulty: 1,
+					type: 2,
+					descriptions: [
+						{
+							language: 'en',
+							description: 'Which statements concerning identifiers are correct?',
+						},
+						{
+							language: 'de',
+							description: 'Welche Aussagen über Identifiers sind korrekt?',
+						}
+					],
+					options: [
+						{
+							language: 'en',
+							options: [
+								'No case sensitivity.',
+								'Identifiers can contain the symbol $.',
+								'Identifiers can contain the symbols like ? or %.',
+								'Identifiers must beginn with a capital letter or a small letter',
+								'Identifiers are allowed to contain numbers, _ and characters.',
+								'Identifiers are allowed to beginn with a number.'
+							]
+						},
+						{
+							language: 'de',
+							options: [
+								'Gross-und Kleinschreibung spielt keine Rolle.',
+								'Identifiers können das Symbol $ enthalten.',
+								'Identifiers können Symbole wie ? oder % enthalten.',
+								'Identifiers müssen mit einem Gross-oder Kleinbuchstaben beginnen.',
+								'Identifiers dürfen Ziffern, _ und Buchstaben enthalten.',
+								'Identifiers können mit einer Ziffer beginnen.'
+							]
+						}
+					],
+					multipleSolutions: true,
+					solution: [1, 4],
+					solutionVisible: true,
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
+				},
+				{
+					names: [
+						{
+							language: 'en',
+							name: 'Java basics'
+						},
+						{
+							language: 'de',
+							name: 'Java Grundlagen'
+						}
+					],
+					programmingLanguage: 'java',
+					category_id: Progressor.categories.findOne()._id,
+					difficulty: 1,
+					type: 3,
+					descriptions: [
+						{
+							language: 'en',
+							description: 'Was ist das Resultat der obigen Funktion? public int compute () { return 2+5; }'
+						},
+						{
+							language: 'de',
+							description: 'What is the result of the following function? public int compute () { return 2+5; } '
+						}
+					],
+					pattern: 1,
+					solution: '7',
+					solutionVisible: true,
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
+				},
+				{
+					names: [
+						{
+							language: 'en',
+							name: 'Class diagram'
+						},
+						{
+							language: 'de',
+							name: 'Klassendiagram'
+						}
+					],
+					programmingLanguage: 'java',
+					category_id: Progressor.categories.findOne()._id,
+					difficulty: 1,
+					type: 3,
+					descriptions: [
+						{
+							language: 'en',
+							description: 'Translate the following class diagram into Java code.'
+						},
+						{
+							language: 'de',
+							description: 'Übersetze das folgende Klassendiagram in Java code'
+						}
+					],
+					solution: '--sample java code--',
+					solutionVisible: true,
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
 				}
 			], function (exercise) {
 				Progressor.exercises.insert(exercise);

@@ -1,0 +1,55 @@
+<template name="multipleSolve">
+	{{#with safeExercise this}}
+		<header>
+			<nav class="row">
+				<div class="col-sm-8">
+					<ol class="breadcrumb">
+						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
+						<li class="active">{{i18nCategoryName category}}</li>
+						<li class="active">{{i18nDifficulty difficulty}}</li>
+						<li class="active">{{i18nExerciseName this}}</li>
+					</ol>
+				</div>
+			</nav>
+			<div class="row">
+				<div class="col-sm-9">
+					<h2>
+						{{i18nExerciseName this}}
+					</h2>
+				</div>
+			</div>
+		</header>
+		<section>
+			<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
+			<p class="well">
+				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
+			</p>
+			<div class="row">
+				<div class="col-md-6">
+					{{#each i18nOptions this}}
+						<div class="{{questionType}}">
+							<label>
+								<input name="optionsRadios" value="{{index}}" type="{{questionType}}">
+								{{this}}
+							</label>
+						</div>
+					{{/each}}
+					<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.sendAnswersButton"}}</button>
+				</div>
+			</div>
+			{{#unless isResult}}
+				{{#if solutionVisible}}
+					<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button> {{!<br/><pre>{solution}</pre>}}
+				{{/if}}
+			{{/unless}}
+		</section>
+		<hr />
+		<section>
+			<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nCategoryName category)}}</h3>
+			<p>
+				{{#markdown}}{{i18nCategoryDescription category}}{{/markdown}}
+			</p>
+		</section>
+	{{/with}}
+</template>

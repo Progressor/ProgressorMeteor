@@ -2,5 +2,5 @@
 	{{> exerciseSolve}}
 </template>
 <template name="exerciseSolve">
-	{{> programmingSolve}}
+	{{> Template.dynamic template=(exerciseType this)}}
 </template>
