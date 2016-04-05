@@ -16,8 +16,9 @@
 
 		this.autorun(function () {
 			let live = Progressor.categories.findOne();
+			if (!live) return;
 			let detached = Tracker.nonreactive(() => category.get());
-			if (!live || !detached || live._id !== detached._id)
+			if (!detached || live._id !== detached._id)
 				category.set(live);
 			else {
 				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
@@ -34,8 +35,8 @@
 			exerciseSearchData: () => ({ _id: category.get().programmingLanguage }),
 			userName: Progressor.getUserName,
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(category.get().programmingLanguage),
-			i18nCategoryName: () => i18n.getName(category.get()),
-			i18nDateTime: dat => i18n.formatDate(dat, 'L LT'),
+			i18nCategoryName: i18n.getName,
+			i18nDateTime: d => i18n.formatDate(d, 'L LT'),
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: category.get() && language._id === category.get().programmingLanguage

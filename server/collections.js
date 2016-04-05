@@ -8,7 +8,7 @@
 	function checked(checks, callback) {
 		return function (...args) {
 			for (let i = 0; i < args.length; i++)
-				check(args[i], checks[i])
+				check(args[i], checks[i]);
 			return callback(...args, this.userId);
 		};
 	}
@@ -18,7 +18,7 @@
 	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
 
 	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
-	Meteor.publish('publicOrMyExercises', userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] }));
+	Meteor.publish('publicOrMyExercises', checked([], userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] })));
 	Meteor.publish('publicExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
 	Meteor.publish('publicExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
 	Meteor.publish('unconfirmedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }));
@@ -48,6 +48,10 @@
 						descriptions: [Match.ObjectIncluding({ language: String, description: String })]
 					}));
 
+				let user = Meteor.user();
+				if (!user || !user.roles || !user.roles[Roles.GLOBAL_GROUP] || !_.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
+
 				if (!category.author_id)
 					category.author_id = this.userId;
 				category.lastEditor_id = this.userId;
@@ -57,6 +61,10 @@
 			},
 			deleteCategory(category) {
 				check(category, Match.ObjectIncluding({ _id: String }));
+
+				let user = Meteor.user();
+				if (!user || !user.roles || !user.roles[Roles.GLOBAL_GROUP] || !_.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
 
 				return Progressor.categories.remove(category._id).rowsAffected;
 			},
@@ -88,6 +96,13 @@
 								})]
 					}));
 
+				let user = Meteor.user();
+				if (user && user.roles && user.roles[Roles.GLOBAL_GROUP] && _.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN)) /*OK*/;
+				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
+					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
+				else
+					throw new Meteor.Error('unauthorised', 'Only authors and administrators can edit exercises.');
+
 				if (!exercise.author_id)
 					exercise.author_id = this.userId;
 				exercise.lastEditor_id = this.userId;
@@ -98,6 +113,13 @@
 			deleteExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 
+				let user = Meteor.user();
+				if (user && user.roles && user.roles[Roles.GLOBAL_GROUP] && _.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN)) /*OK*/;
+				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
+					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
+				else
+					throw new Meteor.Error('unauthorised', 'Only authors and administrators can edit exercises.');
+
 				return Progressor.exercises.remove(exercise._id).rowsAffected;
 			}
 		});
@@ -107,6 +129,9 @@
 	///////////////////////////
 
 	Houston.add_collection(Meteor.users);
+	Houston.add_collection(Meteor.roles);
+
+	Houston.add_collection(Houston._admins);
 
 	function toggleFlag(collection, flag, elementName, setName, unsetName) {
 		return function (document) {

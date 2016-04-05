@@ -1,10 +1,7 @@
 (function () {
 	'use strict';
 
-	const exercise = new ReactiveVar(getDefaultExercise(false)), executorTypes = new ReactiveVar(null);
-	const executionResults = new ReactiveVar([]), blacklist = new ReactiveVar(null), blacklistMatches = new ReactiveVar([]);
-
-	let solutionTyped = false;
+	let exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
 
 	function getDefaultExercise(initInput = true) {
 		return {
@@ -82,14 +79,33 @@
 	}
 
 	Template.programmingEdit.onCreated(function () {
-		this.autorun(function () {
-			exercise.set(Progressor.exercises.findOne() || getDefaultExercise(false));
-			Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
-		});
+
+		exercise = new ReactiveVar(getDefaultExercise(false));
+		executorTypes = new ReactiveVar(null);
+		executionResults = new ReactiveVar([]);
+		blacklist = new ReactiveVar(null);
+		blacklistMatches = new ReactiveVar([]);
+		solutionTyped = false;
 	});
 
 	Template.programmingEdit.onRendered(function () {
 		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+
+		Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
+
+		this.autorun(function () {
+			let live = Progressor.exercises.findOne();
+			if (!live) return;
+			let detached = Tracker.nonreactive(() => exercise.get());
+			if (!detached || live._id !== detached._id)
+				exercise.set(live);
+			else {
+				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
+				Meteor.setTimeout(() => $alert.addClass('in'), 1);
+				Meteor.setTimeout(() => $alert.alert('close'), 7500);
+			}
+		});
+
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
 				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()) && !solutionTyped)
@@ -101,7 +117,9 @@
 
 	Template.programmingEdit.helpers(
 		{
-			disableLanguage: () => !!exercise.get()._id,
+			exercise: () => exercise.get(),
+			exists: () => exercise.get() && exercise.get()._id,
+			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || _.contains(Meteor.user().roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
 			userName: Progressor.getUserName,
@@ -109,7 +127,7 @@
 			i18nExerciseName: i18n.getName,
 			i18nCategoryName: i18n.getName,
 			i18nDifficulty: i18n.getDifficulty,
-			i18nDateTime: dat => i18n.formatDate(dat, 'L LT'),
+			i18nDateTime: d => i18n.formatDate(d, 'L LT'),
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: language._id === exercise.get().programmingLanguage
@@ -243,9 +261,8 @@
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
 			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
-			'click .btn-save, click .btn-release, click .btn-unrelease': changeExercise(function (ev, $this) {
-				if ($this.hasClass('btn-release')) exercise.get().released = true;
-				else if ($this.hasClass('btn-unrelease')) delete exercise.get().released;
+			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
+				if ($this.hasClass('btn-release-request')) exercise.get().released = { requested: new Date() };
 				Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id }));
 			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), error => error || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),

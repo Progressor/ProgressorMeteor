@@ -1,43 +1,32 @@
 <template name="programmingEdit">
-	<header>
-		{{#if this}}
+	<header class="absolute-container">
+		{{#if exists}}
 			<nav>
 				<ol class="breadcrumb">
 					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
-					<li class="active">{{i18nCategoryName category}}</li>
-					<li class="active">{{i18nDifficulty difficulty}}</li>
-					<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</li>
+					<li>{{#linkTo route="categoryExercises" data=(exercise.category)}}{{i18nCategoryName exercise.category}}{{/linkTo}}</li>
+					<li class="active">{{i18nDifficulty exercise.difficulty}}</li>
+					<li>{{#linkTo route="exerciseSolve" data=exercise}}{{i18nExerciseName exercise}}{{/linkTo}}</li>
 					<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
 				</ol>
 			</nav>
-			<h2>{{i18n "exercise.editTitle" (i18nExerciseName this)}}</h2>
+			<h2>{{i18n "exercise.editTitle" (i18nExerciseName exercise)}}</h2>
 		{{else}}
 			<h2>{{i18n "exercise.createTitle"}}</h2>
 		{{/if}}
+		<div id="global-alerts" class="absolute top-right"></div>
 	</header>
-	{{#if this}}
+	{{#if exists}}
 		<div class="help-block">
 			<small class="text-muted">
-				{{i18n "form.createdBy"}} {{userName author_id}}
-				{{#if lastEditor_id}}
-					&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+				{{i18n "form.createdBy"}} {{userName exercise.author_id}}
+				{{#if (exercise.lastEditor_id)}}
+					&mdash; {{i18n "form.editedBy"}} {{userName exercise.lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime exercise.lastEdited}}
 				{{/if}}
 			</small>
 		</div>
 	{{/if}}
-	<div class="btn-group">
-		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-		{{#if this}}
-		{{! {#unless released}
-			<button class="btn btn-info btn-release">{i18n "exercise.releaseButton"}</button>
-		{else}
-			<button class="btn btn-info btn-unrelease">{i18n "exercise.unreleaseButton"}</button>
-		{/unless} }}
-			{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
-		{{/if}}
-		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
-	</div>
 	<div class="row visible-md-block visible-lg-block">
 		<div class="col-md-offset-5 col-md-7">
 			<ul class="nav nav-tabs" role="tablist">
@@ -51,7 +40,7 @@
 		<div class="col-md-5">
 			<div class="form-group form-group-sm">
 				<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-				<select id="select-language" class="form-control" disabled={{disableLanguage}}>
+				<select id="select-language" class="form-control" disabled={{exists}}>
 					<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 					{{#each i18nProgrammingLanguages}}
 						<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
@@ -217,11 +206,11 @@
 					</div>
 					<div class="col-sm-8 text-right">
 						<div class="checkbox checkbox-nospacing">
-							<label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+							<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
 						</div>
 					</div>
 				</div>
-				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="...">{{solution}}</textarea>
+				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="...">{{exercise.solution}}</textarea>
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
@@ -316,16 +305,18 @@
 			{{/if}}
 		</section>
 	</div>
-	<div class="btn-group separated-top">
-		<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-		{{#if this}}
-		{{! {#unless released}
-			<button class="btn btn-info btn-release">{i18n "exercise.releaseButton"}</button>
-		{else}
-			<button class="btn btn-info btn-unrelease">{i18n "exercise.unreleaseButton"}</button>
-		{/unless} }}
-			{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
-		{{/if}}
-		<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
-	</div>
+	{{#if canSave}}
+		<div class="btn-group separated-top">
+			<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
+			{{#if exists}}
+				{{#unless (released.requested)}}
+					<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
+				{{/unless}}
+				{{#linkTo route="exerciseSolve" data=exercise class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+			{{/if}}
+			<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
+		</div>
+	{{else}}
+		<div class="text-warning">{{i18n "form.cannotSave"}}</div>
+	{{/if}}
 </template>

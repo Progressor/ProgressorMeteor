@@ -6,7 +6,7 @@
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
-						<li class="active">{{i18nCategoryName category}}</li>
+						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category}}{{/linkTo}}</li>
 						<li class="active">{{i18nDifficulty difficulty}}</li>
 						{{#unless isResult}}
 							<li class="active">{{i18nExerciseName this}}</li>

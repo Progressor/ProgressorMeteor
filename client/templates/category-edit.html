@@ -8,11 +8,11 @@
 				<ol class="breadcrumb">
 					<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 					<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
-					<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName}}{{/linkTo}}</li>
+					<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category}}{{/linkTo}}</li>
 					<li class="active">{{i18n "category.editBreadcrumb"}}</li>
 				</ol>
 			</nav>
-			<h2>{{i18n "category.editTitle" i18nCategoryName}}</h2>
+			<h2>{{i18n "category.editTitle" (i18nCategoryName category)}}</h2>
 		{{else}}
 			<h2>{{i18n "category.createTitle"}}</h2>
 		{{/if}}
