@@ -5,50 +5,34 @@
 	// SUBSCRIPTIONS //
 	///////////////////
 
-	Meteor.publish('categories', () => Progressor.categories.find());
-	Meteor.publish('category', function (id) {
-		check(id, String);
-		return Progressor.categories.find(id);
-	});
-	Meteor.publish('categoriesForLanguage', function (lng) {
-		check(lng, String);
-		return Progressor.categories.find({ programmingLanguage: lng });
-	});
+	function checked(checks, callback) {
+		return (...args) => {
+			for (let i = 0; i < args.length; i++)
+				check(args[i], checks[i])
+			callback(...args);
+		};
+	}
 
-	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, released: true }));
-	Meteor.publish('publicOrMyExercises', function () {
-		return Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ released: true }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
-	});
-	Meteor.publish('exercise', function (id) {
-		check(id, String);
-		return Progressor.exercises.find({ _id: id, category_id: { $exists: true } });
-	});
+	Meteor.publish('categories', () => Progressor.categories.find());
+	Meteor.publish('category', checked([String], id => Progressor.categories.find(id)));
+	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
+
+	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
+	Meteor.publish('publicOrMyExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: Meteor.userId() }, { lastEditor_id: Meteor.userId() }] }));
+	Meteor.publish('publicExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
+	Meteor.publish('publicExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
+	Meteor.publish('unconfirmedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }));
+	Meteor.publish('exercise', checked([String], id => Progressor.exercises.find({ _id: id, category_id: { $exists: true } })));
 	Meteor.publish('exerciseByResult', function (id) {
 		check(id, String);
-		let result = Progressor.results.findOne({ user_id: this.userId, _id: id });
+		let result = Progressor.results.findOne({ user_id: Meteor.userId(), _id: id });
 		if (result)
 			return Progressor.exercises.find({ _id: result.exercise_id, category_id: { $exists: true } });
 	});
-	Meteor.publish('publicExercisesForCategory', function (cat) {
-		check(cat, String);
-		return Progressor.exercises.find({ category_id: cat, released: true });
-	});
-	Meteor.publish('publicExercisesForLanguage', function (lng) {
-		check(lng, String);
-		return Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, released: true });
-	});
 
-	Meteor.publish('myResults', function () {
-		return Progressor.results.find({ user_id: this.userId });
-	});
-	Meteor.publish('myResult', function (id) {
-		check(id, String);
-		return Progressor.results.find({ user_id: this.userId, _id: id });
-	});
-	Meteor.publish('myExerciseResult', function (id) {
-		check(id, String);
-		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
-	});
+	Meteor.publish('myResults', () => Progressor.results.find({ user_id: Meteor.userId() }));
+	Meteor.publish('myResult', checked([String], id => Progressor.results.find({ user_id: Meteor.userId(), _id: id })));
+	Meteor.publish('myExerciseResult', checked([String], id => Progressor.results.find({ user_id: Meteor.userId(), exercise_id: id })));
 
 	//////////////////////////
 	// MODIFICATION METHODS //
@@ -128,15 +112,26 @@
 		return function (document) {
 			check(document, Match.ObjectIncluding({ _id: String }));
 
-			return Progressor[collection].update(document._id, _.object([[document[flag] !== true ? '$set' : '$unset', _.object([[flag, true]])]])) === 1
+			return Progressor[collection].update(document._id, { [document[flag] !== true ? '$set' : '$unset']: { [flag]: true } }) === 1
 				? `${elementName} '${document._id}' successfully ${document[flag] !== true ? setName : unsetName}.`
 				: `${elementName} '${document._id}' could NOT successfully be ${document[flag] !== true ? setName : unsetName}!`;
 		}
 	}
 
 	Houston.methods('exercises', {
-		'Release/Hide': toggleFlag('exercises', 'released', 'Exercise', 'released', 'hidden'),
-		'Archive/Restore': toggleFlag('exercises', 'archived', 'Exercise', 'archived', 'restored')
+		'Archive/Restore': toggleFlag('exercises', 'archived', 'Exercise', 'archived', 'restored'),
+		'Release/Hide'(document) {
+			check(document, Match.ObjectIncluding({ _id: String }));
+
+			let release = !document.released || !document.released.confirmed;
+			let result = release
+				? Progressor.exercises.update(document._id, { $set: { released: { requested: document.released && document.released.requested ? document.released.requested : new Date(), confirmed: new Date(), confirmor_id: this.userId } } })
+				: Progressor.exercises.update(document._id, { $unset: { 'released.confirmed': null, 'released.confirmor_id': null } });
+
+			return result === 1
+				? `Exercise '${document._id}' successfully ${release ? 'released' : 'hidden'}.`
+				: `Exercise '${document._id}' could NOT successfully be ${release ? 'released' : 'hidden'}!`;
+		}
 	});
 
 })();

@@ -80,7 +80,11 @@ Meteor.startup(function () {
 					],
 					solution: 'public String helloWorld() { return "Hello World"; }',
 					solutionVisible: true,
-					released: false,
+					released: {
+						requested: new Date(),
+						confirmor_id: Meteor.users.findOne()._id,
+						confirmed: new Date()
+					},
 					author_id: Meteor.users.findOne()._id,
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
@@ -190,6 +194,9 @@ Meteor.startup(function () {
 					],
 					solution: null,
 					solutionVisible: false,
+					released: {
+						requested: new Date()
+					},
 					author_id: Meteor.users.findOne()._id,
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
