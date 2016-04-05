@@ -1,22 +1,40 @@
 (function () {
 	'use strict';
 
-	const category = new ReactiveVar(getDefaultCategory());
+	let category;
 
 	function getDefaultCategory() {
 		return { names: [], descriptions: [] };
 	}
 
 	Template.categoryEdit.onCreated(function () {
-		this.autorun(() => category.set(Progressor.categories.findOne() || getDefaultCategory()));
+		category = new ReactiveVar(getDefaultCategory());
+	});
+
+	Template.categoryEdit.onRendered(function () {
+		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+
+		this.autorun(function () {
+			let live = Progressor.categories.findOne();
+			let detached = Tracker.nonreactive(() => category.get());
+			if (!live || !detached || live._id !== detached._id)
+				category.set(live);
+			else {
+				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
+				Meteor.setTimeout(() => $alert.addClass('in'), 1);
+				Meteor.setTimeout(() => $alert.alert('close'), 7500);
+			}
+		});
 	});
 
 	Template.categoryEdit.helpers(
 		{
-			exerciseSearchData: c => () => ({ _id: c.programmingLanguage }),
+			category: () => category.get(),
+			exists: () => category.get() && category.get()._id,
+			exerciseSearchData: () => ({ _id: category.get().programmingLanguage }),
 			userName: Progressor.getUserName,
-			i18nProgrammingLanguage: c => i18n.getProgrammingLanguage(c.programmingLanguage),
-			i18nCategoryName: i18n.getName,
+			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(category.get().programmingLanguage),
+			i18nCategoryName: () => i18n.getName(category.get()),
 			i18nDateTime: dat => i18n.formatDate(dat, 'L LT'),
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
