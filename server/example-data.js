@@ -205,11 +205,11 @@ Meteor.startup(function () {
 					names: [
 						{
 							language: 'en',
-							name: 'Java basics'
+							name: 'Java basics - quantity of operation'
 						},
 						{
 							language: 'de',
-							name: 'Java Grundlagen'
+							name: 'Java Grundlagen - Menge von Werten'
 						}
 					],
 					programmingLanguage: 'java',
@@ -219,11 +219,11 @@ Meteor.startup(function () {
 					descriptions: [
 						{
 							language: 'en',
-							description: 'What is the description of a quantity of operation values, which could be executed on these?',
+							description: 'What is the description of a *quantity of operation values*, which could be executed on these?'
 						},
 						{
 							language: 'de',
-							description: 'Wie nennt man eine Menge von Werten mit einer Menge von Operationen, die auf diese Werten ausgeführt werden können?',
+							description: 'Wie nennt man eine *Menge von Werten mit einer Menge von Operationen*, die auf diese Werten ausgeführt werden können?'
 						}
 					],
 					options: [
@@ -247,11 +247,11 @@ Meteor.startup(function () {
 					names: [
 						{
 							language: 'en',
-							name: 'Java basics'
+							name: 'Java basics - identifiers'
 						},
 						{
 							language: 'de',
-							name: 'Java Grundlagen'
+							name: 'Java Grundlagen - Identifiers'
 						}
 					],
 					programmingLanguage: 'java',
@@ -261,11 +261,11 @@ Meteor.startup(function () {
 					descriptions: [
 						{
 							language: 'en',
-							description: 'Which statements concerning identifiers are correct?',
+							description: 'Which statements concerning **identifiers** are correct?'
 						},
 						{
 							language: 'de',
-							description: 'Welche Aussagen über Identifiers sind korrekt?',
+							description: 'Welche Aussagen über **Identifiers** sind korrekt?'
 						}
 					],
 					options: [
@@ -276,7 +276,7 @@ Meteor.startup(function () {
 								'Identifiers can contain the symbol $.',
 								'Identifiers can contain the symbols like ? or %.',
 								'Identifiers must beginn with a capital letter or a small letter',
-								'Identifiers are allowed to contain numbers, _ and characters.',
+								'Identifiers are allowed to contain numbers, _ and **characters.',
 								'Identifiers are allowed to beginn with a number.'
 							]
 						},
@@ -286,7 +286,7 @@ Meteor.startup(function () {
 								'Gross-und Kleinschreibung spielt keine Rolle.',
 								'Identifiers können das Symbol $ enthalten.',
 								'Identifiers können Symbole wie ? oder % enthalten.',
-								'Identifiers müssen mit einem Gross-oder Kleinbuchstaben beginnen.',
+								'Identifiers müssen mit einem Gross- oder Kleinbuchstaben beginnen.',
 								'Identifiers dürfen Ziffern, _ und Buchstaben enthalten.',
 								'Identifiers können mit einer Ziffer beginnen.'
 							]
@@ -303,11 +303,11 @@ Meteor.startup(function () {
 					names: [
 						{
 							language: 'en',
-							name: 'Java basics'
+							name: 'Java basics - reading code'
 						},
 						{
 							language: 'de',
-							name: 'Java Grundlagen'
+							name: 'Java Grundlagen - Code lesen'
 						}
 					],
 					programmingLanguage: 'java',
@@ -317,11 +317,11 @@ Meteor.startup(function () {
 					descriptions: [
 						{
 							language: 'en',
-							description: 'Was ist das Resultat der obigen Funktion? public int compute () { return 2+5; }'
+							description: 'It was **n = 1234**.\nWhat is the output?\n\n```int r= n % 10;```\n```n = n / 10;```\n```while (n > 0) {```\n &nbsp;&nbsp;```r = r * 10 + n % 10;```\n&nbsp;&nbsp;```n = n / 10;```\n```} System.out.println(r);```\n'
 						},
 						{
 							language: 'de',
-							description: 'What is the result of the following function? public int compute () { return 2+5; } '
+							description: 'Es sei **n = 1234**.\nWie sieht die Ausgabe aus?\n\n```int r= n % 10;```\n```n = n / 10;```\n```while (n > 0) {```\n &nbsp;&nbsp;```r = r * 10 + n % 10;```\n&nbsp;&nbsp;```n = n / 10;```\n```} System.out.println(r);```\n'
 						}
 					],
 					pattern: 1,
@@ -335,11 +335,11 @@ Meteor.startup(function () {
 					names: [
 						{
 							language: 'en',
-							name: 'Class diagram'
+							name: 'Java basics- Class diagram'
 						},
 						{
 							language: 'de',
-							name: 'Klassendiagram'
+							name: 'Java Grundlagen - Klassendiagram'
 						}
 					],
 					programmingLanguage: 'java',
@@ -349,11 +349,11 @@ Meteor.startup(function () {
 					descriptions: [
 						{
 							language: 'en',
-							description: 'Translate the following class diagram into Java code.'
+							description: 'Translate the following class diagram into **Java** code!\n\n![alt text](http://msoe.us/taylor/tutorial/se1021/desktopItemUML.png)'
 						},
 						{
 							language: 'de',
-							description: 'Übersetze das folgende Klassendiagram in Java code'
+							description: 'Übersetze das folgende Klassendiagram in **Java** code!\n\n![alt text](http://msoe.us/taylor/tutorial/se1021/desktopItemUML.png)'
 						}
 					],
 					solution: '--sample java code--',

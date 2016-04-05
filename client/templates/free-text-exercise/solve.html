@@ -2,7 +2,7 @@
 	{{#with safeExercise this}}
 		<header>
 			<nav class="row">
-				<div class="col-sm-8">
+				<div class="col-md-8">
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 						<li>{{#linkTo}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
@@ -13,7 +13,7 @@
 				</div>
 			</nav>
 			<div class="row">
-				<div class="col-sm-9">
+				<div class="col-md-9">
 					<h2>
 						{{i18nExerciseName this}}
 					</h2>
@@ -27,20 +27,30 @@
 			</p>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-						<label for="textarea-fragment">{{i18n "exercise.yourAnswerLabel"}}</label>
-						<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus>Your Solution</textarea>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<button id="button-execute" class="btn btn-default btn-sm">exercise.executeTestsButton</button>
+					{{#if pattern}}
+						<form class="form-inline separated-bottom separated-left">
+							<div class="form-group">
+								<label for="exerciseAnswer">{{i18n "exercise.yourSolutionLabel"}}:</label>
+								<input type="text" class="form-control" id="exerciseAnswer" size="15">
+								<button id="button-checkAnswer" class="btn btn-primary btn-sm separated-left">{{i18n "exercise.checkAnswerButton"}}</button>
+							</div>
+						</form>
+					{{else}}
+						<div class="form-group">
+							<label for="textarea-fragment">{{i18n "exercise.yourSolutionLabel"}}</label>
+							{{#unless isResult}}
+								{{#if solutionVisible}}
+									<span class="pull-right">{{#linkTo}}{{i18n "exercise.showSolutionButton"}}{{/linkTo}}</span> {{!<br /><pre>{solution}</pre>}}
+								{{/if}}
+							{{/unless}}
+							<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus>Your Solution</textarea>
 						</div>
-					</div>
-					{{#unless isResult}}
-						{{#if solutionVisible}}
-							<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button> {{!<br /><pre>{solution}</pre>}}
-						{{/if}}
-					{{/unless}}
+						<div class="row">
+							<div class="col-md-6">
+								<button id="button-execute" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+							</div>
+						</div>
+					{{/if}}
 				</div>
 			</div>
 		</section>

@@ -22,27 +22,22 @@
 		</header>
 		<section>
 			<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
-			<p class="well">
+			<p class="well multiple-choice-nospacing">
 				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
 			</p>
 			<div class="row">
 				<div class="col-md-6">
 					{{#each i18nOptions this}}
-						<div class="{{questionType}}">
+						<div class="{{questionType}} separated-left">
 							<label>
 								<input name="optionsRadios" value="{{index}}" type="{{questionType}}">
 								{{this}}
 							</label>
 						</div>
 					{{/each}}
-					<button id="button-execute" class="btn btn-default btn-sm">{{i18n "exercise.sendAnswersButton"}}</button>
+					<button id="button-checkAnswer" class="btn btn-primary btn-sm">{{i18n "exercise.checkAnswerButton"}}</button>
 				</div>
 			</div>
-			{{#unless isResult}}
-				{{#if solutionVisible}}
-					<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button> {{!<br/><pre>{solution}</pre>}}
-				{{/if}}
-			{{/unless}}
 		</section>
 		<hr />
 		<section>
