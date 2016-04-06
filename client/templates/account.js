@@ -23,8 +23,8 @@
 		{
 			'click #button-logout': () => Meteor.logout(),
 			'click #button-logout-others': () => Meteor.logoutOtherClients(),
-			'click [data-archive-id]': ev => Meteor.call('saveExercise', _.extend(Progressor.exercises.findOne({ _id: $(ev.currentTarget).data('archive-id') }), { archived: true })),
-			'click [data-unarchive-id]': ev => Meteor.call('saveExercise', _.omit(Progressor.exercises.findOne({ _id: $(ev.currentTarget).data('unarchive-id') }), 'archived')),
+			'click [data-archive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('archive-id') }, true),
+			'click [data-unarchive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('unarchive-id') }, false),
 			'change #input-name' (ev) {
 				let $this = $(ev.currentTarget), $group = $this.closest('.form-group');
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {

@@ -91,6 +91,12 @@
 
 				return Progressor.exercises.upsert(exercise._id, _.omit(exercise, 'category')).insertedId || exercise._id;
 			},
+			toggleArchiveExercise(exercise, archive) {
+				check(exercise, Match.ObjectIncluding({ _id: String }));
+				check(archive, Boolean);
+
+				return Progressor.exercises.upsert(exercise._id, { [archive === true ? '$set' : '$unset']: { archived: true } }).rowsAffected;
+			},
 			deleteExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 
