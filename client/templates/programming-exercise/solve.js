@@ -57,15 +57,13 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(getResult().solved, 'L LT'),
-			codeMirrorOptions: function () {
-				return { //https://codemirror.net/doc/manual.html
-					lineNumbers: true,
-					lineWrapping: true,
-					mode: Progressor.getProgrammingLanguage(getExercise().programmingLanguage).codeMirror,
-					autofocus: true,
-					readOnly: isResult.get() ? 'nocursor' : false
-				}
-			},
+			codeMirrorOptions: () => ({ //https://codemirror.net/doc/manual.html
+				lineNumbers: true,
+				lineWrapping: true,
+				mode: Progressor.getProgrammingLanguage(getExercise().programmingLanguage).codeMirror,
+				autofocus: true,
+				readOnly: isResult.get() ? 'nocursor' : false
+			}),
 			executionDisabled: () => executionStatus.get() !== 0x0,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),

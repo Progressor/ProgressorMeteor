@@ -145,14 +145,12 @@
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
 				isActive: difficulty === exercise.get().difficulty
 			})),
-			codeMirrorOptions: function () {
-				return { //https://codemirror.net/doc/manual.html
-					lineNumbers: true,
-					lineWrapping: true,
-					mode: Progressor.getProgrammingLanguage(exercise.get().programmingLanguage).codeMirror,
-					autofocus: true
-				}
-			},
+			codeMirrorOptions: () => ({ //https://codemirror.net/doc/manual.html
+				lineNumbers: true,
+				lineWrapping: true,
+				mode: Progressor.getProgrammingLanguage(exercise.get().programmingLanguage).codeMirror,
+				autofocus: true
+			}),
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(exercise.get(), id),
