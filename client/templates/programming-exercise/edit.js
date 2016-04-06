@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
+	let isDuplicate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
 
 	function getDefaultExercise(initInput = true) {
 		return {
@@ -79,7 +79,7 @@
 	}
 
 	Template.programmingEdit.onCreated(function () {
-
+		isDuplicate = new ReactiveVar(false);
 		exercise = new ReactiveVar(getDefaultExercise(false));
 		executorTypes = new ReactiveVar(null);
 		executionResults = new ReactiveVar([]);
@@ -97,9 +97,12 @@
 		this.autorun(function () {
 			let live = Progressor.exercises.findOne();
 			let detached = Tracker.nonreactive(() => exercise.get());
-			if (!live || !detached || live._id !== detached._id)
-				exercise.set(live || getDefaultExercise(false));
-			else {
+			if (!live || !detached || live._id !== detached._id) {
+				let _exercise = live || getDefaultExercise(false);
+				if (isDuplicate.get())
+					_exercise = _.omit(_exercise, '_id');
+				exercise.set(_exercise);
+			} else {
 				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
 				Meteor.setTimeout(() => $alert.addClass('in'), 1);
 				Meteor.setTimeout(() => $alert.alert('close'), 7500);
@@ -122,10 +125,15 @@
 
 	Template.programmingEdit.helpers(
 		{
+			safeExercise(e) {
+				isDuplicate.set(!e);
+				return exercise.get();
+			},
 			exercise: () => exercise.get(),
 			exists: () => exercise.get() && exercise.get()._id,
 			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || _.contains(Meteor.user().roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
+			exerciseDuplicateQuery: () => ({ duplicate: exercise.get()._id }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
 			userName: Progressor.getUserName,
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
@@ -145,12 +153,15 @@
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
 				isActive: difficulty === exercise.get().difficulty
 			})),
-			codeMirrorOptions: () => ({ //https://codemirror.net/doc/manual.html
-				lineNumbers: true,
-				lineWrapping: true,
-				mode: Progressor.getProgrammingLanguage(exercise.get().programmingLanguage).codeMirror,
-				autofocus: true
-			}),
+			codeMirrorOptions: () => {
+				let programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
+				return { //https://codemirror.net/doc/manual.html
+					lineNumbers: true,
+					lineWrapping: true,
+					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain',
+					autofocus: true
+				};
+			},
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(exercise.get(), id),
