@@ -28,12 +28,14 @@
 		fragment = new ReactiveVar(null);
 	});
 
-	//Template.programmingSolve.onRendered(() => $('body').tooltip({ selector: '[data-toggle="tooltip"]' }));
+	// Template.programmingSolve.onRendered(function () {
+	// 	//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+	// });
 
 	Template.programmingSolve.helpers(
 		{
 			safeExercise(exerciseOrResult) {
-				isResult.set(exerciseOrResult.exercise_id);
+				isResult.set(!!exerciseOrResult.exercise_id);
 				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
 			isResult: () => isResult.get(),
@@ -52,6 +54,15 @@
 				if (result) return result.fragment;
 				else if (fragment.get()) return fragment.get();
 				else Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => fragment.set(!err ? res : null));
+			},
+			editorOptions: function () {
+				return { //https://codemirror.net/doc/manual.html
+					lineNumbers: true,
+					lineWrapping: true,
+					mode: Progressor.getProgrammingLanguage(getExercise().programmingLanguage).codeMirror,
+					autofocus: true,
+					readOnly: isResult.get() ? 'nocursor' : false
+				}
 			},
 			executionDisabled: () => executionStatus.get() !== 0x0,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
@@ -78,7 +89,7 @@
 				});
 			},
 			'click #button-solution': () => $('#textarea-fragment').val(getExercise().solution), //$(ev.currentTarget).slideUp(); $('#pre-solution').slideDown();,
-			'keyup #textarea-fragment': _.throttle(function () {
+			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);
 					Meteor.call('getBlacklist', getExercise().programmingLanguage, (e, r) => blacklist.set(!e ? r : null));

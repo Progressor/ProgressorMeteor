@@ -41,5 +41,6 @@ alanning:roles					# Authorization package for Meteor - compatible with built-in
 houston:admin           # Houston is a zero-config Meteor Admin, modeled after Django Admin.
 sacha:spin              # A Meteor package wrapper for Spin.js via Npm.depends(). - A spinning activity indicator http://spin.js.org.
 chuangbo:marked         # A wrapper of marked. - A markdown parser and compiler. Built for speed.
+perak:codemirror        # CodeMirror packaged for Meteor. CodeMirror is a versatile text editor implemented in JavaScript for the browser.
 
 thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation
