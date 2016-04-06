@@ -210,7 +210,7 @@
 						</div>
 					</div>
 				</div>
-				<textarea id="textarea-solution" class="form-control mono" rows="10" cols="60" placeholder="...">{{exercise.solution}}</textarea>
+				{{> CodeMirror id="textarea-solution" options=codeMirrorOptions reactiveVar="solution"}}
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
@@ -220,7 +220,7 @@
 					{{blackListMessage}}
 				</div>
 			</div>
-			<div id="execution-results"></div>
+			<div id="execution-results" class="separated-top"></div>
 		</section>
 		<section class="col-md-7">
 			<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>

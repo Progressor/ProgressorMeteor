@@ -86,6 +86,7 @@
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
 		solutionTyped = false;
+		Session.set('fragment', null);
 	});
 
 	Template.programmingEdit.onRendered(function () {
@@ -105,15 +106,17 @@
 			}
 		});
 
-		if (!exercise.get() || !exercise.get().solution)
+		if (exercise.get() && exercise.get().solution)
+			Session.set('solution', exercise.get().solution);
+		else
 			this.autorun(function () {
 				if (!solutionTyped)
 					if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
 						Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
-							if (!error) $('#textarea-solution').val(result);
+							Session.set('solution', !error ? result : null);
 						});
 					else
-						$('#textarea-solution').val(null);
+						Session.set('solution', null);
 			});
 	});
 
@@ -142,6 +145,14 @@
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
 				isActive: difficulty === exercise.get().difficulty
 			})),
+			codeMirrorOptions: function () {
+				return { //https://codemirror.net/doc/manual.html
+					lineNumbers: true,
+					lineWrapping: true,
+					mode: Progressor.getProgrammingLanguage(exercise.get().programmingLanguage).codeMirror,
+					autofocus: true
+				}
+			},
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(exercise.get(), id),
@@ -283,7 +294,7 @@
 				});
 			},
 			'click #button-solution': () => $('#textarea-solution').val(exercise.get().solution),
-			'keyup #textarea-solution': _.throttle(function () {
+			'keyup .CodeMirror': _.throttle(function () {
 				solutionTyped = true;
 				if (exercise.get().programmingLanguage)
 					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
