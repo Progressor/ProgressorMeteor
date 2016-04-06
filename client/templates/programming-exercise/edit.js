@@ -28,7 +28,7 @@
 		return value.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
 
-	function testExecutorType(type, isRecursive) {
+	function testExecutorType(type, isRecursive = false) {
 		let executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null, index = executorType ? executorType._id.length : 0;
 		if (!executorType) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
 		else if (executorType.parameterCount > 0) { //if the type has parameters
@@ -46,7 +46,7 @@
 		return isRecursive ? index : index === type.length; //recursive: return new index, otherwise: verify end is reached
 	}
 
-	function testExecutorValue(value, type, isRecursive, separator) {
+	function testExecutorValue(value, type, isRecursive = false, separator = null) {
 		let executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null, typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
 		if (executorType.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
 			if (!(match = value.match(separator ? `^(${executorType.pattern}?(?=${separator})|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
@@ -95,10 +95,9 @@
 
 		this.autorun(function () {
 			let live = Progressor.exercises.findOne();
-			if (!live) return;
 			let detached = Tracker.nonreactive(() => exercise.get());
-			if (!detached || live._id !== detached._id)
-				exercise.set(live);
+			if (!live || !detached || live._id !== detached._id)
+				exercise.set(live || getDefaultExercise(false));
 			else {
 				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
 				Meteor.setTimeout(() => $alert.addClass('in'), 1);
@@ -108,10 +107,13 @@
 
 		if (!exercise.get() || !exercise.get().solution)
 			this.autorun(function () {
-				if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()) && !solutionTyped)
-					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
-						if (!error) $('#textarea-solution').val(result);
-					});
+				if (!solutionTyped)
+					if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+						Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
+							if (!error) $('#textarea-solution').val(result);
+						});
+					else
+						$('#textarea-solution').val(null);
 			});
 	});
 

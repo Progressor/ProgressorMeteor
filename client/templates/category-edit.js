@@ -16,10 +16,9 @@
 
 		this.autorun(function () {
 			let live = Progressor.categories.findOne();
-			if (!live) return;
 			let detached = Tracker.nonreactive(() => category.get());
-			if (!detached || live._id !== detached._id)
-				category.set(live);
+			if (!live || !detached || live._id !== detached._id)
+				category.set(live || getDefaultCategory());
 			else {
 				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
 				Meteor.setTimeout(() => $alert.addClass('in'), 1);
