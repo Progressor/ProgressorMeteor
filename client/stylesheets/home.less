@@ -24,6 +24,13 @@
  */
 [data-href] { cursor: pointer; }
 div.languageLogo { text-align: center; }
-i.languageLogo { font-size: 10em; }
-.panel-default i.languageLogo { color: @brand-primary; }
+i.languageLogo { font-size: 10em; color: @brand-primary; }
 .panel-primary i.languageLogo { color: #FFFFFF; }
+//custom logos
+i.logo-custom { display: inline-block; height: 1em; width: 1em; background-repeat: no-repeat; -webkit-background-size: 1em; background-size: 1em; }
+.logo-custom(@lang) {
+	@logo-color: replace(`'@{brand-primary}'.toUpperCase()`, "#", "");
+	i.logo-@{lang} { &:extend(i.logo-custom); background-image: url("/images/logo-@{lang}-void-@{logo-color}.svg"); }
+	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{lang}-void-FFFFFF.svg"); }
+}
+.logo-custom(kotlin);
