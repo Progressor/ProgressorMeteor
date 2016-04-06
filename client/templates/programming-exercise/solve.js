@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isResult, executionStatus, executionResults, blacklist, blacklistMatches, fragment;
+	let isResult, executionStatus, executionResults, blacklist, blacklistMatches;
 
 	function getExercise(forceRefresh) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -25,12 +25,20 @@
 		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
-		fragment = new ReactiveVar(null);
+		Session.set('fragment', null);
 	});
 
-	// Template.programmingSolve.onRendered(function () {
-	// 	//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-	// });
+	Template.programmingSolve.onRendered(function () {
+		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+
+		this.autorun(function () {
+			let result = Progressor.results.findOne();
+			if (result)
+				Session.set('fragment', result.fragment);
+			else
+				Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => Session.set('fragment', !err ? res : null));
+		});
+	});
 
 	Template.programmingSolve.helpers(
 		{
@@ -49,13 +57,7 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(getResult().solved, 'L LT'),
-			fragment() {
-				let result = Progressor.results.findOne();
-				if (result) return result.fragment;
-				else if (fragment.get()) return fragment.get();
-				else Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => fragment.set(!err ? res : null));
-			},
-			editorOptions: function () {
+			codeMirrorOptions: function () {
 				return { //https://codemirror.net/doc/manual.html
 					lineNumbers: true,
 					lineWrapping: true,

@@ -51,7 +51,7 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
-						{{> CodeMirror id="textarea-fragment" name="textarea-fragment" options=editorOptions code=fragment}}
+						{{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
 					</div>
 					{{#unless isResult}}
 						<div class="row">
