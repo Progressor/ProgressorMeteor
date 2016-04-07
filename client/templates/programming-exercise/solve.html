@@ -49,44 +49,20 @@
 			</p>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-						<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
-						<p>Select a theme:
-						<select id="select">
-							<option>3024-day</option>
-							<option>3024-night</option>
-							<option>ambiance-mobile</option>
-							<option>ambiance</option>
-							<option>base16-dark</option>
-							<option>base16-light</option>
-							<option>blackboard</option>
-							<option>cobalt</option>
-							<option>eclipse</option>
-							<option>elegant</option>
-							<option>elang-dark</option>
-							<option>lesser-dark</option>
-							<option>mbo</option>
-							<option>mdn-like</option>
-							<option>midnight</option>
-							<option>monokai</option>
-							<option>neat</option>
-							<option>neo</option>
-							<option>night</option>
-							<option>paraiso-dark</option>
-							<option>paraiso-light</option>
-							<option>pastel-on-dark</option>
-							<option>rubyblue</option>
-							<option>solarized</option>
-							<option>the-matrix</option>
-							<option>tomorrow-night-eighties</option>
-							<option>twilight</option>
-							<option>vibrant-ink</option>
-							<option>xq-dark</option>
-							<option>xq-light</option>
-						</select>
-						</p>
-						{{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
+					<div class="row">
+						<div class="col-sm-4">
+							<label for="textarea-fragment">{{i18n "exercise.codeFragmentLabel"}}</label>
+						</div>
+						<div class="col-sm-8 text-right">
+							<label for="select-codemirror-themes">{{i18n "exercise.codeMirrorThemeLabel"}}</label>
+							<select id="select-codemirror-themes">
+								{{#each codeMirrorThemes}}
+									<option selected={{isActive}}>{{_id}}</option>
+								{{/each}}
+							</select>
+						</div>
 					</div>
+					{{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
 					{{#unless isResult}}
 						<div class="row">
 							<div class="col-sm-4">

@@ -45,6 +45,11 @@ It also depends on a number of third-party *Meteor* packages.
 9. [houston:admin](https://atmospherejs.com/houston/admin)
    for the *MongoDB* admin frontend
 
+### Monitoring
+
+The tool [*Kadira*](https://kadira.io/) is used to monitor the application performance.
+More information can be found in the official [academy page](https://kadira.io/academy/meteor-performance-101/content/getting-started-with-kadira).
+
 ### Load Testing
 
 This application can be tested under heavy load using [*MeteorDown*](https://github.com/meteorhacks/meteor-down).
@@ -89,11 +94,3 @@ You need to run the **Executor** to be able to solve exercises.
 * or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
   * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
     otherwise *Meteor* will recognise the files temporarily created and continuously restart the server.
-
-### Monitoring
-
-For monitoring the tool *Kadira* was used. 
-For more information please check out:
-https://kadira.io/
-For the usermanual follow this link:
-https://kadira.io/academy/meteor-performance-101/content/getting-started-with-kadira

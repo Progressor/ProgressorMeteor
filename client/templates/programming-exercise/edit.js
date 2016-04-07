@@ -155,12 +155,9 @@
 			})),
 			codeMirrorOptions: () => {
 				let programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
-				return { //https://codemirror.net/doc/manual.html
-					lineNumbers: true,
-					lineWrapping: true,
-					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain',
-					autofocus: true
-				};
+				return _.extend({}, Progressor.getCodeMirrorConfiguration(), {
+					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain'
+				});
 			},
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
