@@ -89,3 +89,11 @@ You need to run the **Executor** to be able to solve exercises.
 * or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
   * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
     otherwise *Meteor* will recognise the files temporarily created and continuously restart the server.
+
+### Monitoring
+
+For monitoring the tool *Kadira* was used. 
+For more information please check out:
+https://kadira.io/
+For the usermanual follow this link:
+https://kadira.io/academy/meteor-performance-101/content/getting-started-with-kadira

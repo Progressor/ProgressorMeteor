@@ -42,5 +42,8 @@ houston:admin           # Houston is a zero-config Meteor Admin, modeled after D
 sacha:spin              # A Meteor package wrapper for Spin.js via Npm.depends(). - A spinning activity indicator http://spin.js.org.
 chuangbo:marked         # A wrapper of marked. - A markdown parser and compiler. Built for speed.
 perak:codemirror        # CodeMirror packaged for Meteor. CodeMirror is a versatile text editor implemented in JavaScript for the browser.
+meteorhacks:kadira      # Monitoring package
+email                   # Package enabaling email service via smtp
 
 thrift                  # custom wrapper for Apache Thrift npm-package + Progressor implementation
+

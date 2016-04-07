@@ -57,13 +57,23 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nResultDateTime: () => i18n.formatDate(getResult().solved, 'L LT'),
-			codeMirrorOptions: () => ({ //https://codemirror.net/doc/manual.html
-				lineNumbers: true,
-				lineWrapping: true,
-				mode: Progressor.getProgrammingLanguage(getExercise().programmingLanguage).codeMirror,
-				autofocus: true,
-				readOnly: isResult.get() ? 'nocursor' : false
-			}),
+			fragment() {
+				let result = Progressor.results.findOne();
+				if (result) return result.fragment;
+				else if (fragment.get()) return fragment.get();
+				else Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => fragment.set(!err ? res : null));
+			},
+			codeMirrorOptions () {
+				let user = Meteor.user();
+				return { //https://codemirror.net/doc/manual.html
+					lineNumbers: true,
+					lineWrapping: true,
+					mode: Progressor.getProgrammingLanguage(getExercise().programmingLanguage).codeMirror,
+					autofocus: true,
+					readOnly: isResult.get() ? 'nocursor' : false,
+					theme: user !== null && user.profile !== null && user.profile.theme !== null ? user.profile.theme : 'eclipse'
+				}
+			},
 			executionDisabled: () => executionStatus.get() !== 0x0,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
@@ -98,7 +108,12 @@
 					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));
 					executionStatus.set(blacklistMatches.get().length ? executionStatus.get() | 0x2 : executionStatus.get() & ~0x2);
 				}
-			}, 500)
+			}, 500),
+			'change #select' (ev) {
+				let theme = $(ev.currentTarget).val();
+				Meteor.users.update(Meteor.userId(), { $set: { 'profile.theme': theme } });
+				$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
+			}
 		});
 
 })();
