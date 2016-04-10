@@ -15,7 +15,7 @@
 								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}
 								{{#if changedAfterSolved}}
 									<em class="text-info">
-										<span class="glyphicon glyphicon-info-sign" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>
+										<span class="glyphicon glyphicon-info-sign text-separated-left" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>
 										{{i18n "exercise.changedMessage"}}
 									</em>
 								{{/if}}
@@ -66,7 +66,7 @@
 					{{#unless isResult}}
 						<div class="row">
 							<div class="col-sm-4">
-								<button id="button-execute" class="btn btn-primary btn-sm" disabled={{executionDisabled}}>{{i18n "exercise.executeTestsButton"}}</button>
+								<button id="button-execute" class="btn btn-primary btn-sm separated-top" disabled={{executionDisabled}}>{{i18n "exercise.executeTestsButton"}}</button>
 							</div>
 							<div class="col-sm-8 text-danger text-right">
 								{{blackListMessage}}

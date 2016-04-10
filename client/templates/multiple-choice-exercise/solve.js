@@ -8,17 +8,13 @@
 	}
 
 	function getResult() {
-			return Progressor.results.findOne();
+		return Progressor.results.findOne();
 	}
-	
+
 	Template.registerHelper('checked', function(index) {
 		return getResult().results[index].checked == true ? 'checked' : '';
 	});
-
-	Template.registerHelper('isResult', function() {
-		return isResult.get() ? 'disabled' : '';
-	});
-
+	
 	Template.multipleSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
 	});
@@ -29,8 +25,11 @@
 				isResult.set(exerciseOrResult.exercise_id);
 				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
+			isResult: () => isResult.get(),
 			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(getExercise().programmingLanguage),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
+			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
+			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			i18nCategoryName: i18n.getName,
 			i18nCategoryDescription: i18n.getDescription,
 			i18nExerciseName: i18n.getName,
