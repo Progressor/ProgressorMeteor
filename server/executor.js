@@ -117,6 +117,29 @@
 				//	pubResults.push({ invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) });
 
 				return results;
+			},
+
+			// checks for other exercise types
+			checkMultipleChoice (exercise, input) {
+				check(exercise, Match.ObjectIncluding(
+					{
+						options: [
+							Match.ObjectIncluding(
+								{ options: [String] }
+							)]
+					}));
+				check(input, [Match.Integer]);
+
+				let ex = Progressor.exercises.findOne({ _id: exercise._id }); // Query exercise from server as solution field on client isn't visible
+				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(ex.solution, i) , checked: _.contains(input, i) }));
+
+				if (exercise._id && this.userId) {
+					let qry = { user_id: this.userId, exercise_id: exercise._id };
+					let del = Progressor.results.findOne(qry);
+					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), results: results, solved: new Date() }));
+				}
+
+				return results;
 			}
 		});
 

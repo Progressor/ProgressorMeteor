@@ -7,6 +7,18 @@
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
+	function getResult() {
+			return Progressor.results.findOne();
+	}
+	
+	Template.registerHelper('checked', function(index) {
+		return getResult().results[index].checked == true ? 'checked' : '';
+	});
+
+	Template.registerHelper('isResult', function() {
+		return isResult.get() ? 'disabled' : '';
+	});
+
 	Template.multipleSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
 	});
@@ -25,9 +37,17 @@
 			i18nExerciseDescription: i18n.getDescription,
 			i18nDifficulty: i18n.getDifficulty,
 			i18nOptions: i18n.getOptions,
-			questionType: () => getExercise().multipleSolutions !== true ? 'radio' : 'checkbox'
+			questionType: () => getExercise().multipleSolutions !== true ? 'radio' : 'checkbox',
+			resultFeedback: (index) => {
+				if (getResult() && getExercise().solutionVisible) return getResult().results[index].success == getResult().results[index].checked ? 'text-success' : 'text-danger';
+			}
 		});
 
 	Template.multipleSolve.events(
-		{});
+		{
+			'click #button-checkAnswer'() {
+				let checked = $('input[name="optionsRadios"]:checked').map(function() { return parseInt($(this).val()); }).get();
+				Meteor.call('checkMultipleChoice', getExercise(), checked);
+			}
+		});
 })();

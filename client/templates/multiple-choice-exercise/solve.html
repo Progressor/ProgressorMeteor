@@ -28,14 +28,14 @@
 			<div class="row">
 				<div class="col-md-6">
 					{{#each i18nOptions this}}
-						<div class="{{questionType}} separated-left">
+						<div class="{{questionType}} {{resultFeedback @index}} separated-left">
 							<label>
-								<input name="optionsRadios" value="{{index}}" type="{{questionType}}">
+								<input value="{{@index}}" name="optionsRadios" type="{{questionType}}" {{checked @index}} {{isResult}}>
 								{{this}}
 							</label>
 						</div>
 					{{/each}}
-					<button id="button-checkAnswer" class="btn btn-primary btn-sm">{{i18n "exercise.checkAnswerButton"}}</button>
+					<button id="button-checkAnswer" class="btn btn-primary btn-sm" {{isResult}}>{{i18n "exercise.checkAnswerButton"}}</button>
 				</div>
 			</div>
 		</section>
