@@ -19,11 +19,8 @@
 			let detached = Tracker.nonreactive(() => category.get());
 			if (!live || !detached || live._id !== detached._id)
 				category.set(live || getDefaultCategory());
-			else {
-				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
-				Meteor.setTimeout(() => $alert.addClass('in'), 1);
-				Meteor.setTimeout(() => $alert.alert('close'), 7500);
-			}
+			else
+				Progressor.showAlert(i18n('form.documentChanged'));
 		});
 	});
 
@@ -70,8 +67,8 @@
 			'change #select-language': changeCategory((ev, $this) => !category.get()._id ? category.get().programmingLanguage = $this.val() : null),
 			'change [id^="input-name-"]': changeCategoryTranslation('name'),
 			'change [id^="textarea-description-"]': changeCategoryTranslation('description'),
-			'click .btn-save': () => Meteor.call('saveCategory', category.get(), (error, id) => error || Router.go('categoryExercises', { _id: id })),
-			'click .btn-delete': () => Meteor.call('deleteCategory', category.get(), error => error || Router.go('exerciseSearch', { _id: category.get().programmingLanguage }))
+			'click .btn-save': () => Meteor.call('saveCategory', category.get(), Progressor.handleError(res => Router.go('categoryExercises', { _id: res }), false)),
+			'click .btn-delete': () => Meteor.call('deleteCategory', category.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: category.get().programmingLanguage }), false))
 		});
 
 })();

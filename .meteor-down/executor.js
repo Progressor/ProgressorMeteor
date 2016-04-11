@@ -34,17 +34,32 @@
 
 		Meteor.call('getBlacklist', language, function (err, res) {
 
+			if (err) {
+				console.log('error in getBlacklist: ' + err);
+				Meteor.kill();
+			}
+
 			(function getFragment(idx) {
 				Meteor.call('getFragment', language, exercise, function (err, res) {
+
+					if (err) {
+						console.log('error in getFragment: ' + err);
+						Meteor.kill();
+					}
+
 					if (idx < 5)
 						getFragment(idx + 1);
-
 					else
 						(function execute(idx) {
 							Meteor.call('execute', language, exercise, fragments[language], function (err, res) {
+						
+								if (err) {
+									console.log('error in execute: ' + err);
+									Meteor.kill();
+								}
+
 								if (idx < 15)
 									execute(idx + 1);
-
 								else
 									Meteor.kill();
 							});

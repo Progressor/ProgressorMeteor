@@ -92,7 +92,7 @@
 	Template.programmingEdit.onRendered(function () {
 		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 
-		Meteor.call('getExecutorTypes', (err, res) => err || executorTypes.set(res));
+		Meteor.call('getExecutorTypes', Progressor.handleError(res => executorTypes.set(res), false));
 
 		this.autorun(function () {
 			let live = Progressor.exercises.findOne();
@@ -102,11 +102,8 @@
 				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id');
 				exercise.set(Progressor.joinCategory(_exercise));
-			} else {
-				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
-				Meteor.setTimeout(() => $alert.addClass('in'), 1);
-				Meteor.setTimeout(() => $alert.alert('close'), 7500);
-			}
+			} else
+				Progressor.showAlert(i18n('form.documentChanged'));
 		});
 
 		this.autorun(function () {
@@ -114,7 +111,7 @@
 				if (exercise.get() && exercise.get().solution)
 					Session.set('solution', exercise.get().solution);
 				else if (exercise.get() && exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
-					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), (err, res) => Session.set('solution', !err ? res : null));
+					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), Progressor.handleError((err, res) => Session.set('solution', !err ? res : null)));
 				else
 					Session.set('solution', null);
 			if (exercise.get() && exercise.get().programmingLanguage) {
@@ -162,7 +159,7 @@
 				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : getDefaultExercise().functions[0].inputTypes, (t, i) => ({ type: t, name: _function.inputNames ? _function.inputNames[i] : null })),
 				isActive: testCase && testCase.functionName === _function.name
 			})),
-			testCases: () => _.map(exercise.get().testCases, testCase => {
+			testCases: () => _.map(exercise.get().testCases, function (testCase) {
 				let _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
 				let fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof(v) === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
 				return _.extend({}, testCase, {
@@ -241,12 +238,12 @@
 					$group.addClass('has-error');
 				_.chain($groups).groupBy(e => $(e).val()).filter(g => g.length > 1).flatten().each(e => $(e).closest('.form-group').addClass('has-error'));
 			},
-			'keyup .exec-type': ev => {
+			'keyup .exec-type'(ev) {
 				let $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorType($this.val()))
 					$group.addClass('has-error');
 			},
-			'keyup .exec-value': ev => {
+			'keyup .exec-value'(ev) {
 				let $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
 					$group.addClass('has-error');
@@ -274,14 +271,14 @@
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request')) exercise.get().released = { requested: new Date() };
-				Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), (err, id) => err || Router.go('exerciseSolve', { _id: id }));
+				Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), err => err || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),
+			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
 
 			//execution
 			'click #button-execute'() {
 				let $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), (err, res) => {
+				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), Progressor.handleError(function (err, res) {
 					let success = !err && Progressor.isExecutionSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
@@ -289,14 +286,14 @@
 					let $alert = $(`<div class="alert alert-${success ? 'success' : 'danger'} fade execution-result" role="alert"></div>`).text(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`)).appendTo($('#execution-results'));
 					Meteor.setTimeout(() => $alert.addClass('in'), 1);
 					Meteor.setTimeout(() => $alert.alert('close'), 3000);
-				});
+				}));
 			},
 			'keyup .CodeMirror': _.throttle(function () {
 				solutionTyped = true;
 				if (exercise.get().programmingLanguage)
 					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
 						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
-						Meteor.call('getBlacklist', exercise.get().programmingLanguage, (err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null));
+						Meteor.call('getBlacklist', exercise.get().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null)));
 					} else {
 						let solution = Session.get('solution');
 						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));

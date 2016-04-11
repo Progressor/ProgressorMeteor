@@ -29,8 +29,8 @@ dt::after { content: ":"; }
 .cursor-default { cursor: default; }
 .absolute {
 	position: absolute;
-	.top-left { top: @default-margin; left: @default-margin; }
-	.top-right { top: @default-margin; right: @default-margin; }
+	&.top-left { top: @default-margin; left: @default-margin; }
+	&.top-right { top: @default-margin; right: @default-margin; }
 	&-container { position: relative; }
 }
 .nomargin { margin: 0; }

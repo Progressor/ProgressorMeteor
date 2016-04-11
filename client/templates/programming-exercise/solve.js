@@ -36,7 +36,7 @@
 			if (result)
 				Session.set('fragment', result.fragment);
 			else
-				Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), (err, res) => Session.set('fragment', !err ? res : null));
+				Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), Progressor.handleError((err, res) => Session.set('fragment', !err ? res : null)));
 		});
 	});
 
@@ -80,18 +80,18 @@
 			'click #button-execute'() {
 				let $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
-				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), function (error, result) {
-					if (!error)
-						executionResults.set(result);
+				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), Progressor.handleError(function (err, res) {
+					if (!err)
+						executionResults.set(res);
 					$result.css('opacity', 1);
 					executionStatus.set(executionStatus.get() & ~0x1);
-				});
+				}));
 			},
 			'click #button-solution': () => Session.set('fragment', getExercise().solution),
 			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);
-					Meteor.call('getBlacklist', getExercise().programmingLanguage, (e, r) => blacklist.set(!e ? r : null));
+					Meteor.call('getBlacklist', getExercise().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? res : null)));
 				} else {
 					let fragment = Session.get('fragment');
 					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));

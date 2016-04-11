@@ -8,7 +8,7 @@
 		return _.filter(_.map(cols, (no, cod) => (idx + 1) % (12 / no) === 0 ? cod : null), cod => !!cod);
 	}
 
-	Template.home.onRendered(() => {
+	Template.home.onRendered(function () {
 		let introIndex = 0;
 		let introInterval = Meteor.setInterval(function () {
 			if (introIndex < introTexts[0].length)

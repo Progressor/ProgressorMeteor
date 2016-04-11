@@ -1,6 +1,6 @@
 <template name="programmingEdit">
 	{{#with safeExercise this}}
-		<header class="absolute-container">
+		<header>
 			{{#if exists}}
 				<nav>
 					<ol class="breadcrumb">
@@ -16,7 +16,6 @@
 			{{else}}
 				<h2>{{i18n "exercise.createTitle"}}</h2>
 			{{/if}}
-			<div id="global-alerts" class="absolute top-right"></div>
 		</header>
 		{{#if exists}}
 			<div class="help-block">
