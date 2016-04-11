@@ -11,13 +11,7 @@
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			userName: Progressor.getUserName,
-			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r),
-			i18nExerciseType: i18n.getExerciseType,
-			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
-			i18nCategoryName: i18n.getName,
-			i18nExerciseName: i18n.getName,
-			i18nDifficulty: i18n.getDifficulty,
-			i18nDateTime: d => i18n.formatDate(d, 'L LT')
+			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r)
 		});
 
 	Template.account.events(

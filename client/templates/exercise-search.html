@@ -11,7 +11,7 @@
 						<li class="active">{{i18nProgrammingLanguage programmingLanguage}}</li>
 					{{else}}
 						<li>{{#linkTo route="exerciseSearch" data=(exerciseSearchData programmingLanguage)}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-						<li class="active">{{i18nCategoryName categories.[0]}}</li>
+						<li class="active">{{i18nName categories.[0]}}</li>
 					{{/unless}}
 				</ol>
 			</div>
@@ -40,7 +40,7 @@
 										<ul>
 											{{#each exercises}}
 												<li>
-													{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}
+													{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
 													{{#if solvedComplete this}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
 												</li>
 											{{/each}}
@@ -71,7 +71,7 @@
 								<option value="">{{i18n "form.selectAll"}}</option>
 							{{/unless}}
 							{{#each categories}}
-								<option value="{{_id}}">{{i18nCategoryName this}}</option>
+								<option value="{{_id}}">{{i18nName this}}</option>
 							{{/each}}
 						</select>
 					</div>
@@ -101,10 +101,10 @@
 						{{#each results}}
 							<tr>
 								<td>
-									{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}
+									{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
 									{{#if solvedComplete this}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
 								</td>
-								<td>{{i18nCategoryName category}}</td>
+								<td>{{i18nName category}}</td>
 								<td>{{i18nDifficulty difficulty}}</td>
 							</tr>
 						{{/each}}

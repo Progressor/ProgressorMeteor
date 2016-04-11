@@ -136,11 +136,6 @@
 			exerciseDuplicateQuery: () => ({ duplicate: exercise.get()._id }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
 			userName: Progressor.getUserName,
-			i18nProgrammingLanguage: () => i18n.getProgrammingLanguage(exercise.get().programmingLanguage),
-			i18nExerciseName: i18n.getName,
-			i18nCategoryName: i18n.getName,
-			i18nDifficulty: i18n.getDifficulty,
-			i18nDateTime: d => i18n.formatDate(d, 'L LT'),
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: language._id === exercise.get().programmingLanguage

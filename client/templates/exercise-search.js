@@ -31,10 +31,6 @@
 				if (!i) return i18n.getProgrammingLanguage(l);
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
-			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
-			i18nCategoryName: i18n.getName,
-			i18nExerciseName: i18n.getName,
-			i18nDifficulty: i18n.getDifficulty,
 			results() {
 				let qry = {};
 				if (filter.get('name') && filter.get('name').length > 2) qry.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };

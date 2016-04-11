@@ -5,14 +5,14 @@
 				<nav>
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
-						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category}}{{/linkTo}}</li>
+						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nName category}}{{/linkTo}}</li>
 						<li class="active">{{i18nDifficulty difficulty}}</li>
-						<li>{{#linkTo route="exerciseSolve" data=exercise}}{{i18nExerciseName exercise}}{{/linkTo}}</li>
+						<li>{{#linkTo route="exerciseSolve" data=exercise}}{{i18nName exercise}}{{/linkTo}}</li>
 						<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
 					</ol>
 				</nav>
-				<h2>{{i18n "exercise.editTitle" (i18nExerciseName exercise)}}</h2>
+				<h2>{{i18n "exercise.editTitle" (i18nName exercise)}}</h2>
 			{{else}}
 				<h2>{{i18n "exercise.createTitle"}}</h2>
 			{{/if}}

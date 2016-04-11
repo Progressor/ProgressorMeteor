@@ -22,12 +22,12 @@
 							{{#each results}}
 								<tr>
 									<td>
-										{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
+										{{#linkTo route="resultView" data=this}}{{i18nName exercise}}{{/linkTo}}
 										<span class="glyphicon {{#if solvedComplete exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
 									</td>
 									<td>{{i18nExerciseType exercise.type}}</td>
 									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
-									<td>{{i18nCategoryName exercise.category}}</td>
+									<td>{{i18nName exercise.category}}</td>
 									<td>{{i18nDifficulty exercise.difficulty}}</td>
 									<td>{{i18nDateTime solved}}</td>
 								</tr>
@@ -57,10 +57,10 @@
 						<tbody>
 							{{#each authoredExercises}}
 								<tr>
-									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
 									<td>{{i18nExerciseType type}}</td>
 									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-									<td>{{i18nCategoryName category}}</td>
+									<td>{{i18nName category}}</td>
 									<td>{{i18nDifficulty difficulty}}</td>
 									<td>{{userName lastEditor_id}}</td>
 									<td>{{i18nDateTime lastEdited}}</td>
@@ -98,10 +98,10 @@
 							<tbody>
 								{{#each archivedExercises}}
 									<tr>
-										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
 										<td>{{i18nExerciseType type}}</td>
 										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-										<td>{{i18nCategoryName category}}</td>
+										<td>{{i18nName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td>{{userName lastEditor_id}}</td>
 										<td>{{i18nDateTime lastEdited}}</td>

@@ -13,6 +13,14 @@
 		});
 	}
 
+	Template.registerHelper('i18nProgrammingLanguage', i18n.getProgrammingLanguage);
+	Template.registerHelper('i18nExerciseType', i18n.getExerciseType);
+	Template.registerHelper('i18nDifficulty', i18n.getDifficulty);
+	Template.registerHelper('i18nName', i18n.getName);
+	Template.registerHelper('i18nDescription', i18n.getDescription);
+	Template.registerHelper('i18nOptions', i18n.getOptions);
+	Template.registerHelper('i18nDateTime', d => i18n.formatDate(d, 'L LT'));
+
 	Meteor.startup(function () {
 
 		if (!init)

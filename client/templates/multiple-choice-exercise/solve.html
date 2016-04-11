@@ -5,14 +5,14 @@
 				<div class="col-sm-8">
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage}}{{/linkTo}}</li>
-						<li class="active">{{i18nCategoryName category}}</li>
+						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+						<li class="active">{{i18nName category}}</li>
 						<li class="active">{{i18nDifficulty difficulty}}</li>
 						{{#unless isResult}}
-							<li class="active">{{i18nExerciseName this}}</li>
+							<li class="active">{{i18nName this}}</li>
 						{{else}}
 							<li>
-								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}
+								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nName this}}{{/linkTo}}
 								{{#if changedAfterSolved}}<em class="text-info">&mdash; {{i18n "exercise.changedMessage"}}</em>{{/if}}
 							</li>
 						{{/unless}}
@@ -22,7 +22,7 @@
 			<div class="row">
 				<div class="col-sm-9">
 					<h2>
-						{{i18nExerciseName this}}
+						{{i18nName this}}
 						{{#if isResult}}
 							<small>
 								({{i18nResultDateTime}})
@@ -36,7 +36,7 @@
 		<section>
 			<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
 			<p class="well">
-				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
+				{{#markdown}}{{i18nDescription this}}{{/markdown}}
 			</p>
 			<div class="row">
 				<div class="col-md-6">
@@ -56,9 +56,9 @@
 		</section>
 		<hr />
 		<section>
-			<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nCategoryName category)}}</h3>
+			<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nName category)}}</h3>
 			<p>
-				{{#markdown}}{{i18nCategoryDescription category}}{{/markdown}}
+				{{#markdown}}{{i18nDescription category}}{{/markdown}}
 			</p>
 		</section>
 	{{/with}}
