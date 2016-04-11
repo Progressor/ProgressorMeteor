@@ -89,7 +89,7 @@
 				exercise.lastEditor_id = this.userId;
 				exercise.lastEdited = new Date();
 
-				return Progressor.exercises.upsert(exercise._id, _.omit(exercise, 'category')).insertedId || exercise._id;
+				return Progressor.exercises.upsert(exercise._id, exercise).insertedId || exercise._id;
 			},
 			toggleArchiveExercise(exercise, archive) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));

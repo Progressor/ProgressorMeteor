@@ -44,7 +44,7 @@
 			},
 			results() {
 				let qry = getQuery();
-				if (_.keys(qry).length) return _.sortBy(Progressor.exercises.find(qry, { limit: 25 }).fetch(), i18n.getName)
+				if (_.keys(qry).length) return _.chain(Progressor.exercises.find(qry, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value()
 			},
 			message: () => _.keys(getQuery()).length ? i18n('form.noResults') : i18n('form.noQuery')
 		});

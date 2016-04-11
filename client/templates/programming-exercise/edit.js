@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isDuplicate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
+	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
 
 	function getDefaultExercise(initInput = true) {
 		return {
@@ -79,7 +79,7 @@
 	}
 
 	Template.programmingEdit.onCreated(function () {
-		isDuplicate = new ReactiveVar(false);
+		isCreate = new ReactiveVar(false);
 		exercise = new ReactiveVar(getDefaultExercise(false));
 		executorTypes = new ReactiveVar(null);
 		executionResults = new ReactiveVar([]);
@@ -92,16 +92,16 @@
 	Template.programmingEdit.onRendered(function () {
 		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 
-		Meteor.call('getExecutorTypes', (error, result) => error || executorTypes.set(result));
+		Meteor.call('getExecutorTypes', (err, res) => err || executorTypes.set(res));
 
 		this.autorun(function () {
 			let live = Progressor.exercises.findOne();
 			let detached = Tracker.nonreactive(() => exercise.get());
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise(false);
-				if (isDuplicate.get())
+				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id');
-				exercise.set(_exercise);
+				exercise.set(Progressor.joinCategory(_exercise));
 			} else {
 				let $alert = $('<div class="alert alert-warning pre-line fade" role="alert"></div>').text(i18n('form.documentChanged')).appendTo($('#global-alerts'));
 				Meteor.setTimeout(() => $alert.addClass('in'), 1);
@@ -127,8 +127,8 @@
 
 	Template.programmingEdit.helpers(
 		{
-			safeExercise(e) {
-				isDuplicate.set(!e);
+			safeExercise(context) {
+				isCreate.set(!context);
 				return exercise.get();
 			},
 			exercise: () => exercise.get(),
@@ -274,16 +274,16 @@
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request')) exercise.get().released = { requested: new Date() };
-				Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id }));
+				Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), (err, id) => err || Router.go('exerciseSolve', { _id: id }));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), error => error || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),
+			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), err => err || Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage })),
 
 			//execution
 			'click #button-execute'() {
 				let $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), (error, result) => {
-					let success = !error && Progressor.isExecutionSuccess(exercise.get(), result);
-					executionResults.set(!error ? result : null);
+				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), (err, res) => {
+					let success = !err && Progressor.isExecutionSuccess(exercise.get(), res);
+					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
 					$('.execution-result').alert('close');
 					let $alert = $(`<div class="alert alert-${success ? 'success' : 'danger'} fade execution-result" role="alert"></div>`).text(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`)).appendTo($('#execution-results'));
@@ -296,7 +296,7 @@
 				if (exercise.get().programmingLanguage)
 					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
 						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
-						Meteor.call('getBlacklist', exercise.get().programmingLanguage, (error, result) => blacklist.set(!error ? _.extend(blacklist.get(), { elements: result }) : null));
+						Meteor.call('getBlacklist', exercise.get().programmingLanguage, (err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null));
 					} else {
 						let solution = Session.get('solution');
 						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));

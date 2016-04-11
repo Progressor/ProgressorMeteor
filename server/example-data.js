@@ -371,7 +371,7 @@ Meteor.startup(function () {
 				{
 					user_id: Meteor.users.findOne()._id,
 					exercise_id: Progressor.exercises.findOne({ programmingLanguage: 'java', difficulty: 1, type: 1 })._id,
-					exercise: _.omit(Progressor.exercises.findOne({ programmingLanguage: 'java', difficulty: 1, type: 1 }), '_id', 'category'),
+					exercise: _.omit(Progressor.exercises.findOne({ programmingLanguage: 'java', difficulty: 1, type: 1 }), '_id'),
 					fragment: 'public String helloWorld() { return "Hello, World!"; }',
 					results: [
 						{

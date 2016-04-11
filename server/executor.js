@@ -100,7 +100,7 @@
 				if (exercise._id && this.userId) {
 					let qry = { user_id: this.userId, exercise_id: exercise._id };
 					let del = Progressor.results.findOne(qry);
-					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), fragment: fragment, results: results, solved: new Date() }));
+					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id'), fragment: fragment, results: results, solved: new Date() }));
 				}
 
 				//let pubResults = Progressor.getVisibleResults(exercise, results);

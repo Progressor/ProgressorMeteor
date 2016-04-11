@@ -44,7 +44,7 @@
 		{
 			safeExercise(exerciseOrResult) {
 				isResult.set(!!exerciseOrResult.exercise_id);
-				return getExercise();
+				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
 			isResult: () => isResult.get(),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
