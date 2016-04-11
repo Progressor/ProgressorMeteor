@@ -90,7 +90,7 @@
 				this.unblock();
 
 				if (exercise._id)
-					exercise = Progressor.exercises.find({ _id: exercise._id });
+					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
 				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));

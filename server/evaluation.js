@@ -19,7 +19,7 @@
 				check(input, [Match.Integer]);
 
 				if (exercise._id)
-					exercise = Progressor.exercises.find({ _id: exercise._id });
+					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
 				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i), checked: _.contains(input, i) }));
 
