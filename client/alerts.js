@@ -9,7 +9,7 @@
 		},
 		handleError(cb = null, rethrow = true) {
 			return function (err, res) {
-				if (err) Progressor.showAlert(i18n('layout.unexpectedError', String(err)), 'error', 7500);
+				if (err) Progressor.showAlert(i18n('layout.unexpectedError', String(err)), 'danger', 7500);
 				if (cb)
 					if (rethrow) cb(err, res);
 					else if (!err) cb(res);
