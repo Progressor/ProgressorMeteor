@@ -6,7 +6,7 @@
 			language: () => i18n.getLanguages()[i18n.getLanguage()],
 			languages: () => _.map(i18n.getLanguages(), (nam, id) =>({ _id: id, name: nam, isActive: id === i18n.getLanguage() })),
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
-			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), lng => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id) }))
+			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), lng => _.extend({ name: i18n.getProgrammingLanguage(lng._id) }, lng))
 		});
 
 	Template.layout.events(

@@ -113,10 +113,15 @@
 			if (!solutionTyped)
 				if (exercise.get() && exercise.get().solution)
 					Session.set('solution', exercise.get().solution);
-				else if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+				else if (exercise.get() && exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
 					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), (err, res) => Session.set('solution', !err ? res : null));
 				else
 					Session.set('solution', null);
+			if (exercise.get() && exercise.get().programmingLanguage) {
+				let programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
+				if (programmingLanguage)
+					$('.CodeMirror')[0].CodeMirror.setOption('mode', programmingLanguage.codeMirror);
+			}
 		});
 	});
 
@@ -145,12 +150,7 @@
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
 				isActive: difficulty === exercise.get().difficulty
 			})),
-			codeMirrorOptions: () => {
-				let programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
-				return _.extend({}, Progressor.getCodeMirrorConfiguration(), {
-					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain'
-				});
-			},
+			codeMirrorOptions: () => Progressor.getCodeMirrorConfiguration(),
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(exercise.get(), id),
@@ -172,7 +172,7 @@
 				});
 			}),
 			executorTypes: () => executorTypes.get() ? executorTypes.get().types : [],
-			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({}, v, { typeLabels: v.types.join(', ') })) : [],
+			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
 
 			//execution
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
@@ -270,9 +270,9 @@
 			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
 			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
-			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
+				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request')) exercise.get().released = { requested: new Date() };
 				Meteor.call('saveExercise', exercise.get(), (error, id) => error || Router.go('exerciseSolve', { _id: id }));
 			}),
@@ -280,8 +280,8 @@
 
 			//execution
 			'click #button-execute'() {
-				let solution = $('#textarea-solution').val(), $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), solution, (error, result) => {
+				let $result = $('.testcase-result').css('opacity', 0.333);
+				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), (error, result) => {
 					let success = !error && Progressor.isExecutionSuccess(exercise.get(), result);
 					executionResults.set(!error ? result : null);
 					$result.css('opacity', 1);
@@ -291,7 +291,6 @@
 					Meteor.setTimeout(() => $alert.alert('close'), 3000);
 				});
 			},
-			'click #button-solution': () => $('#textarea-solution').val(exercise.get().solution),
 			'keyup .CodeMirror': _.throttle(function () {
 				solutionTyped = true;
 				if (exercise.get().programmingLanguage)
@@ -299,7 +298,7 @@
 						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
 						Meteor.call('getBlacklist', exercise.get().programmingLanguage, (error, result) => blacklist.set(!error ? _.extend(blacklist.get(), { elements: result }) : null));
 					} else {
-						let solution = $('#textarea-solution').val();
+						let solution = Session.get('solution');
 						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
 						$('#button-execute').prop('disabled', blacklistMatches.get().length);
 					}

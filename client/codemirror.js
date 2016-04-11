@@ -18,20 +18,24 @@
 									'vibrant-ink',
 									'xq-dark', 'xq-light'];
 	const defaultTheme = 'eclipse';
+	const defaultMode = 'text/plain';
 
 	const config = { //https://codemirror.net/doc/manual.html
 		lineNumbers: true,
-		lineWrapping: true
+		lineWrapping: true,
+		theme: defaultTheme,
+		mode: defaultMode
 	};
 
 	_.extend(Progressor, {
 		getCodeMirrorThemes: () => themes,
 		getCodeMirrorDefaultTheme: () => defaultTheme,
+		getCodeMirrorDefaultMode: () => defaultMode,
 		getCodeMirrorConfiguration() {
-			let user = Meteor.user();
-			return _.extend({}, defaultTheme, {
-				theme: user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : defaultTheme
-			});
+			let ret = config, user = Meteor.user();
+			if (user && user.profile && user.profile.codeMirrorTheme)
+				ret = _.extend({ theme: user.profile.codeMirrorTheme }, ret);
+			return ret;
 		}
 	});
 

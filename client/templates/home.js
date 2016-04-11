@@ -30,8 +30,8 @@
 			programmingLanguages() {
 				let cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
 				return _.union(
-					_.map(cur, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(idx) })),
-					_.map(upc, (lng, idx) => _.extend({}, lng, { name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(cur.length + idx), isUpcoming: true })));
+					_.map(cur, (lng, idx) => _.extend({ name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(idx) }, lng)),
+					_.map(upc, (lng, idx) => _.extend({ name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(cur.length + idx), isUpcoming: true }, lng)));
 			},
 			nofExercises(lng) {
 				let cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
