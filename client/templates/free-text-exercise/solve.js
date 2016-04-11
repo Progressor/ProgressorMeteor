@@ -26,7 +26,4 @@
 			i18nDifficulty: i18n.getDifficulty
 		});
 
-	Template.textSolve.events(
-		{});
-
 })();

@@ -22,14 +22,16 @@ h2, .well > h3 { margin-top: 0; }
  */
 dt::after { content: ":"; }
 .pre-line { white-space: pre-line; }
-.btn.btn-spacing { cursor: default; }
-.checkbox.checkbox-nospacing { margin: 0; }
-.multiple-choice-nospacing { margin-bottom: 0 ;}
-.separated-top { margin-top: 1em; }
-.separated-bottom { margin-bottom: 1em; }
-.separated-left { margin-left: 1em; }
-.text-separated-left {margin-left: 0.3em; }
 .absolute-container { position: relative; }
 .absolute { position: absolute; }
 .absolute.top-left { top: 1em; left: 1em; }
 .absolute.top-right { top: 1em; right: 1em; }
+.cursor-default { cursor: default; }
+.nomargin { margin: 0; }
+.separated(@dir) {
+	.separated-@{dir} { margin-@{dir}: 1em; }
+}
+.separated(top);
+.separated(left);
+.separated(bottom);
+.separated(right);

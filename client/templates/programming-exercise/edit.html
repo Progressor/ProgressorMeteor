@@ -206,7 +206,7 @@
 							<label for="textarea-solution">{{i18n "exercise.solutionFragmentLabel"}}</label>
 						</div>
 						<div class="col-sm-8 text-right">
-							<div class="checkbox checkbox-nospacing">
+							<div class="checkbox nomargin">
 								<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
 							</div>
 						</div>
@@ -292,7 +292,7 @@
 							<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign"></span></button>
 							{{#if testCasesEvaluated}}
 								{{#unless executionFatal}}
-									<span class="btn btn-sm btn-spacing testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
+									<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
 								{{/unless}}
 							{{/if}}
 						</div>

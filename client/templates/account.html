@@ -4,13 +4,14 @@
 	{{/if}}
 	<div class="row">
 		{{#if currentUser}}
-			<div class="col-md-7">
+			<div class="col-md-8">
 				<section class="panel panel-default">
 					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.solvedExercisesSubtitle"}}</h3></div>
 					<table class="table table-condensed table-striped">
 						<thead>
 							<tr>
 								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
 								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
@@ -24,6 +25,7 @@
 										{{#linkTo route="resultView" data=this}}{{i18nExerciseName exercise}}{{/linkTo}}
 										<span class="glyphicon {{#if solvedComplete exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
 									</td>
+									<td>{{i18nExerciseType exercise.type}}</td>
 									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
 									<td>{{i18nCategoryName exercise.category}}</td>
 									<td>{{i18nDifficulty exercise.difficulty}}</td>
@@ -31,7 +33,7 @@
 								</tr>
 							{{else}}
 								<tr>
-									<td colspan="4" class="text-muted">{{i18n "form.noResults"}}</td>
+									<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
 								</tr>
 							{{/each}}
 						</tbody>
@@ -43,6 +45,7 @@
 						<thead>
 							<tr>
 								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
 								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
@@ -55,6 +58,7 @@
 							{{#each authoredExercises}}
 								<tr>
 									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+									<td>{{i18nExerciseType type}}</td>
 									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
 									<td>{{i18nCategoryName category}}</td>
 									<td>{{i18nDifficulty difficulty}}</td>
@@ -64,7 +68,7 @@
 								</tr>
 							{{else}}
 								<tr>
-									<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
+									<td colspan="8" class="text-muted">{{i18n "form.noResults"}}</td>
 								</tr>
 							{{/each}}
 						</tbody>
@@ -82,6 +86,7 @@
 							<thead>
 								<tr>
 									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.typeLabel"}}</th>
 									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
@@ -94,6 +99,7 @@
 								{{#each archivedExercises}}
 									<tr>
 										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nExerciseName this}}{{/linkTo}}</td>
+										<td>{{i18nExerciseType type}}</td>
 										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
 										<td>{{i18nCategoryName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
@@ -103,7 +109,7 @@
 									</tr>
 								{{else}}
 									<tr>
-										<td colspan="6" class="text-muted">{{i18n "form.noResults"}}</td>
+										<td colspan="8" class="text-muted">{{i18n "form.noResults"}}</td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -111,7 +117,7 @@
 					</div>
 				</section>
 			</div>
-			<div class="col-md-4 col-md-offset-1">
+			<div class="col-md-4">
 				<section class="well form-horizontal">
 					<h3>{{i18n "account.accountSettingsSubtitle"}}</h3>
 					<div class="form-group">

@@ -131,7 +131,7 @@
 				check(input, [Match.Integer]);
 
 				let ex = Progressor.exercises.findOne({ _id: exercise._id }); // Query exercise from server as solution field on client isn't visible
-				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(ex.solution, i) , checked: _.contains(input, i) }));
+				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(ex.solution, i), checked: _.contains(input, i) }));
 
 				if (exercise._id && this.userId) {
 					let qry = { user_id: this.userId, exercise_id: exercise._id };

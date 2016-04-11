@@ -12,6 +12,7 @@
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			userName: Progressor.getUserName,
 			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r),
+			i18nExerciseType: i18n.getExerciseType,
 			i18nProgrammingLanguage: i18n.getProgrammingLanguage,
 			i18nCategoryName: i18n.getName,
 			i18nExerciseName: i18n.getName,

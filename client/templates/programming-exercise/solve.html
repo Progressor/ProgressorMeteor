@@ -13,12 +13,7 @@
 						{{else}}
 							<li>
 								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}
-								{{#if changedAfterSolved}}
-									<em class="text-info">
-										<span class="glyphicon glyphicon-info-sign text-separated-left" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>
-										{{i18n "exercise.changedMessage"}}
-									</em>
-								{{/if}}
+								{{#if changedAfterSolved}}<em class="text-info">&mdash; {{i18n "exercise.changedMessage"}}</em>{{/if}}
 							</li>
 						{{/unless}}
 					</ol>
@@ -36,7 +31,10 @@
 					<h2>
 						{{i18nExerciseName this}}
 						{{#if isResult}}
-							<small>({{i18nResultDateTime}})</small>
+							<small>
+								({{i18nResultDateTime}})
+								{{#if changedAfterSolved}}<span class="glyphicon glyphicon-pushpin text-info" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>{{/if}}
+							</small>
 						{{/if}}
 					</h2>
 				</div>
@@ -120,7 +118,7 @@
 					{{/unless}}
 					{{#unless isResult}}
 						{{#if solutionVisible}}
-							<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button> {{!<br /><pre>{solution}</pre>}}
+							<button id="button-solution" class="btn btn-default btn-sm">{{i18n "exercise.showSolutionButton"}}</button>
 						{{/if}}
 					{{/unless}}
 				</div>

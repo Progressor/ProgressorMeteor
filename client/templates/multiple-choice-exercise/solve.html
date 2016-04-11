@@ -13,12 +13,7 @@
 						{{else}}
 							<li>
 								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nExerciseName this}}{{/linkTo}}
-								{{#if changedAfterSolved}}
-									<em class="text-info">
-										<span class="glyphicon glyphicon-info-sign text-separated-left" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>
-										{{i18n "exercise.changedMessage"}}
-									</em>
-								{{/if}}
+								{{#if changedAfterSolved}}<em class="text-info">&mdash; {{i18n "exercise.changedMessage"}}</em>{{/if}}
 							</li>
 						{{/unless}}
 					</ol>
@@ -28,13 +23,19 @@
 				<div class="col-sm-9">
 					<h2>
 						{{i18nExerciseName this}}
+						{{#if isResult}}
+							<small>
+								({{i18nResultDateTime}})
+								{{#if changedAfterSolved}}<span class="glyphicon glyphicon-pushpin text-info" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>{{/if}}
+							</small>
+						{{/if}}
 					</h2>
 				</div>
 			</div>
 		</header>
 		<section>
 			<h3 class="hidden">{{i18n "exercise.exerciseSubtitle"}}</h3>
-			<p class="well multiple-choice-nospacing">
+			<p class="well">
 				{{#markdown}}{{i18nExerciseDescription this}}{{/markdown}}
 			</p>
 			<div class="row">
@@ -47,9 +48,9 @@
 							</label>
 						</div>
 					{{/each}}
-				{{#unless isResult}}
-					<button id="button-checkAnswer" class="btn btn-primary btn-sm">{{i18n "exercise.checkAnswerButton"}}</button>
-				{{/unless}}
+					{{#unless isResult}}
+						<button id="button-checkAnswer" class="btn btn-primary btn-sm">{{i18n "exercise.checkAnswerButton"}}</button>
+					{{/unless}}
 				</div>
 			</div>
 		</section>

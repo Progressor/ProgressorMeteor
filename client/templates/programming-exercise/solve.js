@@ -84,22 +84,22 @@
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
-				let $fragment = $('#textarea-fragment'), $result = $('#table-testcases').css('opacity', 1 / 3);
+				let $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
-				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), $fragment.val(), function (error, result) {
+				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), function (error, result) {
 					if (!error)
 						executionResults.set(result);
 					$result.css('opacity', 1);
 					executionStatus.set(executionStatus.get() & ~0x1);
 				});
 			},
-			'click #button-solution': () => $('#textarea-fragment').val(getExercise().solution), //$(ev.currentTarget).slideUp(); $('#pre-solution').slideDown();,
+			'click #button-solution': () => Session.set('fragment', getExercise().solution),
 			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);
 					Meteor.call('getBlacklist', getExercise().programmingLanguage, (e, r) => blacklist.set(!e ? r : null));
 				} else {
-					let fragment = $('#textarea-fragment').val();
+					let fragment = Session.get('fragment');
 					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));
 					executionStatus.set(blacklistMatches.get().length ? executionStatus.get() | 0x2 : executionStatus.get() & ~0x2);
 				}
