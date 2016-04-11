@@ -5,6 +5,15 @@
 
 	let filter;
 
+	function getQuery() {
+		let qry = {};
+		if (filter.get('name') && filter.get('name').length > 2) qry.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
+		if (filter.get('type')) qry.type = filter.get('type');
+		if (filter.get('category')) qry.category_id = filter.get('category');
+		if (filter.get('difficulty')) qry.difficulty = filter.get('difficulty');
+		return qry;
+	}
+
 	Template.exerciseSearch.onCreated(() => filter = new ReactiveDict());
 
 	Template.exerciseSearch.helpers(
@@ -22,6 +31,8 @@
 					};
 				});
 			},
+			exerciseTypes: () => _.map(Progressor.getExerciseTypes(), (n, k) => k),
+			difficulties: () => Progressor.getDifficulties(),
 			categories: () => Progressor.categories.find().fetch(),
 			solvedComplete(exercise) {
 				let result = Progressor.results.findOne({ exercise_id: exercise._id });
@@ -32,18 +43,16 @@
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
 			results() {
-				let qry = {};
-				if (filter.get('name') && filter.get('name').length > 2) qry.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
-				if (filter.get('category')) qry.category_id = filter.get('category');
-				if (filter.get('difficulty')) qry.difficulty = filter.get('difficulty');
+				let qry = getQuery();
 				if (_.keys(qry).length) return _.sortBy(Progressor.exercises.find(qry, { limit: 25 }).fetch(), i18n.getName)
 			},
-			message: () => filter.get('name') && filter.get('name').length > 2 || filter.get('category') || filter.get('difficulty') ? i18n('form.noResults') : i18n('form.noQuery')
+			message: () => _.keys(getQuery()).length ? i18n('form.noResults') : i18n('form.noQuery')
 		});
 
 	Template.exerciseSearch.events(
 		{
 			'keyup #input-name': _.debounce(ev => filter.set('name', $(ev.currentTarget).val()), 250),
+			'change #select-type': ev => filter.set('type', parseInt($(ev.currentTarget).val())),
 			'change #select-category': ev => filter.set('category', $(ev.currentTarget).val()),
 			'change #select-difficulty': ev => filter.set('difficulty', parseInt($(ev.currentTarget).val()))
 		});
