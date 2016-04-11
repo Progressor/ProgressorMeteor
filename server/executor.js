@@ -58,18 +58,15 @@
 			},
 			getFragment(language, exercise) {
 				check(language, String);
-				check(exercise, Match.ObjectIncluding(
-					{
-						functions: [
-							Match.ObjectIncluding(
-								{
-									name: String,
-									inputNames: [String],
-									inputTypes: [String],
-									outputNames: [String],
-									outputTypes: [String]
-								})]
-					}));
+				check(exercise, Match.OneOf(
+					Match.ObjectIncluding(
+						{
+							_id: String
+						}),
+					Match.ObjectIncluding(
+						{
+							functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })]
+						})));
 
 				this.unblock();
 
@@ -78,28 +75,22 @@
 			},
 			execute(language, exercise, fragment) {
 				check(language, String);
-				check(exercise, Match.ObjectIncluding(
-					{
-						functions: [
-							Match.ObjectIncluding(
-								{
-									name: String,
-									inputNames: [String],
-									inputTypes: [String],
-									outputNames: [String],
-									outputTypes: [String]
-								})],
-						testCases: [
-							Match.ObjectIncluding(
-								{
-									functionName: String,
-									inputValues: [String],
-									expectedOutputValues: [String]
-								})]
-					}));
+				check(exercise, Match.OneOf(
+					Match.ObjectIncluding(
+						{
+							_id: String
+						}),
+					Match.ObjectIncluding(
+						{
+							functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })],
+							testCases: [Match.ObjectIncluding({ functionName: String, inputValues: [String], expectedOutputValues: [String] })]
+						})));
 				check(fragment, String);
 
 				this.unblock();
+
+				if (exercise._id)
+					exercise = Progressor.exercises.find({ _id: exercise._id });
 
 				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
@@ -115,29 +106,6 @@
 				//let pubResults = Progressor.getVisibleResults(exercise, results);
 				//if (Progressor.hasInvisibleTestCases(exercise))
 				//	pubResults.push({ invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) });
-
-				return results;
-			},
-
-			// checks for other exercise types
-			checkMultipleChoice (exercise, input) {
-				check(exercise, Match.ObjectIncluding(
-					{
-						options: [
-							Match.ObjectIncluding(
-								{ options: [String] }
-							)]
-					}));
-				check(input, [Match.Integer]);
-
-				let ex = Progressor.exercises.findOne({ _id: exercise._id }); // Query exercise from server as solution field on client isn't visible
-				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(ex.solution, i), checked: _.contains(input, i) }));
-
-				if (exercise._id && this.userId) {
-					let qry = { user_id: this.userId, exercise_id: exercise._id };
-					let del = Progressor.results.findOne(qry);
-					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id', 'category'), results: results, solved: new Date() }));
-				}
 
 				return results;
 			}

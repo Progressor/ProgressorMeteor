@@ -45,7 +45,7 @@
 				let checked = $('input[name="optionsRadios"]:checked').map(function () {
 					return parseInt($(this).val());
 				}).get();
-				Meteor.call('checkMultipleChoice', getExercise(), checked);
+				Meteor.call('evaluateMultipleChoice', getExercise(), checked);
 			}
 		});
 })();

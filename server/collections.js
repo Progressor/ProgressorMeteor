@@ -14,7 +14,7 @@
 	}
 
 	Meteor.publish('categories', () => Progressor.categories.find());
-	Meteor.publish('category', checked([String], id => Progressor.categories.find(id)));
+	Meteor.publish('category', checked([String], id => Progressor.categories.find({ _id: id })));
 	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
 
 	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
