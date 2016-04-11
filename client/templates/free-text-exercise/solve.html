@@ -25,7 +25,7 @@
 						{{i18nName this}}
 						{{#if isResult}}
 							<small>
-								({{i18nResultDateTime}})
+								({{i18nDateTime resultSolved}})
 								{{#if changedAfterSolved}}<span class="glyphicon glyphicon-pushpin text-info" title="{{i18n "exercise.changedMessage"}}" data-toggle="tooltip"></span>{{/if}}
 							</small>
 						{{/if}}
@@ -53,10 +53,10 @@
 							<label for="textarea-fragment">{{i18n "exercise.yourSolutionLabel"}}</label>
 							{{#unless isResult}}
 								{{#if solutionVisible}}
-									<span class="pull-right">{{#linkTo}}{{i18n "exercise.showSolutionButton"}}{{/linkTo}}</span> {{!<br /><pre>{solution}</pre>}}
+									<span class="pull-right">{{#linkTo}}{{i18n "exercise.showSolutionButton"}}{{/linkTo}}</span>
 								{{/if}}
 							{{/unless}}
-							<textarea id="textarea-fragment" class="form-control mono" rows="10" cols="60" autofocus>Your Solution</textarea>
+							<textarea id="textarea-fragment" class="form-control" rows="10" cols="60" autofocus></textarea>
 						</div>
 						<div class="row">
 							<div class="col-md-6">

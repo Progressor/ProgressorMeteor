@@ -86,7 +86,7 @@
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
 		solutionTyped = false;
-		Session.set('fragment', null);
+		Session.set('solution', null);
 	});
 
 	Template.programmingEdit.onRendered(function () {
@@ -109,18 +109,15 @@
 			}
 		});
 
-		if (exercise.get() && exercise.get().solution)
-			Session.set('solution', exercise.get().solution);
-		else
-			this.autorun(function () {
-				if (!solutionTyped)
-					if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
-						Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), function (error, result) {
-							Session.set('solution', !error ? result : null);
-						});
-					else
-						Session.set('solution', null);
-			});
+		this.autorun(function () {
+			if (!solutionTyped)
+				if (exercise.get() && exercise.get().solution)
+					Session.set('solution', exercise.get().solution);
+				else if (exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), (err, res) => Session.set('solution', !err ? res : null));
+				else
+					Session.set('solution', null);
+		});
 	});
 
 	Template.programmingEdit.helpers(

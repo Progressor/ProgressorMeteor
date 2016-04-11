@@ -102,7 +102,7 @@ Meteor.startup(function () {
 					],
 					programmingLanguage: 'java',
 					category_id: Progressor.categories.findOne()._id,
-					difficulty: 1,
+					difficulty: 2,
 					type: 1,
 					descriptions: [
 						{
@@ -370,8 +370,8 @@ Meteor.startup(function () {
 			[
 				{
 					user_id: Meteor.users.findOne()._id,
-					exercise_id: Progressor.exercises.findOne()._id,
-					exercise: _.omit(Progressor.exercises.findOne(), '_id', 'category'),
+					exercise_id: Progressor.exercises.findOne({ programmingLanguage: 'java', difficulty: 1, type: 1 })._id,
+					exercise: _.omit(Progressor.exercises.findOne({ programmingLanguage: 'java', difficulty: 1, type: 1 }), '_id', 'category'),
 					fragment: 'public String helloWorld() { return "Hello, World!"; }',
 					results: [
 						{

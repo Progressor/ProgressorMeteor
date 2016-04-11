@@ -5,7 +5,7 @@
  */
 @font-face {
 	font-family: OCRAEXT;
-	src: url("/fonts/OCRAEXT.TTF") format('truetype'); //source: http://fontzone.net/font-details/ocr-a-extended
+	src: url("/fonts/OCRAEXT.TTF") format("truetype"); //source: http://fontzone.net/font-details/ocr-a-extended
 }
 #intro { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; }
 .jumbotron.intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
@@ -23,14 +23,13 @@
  * PROGRAMMING LANGUAGES
  */
 [data-href] { cursor: pointer; }
-div.languageLogo { text-align: center; }
-i.languageLogo { font-size: 10em; color: @brand-primary; }
-.panel-primary i.languageLogo { color: #FFFFFF; }
+div.language-logo { text-align: center; }
+i.language-logo { font-size: 10em; color: @brand-primary; }
+.panel-primary i.language-logo { color: #FFFFFF; }
 //custom logos
-i.logo-custom { display: inline-block; height: 1em; width: 1em; background-repeat: no-repeat; -webkit-background-size: 1em; background-size: 1em; }
+i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; height: 1em; width: 1em; background-repeat: no-repeat; -webkit-background-size: 1em; background-size: 1em; }
 .logo-custom(@lang) {
-	@logo-color: replace(`'@{brand-primary}'.toUpperCase()`, "#", "");
-	i.logo-@{lang} { &:extend(i.logo-custom); background-image: url("/images/logo-@{lang}-void-@{logo-color}.svg"); }
-	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{lang}-void-FFFFFF.svg"); }
+	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-void-%s.svg")', @lang, replace('@{brand-primary}', '#', '')); }
+	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{lang}-void-ffffff.svg"); }
 }
-.logo-custom(kotlin);
+.logo-custom(kotlin); //source: extracted from https://resources.jetbrains.com/assets/products/kotlin/kotlin_logos.zip (via https://www.jetbrains.com/company/press/)

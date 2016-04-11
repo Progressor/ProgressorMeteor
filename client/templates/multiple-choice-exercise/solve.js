@@ -22,6 +22,7 @@
 				return getExercise();
 			},
 			isResult: () => isResult.get(),
+			resultSolved: () => getResult().solved,
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,

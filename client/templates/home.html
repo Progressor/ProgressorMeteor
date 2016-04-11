@@ -10,8 +10,8 @@
 		{{#each programmingLanguages}}
 			<div class="col-xs-{{nofColumns "xs"}} col-sm-{{nofColumns "sm"}} col-md-{{nofColumns "md"}} col-lg-{{nofColumns "lg"}}">
 				<div class="panel panel-default {{#if isUpcoming}}disabled{{/if}}" data-href="{{#unless isUpcoming}}{{_id}}{{/unless}}">
-					<div class="panel-heading languageLogo">
-						<i class="{{devicon}} languageLogo"></i>
+					<div class="panel-heading language-logo">
+						<i class="{{devicon}} language-logo"></i>
 					</div>
 					<div class="panel-body">
 						<div class="panel-title">{{name}}</div>

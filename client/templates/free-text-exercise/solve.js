@@ -7,6 +7,10 @@
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
+	function getResult() {
+		return Progressor.results.findOne();
+	}
+
 	Template.textSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
 	});
@@ -17,6 +21,7 @@
 				isResult.set(exerciseOrResult.exercise_id);
 				return getExercise();
 			},
+			resultSolved: () => getResult().solved,
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage })
 		});
 
