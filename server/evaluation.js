@@ -21,11 +21,11 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i), checked: _.contains(input, i) }));
+				const results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i), checked: _.contains(input, i) }));
 
 				if (exercise._id && this.userId) {
-					let qry = { user_id: this.userId, exercise_id: exercise._id };
-					let del = Progressor.results.findOne(qry);
+					const qry = { user_id: this.userId, exercise_id: exercise._id };
+					const del = Progressor.results.findOne(qry);
 					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id'), results: results, solved: new Date() }));
 				}
 

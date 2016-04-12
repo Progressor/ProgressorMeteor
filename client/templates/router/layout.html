@@ -72,11 +72,11 @@
 		{{#unless customTitle}}
 			<h1 class="hidden">{{i18n "layout.title"}}</h1>
 		{{/unless}}
-		<div class="absolute-container">
+		<div>
 			<main>
 				{{> yield}}
 			</main>
-			<div id="global-alerts" class="absolute top-right"></div>
+			<div id="global-alerts" class="fixed top-right"></div>
 		</div>
 	</div>
 </template>

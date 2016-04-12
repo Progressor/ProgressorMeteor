@@ -220,7 +220,6 @@
 						{{blackListMessage}}
 					</div>
 				</div>
-				<div id="execution-results" class="separated-top"></div>
 			</section>
 			<section class="col-md-7">
 				<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
@@ -309,16 +308,14 @@
 			<div class="btn-toolbar separated-top">
 				<div class="btn-group">
 					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if exists}}
-						{{#unless (released.requested)}}
-							<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
-						{{/unless}}
-						{{#linkTo route="exerciseSolve" data=exercise class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
-					{{/if}}
+					{{#if exists}}{{#linkTo route="exerciseSolve" data=exercise class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
 					<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 				</div>
 				{{#if exists}}
 					<div class="btn-group">
+						{{#unless (released.requested)}}
+							<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
+						{{/unless}}
 						{{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
 					</div>
 				{{/if}}

@@ -21,7 +21,7 @@
 			'click [data-archive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('archive-id') }, true, Progressor.handleError),
 			'click [data-unarchive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('unarchive-id') }, false, Progressor.handleError),
 			'change #input-name' (ev) {
-				let $this = $(ev.currentTarget), $group = $this.closest('.form-group');
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {
 					$group.addClass(!err ? 'has-success' : 'has-error');
 					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);

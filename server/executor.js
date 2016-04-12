@@ -19,8 +19,8 @@
 	Meteor.methods(
 		{
 			getExecutorTypes() {
-				let rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
-				let rexSep = ',\\s?', rexKVS = ':\\s?';
+				const rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
+				const rexSep = ',\\s?', rexKVS = ':\\s?';
 				return {
 					types: [
 						{ _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },
@@ -70,7 +70,7 @@
 
 				this.unblock();
 
-				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
+				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 				return getExecutorClient().getFragment(language, functions);
 			},
 			execute(language, exercise, fragment) {
@@ -92,18 +92,18 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				let functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
+				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
 
-				let client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+				const client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
 
 				if (exercise._id && this.userId) {
-					let qry = { user_id: this.userId, exercise_id: exercise._id };
-					let del = Progressor.results.findOne(qry);
+					const qry = { user_id: this.userId, exercise_id: exercise._id };
+					const del = Progressor.results.findOne(qry);
 					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id'), fragment: fragment, results: results, solved: new Date() }));
 				}
 
-				//let pubResults = Progressor.getVisibleResults(exercise, results);
+				//const pubResults = Progressor.getVisibleResults(exercise, results);
 				//if (Progressor.hasInvisibleTestCases(exercise))
 				//	pubResults.push({ invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) });
 

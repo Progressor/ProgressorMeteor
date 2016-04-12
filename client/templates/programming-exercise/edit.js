@@ -29,15 +29,17 @@
 	}
 
 	function testExecutorType(type, isRecursive = false) {
-		let executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null, index = executorType ? executorType._id.length : 0;
+		const executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
+		let index = executorType ? executorType._id.length : 0;
 		if (!executorType) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
 		else if (executorType.parameterCount > 0) { //if the type has parameters
 			if (type.substr(index, 1) !== "<") return false; //verify the next character is the generic open bracket
 			index++; //move index forward
 			for (let i = 0; i < executorType.parameterCount; i++) { //repeat check for each type parameter
-				let delimiter = i === executorType.parameterCount - 1 ? '>' : ',', subLength; //determine the delimiter expected after this type parameter
+				const delimiter = i === executorType.parameterCount - 1 ? '>' : ','; //determine the delimiter expected after this type parameter
 				if (i > 0) index += type.substr(index).match(/^\s?/)[0].length; //skip optional whitespace after separator
-				if ((subLength = testExecutorType(type.substr(index), true)) === false) return false; //verify parameter is a valid type
+				let subLength = testExecutorType(type.substr(index), true);
+				if (subLength === false) return false; //verify parameter is a valid type
 				index += subLength; //move index forward
 				if (type.substr(index, 1) !== delimiter) return false; //verify the next character is the defined delimiter
 				index += delimiter.length; //move index forward
@@ -47,7 +49,8 @@
 	}
 
 	function testExecutorValue(value, type, isRecursive = false, separator = null) {
-		let executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null, typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
+		const executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
+		let typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
 		if (executorType.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
 			if (!(match = value.match(separator ? `^(${executorType.pattern}?(?=${separator})|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
 			valueIndex += match[0].length; //move index forward //_: verify the number range
@@ -55,7 +58,7 @@
 		}
 		if (executorType.parameterCount > 0) { //if the type as parameters
 			typeIndex++; //skip generic open bracket
-			let _typeIndex = typeIndex; //remember initial type index position
+			const _typeIndex = typeIndex; //remember initial type index position
 			for (let j = 0; valueIndex !== value.length; j++) { //repeat until all collection items have been processed
 				if (j > 0) { //if item is not the first one
 					typeIndex = _typeIndex; //reset type index
@@ -64,7 +67,7 @@
 				}
 				for (let i = 0; i < executorType.parameterCount; i++) { //repeat check for each type parameter
 					if (i > 0) typeIndex += type.substr(typeIndex).match(/^\s?/)[0].length; //skip optional whitespace after separator //_: recursive call (pass next separator)
-					let subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, i < executorType.parameterCount - 1 && executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] ? executorType.patternInternalSeparators[i] : executorType.patternSeparator ? executorType.patternSeparator : null);
+					const subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, i < executorType.parameterCount - 1 && executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] ? executorType.patternInternalSeparators[i] : executorType.patternSeparator ? executorType.patternSeparator : null);
 					typeIndex += subLength.typIdx; //move index forward
 					valueIndex += subLength.valIdx; //move index forward
 					typeIndex++; //skip delimiter
@@ -76,6 +79,33 @@
 			}
 		}
 		return isRecursive ? { typIdx: typeIndex, valIdx: valueIndex } : (typeIndex === type.length || executorType.parameterCount > 0) && valueIndex === value.length; //recursive: return new indexes, otherwise: verify end is reached
+	}
+
+	function testValidExercise(exercise) {
+		const notEmpty = /[^\s]+/;
+		const { programmingLanguage, category_id, difficulty, names, descriptions } = exercise;
+		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
+					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
+					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
+					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
+					 && exercise.functions && exercise.functions.length && testValidFunctions(exercise)
+					 && exercise.testCases && exercise.testCases.length && testValidTestCases(exercise);
+	}
+
+	function testValidFunctions({ functions }) {
+		return _.all(functions, f => f.name && testExecutorIdentifier(f.name)
+																 && f.inputNames.length === f.inputTypes.length && _.all(f.inputNames, n => n && testExecutorIdentifier(n)) && _.all(f.inputTypes, t => t && testExecutorType(t))
+																 && f.outputNames.length === f.outputTypes.length && _.all(f.outputNames, n => n && testExecutorIdentifier(n)) && _.all(f.outputTypes, t => t && testExecutorType(t)));
+	}
+
+	function testValidTestCases({ functions, testCases }) {
+		return _.all(testCases, testCase => {
+			let _function = _.find(functions, f => f.name === testCase.functionName);
+			return testCase.functionName && _function
+						 && _function.inputTypes.length === testCase.inputValues.length && _.all(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
+						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.all(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]))
+		});
 	}
 
 	Template.programmingEdit.onCreated(function () {
@@ -95,8 +125,8 @@
 		Meteor.call('getExecutorTypes', Progressor.handleError(res => executorTypes.set(res), false));
 
 		this.autorun(function () {
-			let live = Progressor.exercises.findOne();
-			let detached = Tracker.nonreactive(() => exercise.get());
+			const live = Progressor.exercises.findOne();
+			const detached = Tracker.nonreactive(() => exercise.get());
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise(false);
 				if (isCreate.get())
@@ -110,12 +140,12 @@
 			if (!solutionTyped)
 				if (exercise.get() && exercise.get().solution)
 					Session.set('solution', exercise.get().solution);
-				else if (exercise.get() && exercise.get().programmingLanguage && Progressor.hasValidFunctions(exercise.get()))
+				else if (exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
 					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), Progressor.handleError((err, res) => Session.set('solution', !err ? res : null)));
 				else
 					Session.set('solution', null);
 			if (exercise.get() && exercise.get().programmingLanguage) {
-				let programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
+				const programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
 				if (programmingLanguage)
 					$('.CodeMirror')[0].CodeMirror.setOption('mode', programmingLanguage.codeMirror);
 			}
@@ -160,8 +190,8 @@
 				isActive: testCase && testCase.functionName === _function.name
 			})),
 			testCases: () => _.map(exercise.get().testCases, function (testCase) {
-				let _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
-				let fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof(v) === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
+				const _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
+				const fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof(v) === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
 				return _.extend({}, testCase, {
 					original: testCase,
 					inputValues: fillValues(testCase.inputValues, _function ? _function.inputTypes : null),
@@ -181,7 +211,7 @@
 
 	function changeExercise(cb) {
 		return function (ev) {
-			let ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
+			const ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
 			exercise.dep.changed();
 			return ret;
 		};
@@ -189,8 +219,8 @@
 
 	function changeExerciseTranslation(translationName) {
 		return changeExercise(function (ev) {
-			let $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'], elementIndex = -1;
-			let element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
+			const $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'];
+			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
 			if (!value)
 				elements.splice(elementIndex, 1);
 			else if (element)
@@ -210,14 +240,14 @@
 
 	function removeExerciseCollectionItem(collectionName, cssClass) {
 		return changeExercise(function (ev, $this) {
-			let removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
+			const removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
 			exercise.get()[collectionName] = _.filter(exercise.get()[collectionName], (e, i) => i !== removeIndex);
 		});
 	}
 
 	function removeExerciseSubcollectionItems(collectionName, cssClass1, propertyNames, cssClass2) {
 		return changeExercise(function (ev, $this) {
-			let element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
+			const element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
 			_.each(propertyNames, p => element[p] = _.filter(element[p], (e, i) => i !== removeIndex));
 		});
 	}
@@ -225,26 +255,26 @@
 	Template.programmingEdit.events(
 		{
 			'keyup .input-function-name'(ev) {
-				let $this = $(ev.currentTarget), $group = $this.closest('.form-group');
-				let $groups = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
+				const $groups = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$group.addClass('has-error');
 				_.chain($groups).groupBy(e => $(e).val()).filter(g => g.length > 1).flatten().each(e => $(e).closest('.form-group').addClass('has-error'));
 			},
 			'keyup .input-parameter-name'(ev) {
-				let $this = $(ev.currentTarget), $group = $this.closest('.form-group'), $function = $this.closest('.container-function');
-				let $groups = $function.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group'), $function = $this.closest('.container-function');
+				const $groups = $function.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$group.addClass('has-error');
 				_.chain($groups).groupBy(e => $(e).val()).filter(g => g.length > 1).flatten().each(e => $(e).closest('.form-group').addClass('has-error'));
 			},
 			'keyup .exec-type'(ev) {
-				let $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorType($this.val()))
 					$group.addClass('has-error');
 			},
 			'keyup .exec-value'(ev) {
-				let $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
 					$group.addClass('has-error');
 			},
@@ -270,22 +300,26 @@
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				exercise.get().solution = Session.get('solution');
-				if ($this.hasClass('btn-release-request')) exercise.get().released = { requested: new Date() };
-				Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
+				if ($this.hasClass('btn-release-request'))
+					if (Progressor.isExecutionSuccess(executionResults.get()))
+						exercise.get().released = { requested: new Date() };
+					else
+						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
+				if (testValidExercise(exercise.get()))
+					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
+				else
+					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
 
 			//execution
 			'click #button-execute'() {
-				let $result = $('.testcase-result').css('opacity', 0.333);
+				const $result = $('.testcase-result').css('opacity', 0.333);
 				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), Progressor.handleError(function (err, res) {
-					let success = !err && Progressor.isExecutionSuccess(exercise.get(), res);
+					const success = !err && Progressor.isExecutionSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
-					$('.execution-result').alert('close');
-					let $alert = $(`<div class="alert alert-${success ? 'success' : 'danger'} fade execution-result" role="alert"></div>`).text(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`)).appendTo($('#execution-results'));
-					Meteor.setTimeout(() => $alert.addClass('in'), 1);
-					Meteor.setTimeout(() => $alert.alert('close'), 3000);
+					Progressor.showAlert(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`), success ? 'success' : 'danger', 3000);
 				}));
 			},
 			'keyup .CodeMirror': _.throttle(function () {
@@ -295,7 +329,7 @@
 						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
 						Meteor.call('getBlacklist', exercise.get().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null)));
 					} else {
-						let solution = Session.get('solution');
+						const solution = Session.get('solution');
 						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
 						$('#button-execute').prop('disabled', blacklistMatches.get().length);
 					}

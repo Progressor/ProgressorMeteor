@@ -6,7 +6,7 @@
 	let filter;
 
 	function getQuery() {
-		let qry = {};
+		const qry = {};
 		if (filter.get('name') && filter.get('name').length > 2) qry.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
 		if (filter.get('type')) qry.type = filter.get('type');
 		if (filter.get('category')) qry.category_id = filter.get('category');
@@ -21,9 +21,9 @@
 			columnWidth: () => 12 / numberOfColumns,
 			exerciseSearchData: l => () => ({ _id: l }),
 			difficultiesExercises(difficulties, exercises) {
-				let exercisesSorted = _.chain(exercises).sortBy(i18n.getName);
+				const exercisesSorted = _.chain(exercises).sortBy(i18n.getName);
 				return _.map(difficulties, function (d) {
-					let difficultyExercises = exercisesSorted.filter(e => e.difficulty === d).value(), nofDifficultyExercises = difficultyExercises.length, exercisesPerColumn = Math.ceil(nofDifficultyExercises / numberOfColumns);
+					const difficultyExercises = exercisesSorted.filter(e => e.difficulty === d).value(), nofDifficultyExercises = difficultyExercises.length, exercisesPerColumn = Math.ceil(nofDifficultyExercises / numberOfColumns);
 					return {
 						_id: d,
 						exercises: difficultyExercises,
@@ -35,7 +35,7 @@
 			difficulties: () => Progressor.getDifficulties(),
 			categories: () => Progressor.categories.find().fetch(),
 			solvedComplete(exercise) {
-				let result = Progressor.results.findOne({ exercise_id: exercise._id });
+				const result = Progressor.results.findOne({ exercise_id: exercise._id });
 				return result && Progressor.isExecutionSuccess(exercise, result.results);
 			},
 			i18nPageTitle (i, l, c) {
@@ -43,7 +43,7 @@
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
 			results() {
-				let qry = getQuery();
+				const qry = getQuery();
 				if (!_.isEmpty(qry)) return _.chain(Progressor.exercises.find(qry, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value()
 			},
 			message: () => !_.isEmpty(getQuery()) ? i18n('form.noResults') : i18n('form.noQuery')

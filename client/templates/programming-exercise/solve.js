@@ -32,7 +32,7 @@
 		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 
 		this.autorun(function () {
-			let result = Progressor.results.findOne();
+			const result = Progressor.results.findOne();
 			if (result)
 				Session.set('fragment', result.fragment);
 			else
@@ -52,11 +52,11 @@
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			resultSolved: () => getResult().solved,
 			codeMirrorThemes() {
-				let user = Meteor.user(), userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
+				const user = Meteor.user(), userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
 				return _.map(Progressor.getCodeMirrorThemes(), theme => ({ _id: theme, isActive: theme === userTheme }));
 			},
 			codeMirrorOptions() {
-				let programmingLanguage = Progressor.getProgrammingLanguage(getExercise().programmingLanguage);
+				const programmingLanguage = Progressor.getProgrammingLanguage(getExercise().programmingLanguage);
 				return _.extend({}, Progressor.getCodeMirrorConfiguration(), { //https://codemirror.net/doc/manual.html
 					autofocus: true,
 					readOnly: isResult.get() ? 'nocursor' : false,
@@ -78,7 +78,7 @@
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
-				let $result = $('#table-testcases').css('opacity', 1 / 3);
+				const $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
 				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), Progressor.handleError(function (err, res) {
 					if (!err)
@@ -93,13 +93,13 @@
 					blacklist.set([]);
 					Meteor.call('getBlacklist', getExercise().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? res : null)));
 				} else {
-					let fragment = Session.get('fragment');
+					const fragment = Session.get('fragment');
 					blacklistMatches.set(_.filter(blacklist.get(), blk => fragment.indexOf(blk) >= 0));
 					executionStatus.set(blacklistMatches.get().length ? executionStatus.get() | 0x2 : executionStatus.get() & ~0x2);
 				}
 			}, 500),
 			'change #select-codemirror-themes' (ev) {
-				let theme = $(ev.currentTarget).val();
+				const theme = $(ev.currentTarget).val();
 				$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
 			}

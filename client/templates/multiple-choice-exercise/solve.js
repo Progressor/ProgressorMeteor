@@ -28,12 +28,12 @@
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			questionType: () => getExercise().multipleSolutions !== true ? 'radio' : 'checkbox',
 			resultFeedback(index) {
-				let result = getResult();
+				const result = getResult();
 				if (result && getExercise().solutionVisible)
 					return result.results[index].success == result.results[index].checked ? 'text-success' : 'text-danger';
 			},
 			checked(index) {
-				let result = getResult();
+				const result = getResult();
 				if (result && result.results[index].checked === true)
 					return 'checked';
 			}
@@ -42,7 +42,7 @@
 	Template.multipleSolve.events(
 		{
 			'click #button-checkAnswer'() {
-				let checked = $('input[name="optionsRadios"]:checked').map(function () {
+				const checked = $('input[name="optionsRadios"]:checked').map(function () {
 					return parseInt($(this).val());
 				}).get();
 				Meteor.call('evaluateMultipleChoice', getExercise(), checked, Progressor.handleError);
