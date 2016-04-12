@@ -10,7 +10,7 @@
 
 	Template.home.onRendered(function () {
 		let introIndex = 0;
-		let introInterval = Meteor.setInterval(function () {
+		const introInterval = Meteor.setInterval(function () {
 			if (introIndex < introTexts[0].length)
 				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {
@@ -28,13 +28,13 @@
 		{
 			nofColumns: cod => cols[cod],
 			programmingLanguages() {
-				let cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
+				const cur = Progressor.getProgrammingLanguages(), upc = Progressor.getProgrammingLanguagesUpcoming();
 				return _.union(
 					_.map(cur, (lng, idx) => _.extend({ name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(idx) }, lng)),
 					_.map(upc, (lng, idx) => _.extend({ name: i18n.getProgrammingLanguage(lng._id), description: i18n.getProgrammingLanguageDescription(lng._id), separators: getSeparators(cur.length + idx), isUpcoming: true }, lng)));
 			},
 			nofExercises(lng) {
-				let cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
+				const cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
 				return `${cnt} ${i18n(`exercise.exercise${cnt != 1 ? 's' : ''}`)}`;
 			}
 		}

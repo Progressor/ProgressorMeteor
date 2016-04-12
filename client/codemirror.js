@@ -32,7 +32,8 @@
 		getCodeMirrorDefaultTheme: () => defaultTheme,
 		getCodeMirrorDefaultMode: () => defaultMode,
 		getCodeMirrorConfiguration() {
-			let ret = config, user = Meteor.user();
+			const user = Meteor.user();
+			let ret = config;
 			if (user && user.profile && user.profile.codeMirrorTheme)
 				ret = _.extend({ theme: user.profile.codeMirrorTheme }, ret);
 			return ret;

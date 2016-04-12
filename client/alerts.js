@@ -3,7 +3,7 @@
 
 	_.extend(Progressor, {
 		showAlert(message, level = 'warning', duration = 5000, $container = $('#global-alerts')) {
-			let $alert = $(`<div class="alert alert-${level} pre-line fade" role="alert"></div>`).text(message).appendTo($container);
+			const $alert = $(`<div class="alert alert-${level} pre-line fade" role="alert"></div>`).text(message).appendTo($container);
 			Meteor.setTimeout(() => $alert.addClass('in'), 1);
 			Meteor.setTimeout(() => $alert.alert('close'), duration);
 		},

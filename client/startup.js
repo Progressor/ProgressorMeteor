@@ -22,14 +22,12 @@
 	Template.registerHelper('i18nDateTime', d => i18n.formatDate(d, 'L LT'));
 
 	Meteor.startup(function () {
-
 		if (!init)
 			_.some(navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage], setLanguage);
 	});
 
 	Tracker.autorun(function () {
-
-		let usr = Meteor.user();
+		const usr = Meteor.user();
 		if (usr && usr.profile && usr.profile.language)
 			setLanguage(usr.profile.language);
 	});
