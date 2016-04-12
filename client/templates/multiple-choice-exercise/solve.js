@@ -30,7 +30,7 @@
 			resultFeedback(index) {
 				const result = getResult();
 				if (result && getExercise().solutionVisible)
-					return result.results[index].success == result.results[index].checked ? 'text-success' : 'text-danger';
+					return result.results[index].success === result.results[index].checked ? 'text-success' : 'text-danger';
 			},
 			checked(index) {
 				const result = getResult();
@@ -45,7 +45,7 @@
 				const checked = $('input[name="optionsRadios"]:checked').map(function () {
 					return parseInt($(this).val());
 				}).get();
-				Meteor.call('evaluateMultipleChoice', getExercise(), checked, Progressor.handleError);
+				Meteor.call('evaluateMultipleChoice', getExercise(), checked, Progressor.handleError());
 			}
 		});
 })();
