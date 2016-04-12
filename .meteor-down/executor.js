@@ -52,7 +52,7 @@
 					else
 						(function execute(idx) {
 							Meteor.call('execute', language, exercise, fragments[language], function (err, res) {
-						
+
 								if (err) {
 									console.log('error in execute: ' + err);
 									Meteor.kill();
