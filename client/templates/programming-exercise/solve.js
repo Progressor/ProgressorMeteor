@@ -3,7 +3,7 @@
 
 	let isResult, executionStatus, executionResults, blacklist, blacklistMatches;
 
-	function getExercise(forceRefresh) {
+	function getExercise(forceRefresh = false) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
@@ -32,9 +32,11 @@
 		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 
 		this.autorun(function () {
-			const result = Progressor.results.findOne();
+			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
 			if (result)
 				Session.set('fragment', result.fragment);
+			else if (exercise && exercise.fragment)
+				Session.set('fragment', exercise.fragment);
 			else
 				Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), Progressor.handleError((err, res) => Session.set('fragment', !err ? res : null)));
 		});

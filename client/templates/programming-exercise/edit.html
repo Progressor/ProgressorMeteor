@@ -80,7 +80,7 @@
 				</div>
 				<div class="tab-content">
 					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane {{#if isActive}}active{{/if}}">
+						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" data-lang="{{_id}}" />
@@ -199,25 +199,29 @@
 					</div>
 				{{/each}}
 				<hr />
-				<div class="form-group">
-					<div class="row">
-						<div class="col-sm-4">
-							<label for="textarea-solution">{{i18n "exercise.solutionFragmentLabel"}}</label>
-						</div>
-						<div class="col-sm-8 text-right">
-							<div class="checkbox nomargin">
-								<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation"><a class="a-toggle-codemirror" href="#tab-fragment" aria-controls="tab-fragment" role="tab" data-toggle="tab">{{i18n "exercise.templateFragmentLabel"}}</a></li>
+					<li role="presentation" class="active"><a class="a-toggle-codemirror" href="#tab-solution" aria-controls="tab-solution" role="tab" data-toggle="tab">{{i18n "exercise.solutionFragmentLabel"}}</a></li>
+				</ul>
+				<div class="tab-content">
+					<div role="tabpanel" id="tab-fragment" class="tab-pane fade">
+						{{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
+					</div>
+					<div role="tabpanel" id="tab-solution" class="tab-pane fade active in">
+						{{> CodeMirror id="textarea-solution" options=codeMirrorOptions reactiveVar="solution"}}
+						<div class="row separated-top">
+							<div class="col-sm-4">
+								<button id="button-execute" class="btn btn-primary btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
+							</div>
+							<div class="col-sm-8 text-right">
+								<div class="checkbox nomargin">
+									<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+								</div>
+								<div class="text-danger">
+									{{blackListMessage}}
+								</div>
 							</div>
 						</div>
-					</div>
-					{{> CodeMirror id="textarea-solution" options=codeMirrorOptions reactiveVar="solution"}}
-				</div>
-				<div class="row">
-					<div class="col-sm-4">
-						<button id="button-execute" class="btn btn-primary btn-sm">{{i18n "exercise.executeTestsButton"}}</button>
-					</div>
-					<div class="col-sm-8 text-danger text-right">
-						{{blackListMessage}}
 					</div>
 				</div>
 			</section>
