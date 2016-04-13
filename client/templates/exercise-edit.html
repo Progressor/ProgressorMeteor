@@ -2,5 +2,19 @@
 	{{> exerciseEdit}}
 </template>
 <template name="exerciseEdit">
-	{{> programmingEdit}}
+	{{#if exerciseType this}}
+		{{> Template.dynamic template=(exerciseType this)}}
+	{{else}}
+		<div class="form-inline text-center separated-top">
+			<div class="form-group">
+				<label for="select-type">{{i18n "exercise.typeToCreateLabel"}}</label>
+				<select id="select-type" class="form-control">
+					<option>{{i18n "form.selectPleaseChoose"}}</option>
+					{{#each exerciseTypes}}
+						<option value="{{_id}}">{{i18nExerciseType _id}}</option>
+					{{/each}}
+				</select>
+			</div>
+		</div>
+	{{/if}}
 </template>

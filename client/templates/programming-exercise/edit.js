@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, solutionTyped;
+	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, fragmentTyped, solutionTyped;
 
 	function getDefaultExercise(initInput = true) {
 		return {
@@ -19,6 +19,7 @@
 				expectedOutputValues: [],
 				visible: false
 			}],
+			fragment: null,
 			solution: null,
 			solutionVisible: false
 		};
@@ -115,7 +116,9 @@
 		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
+		fragmentTyped = false;
 		solutionTyped = false;
+		Session.set('fragment', null);
 		Session.set('solution', null);
 	});
 
@@ -137,17 +140,21 @@
 		});
 
 		this.autorun(function () {
+			if (!fragmentTyped)
+				Session.set('fragment', (fragmentTyped = exercise.get() && exercise.get().fragment) ? exercise.get().fragment : null);
 			if (!solutionTyped)
-				if (exercise.get() && exercise.get().solution)
-					Session.set('solution', exercise.get().solution);
-				else if (exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
-					Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), Progressor.handleError((err, res) => Session.set('solution', !err ? res : null)));
-				else
-					Session.set('solution', null);
+				Session.set('solution', (solutionTyped = exercise.get() && exercise.get().solution) ? exercise.get().solution : null);
+
+			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
+				Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), Progressor.handleError(function (err, res) {
+					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
+					if (!solutionTyped) Session.set('solution', !err ? res : null);
+				}));
+
 			if (exercise.get() && exercise.get().programmingLanguage) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
 				if (programmingLanguage)
-					$('.CodeMirror')[0].CodeMirror.setOption('mode', programmingLanguage.codeMirror);
+					$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
 			}
 		});
 	});
@@ -299,6 +306,7 @@
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
+				exercise.get().fragment = Session.get('fragment');
 				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request'))
 					if (Progressor.isExecutionSuccess(executionResults.get()))
@@ -322,7 +330,9 @@
 					Progressor.showAlert(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`), success ? 'success' : 'danger', 3000);
 				}));
 			},
-			'keyup .CodeMirror': _.throttle(function () {
+			'shown.bs.tab .a-toggle-codemirror': ev => $(`#${$(ev.currentTarget).attr('aria-controls')} .CodeMirror`)[0].CodeMirror.refresh(),
+			'keyup #tab-fragment>.CodeMirror': _.once(() => fragmentTyped = true),
+			'keyup #tab-solution>.CodeMirror': _.throttle(function () {
 				solutionTyped = true;
 				if (exercise.get().programmingLanguage)
 					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
