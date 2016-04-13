@@ -31,8 +31,8 @@
 					};
 				});
 			},
-			exerciseTypes: () => _.map(Progressor.getExerciseTypes(), (n, k) => k),
-			difficulties: () => Progressor.getDifficulties(),
+			exerciseTypes: Progressor.getExerciseTypes,
+			difficulties: Progressor.getDifficulties,
 			categories: () => Progressor.categories.find().fetch(),
 			solvedComplete(exercise) {
 				const result = Progressor.results.findOne({ exercise_id: exercise._id });
