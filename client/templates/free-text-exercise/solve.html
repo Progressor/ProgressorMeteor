@@ -50,25 +50,20 @@
 					{{#if pattern}}
 						<form id="form-answer" class="form-inline separated-bottom separated-left">
 							<div class="form-group {{resultFeedback}} {{#if getResult}}has-feedback{{/if}}">
-								<label for="input-answer">{{i18n "exercise.yourSolutionLabel"}}:&nbsp;</label>
-								<input type="text" class="form-control exercise-input" id="input-answer" size="15" value="{{savedAnswer}}" pattern="{{pattern}}" disabled={{isResult}}>
+								<label for="input-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
+								<input type="text" class="form-control exercise-input" id="input-answer" autofocus value="{{savedAnswer}}" pattern="{{pattern}}" disabled={{isResult}}>
 								{{#if getResult}}
 									<span class="glyphicon glyphicon-{{glyphiconFeedback}} form-control-feedback"></span>
 								{{/if}}
 							</div>
 							{{#unless isResult}}
-								<button id="button-save-answer" class="btn btn-primary btn-sm separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
+								<button id="button-save-answer" class="btn btn-primary separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
 							{{/unless}}
 						</form>
 					{{else}}
 						<div class="form-group">
 							<label for="textarea-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
-							{{#unless isResult}}
-								{{#if solutionVisible}}
-									<span class="pull-right">{{i18n "exercise.showSolutionButton"}}</span>
-								{{/if}}
-							{{/unless}}
-							<textarea id="textarea-answer" class="form-control exercise-input" rows="10" cols="60" autofocus value="{{savedAnswer}}" disabled={{isResult}}></textarea>
+							<textarea id="textarea-answer" class="form-control exercise-input" rows="10" cols="60" autofocus disabled={{isResult}}>{{savedAnswer}}</textarea>
 						</div>
 						{{#unless isResult}}
 							<div class="row">
