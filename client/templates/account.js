@@ -5,10 +5,7 @@
 	 * MAIN TEMPLATE
 	 */
 
-	Template.account.onRendered(function () {
-		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
-	});
+	Template.account.onRendered(() => $('#collapseArchive').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign')));
 
 	Template.account.helpers(
 		{

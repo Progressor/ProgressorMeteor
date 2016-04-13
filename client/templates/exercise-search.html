@@ -2,6 +2,7 @@
 	{{> exerciseSearch}}
 </template>
 <template name="exerciseSearch">
+	{{i18nTooltips}}
 	<header>
 		<nav class="row">
 			<div class="col-sm-8">
@@ -119,7 +120,13 @@
 							<tr>
 								<td>
 									{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
-									{{#if success this}}<span class="glyphicon glyphicon-ok text-success"></span>{{/if}}
+									{{#if evaluated this}}
+										{{#if success this}}
+											<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.successMessage"}}" data-toggle="tooltip"></span>
+										{{else}}
+											<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.failureMessage"}}" data-toggle="tooltip"></span>
+										{{/if}}
+									{{/if}}
 								</td>
 								<td>{{i18nName category}}</td>
 								<td>{{i18nDifficulty difficulty}}</td>

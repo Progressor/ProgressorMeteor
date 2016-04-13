@@ -29,8 +29,6 @@
 	});
 
 	Template.programmingSolve.onRendered(function () {
-		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-
 		this.autorun(function () {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
 			if (result)

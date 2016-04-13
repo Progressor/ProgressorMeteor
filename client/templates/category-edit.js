@@ -19,8 +19,6 @@
 	});
 
 	Template.categoryEdit.onRendered(function () {
-		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-
 		this.autorun(function () {
 			const live = Progressor.categories.findOne();
 			const detached = Tracker.nonreactive(() => category.get());

@@ -123,8 +123,6 @@
 	});
 
 	Template.programmingEdit.onRendered(function () {
-		// $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-
 		Meteor.call('getExecutorTypes', Progressor.handleError(res => executorTypes.set(res), false));
 
 		this.autorun(function () {
@@ -327,7 +325,7 @@
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
-					Progressor.showAlert(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`), success ? 'success' : 'danger', 3000);
+					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
 				}));
 			},
 			'shown.bs.tab .a-toggle-codemirror': ev => $(`#${$(ev.currentTarget).attr('aria-controls')} .CodeMirror`)[0].CodeMirror.refresh(),

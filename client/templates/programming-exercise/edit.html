@@ -1,4 +1,5 @@
 <template name="programmingEdit">
+	{{i18nTooltips}}
 	{{#with safeExercise this}}
 		<header>
 			{{#if exists}}
@@ -102,7 +103,7 @@
 			<aside class="panel panel-info">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-						<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-minus-sign"></span></a>
+						<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
 						<a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a>
 					</h3>
 				</div>
@@ -174,8 +175,8 @@
 								</div>
 							</div>
 							<div class="col-sm-2">
-								<button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-plus-sign"></span></button>
-								<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign"></span></button>
+								<button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+								<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 							</div>
 						</div>
 						{{#each inputs}}
@@ -191,8 +192,8 @@
 									</div>
 								</div>
 								<div class="col-sm-2">
-									<button class="btn btn-success btn-sm btn-add-parameter"><span class="glyphicon glyphicon-plus-sign"></span></button>
-									<button class="btn btn-danger btn-sm btn-remove-parameter"><span class="glyphicon glyphicon-minus-sign"></span></button>
+									<button class="btn btn-success btn-sm btn-add-parameter"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+									<button class="btn btn-danger btn-sm btn-remove-parameter"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 								</div>
 							</div>
 						{{/each}}
@@ -290,8 +291,8 @@
 							{{/if}}
 						</div>
 						<div class="col-sm-2">
-							<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign"></span></button>
-							<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign"></span></button>
+							<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+							<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 							{{#if testCasesEvaluated}}
 								{{#unless executionFatal}}
 									<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>

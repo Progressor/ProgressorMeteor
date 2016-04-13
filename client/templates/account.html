@@ -1,4 +1,5 @@
 <template name="account">
+	{{i18nTooltips}}
 	{{#if currentUser}}
 		<h2>{{i18n "account.title"}}</h2>
 	{{/if}}
@@ -48,7 +49,7 @@
 				<h3 class="panel-title">{{title}}</h3>
 			{{else}}
 				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign"></span></a>
+					<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
 					<a role="button" data-toggle="collapse" href="#collapseArchive">{{title}}</a>
 				</h3>
 			{{/unless}}
