@@ -18,6 +18,13 @@
 						{{/unless}}
 					</ol>
 				</div>
+				{{#unless isResult}}
+					<div class="col-sm-4 text-right">
+						<ul class="breadcrumb">
+							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
+						</ul>
+					</div>
+				{{/unless}}
 			</nav>
 			<div class="row">
 				<div class="col-sm-9">
@@ -49,7 +56,7 @@
 						</div>
 					{{/each}}
 					{{#unless isResult}}
-						<button id="button-checkAnswer" class="btn btn-primary btn-sm">{{i18n "exercise.checkAnswerButton"}}</button>
+						<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
 					{{/unless}}
 				</div>
 			</div>

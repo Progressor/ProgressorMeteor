@@ -98,9 +98,9 @@
 				const client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
 
 				if (exercise._id && this.userId) {
-					const qry = { user_id: this.userId, exercise_id: exercise._id };
-					const del = Progressor.results.findOne(qry);
-					Progressor.results.upsert(del ? del._id : null, _.extend(qry, { exercise: _.omit(exercise, '_id'), fragment: fragment, results: results, solved: new Date() }));
+					const query = { user_id: this.userId, exercise_id: exercise._id };
+					const upsertExercise = Progressor.results.findOne(query);
+					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: new Date() }));
 				}
 
 				//const pubResults = Progressor.getVisibleResults(exercise, results);

@@ -324,8 +324,8 @@ Meteor.startup(function () {
 							description: 'Es sei **n = 1234**.\nWie sieht die Ausgabe aus?\n\n```int r= n % 10;```\n```n = n / 10;```\n```while (n > 0) {```\n &nbsp;&nbsp;```r = r * 10 + n % 10;```\n&nbsp;&nbsp;```n = n / 10;```\n```} System.out.println(r);```\n'
 						}
 					],
-					pattern: 1,
-					solution: '7',
+					pattern: '-?\\d+',
+					solution: ['7'],
 					solutionVisible: true,
 					author_id: Meteor.users.findOne()._id,
 					lastEditor_id: Meteor.users.findOne()._id,

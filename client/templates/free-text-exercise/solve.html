@@ -18,6 +18,13 @@
 						{{/unless}}
 					</ol>
 				</div>
+				{{#unless isResult}}
+					<div class="col-sm-4 text-right">
+						<ul class="breadcrumb">
+							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
+						</ul>
+					</div>
+				{{/unless}}
 			</nav>
 			<div class="row">
 				<div class="col-sm-9">
@@ -41,28 +48,35 @@
 			<div class="row">
 				<div class="col-md-6">
 					{{#if pattern}}
-						<form class="form-inline separated-bottom separated-left">
-							<div class="form-group">
-								<label for="exerciseAnswer">{{i18n "exercise.yourSolutionLabel"}}:</label>
-								<input type="text" class="form-control" id="exerciseAnswer" size="15">
-								<button id="button-checkAnswer" class="btn btn-primary btn-sm separated-left">{{i18n "exercise.checkAnswerButton"}}</button>
+						<form id="form-answer" class="form-inline separated-bottom separated-left">
+							<div class="form-group {{resultFeedback}} {{#if getResult}}has-feedback{{/if}}">
+								<label for="input-answer">{{i18n "exercise.yourSolutionLabel"}}:&nbsp;</label>
+								<input type="text" class="form-control exercise-input" id="input-answer" size="15" value="{{savedAnswer}}" pattern="{{pattern}}" disabled={{isResult}}>
+								{{#if getResult}}
+									<span class="glyphicon glyphicon-{{glyphiconFeedback}} form-control-feedback"></span>
+								{{/if}}
 							</div>
+							{{#unless isResult}}
+								<button id="button-save-answer" class="btn btn-primary btn-sm separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
+							{{/unless}}
 						</form>
 					{{else}}
 						<div class="form-group">
-							<label for="textarea-fragment">{{i18n "exercise.yourSolutionLabel"}}</label>
+							<label for="textarea-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
 							{{#unless isResult}}
 								{{#if solutionVisible}}
 									<span class="pull-right">{{i18n "exercise.showSolutionButton"}}</span>
 								{{/if}}
 							{{/unless}}
-							<textarea id="textarea-fragment" class="form-control" rows="10" cols="60" autofocus></textarea>
+							<textarea id="textarea-answer" class="form-control exercise-input" rows="10" cols="60" autofocus value="{{savedAnswer}}" disabled={{isResult}}></textarea>
 						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<button id="button-execute" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+						{{#unless isResult}}
+							<div class="row">
+								<div class="col-md-6">
+									<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+								</div>
 							</div>
-						</div>
+						{{/unless}}
 					{{/if}}
 				</div>
 			</div>
