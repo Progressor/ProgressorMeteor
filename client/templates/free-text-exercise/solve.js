@@ -43,8 +43,10 @@
 			'click #button-save-answer'() {
 				const $input = $('.exercise-input');
 				if ($input[0].checkValidity()) {
-					Meteor.call('evaluateFreeText', getExercise(), $input.val(), Progressor.handleError());
-					Progressor.showAlert("Successfully saved your answer!", 'info');
+					Meteor.call('evaluateFreeText', getExercise(), $input.val(), Progressor.handleError(function (res) {
+						if (res !== true && res !== false)
+							Progressor.showAlert(i18n('exercise.saveSuccessfulMessage'), 'info');
+					}, false));
 				}
 			},
 			'submit #form-answer': ev => ev.preventDefault()
