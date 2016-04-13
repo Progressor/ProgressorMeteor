@@ -41,7 +41,7 @@
 
 	Template.multipleSolve.events(
 		{
-			'click #button-checkAnswer'() {
+			'click #button-save-answer'() {
 				const checked = $('input[name="optionsRadios"]:checked').map(function () {
 					return parseInt($(this).val());
 				}).get();
