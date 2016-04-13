@@ -12,6 +12,8 @@
 
 	Template.account.helpers(
 		{
+			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
+			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			transformResults: r => _.map(r, i => _.extend({}, i.exercise, { result: _.omit(i, 'exercise') }))
 		});
 
@@ -34,8 +36,6 @@
 
 	Template.account_exerciseList.helpers(
 		{
-			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
-			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			userName: Progressor.getUserName,
 			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
 			success: (e, r) => Progressor.isExerciseSuccess(e, r)

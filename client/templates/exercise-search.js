@@ -34,7 +34,11 @@
 			exerciseTypes: Progressor.getExerciseTypes,
 			difficulties: Progressor.getDifficulties,
 			categories: () => Progressor.categories.find().fetch(),
-			solvedComplete(exercise) {
+			evaluated(exercise) {
+				const result = Progressor.results.findOne({ exercise_id: exercise._id });
+				return result && Progressor.isExerciseEvaluated(exercise, result.results);
+			},
+			success(exercise) {
 				const result = Progressor.results.findOne({ exercise_id: exercise._id });
 				return result && Progressor.isExerciseSuccess(exercise, result.results);
 			},

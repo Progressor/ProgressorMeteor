@@ -75,14 +75,16 @@
 					{{#each exercises}}
 						<tr>
 							<td>
-								{{#linkTo route="resultView" data=this}}{{i18nName this}}{{/linkTo}}
-								{{#if result}}
+								{{#unless result}}
+									{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
+								{{else}}
+									{{#linkTo route="resultView" data=result}}{{i18nName this}}{{/linkTo}}
 									{{#if evaluated this result.results}}
 										<span class="glyphicon {{#if success this result.results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
 									{{else}}
 										<span class="glyphicon glyphicon-pencil text-info"></span>
 									{{/if}}
-								{{/if}}
+								{{/unless}}
 							</td>
 							<td>{{i18nExerciseType type}}</td>
 							<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
