@@ -42,7 +42,11 @@
 												<li>
 													{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
 													{{#if evaluated this}}
-														<span class="glyphicon {{#if success this}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
+														{{#if success this}}
+															<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.successMessage"}}" data-toggle="tooltip"></span>
+														{{else}}
+															<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.failureMessage"}}" data-toggle="tooltip"></span>
+														{{/if}}
 													{{/if}}
 												</li>
 											{{/each}}
