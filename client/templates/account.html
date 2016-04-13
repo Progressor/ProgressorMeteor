@@ -15,7 +15,7 @@
 								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-								<th scope="col">{{i18n "exercise.solvedLabel"}}</th>
+								<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="caret"></span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -23,7 +23,11 @@
 								<tr>
 									<td>
 										{{#linkTo route="resultView" data=this}}{{i18nName exercise}}{{/linkTo}}
-										<span class="glyphicon {{#if solvedComplete exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
+										{{#if evaluated exercise results}}
+											<span class="glyphicon {{#if success exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
+										{{else}}
+											<span class="glyphicon glyphicon-pencil text-info"></span>
+										{{/if}}
 									</td>
 									<td>{{i18nExerciseType exercise.type}}</td>
 									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
@@ -50,7 +54,7 @@
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 								<th scope="col">{{i18n "form.editedByLabel"}}</th>
-								<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+								<th scope="col">{{i18n "form.editedAtLabel"}} <span class="caret"></span></th>
 								<th></th>
 							</tr>
 						</thead>
@@ -91,7 +95,7 @@
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 									<th scope="col">{{i18n "form.editedByLabel"}}</th>
-									<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+									<th scope="col">{{i18n "form.editedAtLabel"}} <span class="caret"></span></th>
 									<th></th>
 								</tr>
 							</thead>

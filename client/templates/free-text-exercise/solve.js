@@ -1,18 +1,36 @@
 (function () {
 	'use strict';
 
-	let isResult;
+	let isResult, validationResult, evaluationResult;
 
-	function getExercise(forceRefresh) {
+	function getExercise(forceRefresh = false) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
 	function getResult() {
-		return Progressor.results.findOne();
+		if (isResult.get())
+			return Progressor.results.findOne();
+	}
+
+	function getEvaluationResults() {
+		if (isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+			return Progressor.results.findOne().results;
+		else
+			return evaluationResult.get();
 	}
 
 	Template.textSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
+		validationResult = new ReactiveVar(null);
+		evaluationResult = new ReactiveVar(null);
+	});
+
+	Template.textSolve.onRendered(function () {
+		this.autorun(function () {
+			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
+			if (result)
+				validationResult.set(new RegExp(`^${exercise.pattern}$`).test(result.answer));
+		});
 	});
 
 	Template.textSolve.helpers(
@@ -21,35 +39,41 @@
 				isResult.set(exerciseOrResult.exercise_id);
 				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
-			getResult: () => getResult(),
 			isResult: () => isResult.get(),
-			resultSolved: () => getResult().solved,
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
-			savedAnswer: () => {
-				if (getResult()) return getResult().answer;
+			resultSolved: () => getResult().solved,
+			answer()  {
+				const result = Progressor.results.findOne();
+				if (result)
+					return result.answer;
 			},
-			resultFeedback: () => {
-				const result = getResult();
-				if (result && getExercise().solutionVisible)
-					return result.success ? 'has-success' : 'has-error';
+			validation() {
+				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
+					return `has-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) > 0 ? 'success' : 'error'}`;
+				else if (validationResult.get() === false)
+					return 'has-error';
 			},
-			glyphiconFeedback: () => getResult().success ? 'ok' : 'remove'
+			resultEvaluation() {
+				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
+					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) > 0 ? 'ok' : 'remove'}`;
+			}
 		});
 
 	Template.textSolve.events(
 		{
+			'submit #form-answer': ev => ev.preventDefault(),
+			'change .control-answer': () => validationResult.set($('.control-answer')[0].checkValidity()),
 			'click #button-save-answer'() {
-				const $input = $('.exercise-input');
-				if ($input[0].checkValidity()) {
-					Meteor.call('evaluateFreeText', getExercise(), $input.val(), Progressor.handleError(function (res) {
-						if (res !== true && res !== false)
+				const $control = $('.control-answer');
+				if ($control[0].checkValidity()) {
+					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError(function (res) {
+						if (!res.length)
 							Progressor.showAlert(i18n('exercise.saveSuccessfulMessage'), 'info');
 					}, false));
 				}
-			},
-			'submit #form-answer': ev => ev.preventDefault()
+			}
 		});
 
 })();

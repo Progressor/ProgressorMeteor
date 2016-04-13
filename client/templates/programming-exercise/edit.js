@@ -213,7 +213,7 @@
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c.original, executionResults.get()),
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(exercise.get(), c.original, executionResults.get()),
-			executionFatal: () => Progressor.isExecutionFatal(exercise.get(), executionResults.get())
+			executionFatal: () => Progressor.isExerciseFatal(exercise.get(), executionResults.get())
 		});
 
 	function changeExercise(cb) {
@@ -309,7 +309,7 @@
 				exercise.get().fragment = Session.get('fragment');
 				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExecutionSuccess(executionResults.get()))
+					if (Progressor.isExerciseSuccess(executionResults.get()))
 						exercise.get().released = { requested: new Date() };
 					else
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
@@ -324,7 +324,7 @@
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
 				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), Progressor.handleError(function (err, res) {
-					const success = !err && Progressor.isExecutionSuccess(exercise.get(), res);
+					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
 					Progressor.showAlert(i18n(`exercise.testCase.${success ? 'success' : 'failure'}Message`), success ? 'success' : 'danger', 3000);

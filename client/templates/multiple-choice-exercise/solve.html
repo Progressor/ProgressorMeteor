@@ -48,11 +48,13 @@
 			<div class="row">
 				<div class="col-md-6">
 					{{#each i18nOptions this}}
-						<div class="{{questionType}} {{resultFeedback @index}} separated-left">
-							<label>
-								<input value="{{@index}}" name="optionsRadios" type="{{questionType}}" {{checked @index}} disabled={{isResult}}>
-								{{this}}
-							</label>
+						<div class="{{resultEvaluation @index}}">
+							<div class="{{questionType}}">
+								<label>
+									<input type="{{questionType}}" name="input-option" value="{{@index}}" class="input-option" {{checkedStatus @index}} disabled={{isResult}}>
+									{{this}}
+								</label>
+							</div>
 						</div>
 					{{/each}}
 					{{#unless isResult}}

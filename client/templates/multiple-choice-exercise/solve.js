@@ -1,18 +1,27 @@
 (function () {
 	'use strict';
 
-	let isResult;
+	let isResult, evaluationResults;
 
-	function getExercise(forceRefresh) {
+	function getExercise(forceRefresh = false) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
 	function getResult() {
-		return Progressor.results.findOne();
+		if (isResult.get())
+			return Progressor.results.findOne();
+	}
+
+	function getEvaluationResults() {
+		if (isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+			return Progressor.results.findOne().results;
+		else
+			return evaluationResults.get();
 	}
 
 	Template.multipleSolve.onCreated(function () {
 		isResult = new ReactiveVar(false);
+		evaluationResults = new ReactiveVar([]);
 	});
 
 	Template.multipleSolve.helpers(
@@ -22,30 +31,25 @@
 				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
 			isResult: () => isResult.get(),
-			resultSolved: () => getResult().solved,
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
-			questionType: () => getExercise().multipleSolutions !== true ? 'radio' : 'checkbox',
-			resultFeedback(index) {
-				const result = getResult();
-				if (result && getExercise().solutionVisible)
-					return result.results[index].success === result.results[index].checked ? 'text-success' : 'text-danger';
+			resultSolved: () => getResult().solved,
+			questionType: () => !getExercise().multipleSolutions ? 'radio' : 'checkbox',
+			resultEvaluation(index) {
+				const status = Progressor.getResultStatus(getExercise(), index, getEvaluationResults());
+				if (status !== 0)
+					return `has-${status > 0 ? 'success' : 'error'}`;
 			},
-			checked(index) {
-				const result = getResult();
-				if (result && result.results[index].checked === true)
+			checkedStatus(index) {
+				const result = Progressor.results.findOne();
+				if (result && result.results && result.results[index] && result.results[index].checked)
 					return 'checked';
 			}
 		});
 
 	Template.multipleSolve.events(
 		{
-			'click #button-save-answer'() {
-				const checked = $('input[name="optionsRadios"]:checked').map(function () {
-					return parseInt($(this).val());
-				}).get();
-				Meteor.call('evaluateMultipleChoice', getExercise(), checked, Progressor.handleError());
-			}
+			'click #button-save-answer': () => Meteor.call('evaluateMultipleChoice', getExercise(), $('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError())
 		});
 })();

@@ -21,7 +21,7 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				const results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i), checked: _.contains(checkedOptions, i) }));
+				const results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i) === _.contains(checkedOptions, i), checked: _.contains(checkedOptions, i) }));
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
@@ -31,7 +31,7 @@
 
 				return results;
 			},
-			evaluateFreeText (exercise, answer) {
+			evaluateFreeText(exercise, answer) {
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(
 						{
@@ -47,17 +47,17 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				let success;
+				let results = [];
 				if (exercise.pattern && exercise.solution)
-					success = _.contains(exercise.solution, answer);
+					results.push({ success: _.contains(exercise.solution, answer) });
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
 					const upsertExercise = Progressor.results.findOne(query);
-					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), answer, success, solved: new Date() }));
+					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), answer, results, solved: new Date() }));
 				}
 
-				return success;
+				return results;
 			}
 		});
 

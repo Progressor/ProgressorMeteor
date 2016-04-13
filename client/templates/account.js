@@ -11,7 +11,8 @@
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			userName: Progressor.getUserName,
-			solvedComplete: (e, r) => Progressor.isExecutionSuccess(e, r)
+			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
+			success: (e, r) => Progressor.isExerciseSuccess(e, r)
 		});
 
 	Template.account.events(

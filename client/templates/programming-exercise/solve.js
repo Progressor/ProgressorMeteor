@@ -74,7 +74,7 @@
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
 			invisibleTestCases: () => Progressor.hasInvisibleTestCases(getExercise()),
 			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(getExercise(), getExecutionResults()),
-			executionFatal: () => Progressor.isExecutionFatal(getExercise(), getExecutionResults())
+			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults())
 		});
 
 	Template.programmingSolve.events(

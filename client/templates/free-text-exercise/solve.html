@@ -49,11 +49,11 @@
 				<div class="col-md-6">
 					{{#if pattern}}
 						<form id="form-answer" class="form-inline separated-bottom separated-left">
-							<div class="form-group {{resultFeedback}} {{#if getResult}}has-feedback{{/if}}">
+							<div class="form-group {{validation}} {{#if resultEvaluation}}has-feedback{{/if}}">
 								<label for="input-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
-								<input type="text" class="form-control exercise-input" id="input-answer" autofocus value="{{savedAnswer}}" pattern="{{pattern}}" disabled={{isResult}}>
-								{{#if getResult}}
-									<span class="glyphicon glyphicon-{{glyphiconFeedback}} form-control-feedback"></span>
+								<input type="text" id="input-answer" class="form-control control-answer" autofocus value="{{answer}}" pattern="{{pattern}}" disabled={{isResult}}>
+								{{#if resultEvaluation}}
+									<span class="glyphicon {{resultEvaluation}} form-control-feedback"></span>
 								{{/if}}
 							</div>
 							{{#unless isResult}}
@@ -63,7 +63,7 @@
 					{{else}}
 						<div class="form-group">
 							<label for="textarea-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
-							<textarea id="textarea-answer" class="form-control exercise-input" rows="10" cols="60" autofocus disabled={{isResult}}>{{savedAnswer}}</textarea>
+							<textarea id="textarea-answer" class="form-control control-answer" rows="10" cols="60" autofocus disabled={{isResult}}>{{answer}}</textarea>
 						</div>
 						{{#unless isResult}}
 							<div class="row">

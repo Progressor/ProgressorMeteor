@@ -36,7 +36,7 @@
 			categories: () => Progressor.categories.find().fetch(),
 			solvedComplete(exercise) {
 				const result = Progressor.results.findOne({ exercise_id: exercise._id });
-				return result && Progressor.isExecutionSuccess(exercise, result.results);
+				return result && Progressor.isExerciseSuccess(exercise, result.results);
 			},
 			i18nPageTitle (i, l, c) {
 				if (!i) return i18n.getProgrammingLanguage(l);
