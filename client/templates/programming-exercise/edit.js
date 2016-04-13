@@ -136,7 +136,7 @@
 					_exercise = _.omit(_exercise, '_id');
 				exercise.set(Progressor.joinCategory(_exercise));
 			} else
-				Progressor.showAlert(i18n('form.documentChanged'));
+				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
 		this.autorun(function () {
@@ -209,7 +209,7 @@
 			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
 
 			//execution
-			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
+			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', blacklistMatches.get().join(', ')) : null,
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c.original, executionResults.get()),
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(exercise.get(), c.original, executionResults.get()),

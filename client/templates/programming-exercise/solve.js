@@ -66,7 +66,7 @@
 				});
 			},
 			executionDisabled: () => executionStatus.get() !== 0x0,
-			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatch', blacklistMatches.get().join(', ')) : null,
+			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', blacklistMatches.get().join(', ')) : null,
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
 			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),

@@ -5,13 +5,13 @@
 
 	let filter;
 
-	function getQuery() {
-		const qry = {};
-		if (filter.get('name') && filter.get('name').length > 2) qry.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
-		if (filter.get('type')) qry.type = filter.get('type');
-		if (filter.get('category')) qry.category_id = filter.get('category');
-		if (filter.get('difficulty')) qry.difficulty = filter.get('difficulty');
-		return qry;
+	function getFilter() {
+		const flt = {};
+		if (filter.get('name') && filter.get('name').length > 2) flt.names = { $elemMatch: { name: new RegExp(filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
+		if (filter.get('type')) flt.type = filter.get('type');
+		if (filter.get('category')) flt.category_id = filter.get('category');
+		if (filter.get('difficulty')) flt.difficulty = filter.get('difficulty');
+		return flt;
 	}
 
 	Template.exerciseSearch.onCreated(() => filter = new ReactiveDict());
@@ -43,10 +43,10 @@
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
 			results() {
-				const qry = getQuery();
-				if (!_.isEmpty(qry)) return _.chain(Progressor.exercises.find(qry, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value()
+				const flt = getFilter();
+				if (!_.isEmpty(flt)) return _.chain(Progressor.exercises.find(flt, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value()
 			},
-			message: () => !_.isEmpty(getQuery()) ? i18n('form.noResults') : i18n('form.noQuery')
+			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
 		});
 
 	Template.exerciseSearch.events(

@@ -27,7 +27,7 @@
 			if (!live || !detached || live._id !== detached._id)
 				category.set(live || getDefaultCategory());
 			else
-				Progressor.showAlert(i18n('form.documentChanged'));
+				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
 

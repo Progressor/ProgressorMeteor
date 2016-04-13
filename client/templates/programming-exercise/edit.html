@@ -215,7 +215,7 @@
 							</div>
 							<div class="col-sm-8 text-right">
 								<div class="checkbox nomargin">
-									<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+									<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionButton"}}</label>
 								</div>
 								<div class="text-danger">
 									{{blackListMessage}}
@@ -269,7 +269,7 @@
 									<input type="text" value="{{value}}" class="input-testcase-input form-control exec-value" data-type="{{type}}" />
 								</div>
 							{{else}}
-								<span class="text-muted">{{i18n "form.noResults"}}</span>
+								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 							{{/each}}
 						</div>
 						<div class="col-sm-4">
@@ -278,7 +278,7 @@
 									<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" data-type="{{type}}" />
 								</div>
 							{{else}}
-								<span class="text-muted">{{i18n "form.noResults"}}</span>
+								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 							{{/each}}
 							{{#if testCasesEvaluated}}
 								{{#unless executionFatal}}
@@ -325,7 +325,7 @@
 				{{/if}}
 			</div>
 		{{else}}
-			<div class="text-warning">{{i18n "form.cannotSave"}}</div>
+			<div class="text-warning">{{i18n "form.cannotSaveMessage"}}</div>
 		{{/if}}
 	{{/with}}
 </template>
