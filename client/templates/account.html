@@ -5,121 +5,9 @@
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-8">
-				<section class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.solvedExercisesSubtitle"}}</h3></div>
-					<table class="table table-condensed table-striped">
-						<thead>
-							<tr>
-								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-								<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="caret"></span></th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each results}}
-								<tr>
-									<td>
-										{{#linkTo route="resultView" data=this}}{{i18nName exercise}}{{/linkTo}}
-										{{#if evaluated exercise results}}
-											<span class="glyphicon {{#if success exercise results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
-										{{else}}
-											<span class="glyphicon glyphicon-pencil text-info"></span>
-										{{/if}}
-									</td>
-									<td>{{i18nExerciseType exercise.type}}</td>
-									<td>{{i18nProgrammingLanguage exercise.programmingLanguage}}</td>
-									<td>{{i18nName exercise.category}}</td>
-									<td>{{i18nDifficulty exercise.difficulty}}</td>
-									<td>{{i18nDateTime solved}}</td>
-								</tr>
-							{{else}}
-								<tr>
-									<td colspan="6" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
-								</tr>
-							{{/each}}
-						</tbody>
-					</table>
-				</section>
-				<section class="panel panel-default">
-					<div class="panel-heading"><h3 class="panel-title">{{i18n "account.createdExercisesSubtitle"}}</h3></div>
-					<table class="table table-condensed table-striped">
-						<thead>
-							<tr>
-								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-								<th scope="col">{{i18n "form.editedByLabel"}}</th>
-								<th scope="col">{{i18n "form.editedAtLabel"}} <span class="caret"></span></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each authoredExercises}}
-								<tr>
-									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
-									<td>{{i18nExerciseType type}}</td>
-									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-									<td>{{i18nName category}}</td>
-									<td>{{i18nDifficulty difficulty}}</td>
-									<td>{{userName lastEditor_id}}</td>
-									<td>{{i18nDateTime lastEdited}}</td>
-									<td><a role="button" data-archive-id="{{this._id}}"><span class="glyphicon glyphicon-inbox" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
-								</tr>
-							{{else}}
-								<tr>
-									<td colspan="8" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
-								</tr>
-							{{/each}}
-						</tbody>
-					</table>
-				</section>
-				<section class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign"></span></a>
-							<a role="button" data-toggle="collapse" href="#collapseArchive">{{i18n "account.archivedExercisesSubtitle"}}</a>
-						</h3>
-					</div>
-					<div id="collapseArchive" class="panel-collapse collapse">
-						<table class="table table-condensed table-striped">
-							<thead>
-								<tr>
-									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-									<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-									<th scope="col">{{i18n "form.editedByLabel"}}</th>
-									<th scope="col">{{i18n "form.editedAtLabel"}} <span class="caret"></span></th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								{{#each archivedExercises}}
-									<tr>
-										<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
-										<td>{{i18nExerciseType type}}</td>
-										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-										<td>{{i18nName category}}</td>
-										<td>{{i18nDifficulty difficulty}}</td>
-										<td>{{userName lastEditor_id}}</td>
-										<td>{{i18nDateTime lastEdited}}</td>
-										<td><a role="button" data-unarchive-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
-									</tr>
-								{{else}}
-									<tr>
-										<td colspan="8" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
-									</tr>
-								{{/each}}
-							</tbody>
-						</table>
-					</div>
-				</section>
+				{{> account_exerciseList title=(i18n "account.solvedExercisesSubtitle") exercises=(transformResults results) isResult=true}}
+				{{> account_exerciseList title=(i18n "account.createdExercisesSubtitle") exercises=createdExercises}}
+				{{> account_exerciseList title=(i18n "account.archivedExercisesSubtitle") exercises=archivedExercises isArchive=true}}
 			</div>
 			<div class="col-md-4">
 				<section class="well form-horizontal">
@@ -152,4 +40,73 @@
 			</div>
 		{{/if}}
 	</div>
+</template>
+<template name="account_exerciseList">
+	<section class="panel panel-default">
+		<div class="panel-heading">
+			{{#unless isArchive}}
+				<h3 class="panel-title">{{title}}</h3>
+			{{else}}
+				<h3 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign"></span></a>
+					<a role="button" data-toggle="collapse" href="#collapseArchive">{{title}}</a>
+				</h3>
+			{{/unless}}
+		</div>
+		<div id="{{#if isArchive}}collapseArchive{{/if}}" class="{{#if isArchive}}panel-collapse collapse{{/if}}">
+			<table class="table table-condensed table-striped">
+				<thead>
+					<tr>
+						<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+						<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+						<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+						<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+						<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+						{{#if isResult}}
+							<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
+						{{else}}
+							<th scope="col">{{i18n "form.editedByLabel"}}</th>
+							<th scope="col">{{i18n "form.editedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
+							<th></th>
+						{{/if}}
+					</tr>
+				</thead>
+				<tbody>
+					{{#each exercises}}
+						<tr>
+							<td>
+								{{#linkTo route="resultView" data=this}}{{i18nName this}}{{/linkTo}}
+								{{#if result}}
+									{{#if evaluated this result.results}}
+										<span class="glyphicon {{#if success this result.results}}glyphicon-ok text-success{{else}}glyphicon-remove text-danger{{/if}}"></span>
+									{{else}}
+										<span class="glyphicon glyphicon-pencil text-info"></span>
+									{{/if}}
+								{{/if}}
+							</td>
+							<td>{{i18nExerciseType type}}</td>
+							<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+							<td>{{i18nName category}}</td>
+							<td>{{i18nDifficulty difficulty}}</td>
+							{{#if result}}
+								<td>{{i18nDateTime result.solved}}</td>
+							{{else}}
+								<td>{{userName lastEditor_id}}</td>
+								<td>{{i18nDateTime lastEdited}}</td>
+								{{#unless archived}}
+									<td><a role="button" class="a-archive" data-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
+								{{else}}
+									<td><a role="button" class="a-unarchive" data-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+								{{/unless}}
+							{{/if}}
+						</tr>
+					{{else}}
+						<tr>
+							<td colspan="{{#if result}}6{{else}}8{{/if}}" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
+						</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</section>
 </template>

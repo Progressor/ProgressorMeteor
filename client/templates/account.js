@@ -1,12 +1,38 @@
 (function () {
 	'use strict';
 
+	/*
+	 * MAIN TEMPLATE
+	 */
+
 	Template.account.onRendered(function () {
 		//$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
 		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	Template.account.helpers(
+		{
+			transformResults: r => _.map(r, i => _.extend({}, i.exercise, { result: _.omit(i, 'exercise') }))
+		});
+
+	Template.account.events(
+		{
+			'click #button-logout': () => Meteor.logout(),
+			'click #button-logout-others': () => Meteor.logoutOtherClients(),
+			'change #input-name' (ev) {
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
+				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {
+					$group.addClass(!err ? 'has-success' : 'has-error');
+					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
+				});
+			}
+		});
+
+	/*
+	 * SUB-TEMPLATE EXERCISE LIST
+	 */
+
+	Template.account_exerciseList.helpers(
 		{
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
@@ -15,19 +41,10 @@
 			success: (e, r) => Progressor.isExerciseSuccess(e, r)
 		});
 
-	Template.account.events(
+	Template.account_exerciseList.events(
 		{
-			'click #button-logout': () => Meteor.logout(),
-			'click #button-logout-others': () => Meteor.logoutOtherClients(),
-			'click [data-archive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('archive-id') }, true, Progressor.handleError()),
-			'click [data-unarchive-id]': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('unarchive-id') }, false, Progressor.handleError()),
-			'change #input-name' (ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
-				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {
-					$group.addClass(!err ? 'has-success' : 'has-error');
-					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
-				});
-			}
+			'click .a-archive': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('id') }, true, Progressor.handleError()),
+			'click .a-unarchive': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('id') }, false, Progressor.handleError())
 		});
 
 })();
