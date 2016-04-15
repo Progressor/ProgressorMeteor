@@ -48,16 +48,18 @@
 			</p>
 			<div class="row">
 				<div class="col-md-6">
-					{{#each i18nOptions this}}
-						<div class="{{resultEvaluation @index}}">
-							<div class="{{questionType}}">
-								<label>
-									<input type="{{questionType}}" name="input-option" value="{{@index}}" class="input-option" {{checkedStatus @index}} disabled={{isResult}}>
-									{{this}}
-								</label>
-							</div>
-						</div>
-					{{/each}}
+					<ul class="list-unstyled separated-left">
+						{{#each i18nOptions this}}
+							<li class="{{resultEvaluation @index}}">
+								<div class="{{questionType}}">
+									<label>
+										<input type="{{questionType}}" name="input-option" value="{{@index}}" class="input-option" {{checkedStatus @index}} disabled={{isResult}}>
+										{{this}}
+									</label>
+								</div>
+							</li>
+						{{/each}}
+					</ul>
 					{{#unless isResult}}
 						<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
 					{{/unless}}
