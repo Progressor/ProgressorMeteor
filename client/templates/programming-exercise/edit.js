@@ -144,7 +144,7 @@
 				Session.set('solution', (solutionTyped = exercise.get() && exercise.get().solution) ? exercise.get().solution : null);
 
 			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
-				Meteor.call('getFragment', exercise.get().programmingLanguage, exercise.get(), Progressor.handleError(function (err, res) {
+				Meteor.call('getFragment', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Progressor.handleError(function (err, res) {
 					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
 					if (!solutionTyped) Session.set('solution', !err ? res : null);
 				}));
@@ -316,12 +316,12 @@
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', exercise.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
+			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
 
 			//execution
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, exercise.get(), Session.get('solution'), Progressor.handleError(function (err, res) {
+				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);

@@ -100,6 +100,9 @@
 			deleteExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 
+				if (exercise._id)
+					exercise = Progressor.exercises.findOne({ _id: exercise._id });
+
 				const user = Meteor.user();
 				if (user && user.roles && user.roles[Roles.GLOBAL_GROUP] && _.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN)) /*OK*/;
 				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)

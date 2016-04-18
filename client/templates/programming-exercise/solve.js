@@ -36,7 +36,7 @@
 			else if (exercise && exercise.fragment)
 				Session.set('fragment', exercise.fragment);
 			else
-				Meteor.call('getFragment', getExercise().programmingLanguage, getExercise(), Progressor.handleError((err, res) => Session.set('fragment', !err ? res : null)));
+				Meteor.call('getFragment', getExercise().programmingLanguage, { _id: getExercise()._id }, Progressor.handleError((err, res) => Session.set('fragment', !err ? res : null)));
 		});
 	});
 
@@ -80,7 +80,7 @@
 			'click #button-execute'() {
 				const $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
-				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), Progressor.handleError(function (err, res) {
+				Meteor.call('execute', getExercise().programmingLanguage, { _id: getExercise()._id }, Session.get('fragment'), Progressor.handleError(function (err, res) {
 					executionResults.set(!err ? res : []);
 					$result.css('opacity', 1);
 					executionStatus.set(executionStatus.get() & ~0x1);

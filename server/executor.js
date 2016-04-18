@@ -70,6 +70,9 @@
 
 				this.unblock();
 
+				if (exercise._id)
+					exercise = Progressor.exercises.findOne({ _id: exercise._id });
+
 				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 				return getExecutorClient().getFragment(language, functions);
 			},
