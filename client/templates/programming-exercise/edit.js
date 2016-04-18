@@ -142,18 +142,18 @@
 				Session.set('fragment', (fragmentTyped = exercise.get() && exercise.get().fragment) ? exercise.get().fragment : null);
 			if (!solutionTyped)
 				Session.set('solution', (solutionTyped = exercise.get() && exercise.get().solution) ? exercise.get().solution : null);
-
 			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
 				Meteor.call('getFragment', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Progressor.handleError(function (err, res) {
 					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
 					if (!solutionTyped) Session.set('solution', !err ? res : null);
 				}));
-
 			if (exercise.get() && exercise.get().programmingLanguage) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
 				if (programmingLanguage)
 					$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
 			}
+			if (!executionResults.get().length && Progressor.results.findOne())
+				executionResults.set(Progressor.results.findOne().results);
 		});
 	});
 
@@ -165,7 +165,7 @@
 			},
 			exercise: () => exercise.get(),
 			exists: () => exercise.get() && exercise.get()._id,
-			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || _.contains(Meteor.user().roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN),
+			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
 			exerciseDuplicateQuery: () => ({ duplicate: exercise.get()._id }),
 			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
@@ -196,7 +196,7 @@
 			})),
 			testCases: () => _.map(exercise.get().testCases, function (testCase) {
 				const _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
-				const fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof(v) === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
+				const fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof v === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
 				return _.extend({}, testCase, {
 					original: testCase,
 					inputValues: fillValues(testCase.inputValues, _function ? _function.inputTypes : null),
@@ -307,7 +307,7 @@
 				exercise.get().fragment = Session.get('fragment');
 				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExerciseSuccess(executionResults.get()))
+					if (Progressor.isExerciseSuccess(exercise.get(), executionResults.get()))
 						exercise.get().released = { requested: new Date() };
 					else
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));

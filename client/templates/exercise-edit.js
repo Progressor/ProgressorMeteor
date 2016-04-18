@@ -6,10 +6,7 @@
 	Template.exerciseEdit.onCreated(() => createType = new ReactiveVar(null));
 
 	Template.exerciseEdit.onRendered(function () {
-		$('#nav-exercise-create').click(function (ev) {
-			ev.preventDefault();
-			createType.set(null);
-		});
+		$('#nav-exercise-create').click(ev => createType.set(null));
 	});
 
 	Template.exerciseEdit.helpers(

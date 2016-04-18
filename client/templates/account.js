@@ -31,6 +31,10 @@
 	 * SUB-TEMPLATE EXERCISE LIST
 	 */
 
+	function toggleArchiveExercise(archive) {
+		return ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).closest('tr').data('id') }, archive, Progressor.handleError());
+	}
+
 	Template.account_exerciseList.helpers(
 		{
 			userName: Progressor.getUserName,
@@ -40,8 +44,8 @@
 
 	Template.account_exerciseList.events(
 		{
-			'click .a-archive': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('id') }, true, Progressor.handleError()),
-			'click .a-unarchive': ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).data('id') }, false, Progressor.handleError())
+			'click .a-archive': toggleArchiveExercise(true),
+			'click .a-unarchive': toggleArchiveExercise(false)
 		});
 
 })();

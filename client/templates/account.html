@@ -54,7 +54,7 @@
 				</h3>
 			{{/unless}}
 		</div>
-		<div id="{{#if isArchive}}collapseArchive{{/if}}" class="{{#if isArchive}}panel-collapse collapse{{/if}}">
+		<div id="{{#if isArchive}}collapseArchive{{/if}}" class="panel-collapse {{#if isArchive}}collapse{{/if}}">
 			<table class="table table-condensed table-striped">
 				<thead>
 					<tr>
@@ -74,15 +74,15 @@
 				</thead>
 				<tbody>
 					{{#each exercises}}
-						<tr>
+						<tr data-id="{{_id}}">
 							<td>
 								{{#unless result}}
 									{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
 									{{#if released}}
 										{{#if released.confirmed}}
-											<span class="glyphicon glyphicon-globe text-success" title="{{i18n "exercise.releasedMessage"}}" data-toggle="tooltip"></span>
+											<span class="glyphicon glyphicon-book text-success" title="{{i18n "exercise.releasedMessage"}}" data-toggle="tooltip"></span>
 										{{else}}
-											<span class="glyphicon glyphicon-globe text-info" title="{{i18n "exercise.releaseRequestedMessage"}}" data-toggle="tooltip"></span>
+											<span class="glyphicon glyphicon-book text-info" title="{{i18n "exercise.releaseRequestedMessage"}}" data-toggle="tooltip"></span>
 										{{/if}}
 									{{/if}}
 								{{else}}
@@ -108,9 +108,9 @@
 								<td>{{userName lastEditor_id}}</td>
 								<td>{{i18nDateTime lastEdited}}</td>
 								{{#unless archived}}
-									<td><a role="button" class="a-archive" data-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
+									<td><a role="button" class="a-archive"><span class="glyphicon glyphicon-folder-close" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
 								{{else}}
-									<td><a role="button" class="a-unarchive" data-id="{{this._id}}"><span class="glyphicon glyphicon-briefcase" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+									<td><a role="button" class="a-unarchive"><span class="glyphicon glyphicon-folder-open" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
 								{{/unless}}
 							{{/if}}
 						</tr>

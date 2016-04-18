@@ -17,10 +17,11 @@
 	Meteor.publish('category', checked([String], id => Progressor.categories.find({ _id: id })));
 	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
 
-	Meteor.publish('publicExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
-	Meteor.publish('publicOrMyExercises', checked([], userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] })));
-	Meteor.publish('publicExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
-	Meteor.publish('publicExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
+	Meteor.publish('releaseRequestedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true } }));
+	Meteor.publish('releasedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
+	Meteor.publish('releasedOrMyExercises', checked([], userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] })));
+	Meteor.publish('releasedExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
+	Meteor.publish('releasedExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
 	Meteor.publish('unconfirmedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }));
 	Meteor.publish('exercise', checked([String], id => Progressor.exercises.find({ _id: id, category_id: { $exists: true } })));
 	Meteor.publish('exerciseByResult', function (id) {
@@ -49,7 +50,7 @@
 					}));
 
 				const user = Meteor.user();
-				if (!user || !user.roles || !user.roles[Roles.GLOBAL_GROUP] || !_.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN))
+				if (!Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
 
 				if (!category.author_id)
@@ -63,7 +64,7 @@
 				check(category, Match.ObjectIncluding({ _id: String }));
 
 				const user = Meteor.user();
-				if (!user || !user.roles || !user.roles[Roles.GLOBAL_GROUP] || !_.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN))
+				if (!Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
 
 				return Progressor.categories.remove(category._id).rowsAffected;
@@ -77,8 +78,7 @@
 						type: Match.Integer
 					}));
 
-				const user = Meteor.user();
-				if (user && user.roles && user.roles[Roles.GLOBAL_GROUP] && _.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN)) /*OK*/;
+				if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)) /*OK*/;
 				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
 					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
 				else
@@ -103,8 +103,7 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				const user = Meteor.user();
-				if (user && user.roles && user.roles[Roles.GLOBAL_GROUP] && _.contains(user.roles[Roles.GLOBAL_GROUP], Progressor.ROLE_ADMIN)) /*OK*/;
+				if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)) /*OK*/;
 				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
 					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
 				else

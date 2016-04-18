@@ -13,6 +13,8 @@
 		});
 	}
 
+	Template.registerHelper('isAdmin', () => Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN));
+
 	Template.registerHelper('i18nProgrammingLanguage', i18n.getProgrammingLanguage);
 	Template.registerHelper('i18nExerciseType', i18n.getExerciseType);
 	Template.registerHelper('i18nDifficulty', i18n.getDifficulty);
