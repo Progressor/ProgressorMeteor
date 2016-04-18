@@ -68,10 +68,11 @@
 			'click #button-save-answer'() {
 				const $control = $('.control-answer');
 				if ($control[0].checkValidity()) {
-					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError(function (res) {
-						if (!res.length)
+					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError(function (err, res) {
+						evaluationResult.set(!err ? res : []);
+						if (!err && !res.length)
 							Progressor.showAlert(i18n('exercise.saveSuccessfulMessage'), 'info');
-					}, false));
+					}));
 				}
 			}
 		});

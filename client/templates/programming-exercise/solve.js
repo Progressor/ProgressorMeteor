@@ -81,8 +81,7 @@
 				const $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
 				Meteor.call('execute', getExercise().programmingLanguage, getExercise(), Session.get('fragment'), Progressor.handleError(function (err, res) {
-					if (!err)
-						executionResults.set(res);
+					executionResults.set(!err ? res : []);
 					$result.css('opacity', 1);
 					executionStatus.set(executionStatus.get() & ~0x1);
 				}));
