@@ -321,7 +321,7 @@
 			//execution
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
+				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
