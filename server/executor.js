@@ -57,7 +57,7 @@
 				const { connection, client } = connectExecutor();
 				const blacklist = Meteor.wrapAsync(client.getBlacklist, client)(language);
 				connection.end();
-				
+
 				return blacklist;
 			},
 			getFragment(language, exercise) {
@@ -82,7 +82,7 @@
 				const { connection, client } = connectExecutor();
 				const fragment = Meteor.wrapAsync(client.getFragment, client)(language, functions);
 				connection.end();
-				
+
 				return fragment;
 			},
 			execute(language, exercise, fragment) {
