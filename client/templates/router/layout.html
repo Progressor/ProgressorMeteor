@@ -25,7 +25,7 @@
 								{{/each}}
 							</ul>
 						</li>
-						{{#if isAdmin}}
+						{{#if currentUser}}
 							<li class="dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									{{i18n "exercise.createTitle"}}
@@ -37,6 +37,8 @@
 									{{/each}}
 								</ul>
 							</li>
+						{{/if}}
+						{{#if isAdmin}}
 							<li>{{#linkTo route="exerciseRelease"}}{{i18n "exercise.releaseTitle"}}{{/linkTo}}</li>
 							<li><a href="/admin">{{i18n "layout.mongoDBAdminTitle"}}</a></li>
 						{{/if}}
