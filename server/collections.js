@@ -50,8 +50,8 @@
 					}));
 
 				const user = Meteor.user();
-				if (!Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
+				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
 
 				if (!category.author_id)
 					category.author_id = this.userId;
@@ -64,8 +64,8 @@
 				check(category, Match.ObjectIncluding({ _id: String }));
 
 				const user = Meteor.user();
-				if (!Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('unauthorised', 'Only administrators can edit categories.');
+				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
 
 				return Progressor.categories.remove(category._id).rowsAffected;
 			},
@@ -78,11 +78,11 @@
 						type: Match.Integer
 					}));
 
-				if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)) /*OK*/;
-				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
-					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
-				else
-					throw new Meteor.Error('unauthorised', 'Only authors and administrators can edit exercises.');
+				const user = Meteor.user();
+				if (exercise.released && exercise.released.requested && !Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
+				else if (exercise.author_id !== this.userId)
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', user));
 
 				if (!exercise.author_id)
 					exercise.author_id = this.userId;
@@ -103,11 +103,11 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)) /*OK*/;
-				else if (exercise.author_id === this.userId && exercise.released && exercise.released.requested)
-					throw new Meteor.Error('unauthorised', 'Only administrators can edit released exercises.');
-				else
-					throw new Meteor.Error('unauthorised', 'Only authors and administrators can edit exercises.');
+				const user = Meteor.user();
+				if (exercise.released && exercise.released.requested && !Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
+				else if (exercise.author_id !== this.userId)
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', user));
 
 				return Progressor.exercises.remove(exercise._id).rowsAffected;
 			}

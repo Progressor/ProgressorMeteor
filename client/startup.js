@@ -1,8 +1,6 @@
 (function () {
 	'use strict';
 
-	let init = false;
-
 	function setLanguage(lng) {
 		return _.some(i18n.getLanguages(), function (nme, cod) {
 			if (lng.startsWith(cod)) {
@@ -32,8 +30,7 @@
 	});
 
 	Meteor.startup(function () {
-		if (!init)
-			_.some(navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage], setLanguage);
+		_.some(navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage], setLanguage);
 		Tracker.autorun(function () {
 			const usr = Meteor.user();
 			if (usr && usr.profile && usr.profile.language)
