@@ -65,6 +65,13 @@ The corresponding interface definition file is included in the **Executor** proj
 A custom *Meteor* package called `thrift` wraps the [*npm*](https://www.npmjs.com/) package `thrift` ([source](https://www.npmjs.com/package/thrift)).
 The [package documentation](packages/thrift/README.md) contains the instructions to update the package.
 
+### Configuration
+
+The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
+
+The default configuration is not valid.
+You need to either enter valid configuration settings or delete the blocks altogether.
+
 ### Deployment
 
 ...
