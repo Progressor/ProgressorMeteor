@@ -5,15 +5,15 @@
 		{ host: 'localhost', port: 9090 }
 	];
 
-	let executorConnections, executorIndex = 0;
+	let executorInstanceIndex = 0;
 
-	function getExecutorClient() {
+	function connectExecutor() {
 
-		if (!executorConnections)
-			executorConnections = _.map(executorInstances, i => thrift.createConnection(i.host, i.port));
-
-		//return thrift.createClient(Executor, Random.choice(executorConnections)); //Random
-		return thrift.createClient(Executor, executorConnections[executorIndex = ++executorIndex % executorConnections.length]); //round-robin
+		//const instance = Random.choice(executorInstances); //random
+		const instance = executorInstances[executorInstanceIndex = ++executorInstanceIndex % executorInstances.length]; //round-robin
+		const connection = thrift.createConnection(instance.host, instance.port);
+		const client = thrift.createClient(Executor, connection);
+		return { connection, client };
 	}
 
 	Meteor.methods(
@@ -54,7 +54,11 @@
 
 				this.unblock();
 
-				return getExecutorClient().getBlacklist(language);
+				const { connection, client } = connectExecutor();
+				const blacklist = Meteor.wrapAsync(client.getBlacklist, client)(language);
+				connection.end();
+				
+				return blacklist;
 			},
 			getFragment(language, exercise) {
 				check(language, String);
@@ -74,7 +78,12 @@
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
 				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
-				return getExecutorClient().getFragment(language, functions);
+
+				const { connection, client } = connectExecutor();
+				const fragment = Meteor.wrapAsync(client.getFragment, client)(language, functions);
+				connection.end();
+				
+				return fragment;
 			},
 			execute(language, exercise, fragment) {
 				check(language, String);
@@ -98,7 +107,9 @@
 				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
 
-				const client = getExecutorClient(), results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+				const { connection, client } = connectExecutor();
+				const results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
+				connection.end();
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
