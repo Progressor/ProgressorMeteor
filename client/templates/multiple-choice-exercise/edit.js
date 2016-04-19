@@ -120,6 +120,7 @@
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
 
+			
 			//ToDo: Anpassen
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				exercise.get().fragment = Session.get('fragment');
