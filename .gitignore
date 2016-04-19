@@ -2,4 +2,3 @@
 /.idea/libraries/
 /.idea/workspace.xml
 /packages/thrift/.npm/
-/private/config.json
