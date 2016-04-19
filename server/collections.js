@@ -9,7 +9,7 @@
 		return function (...args) {
 			for (let i = 0; i < args.length; i++)
 				check(args[i], checks[i]);
-			return callback(...args, this.userId);
+			return callback.bind(this)(...args, this.userId);
 		};
 	}
 

@@ -11,7 +11,7 @@
 		{
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
-			transformResults: r => _.map(r, i => _.extend({}, i.exercise, { result: _.omit(i, 'exercise') }))
+			transformResults: r => _.map(r, i => _.extend({ result: _.omit(i, 'exercise') }, i.exercise))
 		});
 
 	Template.account.events(
