@@ -9,7 +9,7 @@
 		return function (...args) {
 			for (let i = 0; i < args.length; i++)
 				check(args[i], checks[i]);
-			return callback(...args, this.userId);
+			return callback.bind(this)(...args, this.userId);
 		};
 	}
 
@@ -31,9 +31,15 @@
 			return Progressor.exercises.find({ _id: result.exercise_id, category_id: { $exists: true } });
 	});
 
-	Meteor.publish('myResults', userId => Progressor.results.find({ user_id: userId }));
-	Meteor.publish('myResult', checked([String], (id, userId) => Progressor.results.find({ user_id: userId, _id: id })));
-	Meteor.publish('myExerciseResult', checked([String], (id, userId) => Progressor.results.find({ user_id: userId, exercise_id: id })));
+	Meteor.publish('myResults', function () {
+		return Progressor.results.find({ user_id: this.userId });
+	});
+	Meteor.publish('myResult', checked([String], function (id) {
+		return Progressor.results.find({ user_id: this.userId, _id: id });
+	}));
+	Meteor.publish('myExerciseResult', checked([String], function (id) {
+		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
+	}));
 
 	//////////////////////////
 	// MODIFICATION METHODS //
@@ -110,6 +116,19 @@
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', user));
 
 				return Progressor.exercises.remove(exercise._id).rowsAffected;
+			},
+			toggleUsersRoles(users, roles, isInRole) {
+				check(users, [String]);
+				check(roles, [String]);
+				check(isInRole, Boolean);
+
+				const user = Meteor.user();
+				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
+
+				Roles[isInRole ? 'addUsersToRoles' : 'removeUsersFromRoles'](users, roles);
+				if (_.contains(roles, Progressor.ROLE_ADMIN))
+					_.each(users, u => Houston._admins[isInRole ? 'insert' : 'remove']({ user_id: u }));
 			}
 		});
 
@@ -132,7 +151,7 @@
 		}
 	}
 
-	Houston.methods('exercises', {
+	Houston.methods(Progressor.exercises, {
 		'Archive/Restore': toggleFlag('exercises', 'archived', 'Exercise', 'archived', 'restored'),
 		'Release/Hide'(document) {
 			check(document, Match.ObjectIncluding({ _id: String }));

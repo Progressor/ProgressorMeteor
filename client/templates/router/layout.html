@@ -25,8 +25,20 @@
 								{{/each}}
 							</ul>
 						</li>
+						{{#if currentUser}}
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									{{i18n "exercise.createTitle"}}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									{{#each i18nExerciseTypes}}
+										<li>{{#linkTo route="exerciseCreate" query=(exerciseCreateQuery this)}}{{name}}{{/linkTo}}</li>
+									{{/each}}
+								</ul>
+							</li>
+						{{/if}}
 						{{#if isAdmin}}
-							<li>{{#linkTo route="exerciseCreate" id="nav-exercise-create"}}{{i18n "exercise.createTitle"}}{{/linkTo}}</li>
 							<li>{{#linkTo route="exerciseRelease"}}{{i18n "exercise.releaseTitle"}}{{/linkTo}}</li>
 							<li><a href="/admin">{{i18n "layout.mongoDBAdminTitle"}}</a></li>
 						{{/if}}
