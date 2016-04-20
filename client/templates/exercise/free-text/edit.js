@@ -13,26 +13,26 @@
 		};
 	}
 
-	//TODO: analog defaultExercise anpassen
-	function testValidExercise(exercise) {
-		const notEmpty = /[^\s]+/;
-		const { programmingLanguage, category_id, difficulty, names, descriptions, pattern, solution } = exercise;
-		let regexValid;
+	function testRegExp(pattern) {
+		if (!pattern || !pattern.length)
+			return false;
 		try {
-			regexValid = pattern.test(exercise)
-			new RegExp(pattern)
-		}	catch (e) {
-			regexValid = false;
-			Progressor.showAlert("Not a valid Regular expression")
+			new RegExp(pattern);
+			return true;
+		} catch (e) {
+			return false;
 		}
+	}
 
+	function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, pattern, solution }) {
+		const notEmpty = /[^\s]+/;
 		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
 					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
 					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
 					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
-					 && regexValid;
-
+					 && (!pattern || !pattern.length || testRegExp(pattern))
+					 && notEmpty.test(solution) && new RegExp(pattern).test(solution);
 	}
 
 	Template.textEdit.onRendered(function () {
@@ -44,7 +44,7 @@
 				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id');
 				exercise.set(Progressor.joinCategory(_exercise));
-			} else
+			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
@@ -95,6 +95,19 @@
 		};
 	}
 
+	function changeExerciseTranslation(translationName) {
+		return changeExercise(function (ev) {
+			const $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'];
+			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
+			if (!value)
+				elements.splice(elementIndex, 1);
+			else if (element)
+				element[translationName] = value;
+			else
+				elements.push({ language: $this.data('lang'), [translationName]: value });
+		});
+	}
+
 	function removeExerciseCollectionItem(collectionName, cssClass) {
 		return changeExercise(function (ev, $this) {
 			const removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
@@ -102,30 +115,24 @@
 		});
 	}
 
-
-
 	Template.textEdit.events(
 		{
 			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
-
-
-			//ToDo: Anpassen
+			'change [id^="input-name-"]': changeExerciseTranslation('name'),
+			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
+			'change #input-pattern': changeExercise((ev, $this) => $this.val().length ? exercise.get().pattern = $this.val() : delete exercise.get().pattern),
+			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
-				exercise.get().fragment = Session.get('fragment');
-				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExerciseSuccess(exercise.get(), executionResults.get()))
-						exercise.get().released = { requested: new Date() };
-					else
-						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
+					exercise.get().released = { requested: new Date() };
 				if (testValidExercise(exercise.get()))
 					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
-
 		});
+
 })();
