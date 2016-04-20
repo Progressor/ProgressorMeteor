@@ -2,8 +2,10 @@
 	'use strict';
 
 	Template.layout.onCreated(function () {
-		if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
-			Meteor.subscribe('numberOfExercisesToRelease');
+		this.autorun(function () {
+			if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
+				Meteor.subscribe('numberOfExercisesToRelease');
+		});
 	});
 
 	Template.layout.helpers(

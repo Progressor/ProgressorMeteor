@@ -18,6 +18,7 @@
 	});
 
 	Meteor.publish('releaseRequestedExercises', function () {
+		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
 		return Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true } });
 	});
 	Meteor.publish('releasedExercises', function () {
@@ -33,9 +34,6 @@
 	Meteor.publish('releasedExercisesForLanguage', function (language) {
 		check(language, String);
 		return Progressor.exercises.find({ programmingLanguage: language, category_id: { $exists: true }, 'released.confirmed': { $exists: true } });
-	});
-	Meteor.publish('unconfirmedExercises', function () {
-		return Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } });
 	});
 	Meteor.publish('exercise', function (id) {
 		check(id, String);

@@ -51,13 +51,13 @@
 			},
 			validation() {
 				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `has-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) > 0 ? 'success' : 'error'}`;
+					return `has-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'success' : 'error'}`;
 				else if (validationResult.get() === false)
 					return 'has-error';
 			},
 			resultEvaluation() {
 				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) > 0 ? 'ok' : 'remove'}`;
+					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'ok' : 'remove'}`;
 			}
 		});
 
