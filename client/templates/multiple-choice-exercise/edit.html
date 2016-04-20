@@ -81,7 +81,7 @@
 				</div>
 				<div class="tab-content">
 					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+						<div role="tabpanel" id="tab-{{_id}}" class="container-translation tab-pane fade {{#if isActive}}active in{{/if}}">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" data-lang="{{_id}}" />
