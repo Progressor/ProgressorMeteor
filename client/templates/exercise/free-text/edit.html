@@ -110,6 +110,11 @@
 					<label for="textarea-solution" class="control-label"> Solution <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> </label>
 					<textarea id="textarea-solution" rows="5" cols="40" class="form-control"> Your Solution here</textarea>
 				</div>
+				<div class="text-right">
+					<div class="checkbox nomargin">
+						<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionButton"}}</label>
+					</div>
+				</div>
 			</div>
 		</div>
 		{{#if canSave}}
