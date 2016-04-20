@@ -101,35 +101,26 @@
 		};
 	}
 
-	function removeExerciseCollectionItem(collectionName, cssClass) {
+	function removeExerciseSubcollectionItems(collectionName, cssClass1, propertyNames, cssClass2) {
 		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
-			exercise.get()[collectionName] = _.filter(exercise.get()[collectionName], (e, i) => i !== removeIndex);
+			const element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
+			_.each(propertyNames, p => element[p] = _.filter(element[p], (e, i) => i !== removeIndex));
 		});
 	}
-	
-	
-	
+
 	Template.multipleEdit.events(
 		{
-			'click .btn-add-option': changeExercise(() => exercise.get().options.push(getDefaultExercise().options[0])),
-			'click .btn-remove-option': removeExerciseCollectionItem('options', 'container-option'),
-			
+			'click .btn-add-option': changeExercise(() => exercise.get().options[0].options.push(null)),
+			'click .btn-remove-option': removeExerciseSubcollectionItems('options', 'container-translation', 'options', 'container-option'),
 
 			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
 
-			
 			//ToDo: Anpassen
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
-				exercise.get().fragment = Session.get('fragment');
-				exercise.get().solution = Session.get('solution');
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExerciseSuccess(exercise.get(), executionResults.get()))
-						exercise.get().released = { requested: new Date() };
-					else
-						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
+					exercise.get().released = { requested: new Date() };
 				if (testValidExercise(exercise.get()))
 					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
 				else
