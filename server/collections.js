@@ -5,25 +5,42 @@
 	// SUBSCRIPTIONS //
 	///////////////////
 
-	function checked(checks, callback) {
-		return function (...args) {
-			for (let i = 0; i < args.length; i++)
-				check(args[i], checks[i]);
-			return callback.bind(this)(...args, this.userId);
-		};
-	}
+	Meteor.publish('categories', function () {
+		return Progressor.categories.find();
+	});
+	Meteor.publish('category', function (id) {
+		check(id, String);
+		return Progressor.categories.find({ _id: id });
+	});
+	Meteor.publish('categoriesForLanguage', function (language) {
+		check(language, String);
+		return Progressor.categories.find({ programmingLanguage: language });
+	});
 
-	Meteor.publish('categories', () => Progressor.categories.find());
-	Meteor.publish('category', checked([String], id => Progressor.categories.find({ _id: id })));
-	Meteor.publish('categoriesForLanguage', checked([String], lng => Progressor.categories.find({ programmingLanguage: lng })));
-
-	Meteor.publish('releaseRequestedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true } }));
-	Meteor.publish('releasedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }));
-	Meteor.publish('releasedOrMyExercises', checked([], userId => Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: userId }, { lastEditor_id: userId }] })));
-	Meteor.publish('releasedExercisesForCategory', checked([String], cat => Progressor.exercises.find({ category_id: cat, 'released.confirmed': { $exists: true } })));
-	Meteor.publish('releasedExercisesForLanguage', checked([String], lng => Progressor.exercises.find({ programmingLanguage: lng, category_id: { $exists: true }, 'released.confirmed': { $exists: true } })));
-	Meteor.publish('unconfirmedExercises', () => Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }));
-	Meteor.publish('exercise', checked([String], id => Progressor.exercises.find({ _id: id, category_id: { $exists: true } })));
+	Meteor.publish('releaseRequestedExercises', function () {
+		return Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true } });
+	});
+	Meteor.publish('releasedExercises', function () {
+		return Progressor.exercises.find({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } });
+	});
+	Meteor.publish('releasedOrMyExercises', function () {
+		return Progressor.exercises.find({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: this.userId }, { lastEditor_id: this.userId }] });
+	});
+	Meteor.publish('releasedExercisesForCategory', function (category) {
+		check(category, String);
+		return Progressor.exercises.find({ category_id: category, 'released.confirmed': { $exists: true } });
+	});
+	Meteor.publish('releasedExercisesForLanguage', function (language) {
+		check(language, String);
+		return Progressor.exercises.find({ programmingLanguage: language, category_id: { $exists: true }, 'released.confirmed': { $exists: true } });
+	});
+	Meteor.publish('unconfirmedExercises', function () {
+		return Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } });
+	});
+	Meteor.publish('exercise', function (id) {
+		check(id, String);
+		return Progressor.exercises.find({ _id: id, category_id: { $exists: true } });
+	});
 	Meteor.publish('exerciseByResult', function (id) {
 		check(id, String);
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
@@ -34,106 +51,28 @@
 	Meteor.publish('myResults', function () {
 		return Progressor.results.find({ user_id: this.userId });
 	});
-	Meteor.publish('myResult', checked([String], function (id) {
+	Meteor.publish('myResult', function (id) {
+		check(id, String);
 		return Progressor.results.find({ user_id: this.userId, _id: id });
-	}));
-	Meteor.publish('myExerciseResult', checked([String], function (id) {
+	});
+	Meteor.publish('myExerciseResult', function (id) {
+		check(id, String);
 		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
-	}));
+	});
 
-	//////////////////////////
-	// MODIFICATION METHODS //
-	//////////////////////////
-
-	Meteor.methods(
-		{
-			saveCategory(category) {
-				check(category, Match.ObjectIncluding(
-					{
-						programmingLanguage: String,
-						names: [Match.ObjectIncluding({ language: String, name: String })],
-						descriptions: [Match.ObjectIncluding({ language: String, description: String })]
-					}));
-
-				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
-
-				if (!category.author_id)
-					category.author_id = this.userId;
-				category.lastEditor_id = this.userId;
-				category.lastEdited = new Date();
-
-				return Progressor.categories.upsert(category._id, category).insertedId || category._id;
-			},
-			deleteCategory(category) {
-				check(category, Match.ObjectIncluding({ _id: String }));
-
-				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
-
-				return Progressor.categories.remove(category._id).rowsAffected;
-			},
-			saveExercise(exercise) {
-				check(exercise, Match.ObjectIncluding(
-					{
-						programmingLanguage: String,
-						category_id: String,
-						difficulty: Match.Integer,
-						type: Match.Integer
-					}));
-
-				if (!this.userId)
-					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
-				else if (exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-				else if (exercise._id && exercise.released && exercise.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
-
-				if (!exercise.author_id)
-					exercise.author_id = this.userId;
-				exercise.lastEditor_id = this.userId;
-				exercise.lastEdited = new Date();
-
-				return Progressor.exercises.upsert(exercise._id, exercise).insertedId || exercise._id;
-			},
-			toggleArchiveExercise(exercise, archive) {
-				check(exercise, Match.ObjectIncluding({ _id: String }));
-				check(archive, Boolean);
-
-				if (exercise.author_id !== this.userId)
-					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-
-				return Progressor.exercises.upsert(exercise._id, { [archive === true ? '$set' : '$unset']: { archived: true } }).rowsAffected;
-			},
-			deleteExercise(exercise) {
-				check(exercise, Match.ObjectIncluding({ _id: String }));
-
-				if (exercise._id)
-					exercise = Progressor.exercises.findOne({ _id: exercise._id });
-
-				if (!this.userId)
-					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
-				else if (exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-				else if (exercise._id && exercise.released && exercise.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
-
-				return Progressor.exercises.remove(exercise._id).rowsAffected;
-			},
-			toggleUsersRoles(users, roles, isInRole) {
-				check(users, [String]);
-				check(roles, [String]);
-				check(isInRole, Boolean);
-
-				const user = Meteor.user();
-				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
-
-				Roles[isInRole ? 'addUsersToRoles' : 'removeUsersFromRoles'](users, roles);
-				if (_.contains(roles, Progressor.ROLE_ADMIN))
-					_.each(users, u => Houston._admins[isInRole ? 'insert' : 'remove']({ user_id: u }));
-			}
-		});
+	Meteor.publish('numberOfExercisesToRelease', function () {
+		const unique = 0;
+		let count = 0;
+		if (Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+			this.added('numberOfExercisesToRelease', unique, { count: count });
+		const handle = Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }).observeChanges(
+			{
+				added: id => this.changed('numberOfExercisesToRelease', unique, { count: ++count }),
+				removed: id => this.changed('numberOfExercisesToRelease', unique, { count: --count })
+			});
+		this.ready();
+		this.onStop(() => handle.stop());
+	});
 
 	///////////////////////////
 	// HOUSTON CONFIGURATION //
