@@ -1,7 +1,10 @@
 (function () {
 	'use strict';
 
-	Template.layout.onCreated(() => Meteor.subscribe('numberOfExercisesToRelease'));
+	Template.layout.onCreated(function () {
+		if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
+			Meteor.subscribe('numberOfExercisesToRelease');
+	});
 
 	Template.layout.helpers(
 		{
@@ -12,10 +15,8 @@
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), l => _.extend({ name: i18n.getProgrammingLanguage(l._id) }, l)),
 			i18nExerciseTypes: () => _.map(Progressor.getExerciseTypes(), t => _.extend({ name: i18n.getExerciseType(t._id) }, t)),
 			nofExercisesToRelease() {
-				if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)) {
-					const result = Progressor.numberOfExercisesToRelease.findOne();
-					if (result) return result.count;
-				}
+				const result = Progressor.numberOfExercisesToRelease.findOne();
+				if (result) return result.count;
 			}
 		});
 

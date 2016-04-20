@@ -78,8 +78,8 @@
 									<li>{{#linkTo route="account"}}{{currentUserEmail}}{{/linkTo}}</li>
 									<li>{{#linkTo route="home" query="action=logout" id="link-logout"}}{{i18n "account.logoutButton"}}{{/linkTo}}</li>
 								{{else}}
-									<li>{{#linkTo route="account"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
-									<li>{{#linkTo route="account"}}{{i18n "account.registerButton"}}{{/linkTo}}</li>
+									<li>{{#linkTo route="account" query="state=signIn"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
+									<li>{{#linkTo route="account" query="state=signUp"}}{{i18n "account.registerButton"}}{{/linkTo}}</li>
 								{{/if}}
 							</ul>
 						</li>

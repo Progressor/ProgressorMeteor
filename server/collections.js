@@ -61,10 +61,10 @@
 	});
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
+		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
 		const unique = 0;
 		let count = 0;
-		if (Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
-			this.added('numberOfExercisesToRelease', unique, { count: count });
+		this.added('numberOfExercisesToRelease', unique, { count: count });
 		const handle = Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }).observeChanges(
 			{
 				added: id => this.changed('numberOfExercisesToRelease', unique, { count: ++count }),
