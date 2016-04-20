@@ -152,6 +152,8 @@
 				if (programmingLanguage)
 					$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
 			}
+			if (!executionResults.get().length && Progressor.results.findOne())
+				executionResults.set(Progressor.results.findOne().results);
 		});
 	});
 

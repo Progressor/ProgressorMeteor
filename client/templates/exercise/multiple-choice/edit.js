@@ -17,7 +17,7 @@
 		};
 	}
 
-	//TODO: analog defaultExercise anpassen
+	//TODO: adjust
 	function testValidExercise(exercise) {
 		const notEmpty = /[^\s]+/;
 		const { programmingLanguage, category_id, difficulty, names, descriptions } = exercise;
@@ -104,7 +104,7 @@
 	function removeExerciseSubcollectionItems(collectionName, cssClass1, propertyNames, cssClass2) {
 		return changeExercise(function (ev, $this) {
 			const element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
-			_.each(propertyNames, p => element[p] = _.filter(element[p], (e, i) => i !== removeIndex));
+			_.each(propertyNames, p => element[p].splice(removeIndex, 1));
 		});
 	}
 
@@ -117,7 +117,7 @@
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
 
-			//ToDo: Anpassen
+			//ToDo: adjust
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
 					exercise.get().released = { requested: new Date() };

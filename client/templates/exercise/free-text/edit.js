@@ -108,13 +108,6 @@
 		});
 	}
 
-	function removeExerciseCollectionItem(collectionName, cssClass) {
-		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
-			exercise.get()[collectionName] = _.filter(exercise.get()[collectionName], (e, i) => i !== removeIndex);
-		});
-	}
-
 	Template.textEdit.events(
 		{
 			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
