@@ -19,7 +19,7 @@
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
 			transformResults: r => _.map(r, i => _.extend({ result: _.omit(i, 'exercise') }, i.exercise)),
-			users: () => _.map(Meteor.users.find({ roles: { $elemMatch: Progressor.ROLE_ADMIN } }).fetch(), function (user) {
+			users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), function (user) {
 				const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
 				Template.instance().userValues[value] = user;
 				return { value: value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };

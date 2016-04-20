@@ -55,9 +55,8 @@
 						descriptions: [Match.ObjectIncluding({ language: String, description: String })]
 					}));
 
-				const user = Meteor.user();
-				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
+				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				if (!category.author_id)
 					category.author_id = this.userId;
@@ -69,9 +68,8 @@
 			deleteCategory(category) {
 				check(category, Match.ObjectIncluding({ _id: String }));
 
-				const user = Meteor.user();
-				if (!Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
+				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				return Progressor.categories.remove(category._id).rowsAffected;
 			},
@@ -84,11 +82,12 @@
 						type: Match.Integer
 					}));
 
-				const user = Meteor.user();
-				if (exercise.released && exercise.released.requested && !Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
-				else if (exercise.author_id !== this.userId)
-					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', user));
+				if (!this.userId)
+					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
+				else if (exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+				else if (exercise._id && exercise.released && exercise.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				if (!exercise.author_id)
 					exercise.author_id = this.userId;
@@ -101,6 +100,9 @@
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 				check(archive, Boolean);
 
+				if (exercise.author_id !== this.userId)
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+
 				return Progressor.exercises.upsert(exercise._id, { [archive === true ? '$set' : '$unset']: { archived: true } }).rowsAffected;
 			},
 			deleteExercise(exercise) {
@@ -109,11 +111,12 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				const user = Meteor.user();
-				if (exercise.released && exercise.released.requested && !Roles.userIsInRole(user, Progressor.ROLE_ADMIN))
-					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', user));
-				else if (exercise.author_id !== this.userId)
-					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', user));
+				if (!this.userId)
+					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
+				else if (exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+				else if (exercise._id && exercise.released && exercise.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				return Progressor.exercises.remove(exercise._id).rowsAffected;
 			},

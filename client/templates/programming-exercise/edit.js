@@ -133,7 +133,7 @@
 				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id');
 				exercise.set(Progressor.joinCategory(_exercise));
-			} else
+			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
@@ -160,7 +160,7 @@
 	Template.programmingEdit.helpers(
 		{
 			safeExercise(context) {
-				isCreate.set(!context);
+				isCreate.set(!context || !context._id);
 				return exercise.get();
 			},
 			exercise: () => exercise.get(),
@@ -196,7 +196,7 @@
 			})),
 			testCases: () => _.map(exercise.get().testCases, function (testCase) {
 				const _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
-				const fillValues = (values, types) => types ? _.chain(values).union(_.range(types.length)).first(types.length).map((v, i) => ({ value: typeof v === 'string' ? v : null, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
+				const fillValues = (values, types) => types ? _.chain([values, _.map(_.range(types.length), () => null)]).flatten().first(types.length).map((v, i) => ({ value: v, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
 				return _.extend({}, testCase, {
 					original: testCase,
 					inputValues: fillValues(testCase.inputValues, _function ? _function.inputTypes : null),
@@ -289,7 +289,7 @@
 			'click .btn-remove-function': removeExerciseCollectionItem('functions', 'container-function'),
 			'click .btn-remove-parameter': removeExerciseSubcollectionItems('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
 			'click .btn-remove-testcase': removeExerciseCollectionItem('testCases', 'container-testcase'),
-			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
+			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? _.extend(exercise.get(), { programmingLanguage: $this.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
@@ -321,7 +321,7 @@
 			//execution
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
+				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);

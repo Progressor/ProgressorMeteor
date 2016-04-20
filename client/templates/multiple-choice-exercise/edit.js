@@ -39,7 +39,7 @@
 				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id');
 				exercise.set(Progressor.joinCategory(_exercise));
-			} else
+			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
@@ -77,10 +77,10 @@
 			})),
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), function (name, id) {
 				const nofOptions = _.max(_.map(exercise.get().options, o => o.options.length));
-				const options = _.chain(i18n.getOptionsForLanguage(exercise.get(), id) || []).union(_.range(nofOptions)).first(nofOptions)
+				const options = _.chain([i18n.getOptionsForLanguage(exercise.get(), id) || [], _.range(nofOptions, () => null)]).flatten().first(nofOptions)
 					.map((o, i) => ({
 						lang: id,
-						text: typeof o === 'string' ? o : null,
+						text: o,
 						placeholder: '...',
 						isSolution: _.contains(exercise.get().solution, i)
 					})).value();

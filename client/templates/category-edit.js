@@ -24,7 +24,7 @@
 			const detached = Tracker.nonreactive(() => category.get());
 			if (!live || !detached || live._id !== detached._id)
 				category.set(live || getDefaultCategory());
-			else
+			else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
