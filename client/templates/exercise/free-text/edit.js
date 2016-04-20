@@ -124,6 +124,7 @@
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
 			'change #input-pattern': changeExercise((ev, $this) => $this.val().length ? exercise.get().pattern = $this.val() : delete exercise.get().pattern),
 			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
+			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
 					exercise.get().released = { requested: new Date() };

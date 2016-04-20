@@ -68,8 +68,11 @@
 						</div>
 						{{#unless isResult}}
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-12">
 									<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+									{{#if solutionVisible}}
+										<button id="button-solution" class="btn btn-primary btn-sm pull-right">{{i18n "exercise.showSolutionButton"}}</button>
+									{{/if}}
 								</div>
 							</div>
 						{{/unless}}
