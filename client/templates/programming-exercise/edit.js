@@ -253,7 +253,7 @@
 	function removeExerciseSubcollectionItems(collectionName, cssClass1, propertyNames, cssClass2) {
 		return changeExercise(function (ev, $this) {
 			const element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
-			_.each(propertyNames, p => element[p] = _.filter(element[p], (e, i) => i !== removeIndex));
+			_.each(propertyNames, p => element[p].splice(removeIndex, 1));
 		});
 	}
 
