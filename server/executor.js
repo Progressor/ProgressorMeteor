@@ -85,7 +85,7 @@
 
 				return fragment;
 			},
-			execute(language, exercise, fragment) {
+			execute(language, exercise, fragment, showInvisible = false) {
 				check(language, String);
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(
@@ -98,6 +98,7 @@
 							testCases: [Match.ObjectIncluding({ functionName: String, inputValues: [String], expectedOutputValues: [String] })]
 						})));
 				check(fragment, String);
+				check(showInvisible, Boolean);
 
 				this.unblock();
 
@@ -117,11 +118,10 @@
 					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: new Date() }));
 				}
 
-				//const pubResults = Progressor.getVisibleResults(exercise, results);
-				//if (Progressor.hasInvisibleTestCases(exercise))
-				//	pubResults.push({ invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) });
-
-				return results;
+				if (Progressor.hasInvisibleTestCases(exercise) && (!showInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)))
+					return _.flatten([Progressor.getVisibleResults(exercise, results), { invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) }]);
+				else
+					return results;
 			}
 		});
 

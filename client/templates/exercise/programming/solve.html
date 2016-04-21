@@ -106,23 +106,22 @@
 												{{/if}}
 											</td>
 										</tr>
+									{{else}}
+										<tr>
+											{{#if testCasesEvaluated}}
+												<td>
+													{{#if testCaseSuccess this}}
+														<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.executionSuccessMessage"}}" data-toggle="tooltip"></span>
+													{{else}}
+														<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.executionFailureMessage"}}" data-toggle="tooltip"></span>
+													{{/if}}
+												</td>
+											{{/if}}
+											<td>{{i18n "exercise.testCase.others"}}</td>
+											<td></td>
+										</tr>
 									{{/if}}
 								{{/each}}
-								{{#if invisibleTestCases}}
-									<tr>
-										{{#if testCasesEvaluated}}
-											<td>
-												{{#if invisibleTestCasesSuccess}}
-													<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.executionSuccessMessage"}}" data-toggle="tooltip"></span>
-												{{else}}
-													<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.executionFailureMessage"}}" data-toggle="tooltip"></span>
-												{{/if}}
-											</td>
-										{{/if}}
-										<td>{{i18n "exercise.testCase.others"}}</td>
-										<td></td>
-									</tr>
-								{{/if}}
 							</tbody>
 						</table>
 					{{else}}

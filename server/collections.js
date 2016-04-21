@@ -21,7 +21,7 @@
 
 	//EXERCISES
 
-	function publishExercises(query, assumeReleased = false) {
+	function publishExercises(query, assumeReleased = false, assumeUnauthorised = false) {
 		const that = this, published = [];
 
 		function getExercises(id = null) {
@@ -32,36 +32,44 @@
 			return Progressor.results.find(id ? { exercise_id: id } : _.object(_.map(query, (v, k) => [k === '_id' ? 'exercise_id' : `exercise.${k}`, v])));
 		}
 
-		function publish(id, exercise = getExercises(id).fetch()[0]) {
-			if (!(exercise.released && exercise.released.confirmed) && that.userId !== exercise.author_id && !Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN) && (assumeReleased || !getResults(exercise._id).fetch().length))
-				return unpublish(id);
-			// if (!exercise.solutionVisible) //TODO: remove sensitive information for /solve only
-			// 	exercise = _.extend({}, exercise, { solution: undefined });
+		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
+			const isAuthorised = that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
+
+			if (!isAuthorised && !(exercise.released && exercise.released.confirmed) && (assumeReleased || !getResults(exercise._id).fetch().length))
+				return unpublishExercise(id);
+
+			if (assumeUnauthorised || !isAuthorised) {
+				if (!exercise.solutionVisible)
+					delete exercise.solution;
+				if (Progressor.hasInvisibleTestCases(exercise))
+					exercise.testCases = _.flatten([Progressor.getVisibleTestCases(exercise), { invisible: true }]);
+			}
+
 			const isPublished = _.contains(published, id);
-			that[isPublished ? 'changed' : 'added']('exercises', id, exercise);
 			if (!isPublished)
 				published.push(id);
+			that[isPublished ? 'changed' : 'added']('exercises', id, exercise);
 		}
 
-		function unpublish(id) {
+		function unpublishExercise(id) {
 			const publishIndex = published.indexOf(id);
 			if (publishIndex >= 0) {
-				that.removed('exercises', id);
 				published.splice(publishIndex, 1);
+				that.removed('exercises', id);
 			}
 		}
 
 		const handleExercises = getExercises().observe(
 			{
-				added: e => publish(e._id, e),
-				changed: e => publish(e._id, e),
-				removed: e => unpublish(e._id)
+				added: e => publishExercise(e._id, e),
+				changed: e => publishExercise(e._id, e),
+				removed: e => unpublishExercise(e._id)
 			});
 		const handleResults = !assumeReleased ? getResults().observe(
 			{
-				added: r => publish(r.exercise_id),
-				changed: r => publish(r.exercise_id),
-				removed: r => publish(r.exercise_id)
+				added: r => publishExercise(r.exercise_id),
+				changed: r => publishExercise(r.exercise_id),
+				removed: r => publishExercise(r.exercise_id)
 			}) : null;
 
 		this.ready();
@@ -90,14 +98,16 @@
 		check(language, String);
 		publishExercises.bind(this)({ programmingLanguage: language, category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
 	});
-	Meteor.publish('exercise', function (id) {
+	Meteor.publish('exercise', function (id, isExecute = false) {
 		check(id, String);
-		publishExercises.bind(this)({ _id: id, category_id: { $exists: true } });
+		check(isExecute, Boolean);
+		publishExercises.bind(this)({ _id: id, category_id: { $exists: true } }, false, isExecute);
 	});
-	Meteor.publish('exerciseByResult', function (id) {
+	Meteor.publish('exerciseByResult', function (id, isExecute = false) {
 		check(id, String);
+		check(isExecute, Boolean);
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
-		return result ? publishExercises.bind(this)({ _id: result.exercise_id, category_id: { $exists: true } }) : [];
+		return result ? publishExercises.bind(this)({ _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
@@ -119,16 +129,56 @@
 
 	//RESULTS
 
+	function publishResults(query, assumeUnauthorised = false) {
+		const that = this, published = [];
+
+		function getResults(id = null) {
+			return Progressor.results.find(id ? { _id: id } : query);
+		}
+
+		function publishResult(id, result = getResults(id).fetch()[0]) {
+			const isAuthorised = !assumeUnauthorised && (that.userId === result.exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN));
+
+			if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
+				result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
+
+			const isPublished = _.contains(published, id);
+			if (!isPublished)
+				published.push(id);
+			that[isPublished ? 'changed' : 'added']('results', id, result);
+		}
+
+		function unpublishResult(id) {
+			const publishIndex = published.indexOf(id);
+			if (publishIndex >= 0) {
+				published.splice(publishIndex, 1);
+				that.removed('results', id);
+			}
+		}
+
+		const handle = getResults().observe(
+			{
+				added: r => publishResult(r._id, r),
+				changed: r => publishResult(r._id, r),
+				removed: r => unpublishResult(r._id)
+			});
+
+		this.ready();
+		this.onStop(() => handle.stop());
+	}
+
 	Meteor.publish('myResults', function () {
 		return Progressor.results.find({ user_id: this.userId });
 	});
-	Meteor.publish('myResult', function (id) {
+	Meteor.publish('myResult', function (id, isExecute = false) {
 		check(id, String);
-		return Progressor.results.find({ user_id: this.userId, _id: id });
+		check(isExecute, Boolean);
+		publishResults.bind(this)({ user_id: this.userId, _id: id }, isExecute);
 	});
-	Meteor.publish('myExerciseResult', function (id) {
+	Meteor.publish('myResultByExercise', function (id, isExecute = false) {
 		check(id, String);
-		return Progressor.results.find({ user_id: this.userId, exercise_id: id });
+		check(isExecute, Boolean);
+		publishResults.bind(this)({ user_id: this.userId, exercise_id: id }, isExecute);
 	});
 
 	///////////////////////////

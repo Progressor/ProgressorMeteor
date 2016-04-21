@@ -138,10 +138,13 @@
 		});
 
 		this.autorun(function () {
-			if (!fragmentTyped)
-				Session.set('fragment', (fragmentTyped = exercise.get() && exercise.get().fragment) ? exercise.get().fragment : null);
+			if (!fragmentTyped && (fragmentTyped = exercise.get() && exercise.get().fragment))
+				Session.set('fragment', exercise.get().fragment);
 			if (!solutionTyped)
-				Session.set('solution', (solutionTyped = exercise.get() && exercise.get().solution) ? exercise.get().solution : null);
+				if (solutionTyped = exercise.get() && exercise.get().solution)
+					Session.set('solution', exercise.get().solution);
+				else if (solutionTyped = Progressor.results.findOne() && Progressor.results.findOne().fragment)
+					Session.set('solution', Progressor.results.findOne().fragment);
 			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
 				Meteor.call('getFragment', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Progressor.handleError(function (err, res) {
 					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
@@ -313,7 +316,7 @@
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
 				if (testValidExercise(exercise.get()))
 					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(function (res) {
-						Meteor.call('execute', exercise.get().programmingLanguage, _.extend({ _id: res }, _.omit(exercise.get(), 'category')), Session.get('solution'));
+						Meteor.call('execute', exercise.get().programmingLanguage, _.extend({ _id: res }, _.omit(exercise.get(), 'category')), Session.get('solution'), true);
 						Router.go('exerciseSolve', { _id: res });
 					}, false));
 				else
@@ -324,7 +327,7 @@
 			//execution
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), Progressor.handleError(function (err, res) {
+				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), true, Progressor.handleError(function (err, res) {
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);

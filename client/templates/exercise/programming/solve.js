@@ -70,8 +70,6 @@
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(getExercise(), c, getExecutionResults()),
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
-			invisibleTestCases: () => Progressor.hasInvisibleTestCases(getExercise()),
-			invisibleTestCasesSuccess: () => Progressor.isInvisibleSuccess(getExercise(), getExecutionResults()),
 			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults())
 		});
 
