@@ -16,7 +16,7 @@
 	function testRegExp(pattern) {
 		try {
 			return pattern && pattern.length && new RegExp(pattern);
-		} catch (e) {
+		} catch (ex) {
 			return false;
 		}
 	}

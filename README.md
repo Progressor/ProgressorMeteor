@@ -69,8 +69,7 @@ The [package documentation](packages/thrift/README.md) contains the instructions
 
 The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
 
-The default configuration is not valid.
-You need to either enter valid configuration settings or delete the blocks altogether.
+The default to provide a valid configuration to use all features of the application.
 
 ### Deployment
 
