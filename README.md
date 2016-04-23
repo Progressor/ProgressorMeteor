@@ -74,17 +74,16 @@ You need to either enter valid configuration settings or delete the blocks altog
 
 ### Deployment
 
-## How to deploy
-The application was deployed using *Meteor Up X*. To deploy
-please follow these simple steps:
+The application was deployed using *Meteor Up X*.
 
-1. Install *Nodejs* link: (https://nodejs.org)
-2. Install *Meteor Up X* package using `npm install -g mupx`
-3. In your *.deploy* directory of your project run following commands `mupx deploy`
- 
- Please note, that the mentioned steps only work if you have already configured your server. For instruction how to configure your server 
- please refer to our documentation.
+To deploy, please follow these simple steps:
 
+1. Install [*Node.js*](https://nodejs.org/) (you may use the version included in meteor)
+2. Install [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx) using `npm install -g mupx`
+3. Inside `.meteor-up`, run the command `mupx deploy`
+
+Please note that the mentioned steps only work if you have already configured your server.
+For instruction how to configure your server, please refer to our documentation.
 
 ## MongoDB
 
