@@ -5,6 +5,15 @@
 	// SUBSCRIPTIONS //
 	///////////////////
 
+	//USERS
+
+	Meteor.publish('adminUsers', function () {
+		return Meteor.users.find({ roles: Progressor.ROLE_ADMIN }, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
+	});
+	Meteor.publish('nonAdminUsers', function () {
+		return Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
+	});
+
 	//CATEGORIES
 
 	Meteor.publish('categories', function () {

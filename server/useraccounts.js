@@ -26,7 +26,7 @@
 	Accounts.onCreateUser(function (options, user) {
 		if (options.profile)
 			user.profile = options.profile;
-		if (!Roles.getUsersInRole(Progressor.ROLE_ADMIN).length) {
+		if (!Roles.getUsersInRole(Progressor.ROLE_ADMIN).count()) {
 			//Roles.addUsersToRoles(user._id, Progressor.ROLE_ADMIN);
 			user.roles = [Progressor.ROLE_ADMIN];
 			Houston._admins.insert({ user_id: user._id });
