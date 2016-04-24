@@ -131,7 +131,7 @@
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise();
 				if (isCreate.get())
-					_exercise = _.omit(_exercise, '_id');
+					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
 				exercise.set(Progressor.joinCategory(_exercise));
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
