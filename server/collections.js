@@ -42,9 +42,9 @@
 		}
 
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
-			const isAuthorised = that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
+			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
 
-			if (!isAuthorised && !(exercise.released && exercise.released.confirmed) && (assumeReleased || !getResults(exercise._id).fetch().length))
+			if (!isAuthorised && !(exercise.released && exercise.released.confirmed) && (assumeReleased || !getResults(exercise._id).fetch().length) || !exercise)
 				return unpublishExercise(id);
 
 			if (assumeUnauthorised || !isAuthorised) {
