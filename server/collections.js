@@ -7,11 +7,8 @@
 
 	//USERS
 
-	Meteor.publish('adminUsers', function () {
+	Meteor.publish('users', function () {
 		return Meteor.users.find({ roles: Progressor.ROLE_ADMIN }, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
-	});
-	Meteor.publish('nonAdminUsers', function () {
-		return Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
 	});
 
 	//CATEGORIES
@@ -44,7 +41,7 @@
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
 			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
 
-			if (!isAuthorised && !(exercise.released && exercise.released.confirmed) && (assumeReleased || !getResults(exercise._id).fetch().length) || !exercise)
+			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !getResults(exercise._id).fetch().length))
 				return unpublishExercise(id);
 
 			if (assumeUnauthorised || !isAuthorised) {
