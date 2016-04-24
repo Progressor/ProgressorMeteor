@@ -28,14 +28,16 @@
 
 				return Progressor.exercises.upsert(exercise._id, exercise).insertedId || exercise._id;
 			},
-			toggleArchiveExercise(exercise, archive) {
+			toggleArchiveExercise(exercise, archived) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
-				check(archive, Boolean);
+				check(archived, Boolean);
+
+				exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
 				if (exercise.author_id !== this.userId)
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
 
-				return Progressor.exercises.upsert(exercise._id, { [archive === true ? '$set' : '$unset']: { archived: true } }).rowsAffected;
+				return Progressor.exercises.upsert(exercise._id, { $set: { archived } }).rowsAffected;
 			},
 			deleteExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
