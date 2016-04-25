@@ -145,7 +145,11 @@
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
 			'change .input-option-text': changeExerciseSubtranslation('option'),
-			'change .input-option-checked': changeExerciseSolution((ev, $this) => $this.prop('checked') && $this.val() === 'true'),
+			'change .input-option-checked': () => {
+				changeExerciseSolution((ev, $this) => $this.prop('checked') && $this.val() === 'true');
+				if (exercise.get().solution.length > 1) $('#clickable-property').attr('disabled', true);
+				else $('#clickable-property').attr('disabled', false);
+					},
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
 					exercise.get().released = { requested: new Date() };
