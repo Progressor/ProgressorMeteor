@@ -309,24 +309,27 @@
 				{{/if}}
 			</section>
 		</div>
-		{{#if canSave}}
-			<div class="btn-toolbar separated-top">
+		<div class="btn-toolbar separated-top">
+			{{#if canSave}}
 				<div class="btn-group">
 					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
 					{{#if exists}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
 					<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 				</div>
-				{{#if exists}}
-					<div class="btn-group">
+			{{/if}}
+			{{#if exists}}
+				<div class="btn-group">
+					{{#if canSave}}
 						{{#unless (released.requested)}}
 							<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
 						{{/unless}}
-						{{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
-					</div>
-				{{/if}}
-			</div>
-		{{else}}
+					{{/if}}
+					{{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
+				</div>
+			{{/if}}
+		</div>
+		{{#unless canSave}}
 			<div class="separated-top text-muted">{{i18n "form.cannotSaveMessage"}}</div>
-		{{/if}}
+		{{/unless}}
 	{{/with}}
 </template>
