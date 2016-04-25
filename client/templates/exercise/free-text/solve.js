@@ -65,6 +65,7 @@
 		{
 			'submit #form-answer': ev => ev.preventDefault(),
 			'change .control-answer': () => validationResult.set($('.control-answer')[0].checkValidity()),
+			'click #button-solution': () => $('.control-answer').val(getExercise().solution[0]),
 			'click #button-save-answer'() {
 				const $control = $('.control-answer');
 				if ($control[0].checkValidity()) {

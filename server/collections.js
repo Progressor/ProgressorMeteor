@@ -5,6 +5,12 @@
 	// SUBSCRIPTIONS //
 	///////////////////
 
+	//USERS
+
+	Meteor.publish('users', function () {
+		return Meteor.users.find({}, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
+	});
+
 	//CATEGORIES
 
 	Meteor.publish('categories', function () {
@@ -33,9 +39,9 @@
 		}
 
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
-			const isAuthorised = that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
+			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
 
-			if (!isAuthorised && !(exercise.released && exercise.released.confirmed) && (assumeReleased || !getResults(exercise._id).fetch().length))
+			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !getResults(exercise._id).fetch().length))
 				return unpublishExercise(id);
 
 			if (assumeUnauthorised || !isAuthorised) {

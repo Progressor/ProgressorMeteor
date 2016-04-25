@@ -49,9 +49,9 @@
 			<div class="row">
 				<div class="col-md-6">
 					{{#if pattern}}
-						<form id="form-answer" class="form-inline separated-bottom separated-left">
+						<form id="form-answer" class="form-inline">
 							<div class="form-group {{validation}} {{#if resultEvaluation}}has-feedback{{/if}}">
-								<label for="input-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
+								<label for="input-answer">{{i18n "exercise.answerLabel"}}</label>
 								<input type="text" id="input-answer" class="form-control control-answer" autofocus value="{{answer}}" pattern="{{pattern}}" disabled={{isResult}}>
 								{{#if resultEvaluation}}
 									<span class="glyphicon {{resultEvaluation}} form-control-feedback"></span>
@@ -59,22 +59,21 @@
 							</div>
 							{{#unless isResult}}
 								<button id="button-save-answer" class="btn btn-primary separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
+								{{#if solutionVisible}}
+									<button id="button-solution" class="btn btn-primary">{{i18n "exercise.showSolutionButton"}}</button>
+								{{/if}}
 							{{/unless}}
 						</form>
 					{{else}}
 						<div class="form-group">
-							<label for="textarea-answer">{{i18n "exercise.yourSolutionLabel"}}</label>
+							<label for="textarea-answer">{{i18n "exercise.answerLabel"}}</label>
 							<textarea id="textarea-answer" class="form-control control-answer" rows="10" cols="60" autofocus disabled={{isResult}}>{{answer}}</textarea>
 						</div>
 						{{#unless isResult}}
-							<div class="row">
-								<div class="col-md-12">
-									<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
-									{{#if solutionVisible}}
-										<button id="button-solution" class="btn btn-primary btn-sm pull-right">{{i18n "exercise.showSolutionButton"}}</button>
-									{{/if}}
-								</div>
-							</div>
+							<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+							{{#if solutionVisible}}
+								<button id="button-solution" class="btn btn-primary btn-sm pull-right">{{i18n "exercise.showSolutionButton"}}</button>
+							{{/if}}
 						{{/unless}}
 					{{/if}}
 				</div>

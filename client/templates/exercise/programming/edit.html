@@ -9,11 +9,11 @@
 						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
 						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nName category}}{{/linkTo}}</li>
 						<li class="active">{{i18nDifficulty difficulty}}</li>
-						<li>{{#linkTo route="exerciseSolve" data=exercise}}{{i18nName exercise}}{{/linkTo}}</li>
+						<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
 						<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
 					</ol>
 				</nav>
-				<h2>{{i18n "exercise.editTitle" (i18nName exercise)}}</h2>
+				<h2>{{i18n "exercise.editTitle" (i18nName this)}}</h2>
 			{{else}}
 				<h2>{{i18n "exercise.createTitle"}}</h2>
 			{{/if}}
@@ -81,14 +81,14 @@
 				</div>
 				<div class="tab-content">
 					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}" data-lang="{{_id}}">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" data-lang="{{_id}}" />
+								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
 							</div>
 							<div class="form-group form-group-sm">
 								<label for="textarea-description-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
-								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control" data-lang="{{_id}}">{{description}}</textarea>
+								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
 							</div>
 						</div>
 					{{/each}}
@@ -216,7 +216,7 @@
 							</div>
 							<div class="col-sm-8 text-right">
 								<div class="checkbox nomargin">
-									<label><input type="checkbox" id="checkbox-solution-visible" checked={{exercise.solutionVisible}}> {{i18n "exercise.showSolutionButton"}}</label>
+									<label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionButton"}}</label>
 								</div>
 								<div class="text-danger">
 									{{blackListMessage}}
@@ -313,7 +313,7 @@
 			<div class="btn-toolbar separated-top">
 				<div class="btn-group">
 					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if exists}}{{#linkTo route="exerciseSolve" data=exercise class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
+					{{#if exists}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
 					<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 				</div>
 				{{#if exists}}

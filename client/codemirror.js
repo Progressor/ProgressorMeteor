@@ -35,7 +35,7 @@
 			const user = Meteor.user();
 			let ret = config;
 			if (user && user.profile && user.profile.codeMirrorTheme)
-				ret = _.extend({ theme: user.profile.codeMirrorTheme }, ret);
+				ret = _.extend({}, ret, { theme: user.profile.codeMirrorTheme });
 			return ret;
 		}
 	});

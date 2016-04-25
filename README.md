@@ -69,22 +69,20 @@ The [package documentation](packages/thrift/README.md) contains the instructions
 
 The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
 
-The default configuration is not valid.
-You need to either enter valid configuration settings or delete the blocks altogether.
+The default to provide a valid configuration to use all features of the application.
 
 ### Deployment
 
-## How to deploy
-The application was deployed using *Meteor Up X*. To deploy
-please follow these simple steps:
+The application was deployed using [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx).
 
-1. Install *Nodejs* link: (https://nodejs.org)
-2. Install *Meteor Up X* package using `npm install -g mupx`
-3. In your *.deploy* directory of your project run following commands `mupx deploy`
- 
- Please note, that the mentioned steps only work if you have already configured your server. For instruction how to configure your server 
- please refer to our documentation.
+To deploy, please follow these simple steps:
 
+1. Install [*Node.js*](https://nodejs.org/) (you may use the version included in meteor)
+2. Install [*Meteor Up X*](https://www.npmjs.com/package/mupx) using `npm install -g mupx`
+3. Inside `.meteor-up`, run the command `mupx deploy`
+
+Please note that the mentioned steps only work if you have already configured your server.
+For instruction how to configure your server, please refer to our documentation.
 
 ## MongoDB
 

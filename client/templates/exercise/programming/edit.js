@@ -3,14 +3,14 @@
 
 	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, fragmentTyped, solutionTyped;
 
-	function getDefaultExercise(initInput = true) {
+	function getDefaultExercise() {
 		return {
 			type: 1,
 			names: [],
 			descriptions: [],
 			functions: [{
-				inputNames: initInput ? [null] : [],
-				inputTypes: initInput ? [null] : [],
+				inputNames: [null],
+				inputTypes: [null],
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
@@ -111,7 +111,7 @@
 
 	Template.programmingEdit.onCreated(function () {
 		isCreate = new ReactiveVar(false);
-		exercise = new ReactiveVar(getDefaultExercise(false));
+		exercise = new ReactiveVar(getDefaultExercise());
 		executorTypes = new ReactiveVar(null);
 		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
@@ -129,9 +129,9 @@
 			const live = Progressor.exercises.findOne();
 			const detached = Tracker.nonreactive(() => exercise.get());
 			if (!live || !detached || live._id !== detached._id) {
-				let _exercise = live || getDefaultExercise(false);
+				let _exercise = live || getDefaultExercise();
 				if (isCreate.get())
-					_exercise = _.omit(_exercise, '_id');
+					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
 				exercise.set(Progressor.joinCategory(_exercise));
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
@@ -166,7 +166,6 @@
 				isCreate.set(!context || !context._id);
 				return exercise.get();
 			},
-			exercise: () => exercise.get(),
 			exists: () => exercise.get() && exercise.get()._id,
 			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
@@ -226,36 +225,48 @@
 	}
 
 	function changeExerciseTranslation(translationName) {
-		return changeExercise(function (ev) {
-			const $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'];
-			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
-			if (!value)
-				elements.splice(elementIndex, 1);
-			else if (element)
-				element[translationName] = value;
-			else
-				elements.push({ language: $this.data('lang'), [translationName]: value });
+		return changeExercise(function (ev, $this) {
+			const value = $this.val(), elements = exercise.get()[`${translationName}s`], language = $this.closest('[data-lang]').data('lang');
+			let elementIndex = -1;
+			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
+			if (!value) elements.splice(elementIndex, 1);
+			else if (element) element[translationName] = value;
+			else elements.push({ language, [translationName]: value });
 		});
 	}
 
 	function changeExerciseCollection(collectionName, cssClass, propertiesFunction) {
-		return changeExercise((ev, $this) => _.extend(exercise.get()[collectionName][$this.closest('.' + cssClass).prevAll('.' + cssClass).length], propertiesFunction(ev, $this)));
+		return changeExercise((ev, $this) => _.extend(exercise.get()[collectionName][$this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length], propertiesFunction(ev, $this)));
 	}
 
 	function changeExerciseSubcollection(collectionName, cssClass1, propertyName, cssClass2) {
-		return changeExercise((ev, $this) => exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length][propertyName][$this.closest('.' + cssClass2).prevAll('.' + cssClass2).length] = $this.val());
+		return changeExercise((ev, $this) => exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length][propertyName][$this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length] = $this.val());
+	}
+
+	function addExerciseCollectionItem(collectionName, cssClass, generator) {
+		return changeExercise(function (ev, $this) {
+			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
+			exercise.get()[collectionName].splice(removeIndex + 1, 0, generator(ev, $this));
+		});
+	}
+
+	function addExerciseSubcollectionItem(collectionName, cssClass1, propertyNames, cssClass2, generator) {
+		return changeExercise(function (ev, $this) {
+			const element = exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length], removeIndex = $this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length;
+			_.each(propertyNames, p => element[p].splice(removeIndex + 1, 0, generator(ev, $this)));
+		});
 	}
 
 	function removeExerciseCollectionItem(collectionName, cssClass) {
 		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest('.' + cssClass).prevAll('.' + cssClass).length;
-			exercise.get()[collectionName] = _.filter(exercise.get()[collectionName], (e, i) => i !== removeIndex);
+			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
+			exercise.get()[collectionName].splice(removeIndex, 1);
 		});
 	}
 
-	function removeExerciseSubcollectionItems(collectionName, cssClass1, propertyNames, cssClass2) {
+	function removeExerciseSubcollectionItem(collectionName, cssClass1, propertyNames, cssClass2) {
 		return changeExercise(function (ev, $this) {
-			const element = exercise.get()[collectionName][$this.closest('.' + cssClass1).prevAll('.' + cssClass1).length], removeIndex = $this.closest('.' + cssClass2).prevAll('.' + cssClass2).length;
+			const element = exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length], removeIndex = $this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length;
 			_.each(propertyNames, p => element[p].splice(removeIndex, 1));
 		});
 	}
@@ -286,11 +297,11 @@
 				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
 					$group.addClass('has-error');
 			},
-			'click .btn-add-function': changeExercise(() => exercise.get().functions.push(getDefaultExercise().functions[0])),
-			'click .btn-add-parameter': changeExercise((ev, $this) => exercise.get().functions[$this.closest('.container-function').prevAll('.container-function').length].inputTypes.push(null)),
-			'click .btn-add-testcase': changeExercise(() => exercise.get().testCases.push(getDefaultExercise().testCases[0])),
+			'click .btn-add-function': addExerciseCollectionItem('functions', 'container-function', () => getDefaultExercise().functions[0]),
+			'click .btn-add-parameter': addExerciseSubcollectionItem('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter', () => null),
+			'click .btn-add-testcase': addExerciseCollectionItem('testCases', 'container-testcase', () => getDefaultExercise().testCases[0]),
 			'click .btn-remove-function': removeExerciseCollectionItem('functions', 'container-function'),
-			'click .btn-remove-parameter': removeExerciseSubcollectionItems('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
+			'click .btn-remove-parameter': removeExerciseSubcollectionItem('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
 			'click .btn-remove-testcase': removeExerciseCollectionItem('testCases', 'container-testcase'),
 			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? _.extend(exercise.get(), { programmingLanguage: $this.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),

@@ -8,20 +8,21 @@
 			type: 3,
 			names: [],
 			descriptions: [],
-			solution: null,
+			solution: [],
 			solutionVisible: false
 		};
 	}
 
 	function testRegExp(pattern) {
-		if (!pattern || !pattern.length)
-			return false;
 		try {
-			new RegExp(pattern);
-			return true;
-		} catch (e) {
+			return pattern && pattern.length && new RegExp(pattern);
+		} catch (ex) {
 			return false;
 		}
+	}
+
+	function testSolution(pattern, solution) {
+		return solution && solution.length && new RegExp(pattern).test(solution);
 	}
 
 	function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, pattern, solution }) {
@@ -32,7 +33,7 @@
 					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
 					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
 					 && (!pattern || !pattern.length || testRegExp(pattern))
-					 && notEmpty.test(solution) && new RegExp(pattern).test(solution);
+					 && _.all(solution, s => notEmpty.test(s) && testSolution(pattern, s));
 	}
 
 	Template.textEdit.onRendered(function () {
@@ -42,7 +43,7 @@
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise();
 				if (isCreate.get())
-					_exercise = _.omit(_exercise, '_id');
+					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
 				exercise.set(Progressor.joinCategory(_exercise));
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
@@ -57,10 +58,9 @@
 	Template.textEdit.helpers(
 		{
 			safeExercise(context) {
-				isCreate.set(!context);
+				isCreate.set(!context || !context._id);
 				return exercise.get();
 			},
-			exercise: () => exercise.get(),
 			exists: () => exercise.get() && exercise.get()._id,
 			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
@@ -96,27 +96,35 @@
 	}
 
 	function changeExerciseTranslation(translationName) {
-		return changeExercise(function (ev) {
-			const $this = $(ev.currentTarget), value = $this.val(), elements = exercise.get()[translationName + 's'];
-			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
-			if (!value)
-				elements.splice(elementIndex, 1);
-			else if (element)
-				element[translationName] = value;
-			else
-				elements.push({ language: $this.data('lang'), [translationName]: value });
+		return changeExercise(function (ev, $this) {
+			const value = $this.val(), elements = exercise.get()[`${translationName}s`], language = $this.closest('[data-lang]').data('lang');
+			let elementIndex = -1;
+			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
+			if (!value) elements.splice(elementIndex, 1);
+			else if (element) element[translationName] = value;
+			else elements.push({ language, [translationName]: value });
 		});
 	}
 
 	Template.textEdit.events(
 		{
+			'keyup #input-pattern'(ev) {
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
+				if (pattern && pattern.length && !testRegExp(pattern))
+					$group.addClass('has-error');
+			},
+			'keyup #textarea-solution'(ev) {
+				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $('#input-pattern').val();
+				if (testRegExp(pattern) && !testSolution(pattern, $this.val()))
+					$group.addClass('has-error');
+			},
 			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
 			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
 			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
 			'change #input-pattern': changeExercise((ev, $this) => $this.val().length ? exercise.get().pattern = $this.val() : delete exercise.get().pattern),
-			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = $this.val()),
+			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = [$this.val()]),
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
