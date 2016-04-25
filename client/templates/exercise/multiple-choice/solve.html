@@ -62,6 +62,9 @@
 					</ul>
 					{{#unless isResult}}
 						<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+						{{#if solutionVisible}}
+							<button id="button-solution" class="btn btn-primary btn-sm">{{i18n "exercise.showSolutionButton"}}</button>
+						{{/if}}
 					{{/unless}}
 				</div>
 			</div>

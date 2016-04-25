@@ -100,7 +100,7 @@
 			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
 			if (!value) elements.splice(elementIndex, 1);
 			else if (element) element[translationName] = value;
-			else elements.push({ language: $this.data('lang'), [translationName]: value });
+			else elements.push({ language, [translationName]: value });
 		});
 	}
 
@@ -116,8 +116,9 @@
 
 	function changeExerciseSolution(propertiesFunction) {
 		return changeExercise(function (ev, $this) {
-			const index = $this.closest('.container-option').prevAll('.container-option').length;
+			const index = $this.closest('.container-option').prevAll('.container-option').length, $multiple = $('#checkbox-multiple-solutions');
 			exercise.get().solution = _.chain([_.filter(exercise.get().solution, i => i !== index), _.first([index], propertiesFunction(ev, $this) ? 1 : 0)]).flatten().sortBy(_.identity).value();
+			$multiple.prop('disabled', exercise.get().solution.length > 1).prop('checked', $multiple.prop('checked') || exercise.get().solution.length > 1);
 		});
 	}
 
@@ -145,11 +146,9 @@
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
 			'change .input-option-text': changeExerciseSubtranslation('option'),
-			'change .input-option-checked': () => {
-				changeExerciseSolution((ev, $this) => $this.prop('checked') && $this.val() === 'true');
-				if (exercise.get().solution.length > 1) $('#clickable-property').attr('disabled', true);
-				else $('#clickable-property').attr('disabled', false);
-					},
+			'change .input-option-checked': changeExerciseSolution((ev, $this) => $this.prop('checked') && $this.val() === 'true'),
+			'change #checkbox-multiple-solutions': changeExercise((ev, $this) => exercise.get().multipleSolutions = $this.prop('checked')),
+			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
 					exercise.get().released = { requested: new Date() };

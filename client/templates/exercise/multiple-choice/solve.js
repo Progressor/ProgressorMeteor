@@ -50,6 +50,7 @@
 
 	Template.multipleSolve.events(
 		{
+			'click #button-solution': () => $('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
 			'click #button-save-answer': () => Meteor.call('evaluateMultipleChoice', getExercise(), $('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((err, res) => evaluationResults.set(!err ? res : [])))
 		});
 
