@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, fragmentTyped, solutionTyped;
+	let isCreate, exercise, executorTypes, executionStatus, executionResults, blacklist, blacklistMatches, fragmentTyped, solutionTyped;
 
 	function getDefaultExercise() {
 		return {
@@ -113,6 +113,7 @@
 		isCreate = new ReactiveVar(false);
 		exercise = new ReactiveVar(getDefaultExercise());
 		executorTypes = new ReactiveVar(null);
+		executionStatus = new ReactiveVar(0x0);
 		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
@@ -133,18 +134,24 @@
 				if (isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
 				exercise.set(Progressor.joinCategory(_exercise));
+				executionResults.set([]);
+				fragmentTyped = false;
+				solutionTyped = false;
+				Session.set('fragment', null);
+				Session.set('solution', null);
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
 		this.autorun(function () {
+			const result = Progressor.results.findOne();
 			if (!fragmentTyped && (fragmentTyped = exercise.get() && exercise.get().fragment))
 				Session.set('fragment', exercise.get().fragment);
 			if (!solutionTyped)
 				if (solutionTyped = exercise.get() && exercise.get().solution)
 					Session.set('solution', exercise.get().solution);
-				else if (solutionTyped = Progressor.results.findOne() && Progressor.results.findOne().fragment)
-					Session.set('solution', Progressor.results.findOne().fragment);
+				else if (solutionTyped = result && result.fragment)
+					Session.set('solution', result.fragment);
 			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
 				Meteor.call('getFragment', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Progressor.handleError(function (err, res) {
 					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
@@ -155,8 +162,8 @@
 				if (programmingLanguage)
 					$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
 			}
-			if (!executionResults.get().length && Progressor.results.findOne())
-				executionResults.set(Progressor.results.findOne().results);
+			if (!executionResults.get().length && result)
+				executionResults.set(result.results);
 		});
 	});
 
@@ -209,6 +216,7 @@
 			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
 
 			//execution
+			executionDisabled: () => executionStatus.get() !== 0x0,
 			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', blacklistMatches.get().join(', ')) : null,
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c.original, executionResults.get()),
@@ -338,25 +346,29 @@
 			//execution
 			'click #button-execute'() {
 				const $result = $('.testcase-result').css('opacity', 0.333);
+				executionStatus.set(executionStatus.get() | 0x1);
 				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), true, Progressor.handleError(function (err, res) {
 					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
 					executionResults.set(!err ? res : null);
 					$result.css('opacity', 1);
+					executionStatus.set(executionStatus.get() & ~0x1);
 					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
 				}));
 			},
-			'shown.bs.tab .a-toggle-codemirror': ev => $(`#${$(ev.currentTarget).attr('aria-controls')} .CodeMirror`)[0].CodeMirror.refresh(),
-			'keyup #tab-fragment>.CodeMirror': _.once(() => fragmentTyped = true),
+			'shown.bs.tab .a-toggle-codemirror': ev => $(`#${$(ev.currentTarget).attr('aria-controls')}`).find('.CodeMirror')[0].CodeMirror.refresh(),
+			'keyup #tab-fragment>.CodeMirror': _.throttle(function () {
+				if (!(fragmentTyped = !!Session.get('fragment'))) changeExercise(() => null)();
+			}, 500),
 			'keyup #tab-solution>.CodeMirror': _.throttle(function () {
-				solutionTyped = true;
+				const solution = Session.get('solution');
+				if (!(solutionTyped = !!solution)) changeExercise(() => null)();
 				if (exercise.get().programmingLanguage)
 					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
 						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
 						Meteor.call('getBlacklist', exercise.get().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null)));
 					} else {
-						const solution = Session.get('solution');
 						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
-						$('#button-execute').prop('disabled', blacklistMatches.get().length);
+						executionStatus.set(blacklistMatches.get().length ? executionStatus.get() | 0x2 : executionStatus.get() & ~0x2);
 					}
 			}, 500)
 		});
