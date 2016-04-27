@@ -81,7 +81,7 @@
 				</div>
 				<div class="tab-content">
 					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}" data-lang="{{_id}}">
+						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
@@ -162,7 +162,7 @@
 					</div>
 				</div>
 				{{#each functions}}
-					<div class="container-function">
+					<div>
 						<div class="row">
 							<div class="col-sm-5">
 								<div class="form-group form-group-sm">
@@ -180,7 +180,7 @@
 							</div>
 						</div>
 						{{#each inputs}}
-							<div class="row container-parameter">
+							<div class="row">
 								<div class="col-sm-offset-1 col-sm-4">
 									<div class="form-group form-group-sm">
 										<input type="text" value="{{name}}" class="input-parameter-name form-control" placeholder="{{i18n "exercise.function.parameterNamePlaceholder"}}" />
@@ -246,7 +246,7 @@
 					</div>
 				</div>
 				{{#each testCases}}
-					<div class="row container-testcase">
+					<div class="row">
 						<div class="col-sm-2">
 							<div class="form-group form-group-sm">
 								<select class="select-testcase-function form-control">
@@ -266,8 +266,8 @@
 						</div>
 						<div class="col-sm-4">
 							{{#each inputValues}}
-								<div class="form-group form-group-sm container-inputvalue">
-									<input type="text" value="{{value}}" class="input-testcase-input form-control exec-value" data-type="{{type}}" />
+								<div class="form-group form-group-sm">
+									<input type="text" value="{{value}}" class="input-testcase-input form-control exec-value" />
 								</div>
 							{{else}}
 								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
@@ -275,8 +275,8 @@
 						</div>
 						<div class="col-sm-4">
 							{{#each expectedOutputValues}}
-								<div class="form-group form-group-sm container-outputvalue">
-									<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" data-type="{{type}}" />
+								<div class="form-group form-group-sm">
+									<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" />
 								</div>
 							{{else}}
 								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>

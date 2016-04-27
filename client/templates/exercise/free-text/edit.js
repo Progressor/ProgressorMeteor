@@ -15,7 +15,7 @@
 
 	function testRegExp(pattern) {
 		try {
-			return pattern && pattern.length && new RegExp(pattern);
+			return !pattern || new RegExp(pattern);
 		} catch (ex) {
 			return false;
 		}
@@ -32,7 +32,7 @@
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
 					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
 					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
-					 && (!pattern || !pattern.length || testRegExp(pattern))
+					 && testRegExp(pattern)
 					 && _.all(solution, s => notEmpty.test(s) && testSolution(pattern, s));
 	}
 
@@ -110,7 +110,7 @@
 		{
 			'keyup #input-pattern'(ev) {
 				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
-				if (pattern && pattern.length && !testRegExp(pattern))
+				if (!testRegExp(pattern))
 					$group.addClass('has-error');
 			},
 			'keyup #textarea-solution'(ev) {

@@ -56,14 +56,12 @@
 
 	function changeCategoryTranslation(translationName) {
 		return changeCategory(function (ev) {
-			const $this = $(ev.currentTarget), value = $this.val(), elements = category.get()[translationName + 's'];
-			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
-			if (!value)
-				elements.splice(elementIndex, 1);
-			else if (element)
-				element[translationName] = value;
-			else
-				elements.push({ language: $this.data('lang'), [translationName]: value });
+			const $this = $(ev.currentTarget), value = $this.val(), language = $this.closest('[data-lang]').data('lang'), elements = category.get()[`${translationName}s`];
+			let elementIndex = -1;
+			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
+			if (!value) elements.splice(elementIndex, 1);
+			else if (element) element[translationName] = value;
+			else elements.push({ language, [translationName]: value });
 		});
 	}
 
