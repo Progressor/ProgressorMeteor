@@ -57,7 +57,7 @@
 				const user = Meteor.user(), userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
 				return _.map(Progressor.getCodeMirrorThemes(), theme => ({ _id: theme, isActive: theme === userTheme }));
 			},
-			codeMirrorOptions(isSolution) {
+			codeMirrorOptions(isSolution = false) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(getExercise().programmingLanguage);
 				return _.extend({}, Progressor.getCodeMirrorConfiguration(), { //https://codemirror.net/doc/manual.html
 					autofocus: true,
@@ -81,21 +81,19 @@
 			'click #button-execute'() {
 				Session.set('solution', null);
 				showSolution.set(false);
-				const $result = $('#table-testcases').css('opacity', 1 / 3);
-				executionStatus.set(executionStatus.get() | 0x1);
-				Meteor.call('execute', getExercise().programmingLanguage, { _id: getExercise()._id }, Session.get('fragment'), Progressor.handleError(function (err, res) {
-					executionResults.set(!err ? res : []);
-					$result.css('opacity', 1);
-					executionStatus.set(executionStatus.get() & ~0x1);
-				}));
+				setTimeout(function () {
+					const $result = $('#table-testcases').css('opacity', 1 / 3);
+					executionStatus.set(executionStatus.get() | 0x1);
+					Meteor.call('execute', getExercise().programmingLanguage, { _id: getExercise()._id }, Session.get('fragment'), Progressor.handleError(function (err, res) {
+						executionResults.set(!err ? res : []);
+						$result.css('opacity', 1);
+						executionStatus.set(executionStatus.get() & ~0x1);
+					}));
+				}, 1);
 			},
 			'click #button-solution': () => {
 				Session.set('solution', getExercise().solution);
 				showSolution.set(true);
-			},
-			'click #button-close': () => {
-				Session.set('solution', null);
-				showSolution.set(false);
 			},
 			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {

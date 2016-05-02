@@ -110,31 +110,29 @@
 					<input type="text" id="input-pattern" class="form-control" value="{{pattern}}" />
 				</div>
 				{{#if hasPattern}}
-					<label for="textarea-solution" class="control-label">
-						{{i18n "exercise.solutionLabel"}} <!--ToDo: Change i18n text to plural! -->
+					<label class="control-label">
+						{{i18n "exercise.solutionLabel"}}
 					</label>
 					{{#each solution}}
-						<div class="container-solution">
-							<div class="row">
-								<div class="col-sm-10">
-									<div class="form-group form-group-sm">
-										<input type="text" class="input-solution-text form-control" value="{{text}}" placeholder="{{placeholder}}" />
-									</div>
+						<div class="row container-solution">
+							<div class="col-sm-10">
+								<div class="form-group form-group-sm">
+									<input type="text" class="input-solution form-control" value="{{this}}" />
 								</div>
-								<div class="col-sm-2">
-									<button class="btn btn-success btn-sm btn-add-solution"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
-									<button class="btn btn-danger btn-sm btn-remove-solution"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
-								</div>
+							</div>
+							<div class="col-sm-2">
+								<button class="btn btn-success btn-sm btn-add-solution"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+								<button class="btn btn-danger btn-sm btn-remove-solution"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 							</div>
 						</div>
 					{{/each}}
 				{{else}}
-					<div class="form-group form-group-sm">
+					<div class="form-group form-group-sm container-solution">
 						<label for="textarea-solution" class="control-label">
 							{{i18n "exercise.solutionLabel"}}
 							{{!-- <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> --}}
 						</label>
-						<textarea id="textarea-solution" rows="5" cols="40" class="form-control">{{solution}}</textarea>
+						<textarea id="textarea-solution" class="input-solution form-control" rows="5" cols="40">{{solution.[0]}}</textarea>
 					</div>
 				{{/if}}
 				<div class="text-right">
