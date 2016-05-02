@@ -294,17 +294,19 @@
 							<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
 							<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 							{{#if testCasesEvaluated}}
-								{{#unless executionFatal}}
-									<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
-								{{/unless}}
+							{{! #unless executionFatal}}
+								<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
+							{{! /unless}}
 							{{/if}}
 						</div>
 					</div>
 				{{/each}}
 				{{#if testCasesEvaluated}}
 					{{#if executionFatal}}
-						<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
-						<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+						<div class="testcase-result">
+							<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+							<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+						</div>
 					{{/if}}
 				{{/if}}
 			</section>

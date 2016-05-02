@@ -287,6 +287,18 @@
 		});
 	}
 
+	function execute(template, exercise, callback, rethrow = true) {
+		const $result = template.$('.testcase-result').css('opacity', 0.333);
+		template.executionStatus.set(template.executionStatus.get() | 0x1);
+		Meteor.call('execute', template.exercise.get().programmingLanguage, exercise, Session.get('solution'), true, Progressor.handleError(function (error, result) {
+			template.executionResults.set(!error ? result : null);
+			$result.css('opacity', 1);
+			template.executionStatus.set(template.executionStatus.get() & ~0x1);
+			if (rethrow) callback(error, result);
+			else if (!error) callback(result);
+		}));
+	}
+
 	Template.programmingEdit.events(
 		{
 			'keyup .input-function-name'(event, template) {
@@ -355,8 +367,13 @@
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
 				if (testValidExercise(template.exercise.get()))
 					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(function (result) {
-						Meteor.call('execute', template.exercise.get().programmingLanguage, _.extend({ _id: result }, _.omit(template.exercise.get(), 'category')), Session.get('solution'), true);
-						Router.go('exerciseSolve', { _id: result });
+						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
+						execute(template, { _id: result }, function (error, results) {
+							if (!error && Progressor.isExerciseSuccess(template.exercise.get(), results))
+								Router.go('exerciseSolve', { _id: result });
+							else
+								Progressor.showAlert(i18n('exercise.executionFailureMessage'), 'warning');
+						});
 					}, false));
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
@@ -365,15 +382,10 @@
 
 			//execution
 			'click #button-execute'(event, template) {
-				const $result = template.$('.testcase-result').css('opacity', 0.333);
-				template.executionStatus.set(template.executionStatus.get() | 0x1);
-				Meteor.call('execute', template.exercise.get().programmingLanguage, _.omit(template.exercise.get(), 'category'), Session.get('solution'), true, Progressor.handleError(function (error, result) {
+				execute(template, _.omit(template.exercise.get(), 'category'), function (error, result) {
 					const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);
-					template.executionResults.set(!error ? result : null);
-					$result.css('opacity', 1);
-					template.executionStatus.set(template.executionStatus.get() & ~0x1);
 					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
-				}));
+				});
 			},
 			'shown.bs.tab .a-toggle-codemirror'(event, template) {
 				template.$(`#${$(event.currentTarget).attr('aria-controls')}`).find('.CodeMirror')[0].CodeMirror.refresh();

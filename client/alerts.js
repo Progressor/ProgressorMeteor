@@ -7,12 +7,12 @@
 			Meteor.setTimeout(() => $alert.addClass('in'), 1);
 			Meteor.setTimeout(() => $alert.alert('close'), duration);
 		},
-		handleError(cb = null, rethrow = true) {
-			return function (err, res) {
-				if (err) Progressor.showAlert(i18n('layout.unexpectedErrorMessage', String(err)), 'danger', 7500);
-				if (cb)
-					if (rethrow) cb(err, res);
-					else if (!err) cb(res);
+		handleError(callback = null, rethrow = true) {
+			return function (error, result) {
+				if (error) Progressor.showAlert(i18n('layout.unexpectedErrorMessage', String(error)), 'danger', 7500);
+				if (callback)
+					if (rethrow) callback(error, result);
+					else if (!error) callback(result);
 			};
 		}
 	});
