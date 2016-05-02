@@ -7,8 +7,8 @@
 			names: [],
 			descriptions: [],
 			functions: [{
-				inputNames: [null],
-				inputTypes: [null],
+				inputNames: [],
+				inputTypes: [],
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
@@ -199,25 +199,32 @@
 				name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
 				description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
 			})),
-			functions: testCase => _.map(tmpl().exercise.get().functions, (_function, index) => _.extend({}, _function, {
-				original: _function, functionIndex: index,
+			functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
+				original: _function, functionIndex,
+				isActive: testCase && testCase.functionName === _function.name,
 				outputType: _function.outputTypes[0],
-				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : getDefaultExercise().functions[0].inputTypes, (t, i) => ({ type: t, functionIndex: index, inputNameIndex: i, inputTypeIndex: i, name: _function.inputNames ? _function.inputNames[i] : null })),
-				isActive: testCase && testCase.functionName === _function.name
+				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : [null], (t, i) => ({
+					functionIndex, inputNameIndex: i, inputTypeIndex: i,
+					name: _function.inputNames ? _function.inputNames[i] : null, type: t
+				}))
 			})),
-			testCases: () => _.map(tmpl().exercise.get().testCases, (testCase, index) => {
+			testCases: () => _.map(tmpl().exercise.get().testCases, (testCase, testCaseIndex) => {
 				function adjustValues(valueName, typeName) {
-					const _function = _.find(tmpl().exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
 					const values = testCase[`${valueName}s`], types = _function ? _function[`${typeName}s`] : null;
 					if (types) {
 						if (values.length < types.length) values.push(..._.chain(types.length - values.length).range().map(() => null).value());
 						else if (values.length > types.length) values.splice(types.length);
 					}
-					return _.map(values, (v, i) => ({ value: v, testCaseIndex: index, [`${valueName}Index`]: i, type: types ? types[i] : null }));
+					return _.map(values, (v, i) => ({
+						testCaseIndex, functionIndex, [`${valueName}Index`]: i,
+						value: v, type: types ? types[i] : null
+					}));
 				}
 
+				let functionIndex = -1;
+				const _function = _.find(tmpl().exercise.get().functions, (f, i) => (functionIndex = f.name === testCase.functionName && testCase.functionName !== undefined ? i : functionIndex) >= 0);
 				return _.extend({}, testCase, {
-					original: testCase, testCaseIndex: index,
+					original: testCase, testCaseIndex, functionIndex,
 					inputValues: adjustValues('inputValue', 'inputType'),
 					expectedOutputValues: adjustValues('expectedOutputValue', 'outputType')
 				});
@@ -271,23 +278,12 @@
 		});
 	}
 
-	function addExerciseSubcollection(collectionName, propertyNames, generator) {
-		return changeExercise(function (event, template, $this) {
-			const element = tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]];
-			_.each(propertyNames, p => element[`${p}s`].splice(this[`${p}Index`] + 1, 0, generator.call(this, event, template, $this)));
-		});
-	}
-
 	function removeExerciseCollection(collectionName) {
 		return changeExercise(function () {
-			tmpl().exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`], 1);
-		});
-	}
-
-	function removeExerciseSubcollection(collectionName, propertyNames) {
-		return changeExercise(function () {
-			const element = tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]];
-			_.each(propertyNames, p => element[`${p}s`].splice(this[`${p}Index`], 1));
+			let collection = tmpl().exercise.get()[`${collectionName}s`];
+			collection.splice(this[`${collectionName}Index`], 1);
+			if (!collection.length)
+				collection.push(getDefaultExercise()[`${collectionName}s`][0]);
 		});
 	}
 
@@ -318,11 +314,21 @@
 					$group.addClass('has-error');
 			},
 			'click .btn-add-function': addExerciseCollection('function', () => getDefaultExercise().functions[0]),
-			'click .btn-add-parameter': addExerciseSubcollection('function', ['inputName', 'inputType'], () => null),
-			'click .btn-add-testcase': addExerciseCollection('testCase', () => getDefaultExercise().testCases[0]),
 			'click .btn-remove-function': removeExerciseCollection('function'),
-			'click .btn-remove-parameter': removeExerciseSubcollection('function', ['inputName', 'inputType']),
+			'click .btn-add-testcase': addExerciseCollection('testCase', () => getDefaultExercise().testCases[0]),
 			'click .btn-remove-testcase': removeExerciseCollection('testCase'),
+			'click .btn-add-parameter': changeExercise(function () {
+				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+				_function.inputNames.splice(this.inputNameIndex + 1, 0, null);
+				_function.inputTypes.splice(this.inputTypeIndex + 1, 0, null);
+				_.chain(exercise.testCases).filter(t => t.functionName === _function.name).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
+			}),
+			'click .btn-remove-parameter': changeExercise(function () {
+				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+				_function.inputNames.splice(this.inputNameIndex, 1);
+				_function.inputTypes.splice(this.inputTypeIndex, 1);
+				_.chain(exercise.testCases).filter(t => t.functionName === _function.name).each(t => t.inputValues.splice(this.inputNameIndex, 1));
+			}),
 			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
 			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
