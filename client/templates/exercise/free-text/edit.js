@@ -52,6 +52,7 @@
 
 	Template.textEdit.onCreated(function () {
 		isCreate = new ReactiveVar(false);
+		hasPattern = new ReactiveVar(false);
 		exercise = new ReactiveVar(getDefaultExercise());
 	});
 
