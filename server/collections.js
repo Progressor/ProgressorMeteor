@@ -41,7 +41,7 @@
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
 			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
 
-			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.any(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
+			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
 				return unpublishExercise(id);
 
 			if (assumeUnauthorised || !isAuthorised) {

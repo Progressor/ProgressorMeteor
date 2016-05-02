@@ -22,10 +22,10 @@
 			exerciseSearchData: l => () => ({ _id: l }),
 			difficultiesExercises(difficulties, exercises) {
 				const exercisesSorted = _.chain(exercises).sortBy(i18n.getName);
-				return _.map(difficulties, function (d) {
-					const difficultyExercises = exercisesSorted.filter(e => e.difficulty === d).value(), nofDifficultyExercises = difficultyExercises.length, exercisesPerColumn = Math.ceil(nofDifficultyExercises / numberOfColumns);
+				return _.map(difficulties, difficulty => {
+					const difficultyExercises = exercisesSorted.where({ difficulty }).value(), nofDifficultyExercises = difficultyExercises.length, exercisesPerColumn = Math.ceil(nofDifficultyExercises / numberOfColumns);
 					return {
-						_id: d,
+						_id: difficulty,
 						exercises: difficultyExercises,
 						exerciseColumns: _.map(_.range(0, numberOfColumns), c => ({ _id: c, exercises: difficultyExercises.slice(exercisesPerColumn * c, exercisesPerColumn * (c + 1)) }))
 					};

@@ -86,24 +86,24 @@
 		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
 					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
-					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
-					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
+					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
 					 && functions && functions.length && testValidFunctions(exercise)
 					 && testCases && testCases.length && testValidTestCases(exercise);
 	}
 
 	function testValidFunctions({ functions }) {
-		return _.all(functions, f => f.name && testExecutorIdentifier(f.name)
-																 && f.inputNames.length === f.inputTypes.length && _.all(f.inputNames, n => n && testExecutorIdentifier(n)) && _.all(f.inputTypes, t => t && testExecutorType(t))
-																 && f.outputNames.length === f.outputTypes.length && _.all(f.outputNames, n => n && testExecutorIdentifier(n)) && _.all(f.outputTypes, t => t && testExecutorType(t)));
+		return _.every(functions, f => f.name && testExecutorIdentifier(f.name)
+																	 && f.inputNames.length === f.inputTypes.length && _.every(f.inputNames, n => n && testExecutorIdentifier(n)) && _.every(f.inputTypes, t => t && testExecutorType(t))
+																	 && f.outputNames.length === f.outputTypes.length && _.every(f.outputNames, n => n && testExecutorIdentifier(n)) && _.every(f.outputTypes, t => t && testExecutorType(t)));
 	}
 
 	function testValidTestCases({ functions, testCases }) {
-		return _.all(testCases, testCase => {
-			const _function = _.find(functions, f => f.name === testCase.functionName);
+		return _.every(testCases, testCase => {
+			const _function = _.where(functions, { name: testCase.functionName });
 			return testCase.functionName && _function
-						 && _function.inputTypes.length === testCase.inputValues.length && _.all(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
-						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.all(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
+						 && _function.inputTypes.length === testCase.inputValues.length && _.every(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
+						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.every(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
 		});
 	}
 
@@ -333,13 +333,13 @@
 				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex + 1, 0, null);
 				_function.inputTypes.splice(this.inputTypeIndex + 1, 0, null);
-				_.chain(exercise.testCases).filter(t => t.functionName === _function.name).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
+				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
 			}),
 			'click .btn-remove-parameter': changeExercise(function () {
 				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex, 1);
 				_function.inputTypes.splice(this.inputTypeIndex, 1);
-				_.chain(exercise.testCases).filter(t => t.functionName === _function.name).each(t => t.inputValues.splice(this.inputNameIndex, 1));
+				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
 			}),
 			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
