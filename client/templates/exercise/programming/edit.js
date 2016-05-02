@@ -103,7 +103,7 @@
 			const _function = _.find(functions, f => f.name === testCase.functionName);
 			return testCase.functionName && _function
 						 && _function.inputTypes.length === testCase.inputValues.length && _.all(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
-						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.all(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]))
+						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.all(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
 		});
 	}
 

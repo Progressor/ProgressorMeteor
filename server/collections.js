@@ -203,7 +203,7 @@
 			return Progressor[collection].update(document._id, { [document[flag] !== true ? '$set' : '$unset']: { [flag]: true } }) === 1
 				? `${elementName} '${document._id}' successfully ${document[flag] !== true ? setName : unsetName}.`
 				: `${elementName} '${document._id}' could NOT successfully be ${document[flag] !== true ? setName : unsetName}!`;
-		}
+		};
 	}
 
 	Houston.methods(Progressor.exercises, {
