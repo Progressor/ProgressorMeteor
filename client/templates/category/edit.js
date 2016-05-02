@@ -9,9 +9,9 @@
 
 	function testValidCategory({ programmingLanguage, names, descriptions }) {
 		const notEmpty = /[^\s]+/;
-		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
-					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
-					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description));
+		return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
+					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description));
 	}
 
 	Template.categoryEdit.onCreated(function () {
@@ -56,14 +56,12 @@
 
 	function changeCategoryTranslation(translationName) {
 		return changeCategory(function (ev) {
-			const $this = $(ev.currentTarget), value = $this.val(), elements = category.get()[translationName + 's'];
-			let elementIndex = -1, element = _.find(elements, (e, i) => (elementIndex = e.language === $this.data('lang') ? i : elementIndex) >= 0);
-			if (!value)
-				elements.splice(elementIndex, 1);
-			else if (element)
-				element[translationName] = value;
-			else
-				elements.push({ language: $this.data('lang'), [translationName]: value });
+			const $this = $(ev.currentTarget), value = $this.val(), language = $this.closest('[data-lang]').data('lang'), elements = category.get()[`${translationName}s`];
+			let elementIndex = -1;
+			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
+			if (!value) elements.splice(elementIndex, 1);
+			else if (element) element[translationName] = value;
+			else elements.push({ language, [translationName]: value });
 		});
 	}
 

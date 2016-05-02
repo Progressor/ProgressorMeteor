@@ -41,7 +41,7 @@
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
 			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
 
-			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.any(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
+			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
 				return unpublishExercise(id);
 
 			if (assumeUnauthorised || !isAuthorised) {
@@ -88,32 +88,32 @@
 
 	Meteor.publish('releaseRequestedExercises', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
-		publishExercises.bind(this)({ category_id: { $exists: true }, 'released.requested': { $exists: true } }, true);
+		publishExercises.call(this, { category_id: { $exists: true }, 'released.requested': { $exists: true } }, true);
 	});
 	Meteor.publish('releasedExercises', function () {
-		publishExercises.bind(this)({ category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
+		publishExercises.call(this, { category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
 	});
 	Meteor.publish('releasedOrMyExercises', function () {
-		publishExercises.bind(this)({ category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: this.userId } /*,{ lastEditor_id: this.userId }*/] }, true);
+		publishExercises.call(this, { category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: this.userId } /*,{ lastEditor_id: this.userId }*/] }, true);
 	});
 	Meteor.publish('releasedExercisesForCategory', function (category) {
 		check(category, String);
-		publishExercises.bind(this)({ category_id: category, 'released.confirmed': { $exists: true } }, true);
+		publishExercises.call(this, { category_id: category, 'released.confirmed': { $exists: true } }, true);
 	});
 	Meteor.publish('releasedExercisesForLanguage', function (language) {
 		check(language, String);
-		publishExercises.bind(this)({ programmingLanguage: language, category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
+		publishExercises.call(this, { programmingLanguage: language, category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
 	});
 	Meteor.publish('exercise', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishExercises.bind(this)({ _id: id, category_id: { $exists: true } }, false, isExecute);
+		publishExercises.call(this, { _id: id, category_id: { $exists: true } }, false, isExecute);
 	});
 	Meteor.publish('exerciseByResult', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
-		return result ? publishExercises.bind(this)({ _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
+		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
@@ -179,12 +179,12 @@
 	Meteor.publish('myResult', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishResults.bind(this)({ user_id: this.userId, _id: id }, isExecute);
+		publishResults.call(this, { user_id: this.userId, _id: id }, isExecute);
 	});
 	Meteor.publish('myResultByExercise', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishResults.bind(this)({ user_id: this.userId, exercise_id: id }, isExecute);
+		publishResults.call(this, { user_id: this.userId, exercise_id: id }, isExecute);
 	});
 
 	///////////////////////////
@@ -203,7 +203,7 @@
 			return Progressor[collection].update(document._id, { [document[flag] !== true ? '$set' : '$unset']: { [flag]: true } }) === 1
 				? `${elementName} '${document._id}' successfully ${document[flag] !== true ? setName : unsetName}.`
 				: `${elementName} '${document._id}' could NOT successfully be ${document[flag] !== true ? setName : unsetName}!`;
-		}
+		};
 	}
 
 	Houston.methods(Progressor.exercises, {

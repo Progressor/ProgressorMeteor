@@ -49,18 +49,18 @@
 		</ul>
 		<div class="tab-content">
 			{{#each i18nCategoryNamesDescriptions}}
-				<div role="tabpanel" id="tab-{{_id}}" class="tab-pane {{#if isActive}}active{{/if}}">
+				<div role="tabpanel" id="tab-{{_id}}" class="tab-pane {{#if isActive}}active{{/if}}" data-lang="{{_id}}">
 					<div class="row">
 						<div class="col-md-8 col-lg-5">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" data-lang="{{_id}}" />
+								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
 							</div>
 						</div>
 					</div>
 					<div class="form-group form-group-sm">
 						<label for="textarea-description-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
-						<textarea id="textarea-description-{{_id}}" rows="20" cols="40" class="form-control" data-lang="{{_id}}">{{description}}</textarea>
+						<textarea id="textarea-description-{{_id}}" rows="20" cols="40" class="form-control">{{description}}</textarea>
 					</div>
 				</div>
 			{{/each}}

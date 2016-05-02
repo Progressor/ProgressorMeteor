@@ -15,7 +15,7 @@
 
 	function testRegExp(pattern) {
 		try {
-			return pattern && pattern.length && new RegExp(pattern);
+			return !pattern || new RegExp(pattern);
 		} catch (ex) {
 			return false;
 		}
@@ -27,13 +27,13 @@
 
 	function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, pattern, solution }) {
 		const notEmpty = /[^\s]+/;
-		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
+		return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
 					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
-					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
-					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
-					 && (!pattern || !pattern.length || testRegExp(pattern))
-					 && _.all(solution, s => notEmpty.test(s) && testSolution(pattern, s));
+					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
+					 && testRegExp(pattern)
+					 && _.every(solution, s => notEmpty.test(s) && testSolution(pattern, s));
 	}
 
 	Template.textEdit.onRendered(function () {
@@ -131,8 +131,7 @@
 			'click .btn-remove-solution': removeExerciseCollectionItem('solution'),
 			'keyup #input-pattern'(ev) {
 				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
-				hasPattern = pattern.length > 0;
-				if (pattern && pattern.length && !testRegExp(pattern))
+				if (!testRegExp(pattern))
 					$group.addClass('has-error');
 			},
 			'keyup #textarea-solution'(ev) {
@@ -158,7 +157,6 @@
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false))
-
 		});
 
 })();

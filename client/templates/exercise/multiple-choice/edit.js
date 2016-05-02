@@ -20,12 +20,12 @@
 
 	function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, options }) {
 		const notEmpty = /[^\s]+/;
-		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
+		return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
 					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
-					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
-					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
-					 && options && options.length && _.chain(_.chain(_.map(options, o => o.options.length)).max().value()).range().all(i => _.any(options, o => o.options[i] && notEmpty.test(o.options[i]))).value();
+					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
+					 && options && options.length && _.chain(_.chain(_.map(options, o => o.options.length)).max().value()).range().every(i => _.some(options, o => o.options[i] && notEmpty.test(o.options[i]))).value();
 	}
 
 	Template.multipleEdit.onRendered(function () {
@@ -159,4 +159,5 @@
 			}),
 			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false))
 		});
+
 })();

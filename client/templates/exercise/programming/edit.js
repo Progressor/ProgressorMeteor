@@ -1,16 +1,14 @@
 (function () {
 	'use strict';
 
-	let isCreate, exercise, executorTypes, executionResults, blacklist, blacklistMatches, fragmentTyped, solutionTyped;
-
 	function getDefaultExercise() {
 		return {
 			type: 1,
 			names: [],
 			descriptions: [],
 			functions: [{
-				inputNames: [null],
-				inputTypes: [null],
+				inputNames: [],
+				inputTypes: [],
 				outputNames: ['return'],
 				outputTypes: [null]
 			}],
@@ -26,11 +24,11 @@
 	}
 
 	function testExecutorIdentifier(value) {
-		return value.length === 0 || /^[A-Z_][A-Z0-9_]*$/i.test(value);
+		return !value || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
 
 	function testExecutorType(type, isRecursive = false) {
-		const executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
+		const executorType = tmpl().executorTypes.get() ? _.find(tmpl().executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
 		let index = executorType ? executorType._id.length : 0;
 		if (!executorType) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
 		else if (executorType.parameterCount > 0) { //if the type has parameters
@@ -50,7 +48,7 @@
 	}
 
 	function testExecutorValue(value, type, isRecursive = false, separator = null) {
-		const executorType = executorTypes.get() ? _.find(executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
+		const executorType = tmpl().executorTypes.get() ? _.find(tmpl().executorTypes.get().types, t => type && type.substr(0, t._id.length) === t._id) : null;
 		let typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
 		if (executorType.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
 			if (!(match = value.match(separator ? `^(${executorType.pattern}?(?=${separator})|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
@@ -84,149 +82,176 @@
 
 	function testValidExercise(exercise) {
 		const notEmpty = /[^\s]+/;
-		const { programmingLanguage, category_id, difficulty, names, descriptions } = exercise;
+		const { programmingLanguage, category_id, difficulty, names, descriptions, functions, testCases } = exercise;
 		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
 					 && category_id && Progressor.categories.find({ _id: category_id }).count() === 1
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
-					 && names && names.length && _.any(names, n => n.name && notEmpty.test(n.name))
-					 && descriptions && descriptions.length && _.any(descriptions, d => d.description && notEmpty.test(d.description))
-					 && exercise.functions && exercise.functions.length && testValidFunctions(exercise)
-					 && exercise.testCases && exercise.testCases.length && testValidTestCases(exercise);
+					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
+					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
+					 && functions && functions.length && testValidFunctions(exercise)
+					 && testCases && testCases.length && testValidTestCases(exercise);
 	}
 
 	function testValidFunctions({ functions }) {
-		return _.all(functions, f => f.name && testExecutorIdentifier(f.name)
-																 && f.inputNames.length === f.inputTypes.length && _.all(f.inputNames, n => n && testExecutorIdentifier(n)) && _.all(f.inputTypes, t => t && testExecutorType(t))
-																 && f.outputNames.length === f.outputTypes.length && _.all(f.outputNames, n => n && testExecutorIdentifier(n)) && _.all(f.outputTypes, t => t && testExecutorType(t)));
+		return _.every(functions, f => f.name && testExecutorIdentifier(f.name)
+																	 && f.inputNames.length === f.inputTypes.length && _.every(f.inputNames, n => n && testExecutorIdentifier(n)) && _.every(f.inputTypes, t => t && testExecutorType(t))
+																	 && f.outputNames.length === f.outputTypes.length && _.every(f.outputNames, n => n && testExecutorIdentifier(n)) && _.every(f.outputTypes, t => t && testExecutorType(t)));
 	}
 
 	function testValidTestCases({ functions, testCases }) {
-		return _.all(testCases, testCase => {
-			const _function = _.find(functions, f => f.name === testCase.functionName);
+		return _.every(testCases, testCase => {
+			const _function = _.where(functions, { name: testCase.functionName });
 			return testCase.functionName && _function
-						 && _function.inputTypes.length === testCase.inputValues.length && _.all(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
-						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.all(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]))
+						 && _function.inputTypes.length === testCase.inputValues.length && _.every(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
+						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.every(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
 		});
 	}
 
 	Template.programmingEdit.onCreated(function () {
-		isCreate = new ReactiveVar(false);
-		exercise = new ReactiveVar(getDefaultExercise());
-		executorTypes = new ReactiveVar(null);
-		executionResults = new ReactiveVar([]);
-		blacklist = new ReactiveVar(null);
-		blacklistMatches = new ReactiveVar([]);
-		fragmentTyped = false;
-		solutionTyped = false;
+		this.isCreate = new ReactiveVar(false);
+		this.exercise = new ReactiveVar(getDefaultExercise());
+		this.executorTypes = new ReactiveVar(null);
+		this.executionStatus = new ReactiveVar(0x0);
+		this.executionResults = new ReactiveVar([]);
+		this.blacklist = new ReactiveVar(null);
+		this.blacklistMatches = new ReactiveVar([]);
+		this.fragmentTyped = false;
+		this.solutionTyped = false;
 		Session.set('fragment', null);
 		Session.set('solution', null);
 	});
 
 	Template.programmingEdit.onRendered(function () {
-		Meteor.call('getExecutorTypes', Progressor.handleError(res => executorTypes.set(res), false));
+		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
 
-		this.autorun(function () {
+		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
-			const detached = Tracker.nonreactive(() => exercise.get());
+			const detached = Tracker.nonreactive(() => this.exercise.get());
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise();
-				if (isCreate.get())
+				if (this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
-				exercise.set(Progressor.joinCategory(_exercise));
+				this.exercise.set(Progressor.joinCategory(_exercise));
+				this.executionResults.set([]);
+				this.fragmentTyped = false;
+				this.solutionTyped = false;
+				Session.set('fragment', null);
+				Session.set('solution', null);
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
-		this.autorun(function () {
-			if (!fragmentTyped && (fragmentTyped = exercise.get() && exercise.get().fragment))
-				Session.set('fragment', exercise.get().fragment);
-			if (!solutionTyped)
-				if (solutionTyped = exercise.get() && exercise.get().solution)
-					Session.set('solution', exercise.get().solution);
-				else if (solutionTyped = Progressor.results.findOne() && Progressor.results.findOne().fragment)
-					Session.set('solution', Progressor.results.findOne().fragment);
-			if ((!fragmentTyped || !solutionTyped) && exercise.get() && exercise.get().programmingLanguage && testValidFunctions(exercise.get()))
-				Meteor.call('getFragment', exercise.get().programmingLanguage, _.omit(exercise.get(), '_id', 'category'), Progressor.handleError(function (err, res) {
-					if (!fragmentTyped) Session.set('fragment', !err ? res : null);
-					if (!solutionTyped) Session.set('solution', !err ? res : null);
+		this.autorun(() => {
+			const result = Progressor.results.findOne();
+			if (!this.fragmentTyped && (this.fragmentTyped = this.exercise.get() && this.exercise.get().fragment))
+				Session.set('fragment', this.exercise.get().fragment);
+			if (!this.solutionTyped)
+				if (this.solutionTyped = this.exercise.get() && this.exercise.get().solution)
+					Session.set('solution', this.exercise.get().solution);
+				else if (this.solutionTyped = result && result.fragment)
+					Session.set('solution', result.fragment);
+			if ((!this.fragmentTyped || !this.solutionTyped) && this.exercise.get() && this.exercise.get().programmingLanguage && testValidFunctions(this.exercise.get()))
+				Meteor.call('getFragment', this.exercise.get().programmingLanguage, _.omit(this.exercise.get(), '_id', 'category'), Progressor.handleError((error, result) => {
+					if (!this.fragmentTyped) Session.set('fragment', !error ? result : null);
+					if (!this.solutionTyped) Session.set('solution', !error ? result : null);
 				}));
-			if (exercise.get() && exercise.get().programmingLanguage) {
-				const programmingLanguage = Progressor.getProgrammingLanguage(exercise.get().programmingLanguage);
+			if (this.exercise.get() && this.exercise.get().programmingLanguage) {
+				const programmingLanguage = Progressor.getProgrammingLanguage(this.exercise.get().programmingLanguage);
 				if (programmingLanguage)
-					$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
+					this.$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
 			}
-			if (!executionResults.get().length && Progressor.results.findOne())
-				executionResults.set(Progressor.results.findOne().results);
+			if (!this.executionResults.get().length && result)
+				this.executionResults.set(result.results);
 		});
 	});
+
+	function tmpl() {
+		return Template.instance();
+	}
 
 	Template.programmingEdit.helpers(
 		{
 			safeExercise(context) {
-				isCreate.set(!context || !context._id);
-				return exercise.get();
+				tmpl().isCreate.set(!context || !context._id);
+				return tmpl().exercise.get();
 			},
-			exists: () => exercise.get() && exercise.get()._id,
-			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
-			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
-			exerciseDuplicateQuery: () => ({ duplicate: exercise.get()._id }),
-			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
+			exists: () => tmpl().exercise.get() && tmpl().exercise.get()._id,
+			canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
+			exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
+			exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
+			categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id ? { _id: tmpl().exercise.get().category_id } : null),
 			userName: Progressor.getUserName,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
-				isActive: language._id === exercise.get().programmingLanguage
+				isActive: language._id === tmpl().exercise.get().programmingLanguage
 			})),
-			i18nCategories: () => Progressor.categories.find({ programmingLanguage: exercise.get().programmingLanguage }).map(category => _.extend({}, category, {
+			i18nCategories: () => Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).map(category => _.extend({}, category, {
 				name: i18n.getName(category),
-				isActive: category._id === exercise.get().category_id
+				isActive: category._id === tmpl().exercise.get().category_id
 			})),
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
-				isActive: difficulty === exercise.get().difficulty
+				isActive: difficulty === tmpl().exercise.get().difficulty
 			})),
 			codeMirrorOptions: () => Progressor.getCodeMirrorConfiguration(),
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
-				name: i18n.getNameForLanguage(exercise.get(), id),
-				description: i18n.getDescriptionForLanguage(exercise.get(), id)
+				name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
+				description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
 			})),
-			functions: testCase => _.map(exercise.get().functions, _function => _.extend({}, _function, {
-				original: _function,
+			functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
+				original: _function, functionIndex,
+				isActive: testCase && testCase.functionName === _function.name,
 				outputType: _function.outputTypes[0],
-				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : getDefaultExercise().functions[0].inputTypes, (t, i) => ({ type: t, name: _function.inputNames ? _function.inputNames[i] : null })),
-				isActive: testCase && testCase.functionName === _function.name
+				inputs: _.map(_function.inputTypes.length ? _function.inputTypes : [null], (t, i) => ({
+					functionIndex, inputNameIndex: i, inputTypeIndex: i,
+					name: _function.inputNames ? _function.inputNames[i] : null, type: t
+				}))
 			})),
-			testCases: () => _.map(exercise.get().testCases, function (testCase) {
-				const _function = _.find(exercise.get().functions, f => f.name === testCase.functionName && testCase.functionName !== undefined);
-				const fillValues = (values, types) => types ? _.chain([values, _.map(_.range(types.length), () => null)]).flatten().first(types.length).map((v, i) => ({ value: v, type: types[i] })).value() : _.map(values, (v, i) => ({ value: v }));
+			testCases: () => _.map(tmpl().exercise.get().testCases, (testCase, testCaseIndex) => {
+				function adjustValues(valueName, typeName) {
+					const values = testCase[`${valueName}s`], types = _function ? _function[`${typeName}s`] : null;
+					if (types) {
+						if (values.length < types.length) values.push(..._.chain(types.length - values.length).range().map(() => null).value());
+						else if (values.length > types.length) values.splice(types.length);
+					}
+					return _.map(values, (v, i) => ({
+						testCaseIndex, functionIndex, [`${valueName}Index`]: i,
+						value: v, type: types ? types[i] : null
+					}));
+				}
+
+				let functionIndex = -1;
+				const _function = _.find(tmpl().exercise.get().functions, (f, i) => (functionIndex = f.name === testCase.functionName && testCase.functionName !== undefined ? i : functionIndex) >= 0);
 				return _.extend({}, testCase, {
-					original: testCase,
-					inputValues: fillValues(testCase.inputValues, _function ? _function.inputTypes : null),
-					expectedOutputValues: fillValues(testCase.expectedOutputValues, _function ? _function.outputTypes : null)
+					original: testCase, testCaseIndex, functionIndex,
+					inputValues: adjustValues('inputValue', 'inputType'),
+					expectedOutputValues: adjustValues('expectedOutputValue', 'outputType')
 				});
 			}),
-			executorTypes: () => executorTypes.get() ? executorTypes.get().types : [],
-			executorValues: () => executorTypes.get() ? _.map(executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
+			executorTypes: () => tmpl().executorTypes.get() ? tmpl().executorTypes.get().types : [],
+			executorValues: () => tmpl().executorTypes.get() ? _.map(tmpl().executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
 
 			//execution
-			blackListMessage: () => blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', blacklistMatches.get().join(', ')) : null,
-			testCasesEvaluated: () => Progressor.isExerciseEvaluated(exercise.get(), executionResults.get()),
-			testCaseSuccess: c => Progressor.isTestCaseSuccess(exercise.get(), c.original, executionResults.get()),
-			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(exercise.get(), c.original, executionResults.get()),
-			executionFatal: () => Progressor.isExerciseFatal(exercise.get(), executionResults.get())
+			executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
+			blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
+			testCasesEvaluated: () => Progressor.isExerciseEvaluated(tmpl().exercise.get(), tmpl().executionResults.get()),
+			testCaseSuccess: c => Progressor.isTestCaseSuccess(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
+			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
+			executionFatal: () => Progressor.isExerciseFatal(tmpl().exercise.get(), tmpl().executionResults.get())
 		});
 
-	function changeExercise(cb) {
-		return function (ev) {
-			const ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
-			exercise.dep.changed();
+	function changeExercise(callback) {
+		return function (event, template) {
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			tmpl().exercise.dep.changed();
 			return ret;
 		};
 	}
 
 	function changeExerciseTranslation(translationName) {
-		return changeExercise(function (ev, $this) {
-			const value = $this.val(), elements = exercise.get()[`${translationName}s`], language = $this.closest('[data-lang]').data('lang');
+		return changeExercise(function (event, template, $this) {
+			const value = $this.val(), elements = tmpl().exercise.get()[`${translationName}s`], language = this._id;
 			let elementIndex = -1;
 			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
 			if (!value) elements.splice(elementIndex, 1);
@@ -235,128 +260,149 @@
 		});
 	}
 
-	function changeExerciseCollection(collectionName, cssClass, propertiesFunction) {
-		return changeExercise((ev, $this) => _.extend(exercise.get()[collectionName][$this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length], propertiesFunction(ev, $this)));
-	}
-
-	function changeExerciseSubcollection(collectionName, cssClass1, propertyName, cssClass2) {
-		return changeExercise((ev, $this) => exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length][propertyName][$this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length] = $this.val());
-	}
-
-	function addExerciseCollectionItem(collectionName, cssClass, generator) {
-		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
-			exercise.get()[collectionName].splice(removeIndex + 1, 0, generator(ev, $this));
+	function changeExerciseCollection(collectionName, propertiesFunction) {
+		return changeExercise(function (event, template, $this) {
+			_.extend(tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertiesFunction.call(this, event, template, $this));
 		});
 	}
 
-	function addExerciseSubcollectionItem(collectionName, cssClass1, propertyNames, cssClass2, generator) {
-		return changeExercise(function (ev, $this) {
-			const element = exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length], removeIndex = $this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length;
-			_.each(propertyNames, p => element[p].splice(removeIndex + 1, 0, generator(ev, $this)));
+	function changeExerciseSubcollection(collectionName, propertyName) {
+		return changeExercise(function (event, template, $this) {
+			tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]][`${propertyName}s`][this[`${propertyName}Index`]] = $this.val();
 		});
 	}
 
-	function removeExerciseCollectionItem(collectionName, cssClass) {
-		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
-			exercise.get()[collectionName].splice(removeIndex, 1);
+	function addExerciseCollection(collectionName, generator) {
+		return changeExercise(function (event, template, $this) {
+			tmpl().exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, generator(event, $this));
 		});
 	}
 
-	function removeExerciseSubcollectionItem(collectionName, cssClass1, propertyNames, cssClass2) {
-		return changeExercise(function (ev, $this) {
-			const element = exercise.get()[collectionName][$this.closest(`.${cssClass1}`).prevAll(`.${cssClass1}`).length], removeIndex = $this.closest(`.${cssClass2}`).prevAll(`.${cssClass2}`).length;
-			_.each(propertyNames, p => element[p].splice(removeIndex, 1));
+	function removeExerciseCollection(collectionName) {
+		return changeExercise(function () {
+			let collection = tmpl().exercise.get()[`${collectionName}s`];
+			collection.splice(this[`${collectionName}Index`], 1);
+			if (!collection.length)
+				collection.push(getDefaultExercise()[`${collectionName}s`][0]);
 		});
+	}
+
+	function execute(template, exercise, callback, rethrow = true) {
+		const $result = template.$('.testcase-result').css('opacity', 0.333);
+		template.executionStatus.set(template.executionStatus.get() | 0x1);
+		Meteor.call('execute', template.exercise.get().programmingLanguage, exercise, Session.get('solution'), true, Progressor.handleError(function (error, result) {
+			template.executionResults.set(!error ? result : null);
+			$result.css('opacity', 1);
+			template.executionStatus.set(template.executionStatus.get() & ~0x1);
+			if (rethrow) callback(error, result);
+			else if (!error) callback(result);
+		}));
 	}
 
 	Template.programmingEdit.events(
 		{
-			'keyup .input-function-name'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
-				const $groups = $('.input-function-name').closest('.form-group').removeClass('has-error').end();
+			'keyup .input-function-name'(event, template) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group');
+				const $groups = template.$('.input-function-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$group.addClass('has-error');
-				_.chain($groups).groupBy(e => $(e).val()).filter(g => g.length > 1).flatten().each(e => $(e).closest('.form-group').addClass('has-error'));
+				_.chain($groups).groupBy(g => $(g).val()).filter(g => g.length > 1).flatten().each(g => $(g).closest('.form-group').addClass('has-error'));
 			},
-			'keyup .input-parameter-name'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group'), $function = $this.closest('.container-function');
+			'keyup .input-parameter-name'(event) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group'), $function = $this.closest('.container-function');
 				const $groups = $function.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
 				if (!testExecutorIdentifier($this.val()))
 					$group.addClass('has-error');
-				_.chain($groups).groupBy(e => $(e).val()).filter(g => g.length > 1).flatten().each(e => $(e).closest('.form-group').addClass('has-error'));
+				_.chain($groups).groupBy(g => $(g).val()).filter(g => g.length > 1).flatten().each(g => $(g).closest('.form-group').addClass('has-error'));
 			},
-			'keyup .exec-type'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
+			'keyup .exec-type'(event) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
 				if (!testExecutorType($this.val()))
 					$group.addClass('has-error');
 			},
-			'keyup .exec-value'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
-				if (!testExecutorValue($this.val(), $this.attr('data-type'))) //cannot use .data(), it will not update
+			'keyup .exec-value'(event) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
+				if (!testExecutorValue($this.val(), this.type))
 					$group.addClass('has-error');
 			},
-			'click .btn-add-function': addExerciseCollectionItem('functions', 'container-function', () => getDefaultExercise().functions[0]),
-			'click .btn-add-parameter': addExerciseSubcollectionItem('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter', () => null),
-			'click .btn-add-testcase': addExerciseCollectionItem('testCases', 'container-testcase', () => getDefaultExercise().testCases[0]),
-			'click .btn-remove-function': removeExerciseCollectionItem('functions', 'container-function'),
-			'click .btn-remove-parameter': removeExerciseSubcollectionItem('functions', 'container-function', ['inputNames', 'inputTypes'], 'container-parameter'),
-			'click .btn-remove-testcase': removeExerciseCollectionItem('testCases', 'container-testcase'),
-			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? _.extend(exercise.get(), { programmingLanguage: $this.val(), category_id: null }) : null),
-			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
-			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
+			'click .btn-add-function': addExerciseCollection('function', () => getDefaultExercise().functions[0]),
+			'click .btn-remove-function': removeExerciseCollection('function'),
+			'click .btn-add-testcase': addExerciseCollection('testCase', () => getDefaultExercise().testCases[0]),
+			'click .btn-remove-testcase': removeExerciseCollection('testCase'),
+			'click .btn-add-parameter': changeExercise(function () {
+				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+				_function.inputNames.splice(this.inputNameIndex + 1, 0, null);
+				_function.inputTypes.splice(this.inputTypeIndex + 1, 0, null);
+				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
+			}),
+			'click .btn-remove-parameter': changeExercise(function () {
+				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+				_function.inputNames.splice(this.inputNameIndex, 1);
+				_function.inputTypes.splice(this.inputTypeIndex, 1);
+				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
+			}),
+			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
+			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
+			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
-			'change .input-function-name': changeExerciseCollection('functions', 'container-function', (ev, $this) => ({ name: $this.val() })),
-			'change .input-function-type': changeExerciseCollection('functions', 'container-function', (ev, $this) => ({ outputNames: ['return'], outputTypes: [$this.val()] })),
-			'change .input-parameter-name': changeExerciseSubcollection('functions', 'container-function', 'inputNames', 'container-parameter'),
-			'change .input-parameter-type': changeExerciseSubcollection('functions', 'container-function', 'inputTypes', 'container-parameter'),
-			'change .select-testcase-function': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ functionName: $this.val() })),
-			'change .checkbox-testcase-visible': changeExerciseCollection('testCases', 'container-testcase', (ev, $this) => ({ visible: $this.prop('checked') })),
-			'change .input-testcase-input': changeExerciseSubcollection('testCases', 'container-testcase', 'inputValues', 'container-inputvalue'),
-			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCases', 'container-testcase', 'expectedOutputValues', 'container-outputvalue'),
-			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
-			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
-				exercise.get().fragment = Session.get('fragment');
-				exercise.get().solution = Session.get('solution');
+			'change .input-function-name': changeExerciseCollection('function', (e, t, $) => ({ name: $.val() })),
+			'change .input-function-type': changeExerciseCollection('function', (e, t, $) => ({ outputNames: ['return'], outputTypes: [$.val()] })),
+			'change .input-parameter-name': changeExerciseSubcollection('function', 'inputName'),
+			'change .input-parameter-type': changeExerciseSubcollection('function', 'inputType'),
+			'change .select-testcase-function': changeExerciseCollection('testCase', (e, t, $) => ({ functionName: $.val() })),
+			'change .checkbox-testcase-visible': changeExerciseCollection('testCase', (e, t, $) => ({ visible: $.prop('checked') })),
+			'change .input-testcase-input': changeExerciseSubcollection('testCase', 'inputValue'),
+			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCase', 'expectedOutputValue'),
+			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
+			'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
+				_.extend(template.exercise.get(), {
+					fragment: Session.get('fragment'),
+					solution: Session.get('solution')
+				});
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExerciseSuccess(exercise.get(), executionResults.get()))
-						exercise.get().released = { requested: new Date() };
+					if (Progressor.isExerciseSuccess(template.exercise.get(), template.executionResults.get()))
+						template.exercise.get().released = { requested: new Date() };
 					else
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
-				if (testValidExercise(exercise.get()))
-					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(function (res) {
-						Meteor.call('execute', exercise.get().programmingLanguage, _.extend({ _id: res }, _.omit(exercise.get(), 'category')), Session.get('solution'), true);
-						Router.go('exerciseSolve', { _id: res });
+				if (testValidExercise(template.exercise.get()))
+					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(function (result) {
+						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
+						execute(template, { _id: result }, function (error, results) {
+							if (!error && Progressor.isExerciseSuccess(template.exercise.get(), results))
+								Router.go('exerciseSolve', { _id: result });
+							else
+								Progressor.showAlert(i18n('exercise.executionFailureMessage'), 'warning');
+						});
 					}, false));
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
+			'click .btn-delete': (e, t) => Meteor.call('deleteExercise', { _id: t.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: t.exercise.get().programmingLanguage }), false)),
 
 			//execution
-			'click #button-execute'() {
-				const $result = $('.testcase-result').css('opacity', 0.333);
-				Meteor.call('execute', exercise.get().programmingLanguage, _.omit(exercise.get(), 'category'), Session.get('solution'), true, Progressor.handleError(function (err, res) {
-					const success = !err && Progressor.isExerciseSuccess(exercise.get(), res);
-					executionResults.set(!err ? res : null);
-					$result.css('opacity', 1);
+			'click #button-execute'(event, template) {
+				execute(template, _.omit(template.exercise.get(), 'category'), function (error, result) {
+					const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);
 					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
-				}));
+				});
 			},
-			'shown.bs.tab .a-toggle-codemirror': ev => $(`#${$(ev.currentTarget).attr('aria-controls')} .CodeMirror`)[0].CodeMirror.refresh(),
-			'keyup #tab-fragment>.CodeMirror': _.once(() => fragmentTyped = true),
-			'keyup #tab-solution>.CodeMirror': _.throttle(function () {
-				solutionTyped = true;
-				if (exercise.get().programmingLanguage)
-					if (!blacklist.get() || exercise.get().programmingLanguage !== blacklist.get().programmingLanguage) {
-						blacklist.set({ programmingLanguage: exercise.get().programmingLanguage });
-						Meteor.call('getBlacklist', exercise.get().programmingLanguage, Progressor.handleError((err, res) => blacklist.set(!err ? _.extend(blacklist.get(), { elements: res }) : null)));
+			'shown.bs.tab .a-toggle-codemirror'(event, template) {
+				template.$(`#${$(event.currentTarget).attr('aria-controls')}`).find('.CodeMirror')[0].CodeMirror.refresh();
+			},
+			'keyup #tab-fragment>.CodeMirror': _.throttle(function (event, template) {
+				if (!(template.fragmentTyped = !!Session.get('fragment'))) changeExercise(() => null)();
+			}, 500),
+			'keyup #tab-solution>.CodeMirror': _.throttle(function (event, template) {
+				const solution = Session.get('solution');
+				if (!(template.solutionTyped = !!solution)) changeExercise(() => null)();
+				if (template.exercise.get().programmingLanguage)
+					if (!template.blacklist.get() || template.exercise.get().programmingLanguage !== template.blacklist.get().programmingLanguage) {
+						template.blacklist.set({ programmingLanguage: template.exercise.get().programmingLanguage });
+						Meteor.call('getBlacklist', template.exercise.get().programmingLanguage, Progressor.handleError((e, r) => template.blacklist.set(!e ? _.extend(template.blacklist.get(), { elements: r }) : null)));
 					} else {
-						const solution = Session.get('solution');
-						blacklistMatches.set(_.filter(blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
-						$('#button-execute').prop('disabled', blacklistMatches.get().length);
+						template.blacklistMatches.set(_.filter(template.blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
+						template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
 					}
 			}, 500)
 		});
