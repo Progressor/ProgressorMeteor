@@ -45,6 +45,10 @@ It also depends on a number of third-party *Meteor* packages.
 9. [houston:admin](https://atmospherejs.com/houston/admin)
    for the *MongoDB* admin frontend
 
+### Configuration
+
+The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
+
 ### Monitoring
 
 The tool [*Kadira*](https://kadira.io/) is used to monitor the application performance.
@@ -53,7 +57,42 @@ More information can be found in the official [academy page](https://kadira.io/a
 ### Load Testing
 
 This application can be tested under heavy load using [*MeteorDown*](https://github.com/meteorhacks/meteor-down).
-The [specialised documentation](.meteor-down/README.md) contains the instructions to execute the load tests.
+
+#### Instructions
+
+To run a load test, please follow these simple steps:
+
+1. Install the latest version of [*Node.js*](https://nodejs.org/) (if needed).
+2. Install the [*meteor-down*](https://www.npmjs.com/package/meteor-down) *npm* package using `npm install --global meteor-down`.
+3. Inside the directory `.meteor-down`, execute `meteor-down <filename>` to run a specific load test.
+
+There is also a [*Meteor* package](https://atmospherejs.com/meteorhacks/meteor-down) which is not currently used in this project.
+
+#### Available Tests
+
+The available test files (to use in place of `<filename>`) are:
+
+* `executor.js`
+
+The available tests are documented in our project documentation.
+
+### Deployment
+
+The application can be deployed using [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx) (short: *mupx*),
+which is the current stable version of the tool [*Meteor UP*](https://github.com/arunoda/meteor-up) (short: *mup*).
+
+It is planned for the two versions to be merged at some point both at *GitHub* and in *npm*.
+
+#### Instructions
+
+To deploy, please follow these simple steps:
+
+1. Install the latest version of [*Node.js*](https://nodejs.org/) (if needed).
+2. Install [*Meteor Up X*](https://www.npmjs.com/package/mupx) using `npm install --global mupx`
+3. Inside the directory `.meteor-up`, execute `mupx deploy`
+
+Please note that the mentioned steps only work if you have already configured your server.
+For instruction how to configure your server, please refer to our project documentation.
 
 ## Apache Thrift
 
@@ -64,25 +103,6 @@ The corresponding interface definition file is included in the **Executor** proj
 
 A custom *Meteor* package called `thrift` wraps the [*npm*](https://www.npmjs.com/) package `thrift` ([source](https://www.npmjs.com/package/thrift)).
 The [package documentation](packages/thrift/README.md) contains the instructions to update the package.
-
-### Configuration
-
-The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
-
-The default to provide a valid configuration to use all features of the application.
-
-### Deployment
-
-The application was deployed using [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx).
-
-To deploy, please follow these simple steps:
-
-1. Install [*Node.js*](https://nodejs.org/) (you may use the version included in meteor)
-2. Install [*Meteor Up X*](https://www.npmjs.com/package/mupx) using `npm install -g mupx`
-3. Inside `.meteor-up`, run the command `mupx deploy`
-
-Please note that the mentioned steps only work if you have already configured your server.
-For instruction how to configure your server, please refer to our documentation.
 
 ## MongoDB
 

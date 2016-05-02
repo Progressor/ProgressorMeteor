@@ -1,9 +1,9 @@
 (function () {
 	'use strict';
 
-	var languages = ['java', 'cpp', 'csharp', 'kotlin'];
+	const languages = ['java', 'cpp', 'csharp', 'kotlin'];
 
-	var exercise = {
+	const exercise = {
 		functions: [
 			{ name: 'helloWorld', inputNames: [], inputTypes: [], outputNames: ['return'], outputTypes: ['string'] },
 			{ name: 'sumInt32Array', inputNames: ['a', 'l'], inputTypes: ['array<int32>', 'int32'], outputNames: ['return'], outputTypes: ['int32'] },
@@ -21,29 +21,29 @@
 		]
 	};
 
-	var fragments = {
+	const fragments = {
 		java: 'public String helloWorld() { return "Hello, World!"; } public int sumInt32Array(int[] a, int l) { return Arrays.stream(a).sum(); } public String getMapEntry(Map<Integer, String> m, int k) { return m.get(k); }',
 		kotlin: 'fun helloWorld() = "Hello, World!"; fun sumInt32Array(a: Array<Int>, l: Int) = a.sum(); fun getMapEntry(m: Map<Int, String>, k: Int) = m[k]',
 		cpp: 'string helloWorld() { return "Hello, World!"; } int32_t sumInt32Array(int32_t* a, int32_t l) { int32_t s = 0; for (int i = 0; i < l; i++) s += a[i]; return s; } string getMapEntry(map<int32_t, string> m, int k) { return m[k]; }',
 		csharp: 'public string helloWorld() => "Hello, World!"; public int sumInt32Array(int[] a, int l) => a.Sum(); public string getMapEntry(Dictionary<int, string> d, int k) => d[k];'
 	};
 
-	meteorDown.init(function (Meteor) {
+	meteorDown.init(Meteor => {
 
-		var language = languages[Math.floor(Math.random() * languages.length)];
+		const language = languages[Math.floor(Math.random() * languages.length)];
 
-		Meteor.call('getBlacklist', language, function (err, res) {
+		Meteor.call('getBlacklist', language, (error, result) => {
 
-			if (err) {
-				console.log('error in getBlacklist: ' + err);
+			if (error) {
+				console.log('error in getBlacklist: ' + error);
 				Meteor.kill();
 			}
 
 			(function getFragment(idx) {
-				Meteor.call('getFragment', language, exercise, function (err, res) {
+				Meteor.call('getFragment', language, exercise, (error, result) => {
 
-					if (err) {
-						console.log('error in getFragment: ' + err);
+					if (error) {
+						console.log('error in getFragment: ' + error);
 						Meteor.kill();
 					}
 
@@ -51,10 +51,10 @@
 						getFragment(idx + 1);
 					else
 						(function execute(idx) {
-							Meteor.call('execute', language, exercise, fragments[language], function (err, res) {
+							Meteor.call('execute', language, exercise, fragments[language], (error, result) => {
 
-								if (err) {
-									console.log('error in execute: ' + err);
+								if (error) {
+									console.log('error in execute: ' + error);
 									Meteor.kill();
 								}
 
