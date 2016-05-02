@@ -333,13 +333,13 @@
 				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex + 1, 0, null);
 				_function.inputTypes.splice(this.inputTypeIndex + 1, 0, null);
-				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
+				_.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
 			}),
 			'click .btn-remove-parameter': changeExercise(function () {
 				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex, 1);
 				_function.inputTypes.splice(this.inputTypeIndex, 1);
-				_.chain(exercise.testCases).filter({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
+				_.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
 			}),
 			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
