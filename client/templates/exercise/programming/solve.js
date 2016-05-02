@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	let isResult, executionStatus, executionResults, blacklist, blacklistMatches;
+	let isResult, executionStatus, executionResults, blacklist, blacklistMatches, showSolution;
 
 	function getExercise(forceRefresh = false) {
 		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -25,7 +25,9 @@
 		executionResults = new ReactiveVar([]);
 		blacklist = new ReactiveVar(null);
 		blacklistMatches = new ReactiveVar([]);
+		showSolution = new ReactiveVar(false);
 		Session.set('fragment', null);
+		Session.set('solution', null);
 	});
 
 	Template.programmingSolve.onRendered(function () {
@@ -55,11 +57,11 @@
 				const user = Meteor.user(), userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
 				return _.map(Progressor.getCodeMirrorThemes(), theme => ({ _id: theme, isActive: theme === userTheme }));
 			},
-			codeMirrorOptions() {
+			codeMirrorOptions(isSolution) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(getExercise().programmingLanguage);
 				return _.extend({}, Progressor.getCodeMirrorConfiguration(), { //https://codemirror.net/doc/manual.html
 					autofocus: true,
-					readOnly: isResult.get() ? 'nocursor' : false,
+					readOnly: isResult.get() || isSolution ? 'nocursor' : false,
 					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain'
 				});
 			},
@@ -70,12 +72,15 @@
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(getExercise(), c, getExecutionResults()),
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
-			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults())
+			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults()),
+			showSolution: () => getExercise().solutionVisible && showSolution.get()
 		});
 
 	Template.programmingSolve.events(
 		{
 			'click #button-execute'() {
+				Session.set('solution', null);
+				showSolution.set(false);
 				const $result = $('#table-testcases').css('opacity', 1 / 3);
 				executionStatus.set(executionStatus.get() | 0x1);
 				Meteor.call('execute', getExercise().programmingLanguage, { _id: getExercise()._id }, Session.get('fragment'), Progressor.handleError(function (err, res) {
@@ -84,7 +89,14 @@
 					executionStatus.set(executionStatus.get() & ~0x1);
 				}));
 			},
-			'click #button-solution': () => Session.set('fragment', getExercise().solution),
+			'click #button-solution': () => {
+				Session.set('solution', getExercise().solution);
+				showSolution.set(true);
+			},
+			'click #button-close': () => {
+				Session.set('solution', null);
+				showSolution.set(false);
+			},
 			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);
