@@ -131,6 +131,7 @@
 			'click .btn-remove-solution': removeExerciseCollectionItem('solution'),
 			'keyup #input-pattern'(ev) {
 				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
+				hasPattern = pattern.length > 0;
 				if (!testRegExp(pattern))
 					$group.addClass('has-error');
 			},
