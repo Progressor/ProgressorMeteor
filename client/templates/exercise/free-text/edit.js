@@ -1,14 +1,14 @@
 (function () {
 	'use strict';
 
-	let isCreate, exercise;
+	let isCreate, exercise, hasPattern;
 
 	function getDefaultExercise() {
 		return {
 			type: 3,
 			names: [],
 			descriptions: [],
-			solution: [],
+			solution: [null],
 			solutionVisible: false
 		};
 	}
@@ -84,7 +84,8 @@
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(exercise.get(), id),
 				description: i18n.getDescriptionForLanguage(exercise.get(), id)
-			}))
+			})),
+			hasPattern: () => hasPattern
 		});
 
 	function changeExercise(cb) {
@@ -95,6 +96,10 @@
 		};
 	}
 
+	function changeExerciseCollection(collectionName, cssClass, propertiesFunction) {
+		return changeExercise((ev, $this) => _.extend(exercise.get()[collectionName][$this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length], propertiesFunction(ev, $this)));
+	}
+	
 	function changeExerciseTranslation(translationName) {
 		return changeExercise(function (ev, $this) {
 			const value = $this.val(), elements = exercise.get()[`${translationName}s`], language = $this.closest('[data-lang]').data('lang');
@@ -106,10 +111,27 @@
 		});
 	}
 
+	function addExerciseCollectionItem(collectionName, cssClass, generator) {
+		return changeExercise(function (ev, $this) {
+			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
+			exercise.get()[collectionName].splice(removeIndex + 1, 0, generator(ev, $this));
+		});
+	}
+
+	function removeExerciseCollectionItem(collectionName, cssClass) {
+		return changeExercise(function (ev, $this) {
+			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
+			exercise.get()[collectionName].splice(removeIndex, 1);
+		});
+	}
+
 	Template.textEdit.events(
 		{
+			'click .btn-add-solution': addExerciseCollectionItem('solution', 'container-solution', () => getDefaultExercise().solution[0]),
+			'click .btn-remove-solution': removeExerciseCollectionItem('solution'),
 			'keyup #input-pattern'(ev) {
 				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
+				hasPattern = pattern.length > 0;
 				if (pattern && pattern.length && !testRegExp(pattern))
 					$group.addClass('has-error');
 			},
@@ -125,6 +147,7 @@
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
 			'change #input-pattern': changeExercise((ev, $this) => $this.val().length ? exercise.get().pattern = $this.val() : delete exercise.get().pattern),
 			'change #textarea-solution': changeExercise((ev, $this) => exercise.get().solution = [$this.val()]),
+			'change .input-solution-text': changeExerciseCollection('solution', 'container-solution', (ev, $this) => $this.val()),
 			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
 			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
 				if ($this.hasClass('btn-release-request'))
@@ -134,7 +157,8 @@
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false)),
+			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false))
+
 		});
 
 })();
