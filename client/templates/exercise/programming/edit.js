@@ -27,7 +27,6 @@
 		return Template.instance();
 	}
 
-
 	function testExecutorIdentifier(value) {
 		return !value || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
