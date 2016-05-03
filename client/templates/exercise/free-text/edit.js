@@ -1,8 +1,6 @@
 (function () {
 	'use strict';
 
-	let isCreate, exercise, hasPattern;
-
 	function getDefaultExercise() {
 		return {
 			type: 3,
@@ -11,6 +9,10 @@
 			solution: [null],
 			solutionVisible: false
 		};
+	}
+
+	function tmpl() {
+		return Template.instance();
 	}
 
 	function testRegExp(pattern) {
@@ -32,77 +34,72 @@
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
 					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
 					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
-					 && testRegExp(pattern)
+					 && testRegExp(pattern) && (pattern || solution.length <= 1)
 					 && _.every(solution, s => notEmpty.test(s) && testSolution(pattern, s));
 	}
 
+	Template.textEdit.onCreated(function () {
+		this.isCreate = new ReactiveVar(false);
+		this.exercise = new ReactiveVar(getDefaultExercise());
+	});
+
 	Template.textEdit.onRendered(function () {
-		this.autorun(function () {
+		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
-			const detached = Tracker.nonreactive(() => exercise.get());
+			const detached = Tracker.nonreactive(() => this.exercise.get());
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise();
-				if (isCreate.get())
+				if (this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
-				exercise.set(Progressor.joinCategory(_exercise));
+				this.exercise.set(Progressor.joinCategory(_exercise));
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
 
-	Template.textEdit.onCreated(function () {
-		isCreate = new ReactiveVar(false);
-		hasPattern = new ReactiveVar(false);
-		exercise = new ReactiveVar(getDefaultExercise());
-	});
-
 	Template.textEdit.helpers(
 		{
 			safeExercise(context) {
-				isCreate.set(!context || !context._id);
-				return exercise.get();
+				tmpl().isCreate.set(!context || !context._id);
+				return tmpl().exercise.get();
 			},
-			exists: () => exercise.get() && exercise.get()._id,
-			canSave: () => !exercise.get() || !exercise.get()._id || !exercise.get().released || !exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
-			exerciseSearchData: () => ({ _id: exercise.get().programmingLanguage }),
-			exerciseDuplicateQuery: () => ({ duplicate: exercise.get()._id }),
-			categoryEditData: () => ( exercise.get() && exercise.get().category_id ? { _id: exercise.get().category_id } : null),
-			hasPattern: () => hasPattern.get(),
+			exists: () => tmpl().exercise.get() && tmpl().exercise.get()._id,
+			canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
+			exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
+			exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
+			categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id ? { _id: tmpl().exercise.get().category_id } : null),
 			userName: Progressor.getUserName,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
-				isActive: language._id === exercise.get().programmingLanguage
+				isActive: language._id === tmpl().exercise.get().programmingLanguage
 			})),
-			i18nCategories: () => Progressor.categories.find({ programmingLanguage: exercise.get().programmingLanguage }).map(category => _.extend({}, category, {
+			i18nCategories: () => Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).map(category => _.extend({}, category, {
 				name: i18n.getName(category),
-				isActive: category._id === exercise.get().category_id
+				isActive: category._id === tmpl().exercise.get().category_id
 			})),
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
-				isActive: difficulty === exercise.get().difficulty
+				isActive: difficulty === tmpl().exercise.get().difficulty
 			})),
 			i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
-				name: i18n.getNameForLanguage(exercise.get(), id),
-				description: i18n.getDescriptionForLanguage(exercise.get(), id)
-			}))
+				name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
+				description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
+			})),
+			solution: () => _.map(tmpl().exercise.get().solution, (solution, solutionIndex) => ({ value: solution, solutionIndex }))
 		});
 
-	function changeExercise(cb) {
-		return function (ev) {
-			const ret = cb.call(this, ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
-			exercise.dep.changed();
+	function changeExercise(callback) {
+		return function (event, template) {
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			template.exercise.dep.changed();
 			return ret;
 		};
 	}
 
-	function changeExerciseCollection(collectionName, cssClass, propertiesFunction) {
-		return changeExercise((ev, $this) => exercise.get()[collectionName][$this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length] = propertiesFunction.call(this, ev, $this));
-	}
-
 	function changeExerciseTranslation(translationName) {
-		return changeExercise(function (ev, $this) {
-			const value = $this.val(), elements = exercise.get()[`${translationName}s`], language = $this.closest('[data-lang]').data('lang');
+		return changeExercise(function (event, template, $this) {
+			const value = $this.val(), elements = template.exercise.get()[`${translationName}s`], language = this._id;
 			let elementIndex = -1;
 			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
 			if (!value) elements.splice(elementIndex, 1);
@@ -111,17 +108,22 @@
 		});
 	}
 
-	function addExerciseCollectionItem(collectionName, cssClass, generator) {
-		return changeExercise(function (ev, $this) {
-			const removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
-			exercise.get()[collectionName].splice(removeIndex + 1, 0, generator.call(this, ev, $this));
+	function changeExerciseCollection(collectionName, itemSupplier) {
+		return changeExercise(function (event, template, $this) {
+			template.exercise.get()[collectionName][this[`${collectionName}Index`]] = itemSupplier.call(this, event, template, $this);
 		});
 	}
 
-	function removeExerciseCollectionItem(collectionName, cssClass) {
-		return changeExercise(function (ev, $this) {
-			const collection = exercise.get()[collectionName], removeIndex = $this.closest(`.${cssClass}`).prevAll(`.${cssClass}`).length;
-			collection.splice(removeIndex, 1);
+	function addExerciseCollection(collectionName, itemSupplier) {
+		return changeExercise(function (event, template, $this) {
+			template.exercise.get()[collectionName].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, $this));
+		});
+	}
+
+	function removeExerciseCollection(collectionName) {
+		return changeExercise(function (event, template) {
+			let collection = template.exercise.get()[collectionName];
+			collection.splice(this[`${collectionName}Index`], 1);
 			if (!collection.length)
 				collection.push(getDefaultExercise()[collectionName][0]);
 		});
@@ -129,36 +131,38 @@
 
 	Template.textEdit.events(
 		{
-			'click .btn-add-solution': addExerciseCollectionItem('solution', 'container-solution', () => getDefaultExercise().solution[0]),
-			'click .btn-remove-solution': removeExerciseCollectionItem('solution'),
-			'keyup #input-pattern'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
-				hasPattern.set(pattern.length > 0);
+			'click .btn-add-solution': addExerciseCollection('solution', () => getDefaultExercise().solution[0]),
+			'click .btn-remove-solution': removeExerciseCollection('solution'),
+			'keyup #input-pattern'(event, template) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
 				if (!testRegExp(pattern))
 					$group.addClass('has-error');
+				template.$('.input-solution').closest('.form-group').removeClass('has-error');
 			},
-			'keyup .input-solution'(ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $('#input-pattern').val();
+			'keyup .input-solution'(event, template) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = template.$('#input-pattern').val();
 				if (testRegExp(pattern) && !testSolution(pattern, $this.val()))
 					$group.addClass('has-error');
 			},
-			'change #select-language': changeExercise((ev, $this) => !exercise.get()._id ? exercise.get().programmingLanguage = $this.val() : null),
-			'change #select-category': changeExercise((ev, $this) => exercise.get().category_id = $this.val()),
-			'change #select-difficulty': changeExercise((ev, $this) => exercise.get().difficulty = parseInt($this.val())),
+			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? t.exercise.get().programmingLanguage = $.val() : null),
+			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
+			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
-			'change #input-pattern': changeExercise((ev, $this) => $this.val().length ? exercise.get().pattern = $this.val() : delete exercise.get().pattern),
-			'change .input-solution': changeExerciseCollection('solution', 'container-solution', (ev, $this) => $this.val()),
-			'change #checkbox-solution-visible': changeExercise((ev, $this) => exercise.get().solutionVisible = $this.prop('checked')),
-			'click .btn-save, click .btn-release-request': changeExercise(function (ev, $this) {
+			'keyup #input-pattern, change #input-pattern': changeExercise((e, t, $) => $.val().length ? t.exercise.get().pattern = $.val() : delete t.exercise.get().pattern),
+			'change .input-solution': changeExerciseCollection('solution', (e, t, $) => $.val()),
+			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
+			'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
 				if ($this.hasClass('btn-release-request'))
-					exercise.get().released = { requested: new Date() };
-				if (testValidExercise(exercise.get()))
-					Meteor.call('saveExercise', _.omit(exercise.get(), 'category'), Progressor.handleError(res => Router.go('exerciseSolve', { _id: res }), false));
+					template.exercise.get().released = { requested: new Date() };
+				if (testValidExercise(template.exercise.get()))
+					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(r => Router.go('exerciseSolve', { _id: r }), false));
 				else
 					Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 			}),
-			'click .btn-delete': () => Meteor.call('deleteExercise', { _id: exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: exercise.get().programmingLanguage }), false))
+			'click .btn-delete'(event, template) {
+				Meteor.call('deleteExercise', { _id: template.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.exercise.get().programmingLanguage }), false));
+			}
 		});
 
 })();

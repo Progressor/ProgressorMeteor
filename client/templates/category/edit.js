@@ -1,10 +1,15 @@
 (function () {
 	'use strict';
 
-	let category;
-
 	function getDefaultCategory() {
-		return { names: [], descriptions: [] };
+		return {
+			names: [],
+			descriptions: []
+		};
+	}
+
+	function tmpl() {
+		return Template.instance();
 	}
 
 	function testValidCategory({ programmingLanguage, names, descriptions }) {
@@ -15,15 +20,15 @@
 	}
 
 	Template.categoryEdit.onCreated(function () {
-		category = new ReactiveVar(getDefaultCategory());
+		this.category = new ReactiveVar(getDefaultCategory());
 	});
 
 	Template.categoryEdit.onRendered(function () {
-		this.autorun(function () {
+		this.autorun(() => {
 			const live = Progressor.categories.findOne();
-			const detached = Tracker.nonreactive(() => category.get());
+			const detached = Tracker.nonreactive(() => this.category.get());
 			if (!live || !detached || live._id !== detached._id)
-				category.set(live || getDefaultCategory());
+				this.category.set(live || getDefaultCategory());
 			else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
@@ -31,32 +36,32 @@
 
 	Template.categoryEdit.helpers(
 		{
-			category: () => category.get(),
-			exists: () => category.get() && category.get()._id,
-			exerciseSearchData: () => ({ _id: category.get().programmingLanguage }),
+			category: () => tmpl().category.get(),
+			exists: () => tmpl().category.get() && tmpl().category.get()._id,
+			exerciseSearchData: () => ({ _id: tmpl().category.get().programmingLanguage }),
 			userName: Progressor.getUserName,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
-				isActive: category.get() && language._id === category.get().programmingLanguage
+				isActive: tmpl().category.get() && language._id === tmpl().category.get().programmingLanguage
 			})),
 			i18nCategoryNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
-				name: i18n.getNameForLanguage(category.get(), id),
-				description: i18n.getDescriptionForLanguage(category.get(), id)
+				name: i18n.getNameForLanguage(tmpl().category.get(), id),
+				description: i18n.getDescriptionForLanguage(tmpl().category.get(), id)
 			}))
 		});
 
-	function changeCategory(cb) {
-		return function (ev) {
-			const ret = cb(ev, ev && ev.currentTarget ? $(ev.currentTarget) : null);
-			category.dep.changed();
+	function changeCategory(callback) {
+		return function (event, template) {
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			template.category.dep.changed();
 			return ret;
 		};
 	}
 
 	function changeCategoryTranslation(translationName) {
-		return changeCategory(function (ev) {
-			const $this = $(ev.currentTarget), value = $this.val(), language = $this.closest('[data-lang]').data('lang'), elements = category.get()[`${translationName}s`];
+		return changeCategory(function (event, template, $this) {
+			const value = $this.val(), elements = template.category.get()[`${translationName}s`], language = this._id;
 			let elementIndex = -1;
 			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
 			if (!value) elements.splice(elementIndex, 1);
@@ -67,16 +72,16 @@
 
 	Template.categoryEdit.events(
 		{
-			'change #select-language': changeCategory((ev, $this) => !category.get()._id ? category.get().programmingLanguage = $this.val() : null),
+			'change #select-language': changeCategory((e, t, $) => !t.category.get()._id ? t.category.get().programmingLanguage = $.val() : null),
 			'change [id^="input-name-"]': changeCategoryTranslation('name'),
 			'change [id^="textarea-description-"]': changeCategoryTranslation('description'),
-			'click .btn-save'() {
-				if (testValidCategory(category.get()))
-					Meteor.call('saveCategory', category.get(), Progressor.handleError(res => Router.go('categoryExercises', { _id: res }), false));
+			'click .btn-save'(event, template) {
+				if (testValidCategory(template.category.get()))
+					Meteor.call('saveCategory', template.category.get(), Progressor.handleError(r => Router.go('categoryExercises', { _id: r }), false));
 				else
 					Progressor.showAlert(i18n('category.isNotValidMessage'));
 			},
-			'click .btn-delete': () => Meteor.call('deleteCategory', category.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: category.get().programmingLanguage }), false))
+			'click .btn-delete': () => Meteor.call('deleteCategory', template.category.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.category.get().programmingLanguage }), false))
 		});
 
 })();

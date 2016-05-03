@@ -60,7 +60,7 @@
 							{{#unless isResult}}
 								<button id="button-save-answer" class="btn btn-primary separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
 								{{#if solutionVisible}}
-									<button id="button-solution" class="btn btn-primary-sm">{{i18n "exercise.showSolutionButton"}}</button>
+									<button id="button-solution" class="btn btn-primary">{{i18n "exercise.showSolutionButton"}}</button>
 								{{/if}}
 							{{/unless}}
 						</form>
@@ -78,13 +78,13 @@
 					{{/if}}
 				</div>
 				<!-- {#if showSolution}} -->
-					<div class="col-md-6">
-						<div class="form-group">
-							<label for="textarea-solution">{{i18n "exercise.solutionLabel"}}</label>
-							<textarea id="textarea-solution" class="form-control control-solution" rows="10" cols="60" autofocus disabled>{{answer}}</textarea>
-						</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="textarea-solution">{{i18n "exercise.solutionLabel"}}</label>
+						<textarea id="textarea-solution" class="form-control control-solution" rows="10" cols="60" autofocus disabled>{{answer}}</textarea>
 					</div>
-				 <!-- {/if}} -->
+				</div>
+				<!-- {/if}} -->
 			</div>
 		</section>
 		<hr>

@@ -42,15 +42,15 @@
 
 	Template.home.events(
 		{
-			'mouseup [data-href]'(ev) {
-				ev.preventDefault();
-				if (ev.which === 1)
-					Router.go('exerciseSearch', { _id: $(ev.currentTarget).data('href') });
-				else if (ev.which === 2 || ev.which === 4)
-					window.open(Router.path('exerciseSearch', { _id: $(ev.currentTarget).data('href') }));
+			'mouseup [data-href]'(event) {
+				event.preventDefault();
+				if (event.which === 1)
+					Router.go('exerciseSearch', { _id: $(event.currentTarget).data('href') });
+				else if (event.which === 2 || event.which === 4)
+					window.open(Router.path('exerciseSearch', { _id: $(event.currentTarget).data('href') }));
 			},
-			'mouseover .panel-default:not(.disabled)': ev => $(ev.currentTarget).removeClass('panel-default').addClass('panel-primary'),
-			'mouseout .panel-primary': ev => $(ev.currentTarget).removeClass('panel-primary').addClass('panel-default')
+			'mouseover .panel-default:not(.disabled)': event => $(event.currentTarget).removeClass('panel-default').addClass('panel-primary'),
+			'mouseout .panel-primary': event => $(event.currentTarget).removeClass('panel-primary').addClass('panel-default')
 		});
 
 })();

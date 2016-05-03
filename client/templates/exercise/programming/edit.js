@@ -23,6 +23,11 @@
 		};
 	}
 
+	function tmpl() {
+		return Template.instance();
+	}
+
+
 	function testExecutorIdentifier(value) {
 		return !value || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
@@ -165,10 +170,6 @@
 		});
 	});
 
-	function tmpl() {
-		return Template.instance();
-	}
-
 	Template.programmingEdit.helpers(
 		{
 			safeExercise(context) {
@@ -244,14 +245,14 @@
 	function changeExercise(callback) {
 		return function (event, template) {
 			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
-			tmpl().exercise.dep.changed();
+			template.exercise.dep.changed();
 			return ret;
 		};
 	}
 
 	function changeExerciseTranslation(translationName) {
 		return changeExercise(function (event, template, $this) {
-			const value = $this.val(), elements = tmpl().exercise.get()[`${translationName}s`], language = this._id;
+			const value = $this.val(), elements = template.exercise.get()[`${translationName}s`], language = this._id;
 			let elementIndex = -1;
 			const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
 			if (!value) elements.splice(elementIndex, 1);
@@ -260,27 +261,27 @@
 		});
 	}
 
-	function changeExerciseCollection(collectionName, propertiesFunction) {
+	function changeExerciseCollection(collectionName, propertySupplier) {
 		return changeExercise(function (event, template, $this) {
-			_.extend(tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertiesFunction.call(this, event, template, $this));
+			_.extend(template.exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this));
 		});
 	}
 
 	function changeExerciseSubcollection(collectionName, propertyName) {
 		return changeExercise(function (event, template, $this) {
-			tmpl().exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]][`${propertyName}s`][this[`${propertyName}Index`]] = $this.val();
+			template.exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]][`${propertyName}s`][this[`${propertyName}Index`]] = $this.val();
 		});
 	}
 
-	function addExerciseCollection(collectionName, generator) {
+	function addExerciseCollection(collectionName, itemSupplier) {
 		return changeExercise(function (event, template, $this) {
-			tmpl().exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, generator(event, $this));
+			template.exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this));
 		});
 	}
 
 	function removeExerciseCollection(collectionName) {
-		return changeExercise(function () {
-			let collection = tmpl().exercise.get()[`${collectionName}s`];
+		return changeExercise(function (event, template) {
+			let collection = template.exercise.get()[`${collectionName}s`];
 			collection.splice(this[`${collectionName}Index`], 1);
 			if (!collection.length)
 				collection.push(getDefaultExercise()[`${collectionName}s`][0]);
@@ -329,14 +330,14 @@
 			'click .btn-remove-function': removeExerciseCollection('function'),
 			'click .btn-add-testcase': addExerciseCollection('testCase', () => getDefaultExercise().testCases[0]),
 			'click .btn-remove-testcase': removeExerciseCollection('testCase'),
-			'click .btn-add-parameter': changeExercise(function () {
-				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+			'click .btn-add-parameter': changeExercise(function (event, template) {
+				const exercise = template.exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex + 1, 0, null);
 				_function.inputTypes.splice(this.inputTypeIndex + 1, 0, null);
 				_.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex + 1, 0, null));
 			}),
-			'click .btn-remove-parameter': changeExercise(function () {
-				const exercise = tmpl().exercise.get(), _function = exercise.functions[this.functionIndex];
+			'click .btn-remove-parameter': changeExercise(function (event, template) {
+				const exercise = template.exercise.get(), _function = exercise.functions[this.functionIndex];
 				_function.inputNames.splice(this.inputNameIndex, 1);
 				_function.inputTypes.splice(this.inputTypeIndex, 1);
 				_.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));

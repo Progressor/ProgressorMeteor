@@ -1,36 +1,38 @@
 (function () {
 	'use strict';
 
-	let isResult, evaluationResults;
+	function tmpl() {
+		return Template.instance();
+	}
 
 	function getExercise(forceRefresh = false) {
-		return isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
+		return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
 
 	function getResult() {
-		if (isResult.get())
+		if (tmpl().isResult.get())
 			return Progressor.results.findOne();
 	}
 
 	function getEvaluationResults() {
-		if (isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+		if (tmpl().isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
 			return Progressor.results.findOne().results;
 		else
-			return evaluationResults.get();
+			return tmpl().evaluationResults.get();
 	}
 
 	Template.multipleSolve.onCreated(function () {
-		isResult = new ReactiveVar(false);
-		evaluationResults = new ReactiveVar([]);
+		this.isResult = new ReactiveVar(false);
+		this.evaluationResults = new ReactiveVar([]);
 	});
 
 	Template.multipleSolve.helpers(
 		{
 			safeExercise(exerciseOrResult) {
-				isResult.set(exerciseOrResult.exercise_id);
+				tmpl().isResult.set(exerciseOrResult.exercise_id);
 				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
 			},
-			isResult: () => isResult.get(),
+			isResult: () => tmpl().isResult.get(),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
@@ -50,8 +52,12 @@
 
 	Template.multipleSolve.events(
 		{
-			'click #button-solution': () => $('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
-			'click #button-save-answer': () => Meteor.call('evaluateMultipleChoice', getExercise(), $('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((err, res) => evaluationResults.set(!err ? res : [])))
+			'click #button-solution'(event, template) {
+				template.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i)));
+			},
+			'click #button-save-answer'(event, template) {
+				Meteor.call('evaluateMultipleChoice', getExercise(), template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((e, r) => template.evaluationResults.set(!e ? r : [])));
+			}
 		});
 
 })();

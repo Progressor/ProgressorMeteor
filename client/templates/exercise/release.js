@@ -5,15 +5,17 @@
 	 * MAIN TEMPLATE
 	 */
 
-	Template.exerciseRelease.onRendered(() => $('#collapseReleased').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign')));
+	Template.exerciseRelease.onRendered(function () {
+		$('#collapseReleased').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+	});
 
 	/*
 	 * SUB-TEMPLATE EXERCISE LIST
 	 */
 
 	function toggleReleaseExercise(release) {
-		return function (ev) {
-			const exercise = Progressor.exercises.findOne({ _id: $(ev.currentTarget).closest('tr').data('id') });
+		return function (event) {
+			const exercise = Progressor.exercises.findOne({ _id: $(event.currentTarget).closest('tr').data('id') });
 			if (release)
 				_.extend(exercise.released, { confirmed: new Date(), confirmor_id: Meteor.userId() });
 			else

@@ -81,7 +81,7 @@
 				</div>
 				<div class="tab-content">
 					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="container-translation tab-pane fade {{#if isActive}}active in{{/if}}" data-lang="{{_id}}">
+						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
 							<div class="form-group form-group-sm">
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
@@ -105,23 +105,21 @@
 									</div>
 								</div>
 								{{#each options}}
-									<div class="container-option">
-										<div class="row">
-											<div class="col-sm-5">
-												<div class="form-group form-group-sm">
-													<input type="text" class="input-option-text form-control" value="{{text}}" placeholder="{{placeholder}}" />
-												</div>
+									<div class="row">
+										<div class="col-sm-5">
+											<div class="form-group form-group-sm">
+												<input type="text" class="input-option-text form-control" value="{{text}}" placeholder="{{placeholder}}" />
 											</div>
-											<div class="col-sm-5">
-												<div class="form-group form-group-sm">
-													<label class="radio-inline"><input type="radio" name="input-option-{{lang}}-{{@index}}" class="input-option-checked" value="true" checked={{isSolution}}> {{i18n "exercise.option.correctLabel"}}</label>
-													<label class="radio-inline"><input type="radio" name="input-option-{{lang}}-{{@index}}" class="input-option-checked" value="false" checked={{not isSolution}}> {{i18n "exercise.option.wrongLabel"}}</label>
-												</div>
+										</div>
+										<div class="col-sm-5">
+											<div class="form-group form-group-sm">
+												<label class="radio-inline"><input type="radio" name="input-option-{{language}}-{{@index}}" class="input-option-checked" value="true" checked={{isSolution}}> {{i18n "exercise.option.correctLabel"}}</label>
+												<label class="radio-inline"><input type="radio" name="input-option-{{language}}-{{@index}}" class="input-option-checked" value="false" checked={{not isSolution}}> {{i18n "exercise.option.wrongLabel"}}</label>
 											</div>
-											<div class="col-sm-2">
-												<button class="btn btn-success btn-sm btn-add-option"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
-												<button class="btn btn-danger btn-sm btn-remove-option"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
-											</div>
+										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-success btn-sm btn-add-option"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+											<button class="btn btn-danger btn-sm btn-remove-option"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
 										</div>
 									</div>
 								{{/each}}

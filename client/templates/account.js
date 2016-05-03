@@ -5,12 +5,16 @@
 	 * MAIN TEMPLATE
 	 */
 
+	function tmpl() {
+		return Template.instance();
+	}
+
 	Template.account.onCreated(function () {
 		this.userValues = [];
 	});
 
 	Template.account.onRendered(function () {
-		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', ev => $(ev.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 		Meteor.typeahead.inject();
 	});
 
@@ -21,7 +25,7 @@
 			transformResults: r => _.map(r, i => _.extend({ result: _.omit(i, 'exercise') }, i.exercise)),
 			users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), function (user) {
 				const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
-				Template.instance().userValues[value] = user;
+				tmpl().userValues[value] = user;
 				return { value: value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
 			})
 		});
@@ -30,15 +34,15 @@
 		{
 			'click #button-logout': () => Meteor.logout(),
 			'click #button-logout-others': () => Meteor.logoutOtherClients(),
-			'change #input-name' (ev) {
-				const $this = $(ev.currentTarget), $group = $this.closest('.form-group');
+			'change #input-name'(event) {
+				const $this = $(event.currentTarget), $group = $this.closest('.form-group');
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, function (err) {
 					$group.addClass(!err ? 'has-success' : 'has-error');
 					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
 				});
 			},
 			'click #button-make-admin'() {
-				const $input = $('#input-make-admin'), $group = $input.closest('.form-group'), user = Template.instance().userValues[$input.val()];
+				const $input = $('#input-make-admin'), $group = $input.closest('.form-group'), user = tmpl().userValues[$input.val()];
 				if (user)
 					Meteor.call('toggleUsersRoles', [user._id], [Progressor.ROLE_ADMIN], true, Progressor.handleError(function (err) {
 						$group.addClass(!err ? 'has-success' : 'has-error');
@@ -57,7 +61,7 @@
 	 */
 
 	function toggleArchiveExercise(archive) {
-		return ev => Meteor.call('toggleArchiveExercise', { _id: $(ev.currentTarget).closest('tr').data('id') }, archive, Progressor.handleError());
+		return event => Meteor.call('toggleArchiveExercise', { _id: $(event.currentTarget).closest('tr').data('id') }, archive, Progressor.handleError());
 	}
 
 	Template.account_exerciseList.helpers(

@@ -2,7 +2,7 @@
 	'use strict';
 
 	Template.layout.onCreated(function () {
-		this.autorun(function () {
+		this.autorun(() => {
 			if (Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN))
 				Meteor.subscribe('numberOfExercisesToRelease');
 		});
@@ -25,9 +25,9 @@
 	Template.layout.events(
 		{
 			'click #link-logout': () => Meteor.logout(),
-			'click .i18n.lang'(ev) {
-				ev.preventDefault();
-				i18n.setLanguage($(ev.currentTarget).data('lang'));
+			'click .i18n.lang'(event) {
+				event.preventDefault();
+				i18n.setLanguage($(event.currentTarget).data('lang'));
 			}
 		});
 
