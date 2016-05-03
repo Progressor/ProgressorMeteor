@@ -79,7 +79,7 @@
 			}) : null;
 
 		this.ready();
-		this.onStop(function () {
+		this.onStop(() => {
 			handleExercises.stop();
 			if (handleResults)
 				handleResults.stop();

@@ -15,7 +15,7 @@
 
 	Template.registerHelper('i18nTooltips', function () {
 		$('body').tooltip({ selector: '[data-toggle="tooltip"]' });
-		Tracker.autorun(function () {
+		Tracker.autorun(() => {
 			i18n.getLanguage(); //depend on
 			setTimeout(() => $('[data-toggle="tooltip"]').tooltip('fixTitle'), 1);
 		});

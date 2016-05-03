@@ -10,7 +10,7 @@
 
 	Template.home.onRendered(function () {
 		let introIndex = 0;
-		const introInterval = Meteor.setInterval(function () {
+		const introInterval = Meteor.setInterval(() => {
 			if (introIndex < introTexts[0].length)
 				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {

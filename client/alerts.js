@@ -11,8 +11,8 @@
 			return function (error, result) {
 				if (error) Progressor.showAlert(i18n('layout.unexpectedErrorMessage', String(error)), 'danger', 7500);
 				if (callback)
-					if (rethrow) callback(error, result);
-					else if (!error) callback(result);
+					if (rethrow) callback.call(this, error, result);
+					else if (!error) callback.call(this, result);
 			};
 		}
 	});

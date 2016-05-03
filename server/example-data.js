@@ -30,7 +30,7 @@ Meteor.startup(function () {
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
 				}
-			], function (category) {
+			], category => {
 				Progressor.categories.insert(category);
 			});
 
@@ -362,7 +362,7 @@ Meteor.startup(function () {
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
 				}
-			], function (exercise) {
+			], exercise => {
 				Progressor.exercises.insert(exercise);
 			});
 
@@ -384,7 +384,7 @@ Meteor.startup(function () {
 					],
 					solved: new Date()
 				}
-			], function (result) {
+			], result => {
 				Progressor.results.insert(result);
 			});
 	}

@@ -2,9 +2,9 @@
 	'use strict';
 
 	function setLanguage(lng) {
-		return _.some(i18n.getLanguages(), function (nme, cod) {
-			if (lng.startsWith(cod)) {
-				i18n.setLanguage(cod, true);
+		return _.some(i18n.getLanguages(), (name, code) => {
+			if (lng.startsWith(code)) {
+				i18n.setLanguage(code, true);
 				return true;
 			}
 			return false;
