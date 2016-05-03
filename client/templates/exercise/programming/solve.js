@@ -95,6 +95,10 @@
 				Session.set('solution', getExercise().solution);
 				showSolution.set(true);
 			},
+			'click #button-close': () => {
+				Session.set('solution', null);
+				showSolution.set(false);
+			},
 			'keyup .CodeMirror': _.throttle(function () {
 				if (!blacklist.get()) {
 					blacklist.set([]);

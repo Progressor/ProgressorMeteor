@@ -81,6 +81,11 @@
 							</div>
 						</div>
 						{{> CodeMirror id="textarea-solution" options=(codeMirrorOptions true) reactiveVar="solution"}}
+						<div class="row">
+							<div class="col-sm-4">
+								<button id="button-close" class="btn btn-primary btn-sm separated-top">{{i18n "exercise.closeButton"}}</button>
+							</div>
+						</div>
 					{{else}}
 						{{#unless executionFatal}}
 							<table id="table-testcases" class="table table-condensed table-striped">

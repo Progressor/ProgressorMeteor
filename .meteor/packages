@@ -47,5 +47,7 @@ meteorhacks:kadira            # Kadira - Performance Monitoring for Meteor
 # meteorhacks:meteor-down     # Meteor side package for MeteorDown load testing framework.
 # mrt:publish-with-relations  # Publish with relations builds on Tom's gist (https://gist.github.com/tmeasday/4042603) to provide a convenient way to publish associated records.
 sergeyt:typeahead             # Twitter's typeahead.js (http://twitter.github.io/typeahead.js/examples/) autocomplete package, wrapped for Meteor 1.0+.
+percolate:synced-cron					# Allows you to define and run scheduled jobs across multiple servers
+meteorhacks:ssr								# Server Side Rendering for Meteor with Blaze
 
 thrift                        # custom wrapper for Apache Thrift npm-package + Progressor implementation
