@@ -290,7 +290,7 @@
 	function execute(template, exercise, callback, rethrow = true) {
 		const $result = template.$('.testcase-result').css('opacity', 0.333);
 		template.executionStatus.set(template.executionStatus.get() | 0x1);
-		Meteor.call('execute', template.exercise.get().programmingLanguage, exercise, Session.get('solution'), true, Progressor.handleError(function (error, result) {
+		Meteor.call('execute', template.exercise.get().programmingLanguage, exercise, Session.get('solution'), true, Progressor.handleError((error, result) => {
 			template.executionResults.set(!error ? result : null);
 			$result.css('opacity', 1);
 			template.executionStatus.set(template.executionStatus.get() & ~0x1);
@@ -366,9 +366,9 @@
 					else
 						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
 				if (testValidExercise(template.exercise.get()))
-					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(function (result) {
+					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(result => {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
-						execute(template, { _id: result }, function (error, results) {
+						execute(template, { _id: result }, (error, results) => {
 							if (!error && Progressor.isExerciseSuccess(template.exercise.get(), results))
 								Router.go('exerciseSolve', { _id: result });
 							else
@@ -382,7 +382,7 @@
 
 			//execution
 			'click #button-execute'(event, template) {
-				execute(template, _.omit(template.exercise.get(), 'category'), function (error, result) {
+				execute(template, _.omit(template.exercise.get(), 'category'), (error, result) => {
 					const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);
 					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
 				});
