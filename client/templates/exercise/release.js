@@ -14,8 +14,8 @@
 	 */
 
 	function toggleReleaseExercise(release) {
-		return function (event) {
-			const exercise = Progressor.exercises.findOne({ _id: $(event.currentTarget).closest('tr').data('id') });
+		return function () {
+			const exercise = Progressor.exercises.findOne({ _id: this._id });
 			if (release)
 				_.extend(exercise.released, { confirmed: new Date(), confirmor_id: Meteor.userId() });
 			else

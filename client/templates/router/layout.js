@@ -27,7 +27,7 @@
 			'click #link-logout': () => Meteor.logout(),
 			'click .i18n.lang'(event) {
 				event.preventDefault();
-				i18n.setLanguage($(event.currentTarget).data('lang'));
+				i18n.setLanguage(this._id);
 			}
 		});
 

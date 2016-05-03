@@ -37,7 +37,7 @@
 				</thead>
 				<tbody>
 					{{#each exercises}}
-						<tr data-id="{{_id}}">
+						<tr>
 							<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
 							<td>{{i18nExerciseType type}}</td>
 							<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
@@ -57,7 +57,7 @@
 						</tr>
 					{{else}}
 						<tr>
-							<td colspan="8" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
+							<td colspan="{{#unless isReleased}}10{{else}}11{{/unless}}" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
 						</tr>
 					{{/each}}
 				</tbody>

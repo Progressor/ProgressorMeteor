@@ -1,15 +1,13 @@
 <template name="home">
 	<header>
 		<div class="jumbotron intro">
-			<h1 id="intro">
-				&nbsp; {{! {i18n "layout.logo"} <small>{i18n "layout.explanation"}<span id="underlineChar">_</span></small> }}
-			</h1>
+			<h1 id="intro">&nbsp;</h1>
 		</div>
 	</header>
 	<section class="row">
 		{{#each programmingLanguages}}
 			<div class="col-xs-{{nofColumns "xs"}} col-sm-{{nofColumns "sm"}} col-md-{{nofColumns "md"}} col-lg-{{nofColumns "lg"}}">
-				<div class="panel panel-default {{#if isUpcoming}}disabled{{/if}}" data-href="{{#unless isUpcoming}}{{_id}}{{/unless}}">
+				<div class="panel panel-default {{#unless isUpcoming}}language-link{{else}}disabled{{/unless}}">
 					<div class="panel-heading language-logo">
 						<i class="{{devicon}} language-logo"></i>
 					</div>

@@ -61,7 +61,9 @@
 	 */
 
 	function toggleArchiveExercise(archive) {
-		return event => Meteor.call('toggleArchiveExercise', { _id: $(event.currentTarget).closest('tr').data('id') }, archive, Progressor.handleError());
+		return function () {
+			Meteor.call('toggleArchiveExercise', { _id: this._id }, archive, Progressor.handleError());
+		};
 	}
 
 	Template.account_exerciseList.helpers(
