@@ -66,10 +66,10 @@
 	Template.textSolve.events(
 		{
 			'submit #form-answer': e => e.preventDefault(),
-			'change .control-answer': (e, t) => t.validationResult.set($('.control-answer')[0].checkValidity()),
-			'click #button-solution': () => $('.control-answer').val(getExercise().solution[0]),
+			'change .control-answer': (e, t) => t.validationResult.set(t.$('.control-answer')[0].checkValidity()),
+			'click #button-solution': (e, t) => t.$('.control-answer').val(getExercise().solution[0]),
 			'click #button-save-answer'(event, template) {
-				const $control = $('.control-answer');
+				const $control = template.$('.control-answer');
 				if ($control[0].checkValidity()) {
 					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError((error, result) => {
 						template.evaluationResult.set(!error ? result : []);

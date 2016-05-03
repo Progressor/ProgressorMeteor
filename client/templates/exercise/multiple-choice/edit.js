@@ -125,7 +125,7 @@
 				else options.push({ language: this.language, options: _.map(_.range(this.optionIndex + 1), i => i === this.optionIndex ? value : null) });
 			}),
 			'change .input-option-checked': changeExercise(function (event, template, $this) {
-				const $multiple = $('#checkbox-multiple-solutions');
+				const $multiple = template.$('#checkbox-multiple-solutions');
 				template.exercise.get().solution = _.chain([_.filter(template.exercise.get().solution, i => i !== this.optionIndex), _.first([this.optionIndex], $this.prop('checked') && $this.val() === 'true' ? 1 : 0)]).flatten().sortBy(_.identity).value();
 				$multiple.prop('disabled', template.exercise.get().solution.length > 1).prop('checked', $multiple.prop('checked') || template.exercise.get().solution.length > 1);
 			}),
