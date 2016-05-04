@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta name="viewport" content="width=device-width" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>{{i18nEmailTitle}}</title>
+	</head>
+	<body>
+		<p>{{i18nEmailReleaseNotifierSalutation}}<br>
+			{{i18nEmailReleaseNotifierIntroLine1}}<br>
+			{{i18nEmailReleaseNotifierIntroLine2}}
+		</p>
+		<table>
+			<caption>{{i18nEmailReleaseNotifierNewRequests}}</caption>
+			<tr>
+				<th>{{i18nExerciseNameLabel}}</th>
+				<th>{{i18nExerciseTypeLabel}}</th>
+				<th>{{i18nExerciseProgrammingLanguageLabel}}</th>
+				<th>{{i18nFormCreatedByLabel}}</th>
+				<th>{{i18nExerciseReleaseRequestedAtLabel}}</th>
+			</tr>
+			{{#each requestedExercises}}
+				<tr>
+					<td>{{name}}</td>
+					<td>{{type}}</td>
+					<td>{{programmingLanguage}}</td>
+					<td>{{author_id}}</td>
+					<td>{{releasedRequested}}</td>
+				</tr>
+			{{/each}}
+		</table>
+		<p>{{i18nEmailReleaseNotifierGratitude}}<br><br>
+			{{i18nEmailReleaseNotifierGreeting}}<br>
+			{{i18nEmailTitle}}</p>
+	</body>
+</html>
