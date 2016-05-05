@@ -108,9 +108,9 @@
 					template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
 				}
 			}, 500),
-			'change #select-codemirror-themes'(event) {
+			'change #select-codemirror-themes'(event, template) {
 				const theme = $(event.currentTarget).val();
-				tmpl().$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
+				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
 			}
 		});
