@@ -356,7 +356,7 @@ Meteor.startup(function () {
 							description: 'Übersetze das folgende Klassendiagram in **Java** code!\n\n![alt text](http://msoe.us/taylor/tutorial/se1021/desktopItemUML.png)'
 						}
 					],
-					solution: '--sample java code--',
+					solution: ['--sample java code--'],
 					solutionVisible: true,
 					author_id: Meteor.users.findOne()._id,
 					lastEditor_id: Meteor.users.findOne()._id,
