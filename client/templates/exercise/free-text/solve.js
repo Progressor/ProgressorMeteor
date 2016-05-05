@@ -25,6 +25,7 @@
 		this.isResult = new ReactiveVar(false);
 		this.validationResult = new ReactiveVar(null);
 		this.evaluationResult = new ReactiveVar(null);
+		this.showSolution = new ReactiveVar(false);
 	});
 
 	Template.textSolve.onRendered(function () {
@@ -60,14 +61,20 @@
 			resultEvaluation() {
 				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
 					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'ok' : 'remove'}`;
-			}
+			},
+			showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
 		});
 
 	Template.textSolve.events(
 		{
 			'submit #form-answer': e => e.preventDefault(),
 			'change .control-answer': (e, t) => t.validationResult.set(t.$('.control-answer')[0].checkValidity()),
-			'click #button-solution': (e, t) => t.$('.control-answer').val(getExercise().solution[0]),
+			'click #button-solution'(event, template) {
+				template.showSolution.set(true)
+			},
+			'click #button-close'(event, template)  {
+				template.showSolution.set(false);
+			},
 			'click #button-save-answer'(event, template) {
 				const $control = template.$('.control-answer');
 				if ($control[0].checkValidity()) {

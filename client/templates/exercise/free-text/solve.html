@@ -47,44 +47,43 @@
 				{{#markdown}}{{i18nDescription this}}{{/markdown}}
 			</p>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-{{#if pattern}}3{{else}}6{{/if}}">
 					{{#if pattern}}
-						<form id="form-answer" class="form-inline">
-							<div class="form-group {{validation}} {{#if resultEvaluation}}has-feedback{{/if}}">
-								<label for="input-answer">{{i18n "exercise.answerLabel"}}</label>
-								<input type="text" id="input-answer" class="form-control control-answer" autofocus value="{{answer}}" pattern="{{pattern}}" disabled={{isResult}}>
-								{{#if resultEvaluation}}
-									<span class="glyphicon {{resultEvaluation}} form-control-feedback"></span>
-								{{/if}}
-							</div>
-							{{#unless isResult}}
-								<button id="button-save-answer" class="btn btn-primary separated-left">{{i18n "exercise.saveAnswerButton"}}</button>
-								{{#if solutionVisible}}
-									<button id="button-solution" class="btn btn-primary">{{i18n "exercise.showSolutionButton"}}</button>
-								{{/if}}
-							{{/unless}}
-						</form>
+						<div class="form-group {{validation}} {{#if resultEvaluation}}has-feedback{{/if}}">
+							<label for="input-answer">{{i18n "exercise.answerLabel"}}</label>
+							<input type="text" id="input-answer" class="form-control control-answer" autofocus value="{{answer}}" pattern="{{pattern}}" disabled={{isResult}}>
+							{{#if resultEvaluation}}
+								<span class="glyphicon {{resultEvaluation}} form-control-feedback"></span>
+							{{/if}}
+						</div>
 					{{else}}
 						<div class="form-group">
 							<label for="textarea-answer">{{i18n "exercise.answerLabel"}}</label>
 							<textarea id="textarea-answer" class="form-control control-answer" rows="10" cols="60" autofocus disabled={{isResult}}>{{answer}}</textarea>
 						</div>
-						{{#unless isResult}}
-							<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
-							{{#if solutionVisible}}
-								<button id="button-solution" class="btn btn-primary btn-sm pull-right">{{i18n "exercise.showSolutionButton"}}</button>
-							{{/if}}
-						{{/unless}}
 					{{/if}}
+					{{#unless isResult}}
+						<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
+						{{#if solutionVisible}}
+							{{#unless showSolution}}
+								<button id="button-solution" class="btn btn-primary btn-sm pull-right">{{i18n "exercise.showSolutionButton"}}</button>
+							{{/unless}}
+						{{/if}}
+					{{/unless}}
 				</div>
-				<!-- {#if showSolution}} -->
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="textarea-solution">{{i18n "exercise.solutionLabel"}}</label>
-						<textarea id="textarea-solution" class="form-control control-solution" rows="10" cols="60" autofocus disabled>{{answer}}</textarea>
-					</div>
-				</div>
-				<!-- {/if}} -->
+					{{#if showSolution}}
+						<div class="col-md-6 width-auto">
+							<div class="text-result">
+								<label>{{i18n "exercise.solutionLabel"}}</label>
+								<ul class="list-group">
+									{{#each solution}}
+										<li class="list-group-item">{{this}}</li>
+									{{/each}}
+								</ul>
+								<button id="button-close" class="btn btn-primary btn-sm">{{i18n "exercise.closeButton"}}</button>
+							</div>
+						</div>
+					{{/if}}
 			</div>
 		</section>
 		<hr>
