@@ -110,7 +110,7 @@
 			}, 500),
 			'change #select-codemirror-themes'(event) {
 				const theme = $(event.currentTarget).val();
-				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
+				tmpl().$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
 				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
 			}
 		});
