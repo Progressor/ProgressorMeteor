@@ -20,7 +20,7 @@
 		{
 			getExecutorTypes() {
 				const rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
-				const rexSep = ',\\s?', rexKVS = ':\\s?';
+				const rexDlmOpn = '{\\s?', rexDlmCls = '\\s?}', rexSep = ',\\s?', rexKVS = ':\\s?';
 				return {
 					types: [
 						{ _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },
@@ -33,10 +33,10 @@
 						{ _id: ttypes.TypeFloat32, label: ttypes.TypeFloat32, parameterCount: 0, pattern: rexFlt, max: 3.402823E+38 },
 						{ _id: ttypes.TypeFloat64, label: ttypes.TypeFloat64, parameterCount: 0, pattern: rexFlt, max: Number.MAX_VALUE },
 						{ _id: ttypes.TypeDecimal, label: ttypes.TypeDecimal, parameterCount: 0, pattern: rexFlt },
-						{ _id: ttypes.TypeContainerArray, label: `${ttypes.TypeContainerArray}<T>`, parameterCount: 1, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerList, label: `${ttypes.TypeContainerList}<T>`, parameterCount: 1, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerSet, label: `${ttypes.TypeContainerSet}<T>`, parameterCount: 1, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2, patternSeparator: rexSep, patternInternalSeparators: [rexKVS] }
+						{ _id: ttypes.TypeContainerArray, label: `${ttypes.TypeContainerArray}<T>`, parameterCount: 1, patternDelimiters: [rexDlmOpn, rexDlmCls], patternSeparator: rexSep },
+						{ _id: ttypes.TypeContainerList, label: `${ttypes.TypeContainerList}<T>`, parameterCount: 1, patternDelimiters: [rexDlmOpn, rexDlmCls], patternSeparator: rexSep },
+						{ _id: ttypes.TypeContainerSet, label: `${ttypes.TypeContainerSet}<T>`, parameterCount: 1, patternDelimiters: [rexDlmOpn, rexDlmCls], patternSeparator: rexSep },
+						{ _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2, patternDelimiters: [rexDlmOpn, rexDlmCls], patternSeparator: rexSep, patternInternalSeparators: [rexKVS] }
 					],
 					values: [
 						{ types: [ttypes.TypeString], values: ['Progressor', 'Bern University of Applied Sciences'] },

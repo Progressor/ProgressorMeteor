@@ -39,13 +39,13 @@
 			if (type.substr(index, 1) !== "<") return false; //verify the next character is the generic open bracket
 			index++; //move index forward
 			for (let i = 0; i < executorType.parameterCount; i++) { //repeat check for each type parameter
-				const delimiter = i === executorType.parameterCount - 1 ? '>' : ','; //determine the delimiter expected after this type parameter
+				const separator = i === executorType.parameterCount - 1 ? '>' : ','; //determine the separator expected after this type parameter
 				if (i > 0) index += type.substr(index).match(/^\s?/)[0].length; //skip optional whitespace after separator
 				let subLength = testExecutorType(type.substr(index), true);
 				if (subLength === false) return false; //verify parameter is a valid type
 				index += subLength; //move index forward
-				if (type.substr(index, 1) !== delimiter) return false; //verify the next character is the defined delimiter
-				index += delimiter.length; //move index forward
+				if (type.substr(index, 1) !== separator) return false; //verify the next character is the defined separator
+				index += separator.length; //move index forward
 			}
 		}
 		return isRecursive ? index : index === type.length; //recursive: return new index, otherwise: verify end is reached
@@ -73,7 +73,7 @@
 					const subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, i < executorType.parameterCount - 1 && executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] ? executorType.patternInternalSeparators[i] : executorType.patternSeparator ? executorType.patternSeparator : null);
 					typeIndex += subLength.typIdx; //move index forward
 					valueIndex += subLength.valIdx; //move index forward
-					typeIndex++; //skip delimiter
+					typeIndex++; //skip separator
 					if (i < executorType.parameterCount - 1) { //if there are more parameters to come //_: verify internal separator
 						if (executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] && !(match = value.substr(valueIndex).match(`^${executorType.patternInternalSeparators[i]}`))) return false;
 						valueIndex += match[0].length; //move index forward
