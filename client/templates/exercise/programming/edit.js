@@ -51,31 +51,33 @@
 		return isRecursive ? index : index === type.length; //recursive: return new index, otherwise: verify end is reached
 	}
 
-	function testExecutorValue(value, type, isRecursive = false, separator = null) {
+	function testExecutorValue(value, type, isRecursive = false, delimiters = null) {
 		const executorType = tmpl().executorTypes.get() ? _.find(tmpl().executorTypes.get().types, t => type && type.substr(0, t._id.length) === t._id) : null;
 		let typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
 		if (executorType.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
-			if (!(match = value.match(separator ? `^(${executorType.pattern}?(?=${separator})|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
+			if (!(match = value.match(delimiters && delimiters.length ? `^(${executorType.pattern}?(?=(${delimiters.join(')|(')}))|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
 			valueIndex += match[0].length; //move index forward //_: verify the number range
 			if (executorType.max && !(Number.isFinite(number = (Number.isInteger(executorType.max) ? parseInt : parseFloat)(match[0])) && -executorType.max - 1 <= number && number <= executorType.max)) return false;
 		}
 		if (executorType.parameterCount > 0) { //if the type as parameters
+			if (!executorType.patternDelimiters || !executorType.patternDelimiters.open || !executorType.patternDelimiters.close || !executorType.patternSeparator //verify configuration
+					|| executorType.parameterCount - 1 !== ( executorType.patternInternalSeparators ? executorType.patternInternalSeparators.length : 0)) return false;
 			typeIndex++; //skip generic open bracket
 			const _typeIndex = typeIndex; //remember initial type index position
-			for (let j = 0; valueIndex !== value.length; j++) { //repeat until all collection items have been processed
-				if (j > 0) { //if item is not the first one
-					typeIndex = _typeIndex; //reset type index
-					if (executorType.patternSeparator && !(match = value.substr(valueIndex).match(`^${executorType.patternSeparator}`))) return false; //verify item separator
-					valueIndex += match[0].length; //move index forward
-				}
+			if (!(match = value.substr(valueIndex).match(`^${executorType.patternDelimiters.open}`))) return false; //verify open delimiter
+			valueIndex += match[0].length; //move index forward
+			for (let j = 0; true; j++) { //repeat until all collection items have been processed
+				if ((match = value.substr(valueIndex).match(`^${executorType.patternDelimiters.close}`)) && (valueIndex += match[0].length)) break; //verify close delimiter, move index forward
+				else if (j > 0 && !((match = value.substr(valueIndex).match(`^${executorType.patternSeparator}`)) && (valueIndex += match[0].length))) return false; //verify item separator / move index forward
+				typeIndex = _typeIndex; //reset type index
 				for (let i = 0; i < executorType.parameterCount; i++) { //repeat check for each type parameter
 					if (i > 0) typeIndex += type.substr(typeIndex).match(/^\s?/)[0].length; //skip optional whitespace after separator //_: recursive call (pass next separator)
-					const subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, i < executorType.parameterCount - 1 && executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] ? executorType.patternInternalSeparators[i] : executorType.patternSeparator ? executorType.patternSeparator : null);
+					const subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, [executorType.patternDelimiters.close, i < executorType.parameterCount - 1 ? executorType.patternInternalSeparators[i] : executorType.patternSeparator]);
 					typeIndex += subLength.typIdx; //move index forward
 					valueIndex += subLength.valIdx; //move index forward
 					typeIndex++; //skip separator
 					if (i < executorType.parameterCount - 1) { //if there are more parameters to come //_: verify internal separator
-						if (executorType.patternInternalSeparators && executorType.patternInternalSeparators[i] && !(match = value.substr(valueIndex).match(`^${executorType.patternInternalSeparators[i]}`))) return false;
+						if (!(match = value.substr(valueIndex).match(`^${executorType.patternInternalSeparators[i]}`))) return false;
 						valueIndex += match[0].length; //move index forward
 					}
 				}
