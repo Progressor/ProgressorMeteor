@@ -180,7 +180,6 @@
 			exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
 			exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
 			categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id ? { _id: tmpl().exercise.get().category_id } : null),
-			userName: Progressor.getUserName,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: language._id === tmpl().exercise.get().programmingLanguage

@@ -39,7 +39,6 @@
 			category: () => tmpl().category.get(),
 			exists: () => tmpl().category.get() && tmpl().category.get()._id,
 			exerciseSearchData: () => ({ _id: tmpl().category.get().programmingLanguage }),
-			userName: Progressor.getUserName,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: tmpl().category.get() && language._id === tmpl().category.get().programmingLanguage

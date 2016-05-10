@@ -24,11 +24,6 @@
 		};
 	}
 
-	Template.exerciseRelease_exerciseList.helpers(
-		{
-			userName: Progressor.getUserName
-		});
-
 	Template.exerciseRelease_exerciseList.events(
 		{
 			'click .a-release': toggleReleaseExercise(true),

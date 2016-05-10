@@ -28,6 +28,7 @@
 						<th scope="col">{{i18n "form.editedAtLabel"}}</th>
 						{{#unless isReleased}}
 							<th scope="col">{{i18n "exercise.releaseRequestedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
+							<th scope="col">{{i18n "exercise.releaseRequestNotifiedAtLabel"}}</th>
 						{{else}}
 							<th scope="col">{{i18n "exercise.releasedByLabel"}}</th>
 							<th scope="col">{{i18n "exercise.releasedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
@@ -48,6 +49,7 @@
 							<td>{{i18nDateTime lastEdited}}</td>
 							{{#unless released.confirmed}}
 								<td>{{i18nDateTime released.requested}}</td>
+								<td>{{i18nDateTime released.notified}}</td>
 								<td><a role="button" class="a-release"><span class="glyphicon glyphicon-book" title="{{i18n "exercise.releaseButton"}}" data-toggle="tooltip"></span></a></td>
 							{{else}}
 								<td>{{userName released.confirmor_id}}</td>
@@ -57,7 +59,7 @@
 						</tr>
 					{{else}}
 						<tr>
-							<td colspan="{{#unless isReleased}}10{{else}}11{{/unless}}" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
+							<td colspan="11" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
 						</tr>
 					{{/each}}
 				</tbody>

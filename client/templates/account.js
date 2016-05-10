@@ -68,7 +68,6 @@
 
 	Template.account_exerciseList.helpers(
 		{
-			userName: Progressor.getUserName,
 			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
 			success: (e, r) => Progressor.isExerciseSuccess(e, r)
 		});

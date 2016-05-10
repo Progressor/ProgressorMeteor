@@ -1,35 +1,50 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 	<head>
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>{{i18nEmailTitle}}</title>
+		<title>Progressor - The Programming Professor</title>
 	</head>
 	<body>
-		<p>{{i18nEmailReleaseNotifierSalutation}}<br>
-			{{i18nEmailReleaseNotifierIntroLine1}}<br>
-			{{i18nEmailReleaseNotifierIntroLine2}}
+		<p>
+			{{i18n "email.releaseNotifier.salutation" address}}<br />
+			{{i18n "email.releaseNotifier.introLine1"}}<br />
+			{{i18n "email.releaseNotifier.introLine2"}}
 		</p>
 		<table>
-			<caption>{{i18nEmailReleaseNotifierNewRequests}}</caption>
-			<tr>
-				<th>{{i18nExerciseNameLabel}}</th>
-				<th>{{i18nExerciseTypeLabel}}</th>
-				<th>{{i18nExerciseProgrammingLanguageLabel}}</th>
-				<th>{{i18nFormCreatedByLabel}}</th>
-				<th>{{i18nExerciseReleaseRequestedAtLabel}}</th>
-			</tr>
-			{{#each requestedExercises}}
+			<caption>{{i18n "email.releaseNotifier.newRequests"}}</caption>
+			<thead>
 				<tr>
-					<td>{{name}}</td>
-					<td>{{type}}</td>
-					<td>{{programmingLanguage}}</td>
-					<td>{{author_id}}</td>
-					<td>{{releasedRequested}}</td>
+					<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+					<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+					<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+					<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+					<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+					<th scope="col">{{i18n "form.createdByLabel"}}</th>
+					<th scope="col">{{i18n "form.editedByLabel"}}</th>
+					<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+					<th scope="col">{{i18n "exercise.releaseRequestedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
 				</tr>
-			{{/each}}
+			</thead>
+			<tbody>
+				{{#each requestedExercises}}
+					<tr>
+						<td>{{i18nName this}}</td>
+						<td>{{i18nExerciseType type}}</td>
+						<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+						<td>{{i18nName category}}</td>
+						<td>{{i18nDifficulty difficulty}}</td>
+						<td>{{userName author_id}}</td>
+						<td>{{userName lastEditor_id}}</td>
+						<td>{{i18nDateTime lastEdited}}</td>
+						<td>{{i18nDateTime released.requested}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
 		</table>
-		<p>{{i18nEmailReleaseNotifierGratitude}}<br><br>
-			{{i18nEmailReleaseNotifierGreeting}}<br>
-			{{i18nEmailTitle}}</p>
+		<p>
+			{{i18n "email.releaseNotifier.gratitude"}}<br /><br />
+			{{i18n "email.releaseNotifier.greeting"}}<br />
+			Progressor - The Programming Professor
+		</p>
 	</body>
 </html>
