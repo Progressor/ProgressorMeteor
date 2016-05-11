@@ -11,13 +11,13 @@
 		],
 		testCases: [
 			{ functionName: 'helloWorld', inputValues: [], expectedOutputValues: ['Hello, World!'] },
-			{ functionName: 'sumInt32Array', inputValues: ['', '0'], expectedOutputValues: ['0'] },
-			{ functionName: 'sumInt32Array', inputValues: ['0', '1'], expectedOutputValues: ['0'] },
-			{ functionName: 'sumInt32Array', inputValues: ['2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97', '25'], expectedOutputValues: ['1060'] },
-			{ functionName: 'sumInt32Array', inputValues: ['1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229', '28'], expectedOutputValues: ['1346267'] },
-			{ functionName: 'getMapEntry', inputValues: ['1:strut1', '1'], expectedOutputValues: ['strut1'] },
-			{ functionName: 'getMapEntry', inputValues: ['1:strut1,2:touwm1,3:weidj1', '2'], expectedOutputValues: ['touwm1'] },
-			{ functionName: 'getMapEntry', inputValues: ['2:touwm1,3:weidj1,1:strut1', '3'], expectedOutputValues: ['weidj1'] }
+			{ functionName: 'sumInt32Array', inputValues: ['{}', '0'], expectedOutputValues: ['0'] },
+			{ functionName: 'sumInt32Array', inputValues: ['{0}', '1'], expectedOutputValues: ['0'] },
+			{ functionName: 'sumInt32Array', inputValues: ['{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 }', '25'], expectedOutputValues: ['1060'] },
+			{ functionName: 'sumInt32Array', inputValues: ['{1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765,10946,17711,28657,46368,75025,121393,196418,317811,514229}', '28'], expectedOutputValues: ['1346267'] },
+			{ functionName: 'getMapEntry', inputValues: ['{1:strut1}', '1'], expectedOutputValues: ['strut1'] },
+			{ functionName: 'getMapEntry', inputValues: ['{1:strut1,2:touwm1,3:weidj1}', '2'], expectedOutputValues: ['touwm1'] },
+			{ functionName: 'getMapEntry', inputValues: ['{2:touwm1,3:weidj1,1:strut1}', '3'], expectedOutputValues: ['weidj1'] }
 		]
 	};
 
@@ -35,7 +35,7 @@
 		Meteor.call('getBlacklist', language, (error, result) => {
 
 			if (error) {
-				console.log('error in getBlacklist: ' + error);
+				console.log('error in getBlacklist: ' + JSON.stringify(error));
 				Meteor.kill();
 			}
 
@@ -43,7 +43,7 @@
 				Meteor.call('getFragment', language, exercise, (error, result) => {
 
 					if (error) {
-						console.log('error in getFragment: ' + error);
+						console.log('error in getFragment: ' + JSON.stringify(error));
 						Meteor.kill();
 					}
 
@@ -54,7 +54,7 @@
 							Meteor.call('execute', language, exercise, fragments[language], (error, result) => {
 
 								if (error) {
-									console.log('error in execute: ' + error);
+									console.log('error in execute: ' + JSON.stringify(error));
 									Meteor.kill();
 								}
 
