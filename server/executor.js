@@ -19,24 +19,23 @@
 	Meteor.methods(
 		{
 			getExecutorTypes() {
-				const rexInt = '[-+]?[0-9]+', rexFlt = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
-				const rexDlmOpn = '{\\s?', rexDlmCls = '\\s?}', rexSep = ',\\s?', rexKVS = ':\\s?';
+				const integerPattern = '[-+]?[0-9]+', floatingPointPattern = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
 				return {
 					types: [
 						{ _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },
 						{ _id: ttypes.TypeCharacter, label: ttypes.TypeCharacter, parameterCount: 0, pattern: '.{1,1}' }, //cannot use single dot, non-greedy operator will be appended
 						{ _id: ttypes.TypeBoolean, label: ttypes.TypeBoolean, parameterCount: 0, pattern: '([tT][rR][uU][eE]|[fF][aA][lL][sS][eE])' }, //true or false (case insensitive)
-						{ _id: ttypes.TypeInt8, label: ttypes.TypeInt8, parameterCount: 0, pattern: rexInt, max: 127 },
-						{ _id: ttypes.TypeInt16, label: ttypes.TypeInt16, parameterCount: 0, pattern: rexInt, max: 32767 },
-						{ _id: ttypes.TypeInt32, label: ttypes.TypeInt32, parameterCount: 0, pattern: rexInt, max: 2147483647 },
-						{ _id: ttypes.TypeInt64, label: ttypes.TypeInt64, parameterCount: 0, pattern: rexInt, max: 9223372036854775807 }, //will round to 9223372036854776000
-						{ _id: ttypes.TypeFloat32, label: ttypes.TypeFloat32, parameterCount: 0, pattern: rexFlt, max: 3.402823E+38 },
-						{ _id: ttypes.TypeFloat64, label: ttypes.TypeFloat64, parameterCount: 0, pattern: rexFlt, max: Number.MAX_VALUE },
-						{ _id: ttypes.TypeDecimal, label: ttypes.TypeDecimal, parameterCount: 0, pattern: rexFlt },
-						{ _id: ttypes.TypeContainerArray, label: `${ttypes.TypeContainerArray}<T>`, parameterCount: 1, patternDelimiters: { open: rexDlmOpn, close: rexDlmCls }, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerList, label: `${ttypes.TypeContainerList}<T>`, parameterCount: 1, patternDelimiters: { open: rexDlmOpn, close: rexDlmCls }, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerSet, label: `${ttypes.TypeContainerSet}<T>`, parameterCount: 1, patternDelimiters: { open: rexDlmOpn, close: rexDlmCls }, patternSeparator: rexSep },
-						{ _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2, patternDelimiters: { open: rexDlmOpn, close: rexDlmCls }, patternSeparator: rexSep, patternInternalSeparators: [rexKVS] }
+						{ _id: ttypes.TypeInt8, label: ttypes.TypeInt8, parameterCount: 0, pattern: integerPattern, max: 127 },
+						{ _id: ttypes.TypeInt16, label: ttypes.TypeInt16, parameterCount: 0, pattern: integerPattern, max: 32767 },
+						{ _id: ttypes.TypeInt32, label: ttypes.TypeInt32, parameterCount: 0, pattern: integerPattern, max: 2147483647 },
+						{ _id: ttypes.TypeInt64, label: ttypes.TypeInt64, parameterCount: 0, pattern: integerPattern, max: 9223372036854775807 }, //will round to 9223372036854776000
+						{ _id: ttypes.TypeFloat32, label: ttypes.TypeFloat32, parameterCount: 0, pattern: floatingPointPattern, max: 3.402823E+38 },
+						{ _id: ttypes.TypeFloat64, label: ttypes.TypeFloat64, parameterCount: 0, pattern: floatingPointPattern, max: Number.MAX_VALUE },
+						{ _id: ttypes.TypeDecimal, label: ttypes.TypeDecimal, parameterCount: 0, pattern: floatingPointPattern },
+						{ _id: ttypes.TypeContainerArray, label: `${ttypes.TypeContainerArray}<T>`, parameterCount: 1 },
+						{ _id: ttypes.TypeContainerList, label: `${ttypes.TypeContainerList}<T>`, parameterCount: 1 },
+						{ _id: ttypes.TypeContainerSet, label: `${ttypes.TypeContainerSet}<T>`, parameterCount: 1 },
+						{ _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2 }
 					],
 					values: [
 						{ types: [ttypes.TypeString], values: ['Progressor', 'Bern University of Applied Sciences'] },
