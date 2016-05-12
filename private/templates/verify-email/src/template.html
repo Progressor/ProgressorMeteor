@@ -1,7 +1,7 @@
 /*
 * ------------------------------------------------------------------------
 *
-* Exercise release requests notifier - !EDITABLE! HTML email template
+* Verify email - !EDITABLE! HTML email template
 *
 * Email template framework: http://foundation.zurb.com/emails.html
 * Parser for making readable to email clients: http://foundation.zurb.com/emails/inliner-v2.html
@@ -79,44 +79,24 @@
 																			</tr>
 																		</tbody>
 																	</table>
-																	<h1>{{i18n "email.releaseNotifier.title"}}</h1>
-																	<p>{{{HTMLBreakLine (i18n "email.releaseNotifier.intro" address '<a href="http://localhost:3000/exercise/release" style="Margin:0;color:#18BC9C;font-family:Lato,`Helvetica Neue`,Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">' '</a>')}}}</p>
+																	<h1>{{i18n "email.verifyEmail.title"}}</h1>
+																	<p>
+																		{{{HTMLBreakLine (i18n "email.verifyEmail.intro" address '<b>' '</b>')}}}
+																	</p>
+																	<a href="{{verifyURL}}">{{verifyURL}}</a>
 																	<table class="spacer">
 																		<tbody>
 																			<tr>
-																				<td height="10px" style="font-size:10px;line-height:10px;"></td>
+																				<td height="16px" style="font-size:16px;line-height:16px;"></td>
 																			</tr>
 																		</tbody>
 																	</table>
-																	<table class="list">
-																		<tr>
-																			<th><b>{{i18n "exercise.nameLabel"}}</b></th>
-																			<th>&nbsp;</th>
-																			<th><b>{{i18n "exercise.programmingLanguageLabel"}}</b></th>
-																			<th>&nbsp;</th>
-																			<th><b>{{i18n "form.createdByLabel"}}</b></th>
-																			<th>&nbsp;</th>
-																			<th><b>{{i18n "exercise.releaseRequestedAtLabel"}}</b></th>
-																		</tr>
-																		{{#each requestedExercises}}
-																			<tr>
-																				<td><a href="http://localhost:3000/exercise/{{_id}}">{{i18nName this}}</a></td>
-																				<td>&nbsp;</td>
-																				<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-																				<td>&nbsp;</td>
-																				<td>{{userName author_id}}</td>
-																				<td>&nbsp;</td>
-																				<td>{{i18nDateTime released.requested}}</td>
-																			</tr>
-																			<tr>
-																				<td height="2px" style="font-size:2px;line-height:2px;"></td>
-																			</tr>
-																		{{/each}}
-																	</table>
+																	<p>{{{HTMLBreakLine (i18n "email.verifyEmail.info" '<b>' '</b>')}}}</p>
+																	<p>{{i18n "email.verifyEmail.motivation"}}</p>
 																	<table class="spacer">
 																		<tbody>
 																			<tr>
-																				<td height="25px" style="font-size:25px;line-height:25px;"></td>
+																				<td height="16px" style="font-size:16px;line-height:16px;"></td>
 																			</tr>
 																		</tbody>
 																	</table>

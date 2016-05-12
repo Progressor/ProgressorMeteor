@@ -2,7 +2,7 @@
 	'use strict';
 
 	//http://docs.meteor.com/#/full/accounts_emailtemplates
-	Accounts.emailTemplates.siteName = "Progressor - The Programming Professor";
+	// Accounts.emailTemplates.siteName = "Progressor - The Programming Professor";
 	// Accounts.emailTemplates.enrollAccount.subject = u => "Welcome to Awesome Town, " + u.profile.name;
 	// Accounts.emailTemplates.enrollAccount.text = (u, l) => "You have been selected to participate in building a better future! To activate your account, simply click the link below:\n\n" + l;
 
@@ -33,5 +33,5 @@
 		}
 		return user;
 	});
-
+	
 })();
