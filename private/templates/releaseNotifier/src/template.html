@@ -1,0 +1,169 @@
+/*
+* ------------------------------------------------------------------------
+*
+* Exercise release requests notifier - !EDITABLE! HTML email template
+*
+* Email template framework: http://foundation.zurb.com/emails.html
+* Parser for making readable to email clients: http://foundation.zurb.com/emails/inliner-v2.html
+* Framework documentation: http://foundation.zurb.com/emails/docs/css-guide.html
+*
+* Further references for HTML emails:
+* - http://kb.mailchimp.com/campaigns/ways-to-build/about-html-email
+* - https://css-tricks.com/using-css-in-html-emails-the-real-story/
+* - https://www.campaignmonitor.com/css/
+*
+* ----------------------------------------------------------------------------
+*/
+<!--DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="template_css.css">
+		<title>Progressor - The Programming Professor</title>
+	</head>
+	<body>
+		<!-- <style> -->
+		<table class="body" data-made-with-foundation="">
+			<tr>
+				<td class="float-center" align="center" valign="top">
+					<center data-parsed="">
+						<style type="text/css" align="center" class="float-center">
+							.header {
+								background: #2c3e50;
+							}
+							.wrapper.secondary {
+								background: #f3f3f3;
+							}
+							.footer p {
+								color: #666666;
+								font-size: 12px;
+							}
+							.footer a {
+								color: #999999;
+							}
+						</style>
+						<table class="container float-center">
+							<br>
+							<tbody>
+								<tr>
+									<td>
+										<table class="spacer">
+											<tbody>
+												<tr>
+													<td height="16px" style="font-size:16px;line-height:16px;"></td>
+												</tr>
+											</tbody>
+										</table>
+										<table class="row">
+											<tbody>
+												<tr>
+													<th class="small-12 large-12 columns first last">
+														<table>
+															<tr>
+																<th class="header">
+																	<!--
+						 											Image source: OneDrive -> shared BaTh folder -> "Public" sub folder
+																	Workaround as images for email have to be public accessible
+						 											As soon as Progressor server is fully public accessible use local image path with: Meteor.absoluteUrl(imgUri)
+						 											-->
+																	<img src="https://ipp0ow.dm2301.livefilestore.com/y3mYRxjzpcbA27DSzeFoNEMua0ZUhTWrqqqWqqL-9iL8CcZkdAaH8iWB1gEp64FIlJ9noQIfwwpveCZhGStRc2M9kIPIPIr3hByLHga7smFDvGlMxIXLyOb3BfY-Rxf-J5cxJC0-EZ85PRoIJo_Y1MSBPbGPaAbUW8Lc_A_wIBtvg4?width=340&height=60&cropmode=none" width="290" height="55" />
+																</th>
+															</tr>
+															<tr>
+																<th>
+																	<table class="spacer">
+																		<tbody>
+																			<tr>
+																				<td height="15px" style="font-size:15px;line-height:15px;"></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																	<h1>{{i18n "email.releaseNotifier.title"}}</h1>
+																	<p>{{{HTMLBreakLine (i18n "email.releaseNotifier.intro" address '<a href="http://localhost:3000/exercise/release" style="Margin:0;color:#18BC9C;font-family:Lato,`Helvetica Neue`,Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">' '</a>')}}}</p>
+																	<table class="spacer">
+																		<tbody>
+																			<tr>
+																				<td height="10px" style="font-size:10px;line-height:10px;"></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																	<table class="list">
+																		<tr>
+																			<th><b>{{i18n "exercise.nameLabel"}}</b></th>
+																			<th>&nbsp;</th>
+																			<th><b>{{i18n "exercise.programmingLanguageLabel"}}</b></th>
+																			<th>&nbsp;</th>
+																			<th><b>{{i18n "form.createdByLabel"}}</b></th>
+																			<th>&nbsp;</th>
+																			<th><b>{{i18n "exercise.releaseRequestedAtLabel"}}</b></th>
+																		</tr>
+																		{{#each requestedExercises}}
+																			<tr>
+																				<td><a href="http://localhost:3000/exercise/{{_id}}">{{i18nName this}}</a></td>
+																				<td>&nbsp;</td>
+																				<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+																				<td>&nbsp;</td>
+																				<td>{{userName author_id}}</td>
+																				<td>&nbsp;</td>
+																				<td>{{i18nDateTime released.requested}}</td>
+																			</tr>
+																			<tr>
+																				<td height="2px" style="font-size:2px;line-height:2px;"></td>
+																			</tr>
+																		{{/each}}
+																	</table>
+																	<table class="spacer">
+																		<tbody>
+																			<tr>
+																				<td height="25px" style="font-size:25px;line-height:25px;"></td>
+																			</tr>
+																		</tbody>
+																	</table>
+																	<p>{{i18n "email.greeting"}}<br><b>Progressor - The Programming Professor</b></p>
+																</th>
+																<th class="expander"></th>
+															</tr>
+														</table>
+													</th>
+												</tr>
+											</tbody>
+										</table>
+										<table class="wrapper secondary" align="center">
+											<tr>
+												<td class="wrapper-inner">
+													<table class="spacer">
+														<tbody>
+															<tr>
+																<td height="16px" style="font-size:16px;line-height:16px;"></td>
+															</tr>
+														</tbody>
+													</table>
+													<table class="row">
+														<tbody>
+															<tr>
+																<th class="small-12 large-6 columns last footer">
+																	<table>
+																		<tr>
+																			<th>
+																				<p class="text-center">{{{HTMLBreakLine (i18n "email.footer")}}}</p>
+																			</th>
+																		</tr>
+																	</table>
+																</th>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</center>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
