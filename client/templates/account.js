@@ -53,13 +53,33 @@
 					}));
 				else
 					Progressor.showAlert(i18n('form.noSelectionMessage'));
+			},
+			'click #at-btn' (event) {
+				if (AccountsTemplates.getState() == 'resetPwd') {
+					event.preventDefault();
+					let new_password = $('#at-field-password').val(), confirm_password = $('#at-field-password_again').val();
+					
+					if (new_password && new_password == confirm_password) {
+						Accounts.resetPassword(Session.get('resetPasswordToken'), new_password, function (err) {
+							if (!err) {
+								Progressor.showAlert(i18n('account.pwdResetSuccess'), 'success', 10000);
+								Session.get('doneCallback')(); // done() -> http://guide.meteor.com/accounts.html
+								Session.set('resetPasswordToken', undefined);
+								Session.set('doneCallback', undefined);
+							} else {
+								Progressor.showAlert(i18n('account.pwdResetError'), 'danger', 10000);
+							}
+						});
+					}
+					return false;
+				}
 			}
 		});
 
 	/*
 	 * SUB-TEMPLATE EXERCISE LIST
 	 */
-
+	
 	function toggleArchiveExercise(archive) {
 		return function () {
 			Meteor.call('toggleArchiveExercise', { _id: this._id }, archive, Progressor.handleError());
