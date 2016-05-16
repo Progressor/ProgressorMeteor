@@ -57,10 +57,10 @@
 			'click #at-btn' (event) {
 				if (AccountsTemplates.getState() == 'resetPwd') {
 					event.preventDefault();
-					let new_password = $('#at-field-password').val(), confirm_password = $('#at-field-password_again').val();
+					let $newPassword = $('#at-field-password').val(), $confirmPassword = $('#at-field-password_again').val();
 					
-					if (new_password && new_password == confirm_password) {
-						Accounts.resetPassword(Session.get('resetPasswordToken'), new_password, function (err) {
+					if ($newPassword && $newPassword == $confirmPassword) {
+						Accounts.resetPassword(Session.get('resetPasswordToken'), $newPassword, function (err) {
 							if (!err) {
 								Progressor.showAlert(i18n('account.pwdResetSuccess'), 'success', 10000);
 								Session.get('doneCallback')(); // done() -> http://guide.meteor.com/accounts.html
