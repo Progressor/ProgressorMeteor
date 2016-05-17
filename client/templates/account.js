@@ -54,24 +54,22 @@
 				else
 					Progressor.showAlert(i18n('form.noSelectionMessage'));
 			},
-			'click #at-btn' (event) {
+			'click #at-btn'(event) {
 				if (AccountsTemplates.getState() == 'resetPwd') {
 					event.preventDefault();
-					let $newPassword = $('#at-field-password').val(), $confirmPassword = $('#at-field-password_again').val();
-					
-					if ($newPassword && $newPassword == $confirmPassword) {
-						Accounts.resetPassword(Session.get('resetPasswordToken'), $newPassword, function (err) {
-							if (!err) {
-								Progressor.showAlert(i18n('account.pwdResetSuccess'), 'success', 10000);
-								Session.get('doneCallback')(); // done() -> http://guide.meteor.com/accounts.html
-								Session.set('resetPasswordToken', undefined);
-								Session.set('doneCallback', undefined);
-							} else {
-								Progressor.showAlert(i18n('account.pwdResetError'), 'danger', 10000);
-							}
+					let newPassword = $('#at-field-password').val(), confirmPassword = $('#at-field-password_again').val();
+					if (newPassword && newPassword == confirmPassword) {
+						let { token, done } = Session.get('onResetPasswordLink_arguments');
+						Accounts.resetPassword(token, newPassword, error => {
+							if (!error) {
+								Progressor.showAlert(i18n('account.passwordResetSuccessMessage'), 'success');
+								done();
+								Session.set('onResetPasswordLink_arguments', undefined);
+							} else
+								Progressor.showAlert(i18n('account.passwordResetErrorMessage'), 'danger');
 						});
-					}
-					return false;
+					} else
+						Progressor.showAlert(i18n('account.passwordMismatchMessage'));
 				}
 			}
 		});
@@ -79,7 +77,7 @@
 	/*
 	 * SUB-TEMPLATE EXERCISE LIST
 	 */
-	
+
 	function toggleArchiveExercise(archive) {
 		return function () {
 			Meteor.call('toggleArchiveExercise', { _id: this._id }, archive, Progressor.handleError());
