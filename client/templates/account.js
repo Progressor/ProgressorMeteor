@@ -55,7 +55,7 @@
 					Progressor.showAlert(i18n('form.noSelectionMessage'));
 			},
 			'click #at-btn'(event) {
-				if (AccountsTemplates.getState() == 'resetPwd') {
+				if (AccountsTemplates.getState() === 'resetPwd') {
 					event.preventDefault();
 					let newPassword = $('#at-field-password').val(), confirmPassword = $('#at-field-password_again').val();
 					if (newPassword && newPassword == confirmPassword) {
