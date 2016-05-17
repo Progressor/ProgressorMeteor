@@ -20,7 +20,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="../../template.css">
-		<title>Progressor - The Programming Professor</title>
+		<title>{{i18n "layout.title"}} - {{i18n "layout.explanation"}}</title>
 	</head>
 	<body>
 		<!-- <style> -->
@@ -80,7 +80,7 @@
 																		</tbody>
 																	</table>
 																	<h1>{{i18n "email.releaseNotifier.title"}}</h1>
-																	<p>{{{HTMLBreakLine (i18n "email.releaseNotifier.intro" address '<a href="http://localhost:3000/exercise/release" style="Margin:0;color:#18BC9C;font-family:Lato,`Helvetica Neue`,Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">' '</a>')}}}</p>
+																	<p>{{{htmlLineBreak (i18n "email.releaseNotifier.intro" address '<a href="http://localhost:3000/exercise/release" style="Margin:0;color:#18BC9C;font-family:Lato,`Helvetica Neue`,Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">' '</a>')}}}</p>
 																	<table class="spacer">
 																		<tbody>
 																			<tr>
@@ -120,7 +120,7 @@
 																			</tr>
 																		</tbody>
 																	</table>
-																	<p>{{i18n "email.greeting"}}<br><b>Progressor - The Programming Professor</b></p>
+																	<p>{{i18n "email.greeting"}}<br><b>{{i18n "layout.title"}} - {{i18n "layout.explanation"}}</b></p>
 																</th>
 																<th class="expander"></th>
 															</tr>
@@ -146,7 +146,7 @@
 																	<table>
 																		<tr>
 																			<th>
-																				<p class="text-center">{{{HTMLBreakLine (i18n "email.footer")}}}</p>
+																				<p class="text-center">{{{htmlLineBreak (i18n "email.footer")}}}</p>
 																			</th>
 																		</tr>
 																	</table>

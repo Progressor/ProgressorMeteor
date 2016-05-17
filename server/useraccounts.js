@@ -1,6 +1,6 @@
 (function () {
 	'use strict';
-	
+
 	Meteor.methods(
 		{
 			toggleUsersRoles(users, roles, isInRole) {
@@ -18,15 +18,15 @@
 			}
 		});
 
-	Accounts.onCreateUser(function (options, user) {
+	Accounts.onCreateUser((options, user) => {
 		if (options.profile)
 			user.profile = options.profile;
 		if (!Roles.getUsersInRole(Progressor.ROLE_ADMIN).count()) {
-			//Roles.addUsersToRoles(user._id, Progressor.ROLE_ADMIN);
+			//Roles.addUsersToRoles(user._id, Progressor.ROLE_ADMIN); //object does not yet exist
 			user.roles = [Progressor.ROLE_ADMIN];
 			Houston._admins.insert({ user_id: user._id });
 		}
 		return user;
 	});
-	
+
 })();
