@@ -106,7 +106,7 @@
 
 	function testValidTestCases({ functions, testCases }) {
 		return _.every(testCases, testCase => {
-			const _function = _.where(functions, { name: testCase.functionName });
+			const _function = _.findWhere(functions, { name: testCase.functionName });
 			return testCase.functionName && _function
 						 && _function.inputTypes.length === testCase.inputValues.length && _.every(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
 						 && _function.outputTypes.length === testCase.expectedOutputValues.length && _.every(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
@@ -392,11 +392,11 @@
 				template.$(`#${$(event.currentTarget).attr('aria-controls')}`).find('.CodeMirror')[0].CodeMirror.refresh();
 			},
 			'keyup #tab-fragment>.CodeMirror': _.throttle(function (event, template) {
-				if (!(template.fragmentTyped = !!Session.get('fragment'))) changeExercise(() => null)();
+				if (!(template.fragmentTyped = !!Session.get('fragment'))) changeExercise(() => null).call(this, event, template);
 			}, 500),
 			'keyup #tab-solution>.CodeMirror': _.throttle(function (event, template) {
 				const solution = Session.get('solution');
-				if (!(template.solutionTyped = !!solution)) changeExercise(() => null)();
+				if (!(template.solutionTyped = !!solution)) changeExercise(() => null).call(this, event, template);
 				if (template.exercise.get().programmingLanguage)
 					if (!template.blacklist.get() || template.exercise.get().programmingLanguage !== template.blacklist.get().programmingLanguage) {
 						template.blacklist.set({ programmingLanguage: template.exercise.get().programmingLanguage });
