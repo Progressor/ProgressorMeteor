@@ -12,14 +12,14 @@
 		let introIndex = 0;
 		const introInterval = Meteor.setInterval(() => {
 			if (introIndex < introTexts[0].length)
-				$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
+				this.$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
 			else if (introIndex < introTexts[0].length + introTexts[1].length) {
 				if (introIndex == introTexts[0].length)
-					$('<small id="introExplanation"></small>').appendTo($('#intro')); //create & animate explanation
-				$('#introExplanation').text(introTexts[1].substr(0, ++introIndex - introTexts[0].length));
+					$('<small id="introExplanation"></small>').appendTo(this.$('#intro')); //create & animate explanation
+				this.$('#introExplanation').text(introTexts[1].substr(0, ++introIndex - introTexts[0].length));
 			} else {
 				Meteor.clearInterval(introInterval); //clear animation interval
-				$('<span class="pulsate">_</span>').appendTo($('#introExplanation'));
+				$('<span class="pulsate">_</span>').appendTo(this.$('#introExplanation'));
 			}
 		}, 150);
 	});

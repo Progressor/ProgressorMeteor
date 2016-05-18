@@ -6,7 +6,7 @@
 	 */
 
 	Template.exerciseRelease.onRendered(function () {
-		$('#collapseReleased').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		this.$('#collapseReleased').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	/*

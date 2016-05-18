@@ -14,7 +14,7 @@
 	});
 
 	Template.account.onRendered(function () {
-		$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		this.$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 		Meteor.typeahead.inject();
 	});
 
@@ -41,8 +41,8 @@
 					Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
 				});
 			},
-			'click #button-make-admin'() {
-				const $input = $('#input-make-admin'), $group = $input.closest('.form-group'), user = tmpl().userValues[$input.val()];
+			'click #button-make-admin'(event, template) {
+				const $input = template.$('#input-make-admin'), $group = $input.closest('.form-group'), user = template.userValues[$input.val()];
 				if (user)
 					Meteor.call('toggleUsersRoles', [user._id], [Progressor.ROLE_ADMIN], true, Progressor.handleError(error => {
 						$group.addClass(!error ? 'has-success' : 'has-error');
@@ -54,10 +54,10 @@
 				else
 					Progressor.showAlert(i18n('form.noSelectionMessage'));
 			},
-			'click #at-btn'(event) {
+			'click #at-btn'(event, template) {
 				if (AccountsTemplates.getState() === 'resetPwd') {
 					event.preventDefault();
-					let newPassword = $('#at-field-password').val(), confirmPassword = $('#at-field-password_again').val();
+					let newPassword = template.$('#at-field-password').val(), confirmPassword = template.$('#at-field-password_again').val();
 					if (newPassword && newPassword == confirmPassword) {
 						let { token, done } = Session.get('onResetPasswordLink_arguments');
 						Accounts.resetPassword(token, newPassword, error => {
