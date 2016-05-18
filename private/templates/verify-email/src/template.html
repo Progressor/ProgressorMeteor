@@ -1,20 +1,3 @@
-/*
-* ------------------------------------------------------------------------
-*
-* Verify email - !EDITABLE! HTML email template
-*
-* Email template framework: http://foundation.zurb.com/emails.html
-* Parser for making readable to email clients: http://foundation.zurb.com/emails/inliner-v2.html
-* Framework documentation: http://foundation.zurb.com/emails/docs/css-guide.html
-*
-* Further references for HTML emails:
-* - http://kb.mailchimp.com/campaigns/ways-to-build/about-html-email
-* - https://css-tricks.com/using-css-in-html-emails-the-real-story/
-* - https://www.campaignmonitor.com/css/
-*
-* ----------------------------------------------------------------------------
-*/
-<!--DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"-->
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -44,7 +27,6 @@
 							}
 						</style>
 						<table class="container float-center">
-							<br>
 							<tbody>
 								<tr>
 									<td>
@@ -62,12 +44,7 @@
 														<table>
 															<tr>
 																<th class="header">
-																	<!--
-						 											Image source: OneDrive -> shared BaTh folder -> "Public" sub folder
-																	Workaround as images for email have to be public accessible
-						 											As soon as Progressor server is fully public accessible use local image path with: Meteor.absoluteUrl(imgUri)
-						 											-->
-																	<img src="https://ipp0ow.dm2301.livefilestore.com/y3mYRxjzpcbA27DSzeFoNEMua0ZUhTWrqqqWqqL-9iL8CcZkdAaH8iWB1gEp64FIlJ9noQIfwwpveCZhGStRc2M9kIPIPIr3hByLHga7smFDvGlMxIXLyOb3BfY-Rxf-J5cxJC0-EZ85PRoIJo_Y1MSBPbGPaAbUW8Lc_A_wIBtvg4?width=340&height=60&cropmode=none" width="290" height="55" />
+																	<img src="{{absoluteUrl "images/logo-progressor-email.jpg"}}" width="280" height="46" />
 																</th>
 															</tr>
 															<tr>
@@ -100,7 +77,10 @@
 																			</tr>
 																		</tbody>
 																	</table>
-																	<p>{{i18n "email.greeting"}}<br><b>{{i18n "layout.title"}} - {{i18n "layout.explanation"}}</b></p>
+																	<p>
+																		{{i18n "email.greeting"}}<br />
+																		<b>{{i18n "layout.title"}} - {{i18n "layout.explanation"}}</b>
+																	</p>
 																</th>
 																<th class="expander"></th>
 															</tr>
