@@ -4,6 +4,8 @@ Meteor.startup(function () {
 	if (Progressor.categories.find().count() === 0
 			&& Progressor.exercises.find().count() === 0
 			&& Progressor.results.find().count() === 0
+			&& Progressor.examinations.find().count() === 0
+			&& Progressor.executions.find().count() === 0
 			&& Meteor.users.find().count() > 0) {
 
 		_.each(
@@ -30,9 +32,7 @@ Meteor.startup(function () {
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
 				}
-			], category => {
-				Progressor.categories.insert(category);
-			});
+			], d => Progressor.categories.insert(d));
 
 		_.each(
 			[
@@ -362,9 +362,39 @@ Meteor.startup(function () {
 					lastEditor_id: Meteor.users.findOne()._id,
 					lastEdited: new Date()
 				}
-			], exercise => {
-				Progressor.exercises.insert(exercise);
-			});
+			], d => Progressor.exercises.insert(d));
+
+		_.each(
+			[
+				{
+					exercises: _.map(Progressor.exercises.find().fetch(), exercise => ({
+						_id: exercise._id,
+						weight: Math.floor(Random.fraction() * 12 + 1)
+					})),
+					durationMinutes: 25,
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
+				}
+			], d => Progressor.examinations.insert(d));
+
+		_.each(
+			[
+				{
+					examination: Progressor.examinations.findOne()._id,
+					exercises: _.chain(Progressor.exercises.find().fetch()).map(exercise => ({
+						base_id: exercise._id,
+						_id: Progressor.exercises.insert(_.omit(exercise, '_id', 'category_id', 'difficulty')).insertedId,
+						weight: Math.floor(Random.fraction() * 12 + 1)
+					})).sortBy(() => Random.fraction()),
+					examinees: [
+						Meteor.users.findOne()._id
+					],
+					author_id: Meteor.users.findOne()._id,
+					lastEditor_id: Meteor.users.findOne()._id,
+					lastEdited: new Date()
+				}
+			], d => Progressor.executions.insert(d));
 
 		_.each(
 			[
@@ -384,8 +414,7 @@ Meteor.startup(function () {
 					],
 					solved: new Date()
 				}
-			], result => {
-				Progressor.results.insert(result);
-			});
+			], d => Progressor.results.insert(d));
 	}
+
 });

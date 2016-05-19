@@ -1,16 +1,13 @@
 (function () {
 	'use strict';
 
-	const executorInstances = [
-		{ host: 'localhost', port: 9090 }
-	];
-
-	let executorInstanceIndex = 0;
+	const executors = Progressor.getConfiguration().executors;
+	let executorIndex = 0;
 
 	function connectExecutor() {
 
-		//const instance = Random.choice(executorInstances); //random
-		const instance = executorInstances[executorInstanceIndex = ++executorInstanceIndex % executorInstances.length]; //round-robin
+		//const instance = Random.choice(executors); //random
+		const instance = executors[executorIndex = ++executorIndex % executors.length]; //round-robin
 		const connection = thrift.createConnection(instance.host, instance.port);
 		const client = thrift.createClient(Executor, connection);
 		return { connection, client };
