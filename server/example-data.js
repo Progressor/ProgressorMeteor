@@ -381,7 +381,7 @@ Meteor.startup(function () {
 		_.each(
 			[
 				{
-					examination: Progressor.examinations.findOne()._id,
+					examination_id: Progressor.examinations.findOne()._id,
 					exercises: _.chain(Progressor.exercises.find().fetch()).map(exercise => ({
 						base_id: exercise._id,
 						_id: Progressor.exercises.insert(_.omit(exercise, '_id', 'category_id', 'difficulty')).insertedId,
