@@ -23,7 +23,7 @@ The *Thrift* generator generates [*Node.js*](https://nodejs.org/) code which nee
 
 4. Change variable declarations in `executor_types.js`.
 
-   * Remove the keyword `var` for the declarations `var thrift = ...`, `var Thrift = ...`, `var Q = ...` and var ttypes = ...`.
+   * Remove the keyword `var` for the declarations `var thrift = ...`, `var Thrift = ...`, `var Q = ...` and `var ttypes = ...`.
    * Replace `module.exports` by `ttypes`.
    * These changes allow the variables to be accessible in other code files of the same package and to be exported for futher use outside the package.
 
