@@ -8,6 +8,135 @@ Thrift = thrift.Thrift;
 Q = thrift.Q;
 
 ttypes = {};
+
+VersionInformation = ttypes.VersionInformation = function (args) {
+	this.languageVersion = null;
+	this.compilerName = null;
+	this.compilerVersion = null;
+	this.platformName = null;
+	this.platformVersion = null;
+	this.platformArchitecture = null;
+	if (args) {
+		if (args.languageVersion !== undefined && args.languageVersion !== null) {
+			this.languageVersion = args.languageVersion;
+		}
+		if (args.compilerName !== undefined && args.compilerName !== null) {
+			this.compilerName = args.compilerName;
+		}
+		if (args.compilerVersion !== undefined && args.compilerVersion !== null) {
+			this.compilerVersion = args.compilerVersion;
+		}
+		if (args.platformName !== undefined && args.platformName !== null) {
+			this.platformName = args.platformName;
+		}
+		if (args.platformVersion !== undefined && args.platformVersion !== null) {
+			this.platformVersion = args.platformVersion;
+		}
+		if (args.platformArchitecture !== undefined && args.platformArchitecture !== null) {
+			this.platformArchitecture = args.platformArchitecture;
+		}
+	}
+};
+VersionInformation.prototype = {};
+VersionInformation.prototype.read = function (input) {
+	input.readStructBegin();
+	while (true) {
+		var ret = input.readFieldBegin();
+		var fname = ret.fname;
+		var ftype = ret.ftype;
+		var fid = ret.fid;
+		if (ftype == Thrift.Type.STOP) {
+			break;
+		}
+		switch (fid) {
+			case 1:
+				if (ftype == Thrift.Type.STRING) {
+					this.languageVersion = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 2:
+				if (ftype == Thrift.Type.STRING) {
+					this.compilerName = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 3:
+				if (ftype == Thrift.Type.STRING) {
+					this.compilerVersion = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 4:
+				if (ftype == Thrift.Type.STRING) {
+					this.platformName = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 5:
+				if (ftype == Thrift.Type.STRING) {
+					this.platformVersion = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 6:
+				if (ftype == Thrift.Type.STRING) {
+					this.platformArchitecture = input.readString();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			default:
+				input.skip(ftype);
+		}
+		input.readFieldEnd();
+	}
+	input.readStructEnd();
+	return;
+};
+
+VersionInformation.prototype.write = function (output) {
+	output.writeStructBegin('VersionInformation');
+	if (this.languageVersion !== null && this.languageVersion !== undefined) {
+		output.writeFieldBegin('languageVersion', Thrift.Type.STRING, 1);
+		output.writeString(this.languageVersion);
+		output.writeFieldEnd();
+	}
+	if (this.compilerName !== null && this.compilerName !== undefined) {
+		output.writeFieldBegin('compilerName', Thrift.Type.STRING, 2);
+		output.writeString(this.compilerName);
+		output.writeFieldEnd();
+	}
+	if (this.compilerVersion !== null && this.compilerVersion !== undefined) {
+		output.writeFieldBegin('compilerVersion', Thrift.Type.STRING, 3);
+		output.writeString(this.compilerVersion);
+		output.writeFieldEnd();
+	}
+	if (this.platformName !== null && this.platformName !== undefined) {
+		output.writeFieldBegin('platformName', Thrift.Type.STRING, 4);
+		output.writeString(this.platformName);
+		output.writeFieldEnd();
+	}
+	if (this.platformVersion !== null && this.platformVersion !== undefined) {
+		output.writeFieldBegin('platformVersion', Thrift.Type.STRING, 5);
+		output.writeString(this.platformVersion);
+		output.writeFieldEnd();
+	}
+	if (this.platformArchitecture !== null && this.platformArchitecture !== undefined) {
+		output.writeFieldBegin('platformArchitecture', Thrift.Type.STRING, 6);
+		output.writeString(this.platformArchitecture);
+		output.writeFieldEnd();
+	}
+	output.writeFieldStop();
+	output.writeStructEnd();
+	return;
+};
+
 FunctionSignature = ttypes.FunctionSignature = function (args) {
 	this.name = null;
 	this.inputNames = null;
@@ -412,10 +541,18 @@ Result.prototype.write = function (output) {
 };
 
 PerformanceIndicators = ttypes.PerformanceIndicators = function (args) {
-	this.runtimeMilliseconds = null;
+	this.totalCompileTimeMilliseconds = null;
+	this.totalExecutionTimeMilliseconds = null;
+	this.testCaseExecutionTimeMilliseconds = null;
 	if (args) {
-		if (args.runtimeMilliseconds !== undefined && args.runtimeMilliseconds !== null) {
-			this.runtimeMilliseconds = args.runtimeMilliseconds;
+		if (args.totalCompileTimeMilliseconds !== undefined && args.totalCompileTimeMilliseconds !== null) {
+			this.totalCompileTimeMilliseconds = args.totalCompileTimeMilliseconds;
+		}
+		if (args.totalExecutionTimeMilliseconds !== undefined && args.totalExecutionTimeMilliseconds !== null) {
+			this.totalExecutionTimeMilliseconds = args.totalExecutionTimeMilliseconds;
+		}
+		if (args.testCaseExecutionTimeMilliseconds !== undefined && args.testCaseExecutionTimeMilliseconds !== null) {
+			this.testCaseExecutionTimeMilliseconds = args.testCaseExecutionTimeMilliseconds;
 		}
 	}
 };
@@ -433,13 +570,24 @@ PerformanceIndicators.prototype.read = function (input) {
 		switch (fid) {
 			case 1:
 				if (ftype == Thrift.Type.DOUBLE) {
-					this.runtimeMilliseconds = input.readDouble();
+					this.totalCompileTimeMilliseconds = input.readDouble();
 				} else {
 					input.skip(ftype);
 				}
 				break;
-			case 0:
-				input.skip(ftype);
+			case 2:
+				if (ftype == Thrift.Type.DOUBLE) {
+					this.totalExecutionTimeMilliseconds = input.readDouble();
+				} else {
+					input.skip(ftype);
+				}
+				break;
+			case 3:
+				if (ftype == Thrift.Type.DOUBLE) {
+					this.testCaseExecutionTimeMilliseconds = input.readDouble();
+				} else {
+					input.skip(ftype);
+				}
 				break;
 			default:
 				input.skip(ftype);
@@ -452,9 +600,19 @@ PerformanceIndicators.prototype.read = function (input) {
 
 PerformanceIndicators.prototype.write = function (output) {
 	output.writeStructBegin('PerformanceIndicators');
-	if (this.runtimeMilliseconds !== null && this.runtimeMilliseconds !== undefined) {
-		output.writeFieldBegin('runtimeMilliseconds', Thrift.Type.DOUBLE, 1);
-		output.writeDouble(this.runtimeMilliseconds);
+	if (this.totalCompileTimeMilliseconds !== null && this.totalCompileTimeMilliseconds !== undefined) {
+		output.writeFieldBegin('totalCompileTimeMilliseconds', Thrift.Type.DOUBLE, 1);
+		output.writeDouble(this.totalCompileTimeMilliseconds);
+		output.writeFieldEnd();
+	}
+	if (this.totalExecutionTimeMilliseconds !== null && this.totalExecutionTimeMilliseconds !== undefined) {
+		output.writeFieldBegin('totalExecutionTimeMilliseconds', Thrift.Type.DOUBLE, 2);
+		output.writeDouble(this.totalExecutionTimeMilliseconds);
+		output.writeFieldEnd();
+	}
+	if (this.testCaseExecutionTimeMilliseconds !== null && this.testCaseExecutionTimeMilliseconds !== undefined) {
+		output.writeFieldBegin('testCaseExecutionTimeMilliseconds', Thrift.Type.DOUBLE, 3);
+		output.writeDouble(this.testCaseExecutionTimeMilliseconds);
 		output.writeFieldEnd();
 	}
 	output.writeFieldStop();
