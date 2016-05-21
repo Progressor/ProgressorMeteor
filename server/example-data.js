@@ -367,6 +367,16 @@ Meteor.startup(function () {
 		_.each(
 			[
 				{
+					names: [
+						{
+							language: 'en',
+							name: 'Java - 1st Term'
+						},
+						{
+							language: 'de',
+							name: 'Java - 1. Semester'
+						}
+					],
 					exercises: _.map(Progressor.exercises.find().fetch(), exercise => ({
 						_id: exercise._id,
 						weight: Math.floor(Random.fraction() * 12 + 1)
@@ -381,6 +391,22 @@ Meteor.startup(function () {
 		_.each(
 			[
 				{
+					names: [
+						{
+							language: 'en',
+							name: 'Java - 1st Term - 2016'
+						},
+						{
+							language: 'de',
+							name: 'Java - 1. Semester - 2016'
+						}
+					],
+					descriptions: [
+						{
+							language: 'en',
+							description: 'This exam contributes 30% to the final grade.'
+						}
+					],
 					examination_id: Progressor.examinations.findOne()._id,
 					exercises: _.chain(Progressor.exercises.find().fetch()).map(exercise => ({
 						base_id: exercise._id,
