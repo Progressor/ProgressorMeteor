@@ -9,19 +9,23 @@
 	}
 
 	Template.home.onRendered(function () {
-		let introIndex = 0;
-		const introInterval = Meteor.setInterval(() => {
-			if (introIndex < introTexts[0].length)
-				this.$('#intro').text(introTexts[0].substr(0, ++introIndex)); //animate title
-			else if (introIndex < introTexts[0].length + introTexts[1].length) {
-				if (introIndex == introTexts[0].length)
+		this.introIndex = 0;
+		this.introInterval = Meteor.setInterval(() => {
+			if (this.introIndex < introTexts[0].length)
+				this.$('#intro').text(introTexts[0].substr(0, ++this.introIndex)); //animate title
+			else if (this.introIndex < introTexts[0].length + introTexts[1].length) {
+				if (this.introIndex == introTexts[0].length)
 					$('<small id="introExplanation"></small>').appendTo(this.$('#intro')); //create & animate explanation
-				this.$('#introExplanation').text(introTexts[1].substr(0, ++introIndex - introTexts[0].length));
+				this.$('#introExplanation').text(introTexts[1].substr(0, ++this.introIndex - introTexts[0].length));
 			} else {
-				Meteor.clearInterval(introInterval); //clear animation interval
+				Meteor.clearInterval(this.introInterval); //clear animation interval
 				$('<span class="pulsate">_</span>').appendTo(this.$('#introExplanation'));
 			}
 		}, 150);
+	});
+
+	Template.home.onDestroyed(function () {
+		Meteor.clearInterval(this.introInterval);
 	});
 
 	Template.home.helpers(
