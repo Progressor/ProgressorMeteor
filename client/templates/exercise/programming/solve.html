@@ -138,10 +138,8 @@
 								</tbody>
 							</table>
 						{{else}}
-							<div class="execute-result">
-								<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
-								<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
-							</div>
+							<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+							<pre class="text-danger execute-result">{{testCaseActualOutput testCases.[0]}}</pre>
 						{{/unless}}
 						{{#unless isResult}}
 							{{#if solutionVisible}}
