@@ -3,12 +3,11 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-thrift = Npm.require('thrift');
+thrift = require('thrift');
 Thrift = thrift.Thrift;
 Q = thrift.Q;
 
 ttypes = {};
-
 VersionInformation = ttypes.VersionInformation = function (args) {
 	this.languageVersion = null;
 	this.compilerName = null;
@@ -541,12 +540,12 @@ Result.prototype.write = function (output) {
 };
 
 PerformanceIndicators = ttypes.PerformanceIndicators = function (args) {
-	this.totalCompileTimeMilliseconds = null;
+	this.totalCompilationTimeMilliseconds = null;
 	this.totalExecutionTimeMilliseconds = null;
 	this.testCaseExecutionTimeMilliseconds = null;
 	if (args) {
-		if (args.totalCompileTimeMilliseconds !== undefined && args.totalCompileTimeMilliseconds !== null) {
-			this.totalCompileTimeMilliseconds = args.totalCompileTimeMilliseconds;
+		if (args.totalCompilationTimeMilliseconds !== undefined && args.totalCompilationTimeMilliseconds !== null) {
+			this.totalCompilationTimeMilliseconds = args.totalCompilationTimeMilliseconds;
 		}
 		if (args.totalExecutionTimeMilliseconds !== undefined && args.totalExecutionTimeMilliseconds !== null) {
 			this.totalExecutionTimeMilliseconds = args.totalExecutionTimeMilliseconds;
@@ -570,7 +569,7 @@ PerformanceIndicators.prototype.read = function (input) {
 		switch (fid) {
 			case 1:
 				if (ftype == Thrift.Type.DOUBLE) {
-					this.totalCompileTimeMilliseconds = input.readDouble();
+					this.totalCompilationTimeMilliseconds = input.readDouble();
 				} else {
 					input.skip(ftype);
 				}
@@ -600,9 +599,9 @@ PerformanceIndicators.prototype.read = function (input) {
 
 PerformanceIndicators.prototype.write = function (output) {
 	output.writeStructBegin('PerformanceIndicators');
-	if (this.totalCompileTimeMilliseconds !== null && this.totalCompileTimeMilliseconds !== undefined) {
-		output.writeFieldBegin('totalCompileTimeMilliseconds', Thrift.Type.DOUBLE, 1);
-		output.writeDouble(this.totalCompileTimeMilliseconds);
+	if (this.totalCompilationTimeMilliseconds !== null && this.totalCompilationTimeMilliseconds !== undefined) {
+		output.writeFieldBegin('totalCompilationTimeMilliseconds', Thrift.Type.DOUBLE, 1);
+		output.writeDouble(this.totalCompilationTimeMilliseconds);
 		output.writeFieldEnd();
 	}
 	if (this.totalExecutionTimeMilliseconds !== null && this.totalExecutionTimeMilliseconds !== undefined) {

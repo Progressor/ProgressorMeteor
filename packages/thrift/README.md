@@ -13,8 +13,8 @@ The *Thrift* generator generates [*Node.js*](https://nodejs.org/) code which nee
 
 2. Copy the generated files to the correct locations.
 
-   * Copy `ExecutorService.js` to `.\packages\thrift`.
    * Copy `executor_types.js` to `.\packages\thrift\lib`.
+   * Copy `ExecutorService.js` to `.\packages\thrift`.
    * This forces Meteor to load the types before the service.
 
 3. Replace all `require(...)` calls by `Npm.require(...)`.
