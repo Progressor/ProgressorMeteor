@@ -3,7 +3,7 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-thrift = require('thrift');
+thrift = Npm.require('thrift');
 Thrift = thrift.Thrift;
 Q = thrift.Q;
 

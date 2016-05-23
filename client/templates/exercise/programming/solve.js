@@ -74,6 +74,7 @@
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(getExercise(), c, getExecutionResults()),
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
+			testCaseExecutionTime: c => Progressor.getTestCaseExecutionTime(getExercise(), c, getExecutionResults()),
 			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults()),
 			showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
 		});

@@ -93,6 +93,7 @@
 									<tr>
 										<th scope="col" colspan="{{#if testCasesEvaluated}}2{{else}}1{{/if}}">{{i18n "exercise.testCase.descriptionLabel"}}</th>
 										<th scope="col">{{i18n "exercise.testCase.expectedOutputLabel"}}</th>
+										{{!-- <th scope="col">{{i18n "exercise.testCase.executionTimeLabel"}}</th> --}}
 									</tr>
 								</thead>
 								<tbody>
@@ -118,6 +119,7 @@
 														{{/unless}}
 													{{/if}}
 												</td>
+												{{!-- <td>{{testCaseExecutionTime this}}</td> --}}
 											</tr>
 										{{else}}
 											<tr>
@@ -132,6 +134,7 @@
 												{{/if}}
 												<td>{{i18n "exercise.testCase.others"}}</td>
 												<td></td>
+												{{! <td></td> }}
 											</tr>
 										{{/if}}
 									{{/each}}
