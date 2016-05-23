@@ -88,7 +88,7 @@
 						</div>
 					{{else}}
 						{{#unless executionFatal}}
-							<table id="table-testcases" class="table table-condensed table-striped">
+							<table id="table-testcases" class="table table-condensed table-striped execute-result">
 								<thead>
 									<tr>
 										<th scope="col" colspan="{{#if testCasesEvaluated}}2{{else}}1{{/if}}">{{i18n "exercise.testCase.descriptionLabel"}}</th>
@@ -138,8 +138,10 @@
 								</tbody>
 							</table>
 						{{else}}
-							<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
-							<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+							<div class="execute-result">
+								<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+								<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+							</div>
 						{{/unless}}
 						{{#unless isResult}}
 							{{#if solutionVisible}}

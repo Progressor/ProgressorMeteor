@@ -83,11 +83,11 @@
 			'click #button-execute'(event, template) {
 				template.showSolution.set(false);
 				const exercise = getExercise();
-				setTimeout(() => template.$('#table-testcases').css('opacity', 1 / 3), 1);
+				setTimeout(() => template.$('.execute-result').css('opacity', 1 / 3), 1);
 				template.executionStatus.set(template.executionStatus.get() | 0x1);
 				Meteor.call('execute', exercise.programmingLanguage, { _id: exercise._id }, Session.get('fragment'), Progressor.handleError((error, result) => {
 					template.executionResults.set(!error ? result : []);
-					template.$('#table-testcases').css('opacity', 1);
+					template.$('.execute-result').css('opacity', 1);
 					template.executionStatus.set(template.executionStatus.get() & ~0x1);
 				}));
 			},
