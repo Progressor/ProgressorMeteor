@@ -49,6 +49,6 @@ meteorhacks:kadira            # Kadira - Performance Monitoring for Meteor
 sergeyt:typeahead             # Twitter's typeahead.js (http://twitter.github.io/typeahead.js/examples/) autocomplete package, wrapped for Meteor 1.0+.
 percolate:synced-cron         # Allows you to define and run scheduled jobs across multiple servers
 meteorhacks:ssr               # Server Side Rendering for Meteor with Blaze
+pascoual:pdfkitx              # Create PDF with PDFKit Node.js package in your Meteor application, server-side and browser-side.
 
 thrift                        # custom wrapper for Apache Thrift npm-package + Progressor implementation
-pascoual:pdfkit

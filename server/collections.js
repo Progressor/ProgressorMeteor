@@ -86,6 +86,8 @@
 		});
 	}
 
+	// CATEGORISED EXERCISES
+
 	Meteor.publish('releaseRequestedExercises', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
 		publishExercises.call(this, { category_id: { $exists: true }, 'released.requested': { $exists: true } }, true);
@@ -115,6 +117,16 @@
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
 		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
+
+	// EXAMINATION EXERCISES
+
+	Meteor.publish('exercisesByExecution', function (executionId, isExecute = false) {
+		check(executionId, String);
+		check(isExecute, Boolean);
+		publishExercises.call(this, { execution_id: executionId }, true);
+	});
+
+	// RELEASE REQUEST COUNT
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
@@ -181,11 +193,96 @@
 		check(isExecute, Boolean);
 		publishResults.call(this, { user_id: this.userId, _id: id }, isExecute);
 	});
-	Meteor.publish('myResultByExercise', function (id, isExecute = false) {
-		check(id, String);
+	Meteor.publish('myResultByExercise', function (exerciseId, isExecute = false) {
+		check(exerciseId, String);
 		check(isExecute, Boolean);
-		publishResults.call(this, { user_id: this.userId, exercise_id: id }, isExecute);
+		publishResults.call(this, { user_id: this.userId, exercise_id: exerciseId }, isExecute);
 	});
+
+	// EXAMINATIONS
+
+	Meteor.publish('myExaminations', function () {
+		publishExaminations.call(this, { author_id: this.userId });
+	});
+	Meteor.publish('examination', function (id) {
+		check(id, String);
+		publishExaminations.call(this, { _id: id });
+	});
+
+	function publishExaminations(query) {
+		const that = this, published = [];
+
+		function publishExamination(id, examination) {
+			if (that.userId !== examination.author_id && !Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN))
+				return unpublishExamination(id);
+
+			const isPublished = _.contains(published, id);
+			if (!isPublished)
+				published.push(id);
+			that[isPublished ? 'changed' : 'added']('examinations', id, examination);
+		}
+
+		function unpublishExamination(id) {
+			const publishIndex = published.indexOf(id);
+			if (publishIndex >= 0) {
+				published.splice(publishIndex, 1);
+				that.removed('examinations', id);
+			}
+		}
+
+		const handleExaminations = Progressor.examinations.find(query).observe(
+			{
+				added: e => publishExamination(e._id, e),
+				changed: e => publishExamination(e._id, e),
+				removed: e => unpublishExamination(e._id)
+			});
+
+		this.ready();
+		this.onStop(() => handleExaminations.stop());
+	}
+
+	// EXECUTIONS
+
+	Meteor.publish('myExecutions', function () {
+		publishExecutions.call(this, { author_id: this.userId });
+	});
+	Meteor.publish('execution', function (id) {
+		check(id, String);
+		publishExecutions.call(this, { _id: id });
+	});
+
+	function publishExecutions(query) {
+		const that = this, published = [];
+
+		function publishExecution(id, execution) {
+			if (that.userId !== execution.author_id && !Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN)
+					&& ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, that.userId)) || !execution.startTime || execution.startTime > new Date()))
+				return unpublishExecution(id);
+
+			const isPublished = _.contains(published, id);
+			if (!isPublished)
+				published.push(id);
+			that[isPublished ? 'changed' : 'added']('executions', id, execution);
+		}
+
+		function unpublishExecution(id) {
+			const publishIndex = published.indexOf(id);
+			if (publishIndex >= 0) {
+				published.splice(publishIndex, 1);
+				that.removed('executions', id);
+			}
+		}
+
+		const handleExecutions = Progressor.executions.find(query).observe(
+			{
+				added: e => publishExecution(e._id, e),
+				changed: e => publishExecution(e._id, e),
+				removed: e => unpublishExecution(e._id)
+			});
+
+		this.ready();
+		this.onStop(() => handleExecutions.stop());
+	}
 
 	///////////////////////////
 	// HOUSTON CONFIGURATION //
