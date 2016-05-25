@@ -27,7 +27,9 @@ h2, .well > h3 { margin-top: 0; }
 dt::after { content: ":"; }
 .pre-line { white-space: pre-line; }
 .cursor-default { cursor: default; }
+td, th { vertical-align: middle !important; }
 .width-auto { width: auto; }
+.nomargin { margin: 0; }
 .absolute {
 	position: absolute;
 	&.top-left { top: @default-margin; left: @default-margin; }
@@ -39,7 +41,6 @@ dt::after { content: ":"; }
 	&.top-left { top: @header-height + (@default-margin * @font-size-base); left: @default-margin; }
 	&.top-right { top: @header-height + (@default-margin * @font-size-base); right: @default-margin; }
 }
-.nomargin { margin: 0; }
 .separated(@dir) {
 	.separated-@{dir} { margin-@{dir}: @default-margin; }
 }
