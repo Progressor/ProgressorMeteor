@@ -391,6 +391,7 @@ Meteor.startup(function () {
 		_.each(
 			[
 				{
+					examination_id: Progressor.examinations.findOne()._id,
 					names: [
 						{
 							language: 'en',
@@ -407,7 +408,7 @@ Meteor.startup(function () {
 							description: 'This exam contributes 30% to the final grade.'
 						}
 					],
-					examination_id: Progressor.examinations.findOne()._id,
+					durationMinutes: 25,
 					exercises: _.chain(Progressor.exercises.find().fetch()).map(exercise => ({
 						base_id: exercise._id,
 						_id: Progressor.exercises.insert(_.omit(exercise, '_id', 'category_id', 'difficulty')).insertedId,
