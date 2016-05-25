@@ -53,6 +53,7 @@
 				const flt = getFilter();
 				if (!_.isEmpty(flt)) return _.chain(Progressor.exercises.find(flt, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value();
 			},
+			exercises: () => _.map(tmpl().examination.get().exercises, (e, i) => _.extend({}, e, { exerciseIndex: i })),
 			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
 		});
 
@@ -75,6 +76,13 @@
 		});
 	}
 
+	function removeExaminationCollection(collectionName) {
+		return changeExamination(function (event, template) {
+			let collection = template.examination.get()[`${collectionName}s`];
+			collection.splice(this[`${collectionName}Index`], 1);
+		});
+	}
+
 	Template.examinationTemplateEdit.events(
 		{
 			'change #select-type': (event, template) => template.filter.set('type', parseInt($(event.currentTarget).val())),
@@ -82,9 +90,10 @@
 			'change #select-category': (event, template) => template.filter.set('category', $(event.currentTarget).val()),
 			'change #select-difficulty': (event, template) => template.filter.set('difficulty', parseInt($(event.currentTarget).val())),
 			'change [id^="input-name-"]': changeExaminationTranslation('name'),
-			'click .btn-add-function': changeExamination(function(event,template){
+			'click .btn-add-function': changeExamination(function (event, template) {
 				template.examination.get().exercises.push(this);
-			})
+			}),
+			'click .btn-remove-function': removeExaminationCollection('exercise')
 		});
 
 })();

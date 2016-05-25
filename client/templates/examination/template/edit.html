@@ -90,7 +90,9 @@
 											<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
 											<td>{{i18nName category}}</td>
 											<td>{{i18nDifficulty difficulty}}</td>
-											<td><button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-arrow-right" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button></td>
+											<td>
+												<button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-arrow-right" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
+											</td>
 										</tr>
 									{{/each}}
 								</tbody>
@@ -125,33 +127,39 @@
 				</div>
 				<h3>{{i18n "exam.exercisesIncludedTitleLabel"}}</h3>
 				<div class="col-md-7">
-					<table id="includedExercises" class="table table-condensed table-striped">
-						<thead>
-							<tr>
-								<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-								<th scope="col">{{i18n "exam.exerciseWeightingLabel" }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{{#each exercises}}
+					{{#if exercises}}
+						<table id="includedExercises" class="table table-condensed table-striped">
+							<thead>
 								<tr>
-									<td>{{i18nName this}}</td>
-									<td>{{i18nExerciseType type}}</td>
-									<td>{{i18nName category}}</td>
-									<td>{{i18nDifficulty difficulty}}</td>
-									<td><input type="number" min="0" class="form-control input-sm" /></td>
-									<td>
-										<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
-									</td>
+									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">{{i18n "exam.exerciseWeightingLabel" }}</th>
 								</tr>
-							{{/each}}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{{#each exercises}}
+									<tr>
+										<td>{{i18nName this}}</td>
+										<td>{{i18nExerciseType type}}</td>
+										<td>{{i18nName category}}</td>
+										<td>{{i18nDifficulty difficulty}}</td>
+										<td><input type="number" min="0" max="100" class="form-control input-sm" /></td>
+										<td>
+											<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
+										</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					{{else}}
+						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+					{{/if}}
+					<div>
 					<button id="saveExamButton" class="btn btn-success btn-save" value="save">{{i18n "exam.saveButtonTitle"}}</button>
 					<button id="deleteExamButton" class="btn btn-danger btn-delete" value="delete">{{i18n "exam.deleteButtonTitle"}}</button>
+					</div>
 				</div>
 			</div>
 		</div>
