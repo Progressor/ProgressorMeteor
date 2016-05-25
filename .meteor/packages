@@ -51,3 +51,4 @@ percolate:synced-cron         # Allows you to define and run scheduled jobs acro
 meteorhacks:ssr               # Server Side Rendering for Meteor with Blaze
 
 thrift                        # custom wrapper for Apache Thrift npm-package + Progressor implementation
+pascoual:pdfkit
