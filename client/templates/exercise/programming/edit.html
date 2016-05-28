@@ -88,12 +88,15 @@
 								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
 							</div>
-							<div class="help-block">
-								{{i18n "form.supportsMarkdown"}}
-								<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
-							</div>
 							<div class="form-group form-group-sm">
-								<label for="textarea-description-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
+								<label for="textarea-description-{{_id}}" class="control-label">
+									{{i18n "exercise.descriptionLabel"}} ({{_id}})
+									<span class="text-info">
+										&mdash;
+										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
+										{{i18n "form.supportsMarkdown"}}
+									</span>
+								</label>
 								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
 							</div>
 						</div>
@@ -234,20 +237,20 @@
 					<div class="col-sm-2">
 						<label class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
 					</div>
+					<div class="col-sm-1">
+						<label class="control-label">{{i18n "exercise.testCase.visibleLabel"}}</label>
+					</div>
 					<div class="col-sm-4">
 						<label class="control-label">
 							{{i18n "exercise.testCase.inputLabel"}}
 							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
 						</label>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-3">
 						<label class="control-label">
 							{{i18n "exercise.testCase.expectedOutputLabel"}}
 							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
 						</label>
-					</div>
-					<div class="col-sm-2">
-						<label class="control-label">{{i18n "exercise.testCase.visibleLabel"}}</label>
 					</div>
 				</div>
 				{{#each testCases}}
@@ -263,7 +266,9 @@
 									{{/each}}
 								</select>
 							</div>
-
+						</div>
+						<div class="col-sm-1">
+							<input type="checkbox" class="checkbox-testcase-visible" checked={{visible}} />
 						</div>
 						<div class="col-sm-4">
 							{{#each inputValues}}
@@ -274,7 +279,7 @@
 								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 							{{/each}}
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							{{#each expectedOutputValues}}
 								<div class="form-group form-group-sm">
 									<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" />
@@ -290,9 +295,6 @@
 									{{/unless}}
 								{{/unless}}
 							{{/if}}
-						</div>
-						<div class="col-sm-2">
-							<input type="checkbox" class="checkbox-testcase-visible" checked={{visible}} />
 						</div>
 						<div class="col-sm-2">
 							<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
