@@ -91,7 +91,7 @@
 							<div class="form-group form-group-sm">
 								<label for="textarea-description-{{_id}}" class="control-label">
 									{{i18n "exercise.descriptionLabel"}} ({{_id}})
-									<span class="text-info">
+									<span class="text-info font-weight-normal">
 										&mdash;
 										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
 										{{i18n "form.supportsMarkdown"}}
@@ -167,7 +167,7 @@
 					</div>
 				</div>
 				{{#each functions}}
-					<div>
+					<div class="container-function">
 						<div class="row">
 							<div class="col-sm-5">
 								<div class="form-group form-group-sm">
@@ -273,7 +273,7 @@
 						<div class="col-sm-4">
 							{{#each inputValues}}
 								<div class="form-group form-group-sm">
-									<input type="text" value="{{value}}" class="input-testcase-input form-control exec-value" />
+									<input type="text" value="{{value}}" placeholder="{{name}}" class="input-testcase-input form-control exec-value" />
 								</div>
 							{{else}}
 								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
