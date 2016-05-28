@@ -27,7 +27,7 @@ reactive-var                  # This package provide ReactiveVar, a general-purp
 reactive-dict                 # This package provide ReactiveDict, a general-purpose reactive datatype for use with tracker.
 iron:router                   # A router that works on the server and the browser, designed specifically for Meteor
 accounts-password             # email - password login provider
-accounts-ui                   # A turn-key user interface for Meteor Accounts.
+# accounts-ui                 # A turn-key user interface for Meteor Accounts.
 underscore                    # underscore.js library
 less                          # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
 # markdown                    # basic markdown support
