@@ -19,13 +19,13 @@
 						{{/unless}}
 					</ol>
 				</div>
-				{{#unless isResult}}
+				{{#if canEdit this}}
 					<div class="col-sm-4 text-right">
 						<ul class="breadcrumb">
 							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
 						</ul>
 					</div>
-				{{/unless}}
+				{{/if}}
 			</nav>
 			<div class="row">
 				<div class="col-sm-9">
