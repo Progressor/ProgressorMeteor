@@ -388,7 +388,7 @@
 
 			//execution
 			'click #button-execute'(event, template) {
-				execute(template, _.omit(template.exercise.get(), 'category'), (error, result) => {
+				execute(template, _.omit(template.exercise.get(), '_id', 'category'), (error, result) => {
 					const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);
 					Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
 				});
