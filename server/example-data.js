@@ -413,7 +413,7 @@ Meteor.startup(function () {
 						base_id: exercise._id,
 						_id: Progressor.exercises.insert(_.omit(exercise, '_id', 'category_id', 'difficulty')).insertedId,
 						weight: Math.floor(Random.fraction() * 12 + 1)
-					})).sortBy(() => Random.fraction()),
+					})).sortBy(() => Random.fraction()).value(),
 					examinees: [
 						Meteor.users.findOne()._id
 					],
