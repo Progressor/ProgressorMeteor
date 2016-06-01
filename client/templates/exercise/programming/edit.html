@@ -258,7 +258,9 @@
 						<div class="col-sm-2">
 							<div class="form-group form-group-sm">
 								<select class="select-testcase-function form-control">
-									<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+									{{#unless hasSingleFunction}}
+										<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+									{{/unless}}
 									{{#each functions this}}
 										{{#if name}}
 											<option selected={{isActive}}>{{name}}</option>

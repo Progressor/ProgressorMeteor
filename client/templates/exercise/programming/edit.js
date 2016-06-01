@@ -199,6 +199,7 @@
 				name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
 				description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
 			})),
+			hasSingleFunction: () => _.filter(tmpl().exercise.get().functions, f => f.name).length === 1,
 			functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
 				original: _function, functionIndex,
 				isActive: testCase && testCase.functionName === _function.name,
@@ -351,7 +352,7 @@
 			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
 			'change [id^="input-name-"]': changeExerciseTranslation('name'),
 			'change [id^="textarea-description-"]': changeExerciseTranslation('description'),
-			'change .input-function-name': changeExerciseCollection('function', (e, t, $) => ({ name: $.val() })),
+			'change .input-function-name': changeExerciseCollection('function', (e, t, $) => (setTimeout(() => t.$('.select-testcase-function').trigger('change'), 10), { name: $.val() })),
 			'change .input-function-type': changeExerciseCollection('function', (e, t, $) => ({ outputNames: ['return'], outputTypes: [$.val()] })),
 			'change .input-parameter-name': changeExerciseSubcollection('function', 'inputName'),
 			'change .input-parameter-type': changeExerciseSubcollection('function', 'inputType'),
