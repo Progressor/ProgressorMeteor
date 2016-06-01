@@ -93,7 +93,8 @@
 			'click .btn-add-function': changeExamination(function (event, template) {
 				template.examination.get().exercises.push(this);
 			}),
-			'click .btn-remove-function': removeExaminationCollection('exercise')
+			'click .btn-remove-function': removeExaminationCollection('exercise'),
+			'click .btn-save': Meteor.call('saveExamination')
 		});
 
 })();
