@@ -14,7 +14,7 @@
 	});
 
 	Template.account.onRendered(function () {
-		this.$('#collapseArchive').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 		Meteor.typeahead.inject();
 	});
 
@@ -86,6 +86,7 @@
 
 	Template.account_exerciseList.helpers(
 		{
+			randomId: () => Random.id(),
 			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
 			success: (e, r) => Progressor.isExerciseSuccess(e, r)
 		});

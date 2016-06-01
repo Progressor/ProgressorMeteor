@@ -60,86 +60,84 @@
 	</div>
 </template>
 <template name="account_exerciseList">
-	<section class="panel panel-default">
-		<div class="panel-heading">
-			{{#unless isArchive}}
-				<h3 class="panel-title">{{title}}</h3>
-			{{else}}
+	{{#let id=randomId}}
+		<section class="panel panel-default">
+			<div class="panel-heading">
 				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapseArchive"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
-					<a role="button" data-toggle="collapse" href="#collapseArchive">{{title}}</a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}"><span class="glyphicon {{#if isResult}}glyphicon-minus-sign{{else}}glyphicon-plus-sign{{/if}}" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}">{{title}}</a>
 				</h3>
-			{{/unless}}
-		</div>
-		<div id="{{#if isArchive}}collapseArchive{{/if}}" class="panel-collapse {{#if isArchive}}collapse{{/if}}">
-			<table class="table table-condensed table-striped">
-				<thead>
-					<tr>
-						<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-						<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-						<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-						<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-						<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-						{{#if isResult}}
-							<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
-						{{else}}
-							<th scope="col">{{i18n "form.editedByLabel"}}</th>
-							<th scope="col">{{i18n "form.editedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
-							<th></th>
-						{{/if}}
-					</tr>
-				</thead>
-				<tbody>
-					{{#each exercises}}
+			</div>
+			<div id="collapse-{{id}}" class="panel-collapse collapse {{#if isResult}}in{{/if}}">
+				<table class="table table-condensed table-striped">
+					<thead>
 						<tr>
-							<td>
-								{{#unless result}}
-									{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
-									{{#if released}}
-										{{#if released.confirmed}}
-											<span class="glyphicon glyphicon-book text-success" title="{{i18n "exercise.releasedMessage"}}" data-toggle="tooltip"></span>
-										{{else}}
-											<span class="glyphicon glyphicon-book text-info" title="{{i18n "exercise.releaseRequestedMessage"}}" data-toggle="tooltip"></span>
-										{{/if}}
-									{{/if}}
-								{{else}}
-									{{#linkTo route="resultView" data=result}}{{i18nName this}}{{/linkTo}}
-									{{#if evaluated this result.results}}
-										{{#if success this result.results}}
-											<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.successMessage"}}" data-toggle="tooltip"></span>
-										{{else}}
-											<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.failureMessage"}}" data-toggle="tooltip"></span>
-										{{/if}}
-									{{else}}
-										<span class="glyphicon glyphicon-pencil text-info" title="{{i18n "exercise.unevaluatedMessage"}}" data-toggle="tooltip"></span>
-									{{/if}}
-								{{/unless}}
-							</td>
-							<td>{{i18nExerciseType type}}</td>
-							<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-							<td>{{i18nName category}}</td>
-							<td>{{i18nDifficulty difficulty}}</td>
-							{{#if result}}
-								<td>{{i18nDateTime result.solved}}</td>
+							<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+							<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+							<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+							<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+							<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+							{{#if isResult}}
+								<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
 							{{else}}
-								<td>{{userName lastEditor_id}}</td>
-								<td>{{i18nDateTime lastEdited}}</td>
-								{{#unless archived}}
-									<td><a role="button" class="a-archive"><span class="glyphicon glyphicon-folder-close" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
-								{{else}}
-									<td><a role="button" class="a-unarchive"><span class="glyphicon glyphicon-folder-open" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
-								{{/unless}}
+								<th scope="col">{{i18n "form.editedByLabel"}}</th>
+								<th scope="col">{{i18n "form.editedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
+								<th></th>
 							{{/if}}
 						</tr>
-					{{else}}
-						<tr>
-							<td colspan="{{#if result}}6{{else}}8{{/if}}" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
-						</tr>
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</section>
+					</thead>
+					<tbody>
+						{{#each exercises}}
+							<tr>
+								<td>
+									{{#unless result}}
+										{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
+										{{#if released}}
+											{{#if released.confirmed}}
+												<span class="glyphicon glyphicon-book text-success" title="{{i18n "exercise.releasedMessage"}}" data-toggle="tooltip"></span>
+											{{else}}
+												<span class="glyphicon glyphicon-book text-info" title="{{i18n "exercise.releaseRequestedMessage"}}" data-toggle="tooltip"></span>
+											{{/if}}
+										{{/if}}
+									{{else}}
+										{{#linkTo route="resultView" data=result}}{{i18nName this}}{{/linkTo}}
+										{{#if evaluated this result.results}}
+											{{#if success this result.results}}
+												<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.successMessage"}}" data-toggle="tooltip"></span>
+											{{else}}
+												<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.failureMessage"}}" data-toggle="tooltip"></span>
+											{{/if}}
+										{{else}}
+											<span class="glyphicon glyphicon-pencil text-info" title="{{i18n "exercise.unevaluatedMessage"}}" data-toggle="tooltip"></span>
+										{{/if}}
+									{{/unless}}
+								</td>
+								<td>{{i18nExerciseType type}}</td>
+								<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+								<td>{{i18nName category}}</td>
+								<td>{{i18nDifficulty difficulty}}</td>
+								{{#if result}}
+									<td>{{i18nDateTime result.solved}}</td>
+								{{else}}
+									<td>{{userName lastEditor_id}}</td>
+									<td>{{i18nDateTime lastEdited}}</td>
+									{{#unless archived}}
+										<td><a role="button" class="a-archive"><span class="glyphicon glyphicon-folder-close" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
+									{{else}}
+										<td><a role="button" class="a-unarchive"><span class="glyphicon glyphicon-folder-open" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+									{{/unless}}
+								{{/if}}
+							</tr>
+						{{else}}
+							<tr>
+								<td colspan="{{#if result}}6{{else}}8{{/if}}" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	{{/let}}
 </template>
 <template name="account_makeAdminItem">
 	{{#if name}}

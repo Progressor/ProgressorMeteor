@@ -129,6 +129,7 @@
 
 	Template.programmingEdit.onRendered(function () {
 		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
