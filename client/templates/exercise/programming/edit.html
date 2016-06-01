@@ -28,82 +28,91 @@
 				</small>
 			</div>
 		{{/if}}
-		<div class="row visible-md-block visible-lg-block">
-			<div class="col-md-offset-5 col-md-7">
-				<ul class="nav nav-tabs" role="tablist">
-					{{#each i18nExerciseNamesDescriptions}}
-						<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-					{{/each}}
-				</ul>
+		<section class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#collapseConfig">{{i18n "exercise.exerciseSubtitle"}}</a>
+				</h3>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-5">
-				<div class="form-group form-group-sm">
-					<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-					<select id="select-language" class="form-control" disabled={{_id}}>
-						<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nProgrammingLanguages}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
+			<div id="collapseConfig" class="panel-body panel-collapse collapse in">
+				<div class="row visible-md-block visible-lg-block">
+					<div class="col-md-offset-5 col-md-7">
+						<ul class="nav nav-tabs" role="tablist">
+							{{#each i18nExerciseNamesDescriptions}}
+								<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+							{{/each}}
+						</ul>
+					</div>
 				</div>
-				<div class="form-group form-group-sm">
-					<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
-					{{#if isAdmin}}
-						{{#if categoryEditData}}
-							&mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
-						{{/if}}
-						&mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
-					{{/if}}
-					<select id="select-category" class="form-control">
-						<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nCategories}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
-				</div>
-				<div class="form-group form-group-sm">
-					<label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
-					<select id="select-difficulty" class="form-control">
-						<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nDifficulties}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
-				</div>
-			</div>
-			<div class="col-md-7">
-				<div class="visible-xs-block visible-sm-block">
-					<ul class="nav nav-tabs" role="tablist">
-						{{#each i18nExerciseNamesDescriptions}}
-							<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-						{{/each}}
-					</ul>
-				</div>
-				<div class="tab-content">
-					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
-							<div class="form-group form-group-sm">
-								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
-							</div>
-							<div class="form-group form-group-sm">
-								<label for="textarea-description-{{_id}}" class="control-label">
-									{{i18n "exercise.descriptionLabel"}} ({{_id}})
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group form-group-sm">
+							<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
+							<select id="select-language" class="form-control" disabled={{_id}}>
+								<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+								{{#each i18nProgrammingLanguages}}
+									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+								{{/each}}
+							</select>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
+							{{#if isAdmin}}
+								{{#if categoryEditData}}
+									&mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
+								{{/if}}
+								&mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
+							{{/if}}
+							<select id="select-category" class="form-control">
+								<option value="">{{i18n "form.selectPleaseChoose"}}</option>
+								{{#each i18nCategories}}
+									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+								{{/each}}
+							</select>
+						</div>
+						<div class="form-group form-group-sm">
+							<label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
+							<select id="select-difficulty" class="form-control">
+								<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
+								{{#each i18nDifficulties}}
+									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="col-md-7">
+						<div class="visible-xs-block visible-sm-block">
+							<ul class="nav nav-tabs" role="tablist">
+								{{#each i18nExerciseNamesDescriptions}}
+									<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+								{{/each}}
+							</ul>
+						</div>
+						<div class="tab-content">
+							{{#each i18nExerciseNamesDescriptions}}
+								<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+									<div class="form-group form-group-sm">
+										<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+										<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
+									</div>
+									<div class="form-group form-group-sm">
+										<label for="textarea-description-{{_id}}" class="control-label">
+											{{i18n "exercise.descriptionLabel"}} ({{_id}})
 									<span class="text-info font-weight-normal">
 										&mdash;
 										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
 										{{i18n "form.supportsMarkdown"}}
 									</span>
-								</label>
-								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
-							</div>
+										</label>
+										<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
+									</div>
+								</div>
+							{{/each}}
 						</div>
-					{{/each}}
+					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 		<div id="collapseHelp" class="panel-collapse collapse">
 			<aside class="panel panel-info">
 				<div class="panel-heading">
