@@ -90,11 +90,13 @@
 			'change #select-category': (event, template) => template.filter.set('category', $(event.currentTarget).val()),
 			'change #select-difficulty': (event, template) => template.filter.set('difficulty', parseInt($(event.currentTarget).val())),
 			'change [id^="input-name-"]': changeExaminationTranslation('name'),
+			'change #input-duration': changeExamination((event, template, $this) => template.examination.get().durationMinutes = parseInt($this.val())),
 			'click .btn-add-function': changeExamination(function (event, template) {
 				template.examination.get().exercises.push(this);
 			}),
 			'click .btn-remove-function': removeExaminationCollection('exercise'),
-			'click .btn-save': Meteor.call('saveExamination')
+			'click .btn-save': (event, template) => Meteor.call('saveExamination', template.examination.get(),
+																													Progressor.handleError(result => Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success'), false))
 		});
 
 })();

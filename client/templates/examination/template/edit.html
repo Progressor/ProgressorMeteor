@@ -125,6 +125,12 @@
 						<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
 					</div>
 				</div>
+				<form class="form-inline">
+					<div class="form-group">
+							<label for="input-duration">{{i18n "exam.durationLabel"}}</label>
+							<input type="number" min="5" class="form-control input-sm" id="input-duration"> {{i18n "exam.minutesLabel"}}
+					</div>
+				</form>
 				<h3>{{i18n "exam.exercisesIncludedTitleLabel"}}</h3>
 				<div class="col-md-7">
 					{{#if exercises}}
@@ -133,6 +139,7 @@
 								<tr>
 									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
 									<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 									<th scope="col">{{i18n "exam.exerciseWeightingLabel" }}</th>
@@ -143,6 +150,7 @@
 									<tr>
 										<td>{{i18nName this}}</td>
 										<td>{{i18nExerciseType type}}</td>
+										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
 										<td>{{i18nName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
 										<td><input type="number" min="0" class="form-control input-sm" /></td>
@@ -157,8 +165,8 @@
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 					{{/if}}
 					<div>
-					<button id="saveExamButton" class="btn btn-success btn-save" value="save">{{i18n "exam.saveButtonTitle"}}</button>
-					<button id="deleteExamButton" class="btn btn-danger btn-delete" value="delete">{{i18n "exam.deleteButtonTitle"}}</button>
+						<button id="saveExamButton" class="btn btn-success btn-save" value="save">{{i18n "exam.saveButtonTitle"}}</button>
+						<button id="deleteExamButton" class="btn btn-danger btn-delete" value="delete">{{i18n "exam.deleteButtonTitle"}}</button>
 					</div>
 				</div>
 			</div>
