@@ -230,7 +230,11 @@
 							</div>
 							<div class="col-sm-8 text-right">
 								<div class="checkbox nomargin">
-									<label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+									<label>
+										<input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}} />
+										{{i18n "exercise.showSolutionLabel"}}
+										<span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.solutionVisibleMessage"}}" data-toggle="tooltip"></span>
+									</label>
 								</div>
 								<div class="text-danger">
 									{{blackListMessage}}
@@ -247,7 +251,10 @@
 						<label class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
 					</div>
 					<div class="col-sm-1">
-						<label class="control-label">{{i18n "exercise.testCase.visibleLabel"}}</label>
+						<label class="control-label">
+							{{i18n "exercise.testCase.visibleLabel"}}
+							<span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.testCaseVisibleMessage"}}" data-toggle="tooltip"></span>
+						</label>
 					</div>
 					<div class="col-sm-4">
 						<label class="control-label">
