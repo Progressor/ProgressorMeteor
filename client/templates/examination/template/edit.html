@@ -8,7 +8,7 @@
 			<h2>{{#if _id}}{{i18n "examination.editTemplateTitle" (i18nName this)}}{{else}}{{i18n "examination.createTemplateTitle"}}{{/if}}</h2>
 		</header>
 		<div class="row">
-			<aside class="col-md-5">
+			<aside class="col-md-4">
 				<h3>{{i18n "examination.selectExercisesSubtitle"}}</h3>
 				<div class="form-group form-group-sm">
 					<label for="input-name" class="control-label">{{i18n "exercise.nameLabel"}}</label>
@@ -74,7 +74,7 @@
 						<tbody>
 							{{#each results}}
 								<tr>
-									<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
+									<td>{{#linkTo route="exerciseEdit" data=this}}{{i18nName this}}{{/linkTo}}</td>
 									<td>{{i18nName category}}</td>
 									<td>{{i18nDifficulty difficulty}}</td>
 									<td>
@@ -88,7 +88,7 @@
 					<div class="text-muted">{{message}}</div>
 				{{/if}}
 			</aside>
-			<section class="col-md-7">
+			<section class="col-md-8">
 				<h3>{{i18n "examination.configureExaminationSubtitle"}}</h3>
 				<ul class="nav nav-tabs" role="tablist">
 					{{#each i18nExaminationNames}}
@@ -122,6 +122,7 @@
 									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
 									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">{{i18n "form.createdByLabel"}}</th>
 									<th scope="col">{{i18n "exercise.weightLabel"}}</th>
 									<td></td>
 								</tr>
@@ -129,11 +130,12 @@
 							<tbody>
 								{{#each exercises}}
 									<tr>
-										<td>{{i18nName this}}</td>
+										<td>{{#linkTo route="exerciseEdit" data=this}}{{i18nName this}}{{/linkTo}}</td>
 										<td>{{i18nExerciseType type}}</td>
 										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
 										<td>{{i18nName category}}</td>
 										<td>{{i18nDifficulty difficulty}}</td>
+										<td>{{userName author_id}}</td>
 										<td><input type="number" class="form-control input-sm input-weight" min="0" value="{{weight}}" /></td>
 										<td>
 											<button class="btn btn-danger btn-sm btn-remove-exercise" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
