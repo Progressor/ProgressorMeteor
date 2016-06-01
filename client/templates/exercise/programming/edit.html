@@ -2,7 +2,7 @@
 	{{i18nTooltips}}
 	{{#with safeExercise this}}
 		<header>
-			{{#if exists}}
+			{{#if _id}}
 				<nav>
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
@@ -18,7 +18,7 @@
 				<h2>{{i18n "exercise.createTitle"}}</h2>
 			{{/if}}
 		</header>
-		{{#if exists}}
+		{{#if _id}}
 			<div class="help-block">
 				<small class="text-muted">
 					{{i18n "form.createdBy"}} {{userName author_id}}
@@ -41,7 +41,7 @@
 			<div class="col-md-5">
 				<div class="form-group form-group-sm">
 					<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-					<select id="select-language" class="form-control" disabled={{exists}}>
+					<select id="select-language" class="form-control" disabled={{_id}}>
 						<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 						{{#each i18nProgrammingLanguages}}
 							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
@@ -180,8 +180,8 @@
 								</div>
 							</div>
 							<div class="col-sm-2">
-								<button class="btn btn-success btn-sm btn-add-function"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
-								<button class="btn btn-danger btn-sm btn-remove-function"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
+								<button class="btn btn-success btn-sm btn-add-function" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+								<button class="btn btn-danger btn-sm btn-remove-function" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
 							</div>
 						</div>
 						{{#each inputs}}
@@ -197,8 +197,8 @@
 									</div>
 								</div>
 								<div class="col-sm-2">
-									<button class="btn btn-success btn-sm btn-add-parameter"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
-									<button class="btn btn-danger btn-sm btn-remove-parameter"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
+									<button class="btn btn-success btn-sm btn-add-parameter" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+									<button class="btn btn-danger btn-sm btn-remove-parameter" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
 								</div>
 							</div>
 						{{/each}}
@@ -297,8 +297,8 @@
 							{{/if}}
 						</div>
 						<div class="col-sm-2">
-							<button class="btn btn-success btn-sm btn-add-testcase"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.addButton"}}" data-toggle="tooltip"></span></button>
-							<button class="btn btn-danger btn-sm btn-remove-testcase"><span class="glyphicon glyphicon-minus-sign" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"></span></button>
+							<button class="btn btn-success btn-sm btn-add-testcase" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+							<button class="btn btn-danger btn-sm btn-remove-testcase" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
 							{{#if testCaseEvaluated this}}
 							{{! #unless executionFatal}}
 								<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
@@ -321,11 +321,11 @@
 			{{#if canSave}}
 				<div class="btn-group">
 					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if exists}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
+					{{#if _id}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
 					<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
 				</div>
 			{{/if}}
-			{{#if exists}}
+			{{#if _id}}
 				<div class="btn-group">
 					{{#if canSave}}
 						{{#unless (released.requested)}}

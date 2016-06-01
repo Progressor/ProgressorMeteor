@@ -378,7 +378,7 @@ Meteor.startup(function () {
 						}
 					],
 					exercises: _.map(Progressor.exercises.find().fetch(), exercise => ({
-						_id: exercise._id,
+						exercise_id: exercise._id,
 						weight: Math.floor(Random.fraction() * 12 + 1)
 					})),
 					durationMinutes: 25,

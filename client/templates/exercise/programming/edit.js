@@ -177,7 +177,6 @@
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().exercise.get();
 			},
-			exists: () => tmpl().exercise.get() && tmpl().exercise.get()._id,
 			canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
 			exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),

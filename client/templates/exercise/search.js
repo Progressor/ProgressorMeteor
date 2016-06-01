@@ -52,17 +52,17 @@
 			},
 			results() {
 				const flt = getFilter();
-				if (!_.isEmpty(flt)) return _.chain(Progressor.exercises.find(flt, { limit: 25 }).fetch()).map(Progressor.joinCategory).sortBy(i18n.getName).value();
+				if (!_.isEmpty(flt)) return _.chain(Progressor.exercises.find(flt, { sort: [['requested.released', 'desc']], limit: 25 }).fetch()).map(Progressor.joinCategory)/*.sortBy(i18n.getName)*/.value();
 			},
 			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
 		});
 
 	Template.exerciseSearch.events(
 		{
-			'keyup #input-name': _.debounce((event, template) => template.filter.set('name', $(event.currentTarget).val()), 250),
-			'change #select-type': (event, template) => template.filter.set('type', parseInt($(event.currentTarget).val())),
-			'change #select-category': (event, template) => template.filter.set('category', $(event.currentTarget).val()),
-			'change #select-difficulty': (event, template) => template.filter.set('difficulty', parseInt($(event.currentTarget).val()))
+			'keyup #input-name': _.debounce((e, t) => t.filter.set('name', $(e.currentTarget).val()), 250),
+			'change #select-type': (e, t) => t.filter.set('type', parseInt($(e.currentTarget).val())),
+			'change #select-category': (e, t) => t.filter.set('category', $(e.currentTarget).val()),
+			'change #select-difficulty': (e, t) => t.filter.set('difficulty', parseInt($(e.currentTarget).val()))
 		});
 
 })();
