@@ -57,9 +57,9 @@
 					$set: {
 						startTime: new Date(),
 						exercises: _.map(execution.exercises, exercise => _.extend(exercise, {
-							exercise_id: Progressor.exercises.insert(_.extend(_.omit(Progressor.exercises.find({ _id: exercise._id }), '_id', 'category_id', 'difficulty'), {
+							exercise_id: Progressor.exercises.insert(_.extend(_.omit(Progressor.exercises.findOne({ _id: exercise.base_id }), '_id', 'category_id', 'difficulty'), {
 								execution_id: execution._id
-							})).insertedId
+							}))
 						}))
 					}
 				}).rowsAffected;
