@@ -25,10 +25,11 @@
 							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
 						</ul>
 					</div>
+
 				{{/if}}
 			</nav>
 			<div class="row">
-				<div class="col-sm-9">
+				<div class="col-sm-8">
 					<h2>
 						{{i18nName this}}
 						{{#if isResult}}
@@ -39,6 +40,15 @@
 						{{/if}}
 					</h2>
 				</div>
+				{{#if true}} <!-- execution_id -->
+					<div class="col-sm-4 text-right">
+						<span class="separated-right">{{#linkTo route="exerciseSolve" data=null}}examination Overview{{/linkTo}}</span>
+						<ul class="pager nomargin pull-right"><!-- data for next and previus exercises -->
+							<li>{{#linkTo route="exerciseSolve" data=null}}&larr; {{i18n "examination.previousLabel"}}{{/linkTo}}</li>
+							<li>{{#linkTo route="exerciseSolve" data=null}}{{i18n "examination.nextLabel"}} &rarr;{{/linkTo}}</li>
+						</ul>
+					</div>
+				{{/if}}
 			</div>
 		</header>
 		<section>
