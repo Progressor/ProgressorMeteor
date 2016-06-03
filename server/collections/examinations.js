@@ -4,7 +4,12 @@
 	Meteor.methods(
 		{
 			saveExamination(examination){
-				check(examination, Object);
+				check(examination, Match.ObjectIncluding(
+					{
+						names: [Match.ObjectIncluding({ language: String, name: String })],
+						durationMinutes: Match.Integer,
+						exercises: [Match.ObjectIncluding({ exercise_id: String, weight: Number })]
+					}));
 
 				const _examination = examination._id ? Progressor.examinations.findOne({ _id: examination._id }) : examination;
 

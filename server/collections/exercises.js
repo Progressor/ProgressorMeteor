@@ -9,7 +9,11 @@
 						programmingLanguage: String,
 						category_id: String,
 						difficulty: Match.Integer,
-						type: Match.Integer
+						type: Match.Integer,
+						names: [Match.ObjectIncluding({ language: String, name: String })],
+						descriptions: [Match.ObjectIncluding({ language: String, description: String })],
+						functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })],
+						testCases: [Match.ObjectIncluding({ functionName: String, inputValues: [String], expectedOutputValues: [String] })]
 					}));
 
 				const _exercise = exercise._id ? Progressor.exercises.findOne({ _id: exercise._id }) : exercise;
