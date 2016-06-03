@@ -1,3 +1,52 @@
 <template name="examinationExecutionView">
-	...
+	{{i18nTooltips}}
+	<h3>Overview: {{i18nName this}}</h3>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="well form-horizontal">
+				<p>
+					{{i18nDescription this}}
+				</p>
+				<p><b>Startzeit:</b> {{startTime}}<br><b>Dauer:</b> {{durationMinutes}}</p>
+				<p></p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<section class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Exercises</h3>
+				</div>
+				<div class="panel-collapse">
+					<table class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Exercise Name</th>
+								<th scope="col">Type</th>
+								<th scope="col">Weight</th>
+								<th scope="col">Progress</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each exercises}}
+								<tr>
+									<td>{{exerciseNumber @index}}</td>
+									<td>{{i18nName this}}</td>
+									<td>{{i18nExerciseType type}}</td>
+									<td>{{weight}}</td>
+									<td>
+										<div class="progress nomargin">
+											<div class="progress-bar progress-bar-success" style="width: 40%"></div>
+										</div>
+									</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
 </template>
