@@ -36,6 +36,13 @@
 		});
 	});
 
+	function getExecutionExercise(offset) {
+		const execution = Progressor.executions.findOne();
+		let exerciseIndex = -1;
+		if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset])
+			return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
+	}
+
 	Template.textSolve.helpers(
 		{
 			safeExercise(exerciseOrResult) {
@@ -46,6 +53,8 @@
 			canEdit: e => !tmpl().isResult.get() && (e.author_id === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)),
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
+			previousExerciseSolveData: () => getExecutionExercise(-1),
+			nextExerciseSolveData: () => getExecutionExercise(+1),
 			changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
 			resultSolved: () => getResult().solved,
 			answer()  {

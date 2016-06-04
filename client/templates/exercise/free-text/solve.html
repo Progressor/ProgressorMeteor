@@ -2,33 +2,35 @@
 	{{i18nTooltips}}
 	{{#with safeExercise this}}
 		<header>
-			<nav class="row">
-				<div class="col-sm-8">
-					<ol class="breadcrumb">
-						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-						<li class="active">{{i18nName category}}</li>
-						<li class="active">{{i18nDifficulty difficulty}}</li>
-						{{#unless isResult}}
-							<li class="active">{{i18nName this}}</li>
-						{{else}}
-							<li>
-								{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nName this}}{{/linkTo}}
-								{{#if changedAfterSolved}}<em class="text-info">&mdash; {{i18n "exercise.changedMessage"}}</em>{{/if}}
-							</li>
-						{{/unless}}
-					</ol>
-				</div>
-				{{#if canEdit this}}
-					<div class="col-sm-4 text-right">
-						<ul class="breadcrumb">
-							<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
-						</ul>
+			{{#unless execution}}
+				<nav class="row">
+					<div class="col-sm-8">
+						<ol class="breadcrumb">
+							<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+							<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+							<li>{{#linkTo route="categoryExercises" data=category}}{{i18nName category}}{{/linkTo}}</li>
+							<li class="active">{{i18nDifficulty difficulty}}</li>
+							{{#unless isResult}}
+								<li class="active">{{i18nName this}}</li>
+							{{else}}
+								<li>
+									{{#linkTo route="exerciseSolve" data=exerciseSolveData}}{{i18nName this}}{{/linkTo}}
+									{{#if changedAfterSolved}}<em class="text-info">&mdash; {{i18n "exercise.changedMessage"}}</em>{{/if}}
+								</li>
+							{{/unless}}
+						</ol>
 					</div>
-				{{/if}}
-			</nav>
+					{{#if canEdit this}}
+						<div class="col-sm-4 text-right">
+							<ul class="breadcrumb">
+								<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
+							</ul>
+						</div>
+					{{/if}}
+				</nav>
+			{{/unless}}
 			<div class="row">
-				<div class="col-sm-9">
+				<div class="col-sm-8">
 					<h2>
 						{{i18nName this}}
 						{{#if isResult}}
@@ -39,6 +41,15 @@
 						{{/if}}
 					</h2>
 				</div>
+				{{#if execution}}
+					<div class="col-sm-4">
+						<ul class="pager nomargin pull-right">
+							<li class="{{#unless previousExerciseSolveData}}disabled{{/unless}}">{{!class="previous"}}{{#linkTo route="exerciseSolve" data=previousExerciseSolveData}}&larr;&nbsp;{{i18n "form.previousButton"}}{{/linkTo}}</li>
+							<li>{{#linkTo route="examinationExecutionView" data=execution}}{{i18n "examination.overviewTitle"}}{{/linkTo}}</li>
+							<li class="{{#unless nextExerciseSolveData}}disabled{{/unless}}">{{!class="next"}}{{#linkTo route="exerciseSolve" data=nextExerciseSolveData}}{{i18n "form.nextButton"}}&nbsp;&rarr;{{/linkTo}}</li>
+						</ul>
+					</div>
+				{{/if}}
 			</div>
 		</header>
 		<section>

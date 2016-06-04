@@ -28,7 +28,7 @@
 	//EXERCISES
 
 	function publishExercises(query, assumeReleased = false, assumeUnauthorised = false) {
-		const that = this, published = [];
+		const published = [];
 
 		function getExercises(id = null) {
 			return Progressor.exercises.find(id ? { _id: id } : query);
@@ -39,10 +39,11 @@
 		}
 
 		function publishExercise(id, exercise = getExercises(id).fetch()[0]) {
-			const isAuthorised = exercise && that.userId === exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN);
+			const isAuthorised = exercise && this.userId === exercise.author_id || Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN);
 
-			if (!exercise || !isAuthorised && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
-				return unpublishExercise(id);
+			//TODO: add robust execution handling
+			if (!exercise || !isAuthorised && !exercise.execution_id && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
+				return unpublishExercise.call(this, id);
 
 			if (assumeUnauthorised || !isAuthorised) {
 				if (!exercise.solutionVisible)
@@ -54,28 +55,28 @@
 			const isPublished = _.contains(published, id);
 			if (!isPublished)
 				published.push(id);
-			that[isPublished ? 'changed' : 'added']('exercises', id, exercise);
+			this[isPublished ? 'changed' : 'added']('exercises', id, exercise);
 		}
 
 		function unpublishExercise(id) {
 			const publishIndex = published.indexOf(id);
 			if (publishIndex >= 0) {
 				published.splice(publishIndex, 1);
-				that.removed('exercises', id);
+				this.removed('exercises', id);
 			}
 		}
 
 		const handleExercises = getExercises().observe(
 			{
-				added: e => publishExercise(e._id, e),
-				changed: e => publishExercise(e._id, e),
-				removed: e => unpublishExercise(e._id)
+				added: e => publishExercise.call(this, e._id, e),
+				changed: e => publishExercise.call(this, e._id, e),
+				removed: e => unpublishExercise.call(this, e._id)
 			});
 		const handleResults = !assumeReleased ? getResults().observe(
 			{
-				added: r => publishExercise(r.exercise_id),
-				changed: r => publishExercise(r.exercise_id),
-				removed: r => publishExercise(r.exercise_id)
+				added: r => publishExercise.call(this, r.exercise_id),
+				changed: r => publishExercise.call(this, r.exercise_id),
+				removed: r => publishExercise.call(this, r.exercise_id)
 			}) : null;
 
 		this.ready();
@@ -86,7 +87,7 @@
 		});
 	}
 
-	// CATEGORISED EXERCISES
+	//CATEGORISED EXERCISES
 
 	Meteor.publish('releaseRequestedExercises', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
@@ -109,7 +110,7 @@
 	Meteor.publish('exercise', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishExercises.call(this, { _id: id, category_id: { $exists: true } }, false, isExecute);
+		publishExercises.call(this, { _id: id /*, category_id: { $exists: true }*/ }, false, isExecute);
 	});
 	Meteor.publish('exerciseByResult', function (id, isExecute = false) {
 		check(id, String);
@@ -118,15 +119,15 @@
 		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
 
-	// EXAMINATION EXERCISES
+	//EXAMINATION EXERCISES
 
 	Meteor.publish('exercisesByExecution', function (executionId, isExecute = false) {
 		check(executionId, String);
 		check(isExecute, Boolean);
-		publishExercises.call(this, { execution_id: executionId }, true);
+		publishExercises.call(this, { execution_id: executionId }, true, isExecute);
 	});
 
-	// RELEASE REQUEST COUNT
+	//RELEASE REQUEST COUNT
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
@@ -148,37 +149,40 @@
 	//RESULTS
 
 	function publishResults(query, assumeUnauthorised = false) {
-		const that = this, published = [];
+		const published = [];
 
-		function getResults(id = null) {
-			return Progressor.results.find(id ? { _id: id } : query);
-		}
+		function publishResult(id, result) {
+			const isAuthorised = !assumeUnauthorised && (this.userId === result.exercise.author_id || Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN));
 
-		function publishResult(id, result = getResults(id).fetch()[0]) {
-			const isAuthorised = !assumeUnauthorised && (that.userId === result.exercise.author_id || Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN));
+			//TODO: add robust execution handling
+			const execution = result.exercise.execution_id ? Progressor.executions.findOne({ _id: result.exercise.execution_id }) : null;
+			if (this.userId !== result.user_id && !(execution && this.userId === execution.author_id) && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				return unpublishResult.call(this, id);
 
-			if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
+			if (!isAuthorised && execution && result.exercise.type !== 1)
+				result.results = [];
+			else if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
 				result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
 
 			const isPublished = _.contains(published, id);
 			if (!isPublished)
 				published.push(id);
-			that[isPublished ? 'changed' : 'added']('results', id, result);
+			this[isPublished ? 'changed' : 'added']('results', id, result);
 		}
 
 		function unpublishResult(id) {
 			const publishIndex = published.indexOf(id);
 			if (publishIndex >= 0) {
 				published.splice(publishIndex, 1);
-				that.removed('results', id);
+				this.removed('results', id);
 			}
 		}
 
-		const handle = getResults().observe(
+		const handle = Progressor.results.find(query).observe(
 			{
-				added: r => publishResult(r._id, r),
-				changed: r => publishResult(r._id, r),
-				removed: r => unpublishResult(r._id)
+				added: r => publishResult.call(this, r._id, r),
+				changed: r => publishResult.call(this, r._id, r),
+				removed: r => unpublishResult.call(this, r._id)
 			});
 
 		this.ready();
@@ -186,20 +190,58 @@
 	}
 
 	Meteor.publish('myResults', function () {
-		return Progressor.results.find({ user_id: this.userId });
+		return Progressor.results.find({ user_id: this.userId, 'exercise.category_id': { $exists: true } });
 	});
-	Meteor.publish('myResult', function (id, isExecute = false) {
+	Meteor.publish('result', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishResults.call(this, { user_id: this.userId, _id: id }, isExecute);
+		publishResults.call(this, { _id: id /*, 'exercise.category_id': { $exists: true }*/ }, isExecute);
 	});
-	Meteor.publish('myResultByExercise', function (exerciseId, isExecute = false) {
+	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false) {
 		check(exerciseId, String);
 		check(isExecute, Boolean);
-		publishResults.call(this, { user_id: this.userId, exercise_id: exerciseId }, isExecute);
+		publishResults.call(this, { exercise_id: exerciseId /*, 'exercise.category_id': { $exists: true }*/ }, isExecute);
 	});
 
-	// EXAMINATIONS
+	Meteor.publish('resultsByExecution', function (executionId, isExecute = false) {
+		check(executionId, String);
+		check(isExecute, Boolean);
+		publishResults.call(this, { 'exercise.execution_id': executionId }, isExecute);
+	});
+
+	//EXAMINATIONS
+
+	function publishExaminations(query) {
+		const published = [];
+
+		function publishExamination(id, examination) {
+			if (this.userId !== examination.author_id && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				return unpublishExamination.call(this, id);
+
+			const isPublished = _.contains(published, id);
+			if (!isPublished)
+				published.push(id);
+			this[isPublished ? 'changed' : 'added']('examinations', id, examination);
+		}
+
+		function unpublishExamination(id) {
+			const publishIndex = published.indexOf(id);
+			if (publishIndex >= 0) {
+				published.splice(publishIndex, 1);
+				this.removed('examinations', id);
+			}
+		}
+
+		const handleExaminations = Progressor.examinations.find(query).observe(
+			{
+				added: e => publishExamination.call(this, e._id, e),
+				changed: e => publishExamination.call(this, e._id, e),
+				removed: e => unpublishExamination.call(this, e._id)
+			});
+
+		this.ready();
+		this.onStop(() => handleExaminations.stop());
+	}
 
 	Meteor.publish('myExaminations', function () {
 		publishExaminations.call(this, { author_id: this.userId });
@@ -209,39 +251,44 @@
 		publishExaminations.call(this, { _id: id });
 	});
 
-	function publishExaminations(query) {
-		const that = this, published = [];
+	//EXECUTIONS
 
-		function publishExamination(id, examination) {
-			if (that.userId !== examination.author_id && !Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN))
-				return unpublishExamination(id);
+	function publishExecutions(query) {
+		const published = [];
+
+		function getExecutions(id = null) {
+			return Progressor.executions.find(id ? { _id: id } : query);
+		}
+
+		function publishExecution(id, execution = getExecutions(id).fetch()[0]) {
+			if (this.userId !== execution.author_id && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN) //TODO: add robust time handling
+					&& ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, this.userId)) || !execution.startTime || execution.startTime > new Date() || (execution.startTime + execution.durationMinutes * 60 * 1000) < new Date()))
+				return unpublishExecution.call(this, id);
 
 			const isPublished = _.contains(published, id);
 			if (!isPublished)
 				published.push(id);
-			that[isPublished ? 'changed' : 'added']('examinations', id, examination);
+			this[isPublished ? 'changed' : 'added']('executions', id, execution);
 		}
 
-		function unpublishExamination(id) {
+		function unpublishExecution(id) {
 			const publishIndex = published.indexOf(id);
 			if (publishIndex >= 0) {
 				published.splice(publishIndex, 1);
-				that.removed('examinations', id);
+				this.removed('executions', id);
 			}
 		}
 
-		const handleExaminations = Progressor.examinations.find(query).observe(
+		const handleExecutions = getExecutions().observe(
 			{
-				added: e => publishExamination(e._id, e),
-				changed: e => publishExamination(e._id, e),
-				removed: e => unpublishExamination(e._id)
+				added: e => publishExecution.call(this, e._id, e),
+				changed: e => publishExecution.call(this, e._id, e),
+				removed: e => unpublishExecution.call(this, e._id)
 			});
 
 		this.ready();
-		this.onStop(() => handleExaminations.stop());
+		this.onStop(() => handleExecutions.stop());
 	}
-
-	// EXECUTIONS
 
 	Meteor.publish('myExecutions', function () {
 		publishExecutions.call(this, { author_id: this.userId });
@@ -250,39 +297,10 @@
 		check(id, String);
 		publishExecutions.call(this, { _id: id });
 	});
-
-	function publishExecutions(query) {
-		const that = this, published = [];
-
-		function publishExecution(id, execution) {
-			if (that.userId !== execution.author_id && !Roles.userIsInRole(that.userId, Progressor.ROLE_ADMIN)
-					&& ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, that.userId)) || !execution.startTime || execution.startTime > new Date()))
-				return unpublishExecution(id);
-
-			const isPublished = _.contains(published, id);
-			if (!isPublished)
-				published.push(id);
-			that[isPublished ? 'changed' : 'added']('executions', id, execution);
-		}
-
-		function unpublishExecution(id) {
-			const publishIndex = published.indexOf(id);
-			if (publishIndex >= 0) {
-				published.splice(publishIndex, 1);
-				that.removed('executions', id);
-			}
-		}
-
-		const handleExecutions = Progressor.executions.find(query).observe(
-			{
-				added: e => publishExecution(e._id, e),
-				changed: e => publishExecution(e._id, e),
-				removed: e => unpublishExecution(e._id)
-			});
-
-		this.ready();
-		this.onStop(() => handleExecutions.stop());
-	}
+	Meteor.publish('executionByExercise', function (exerciseId) {
+		check(exerciseId, String);
+		publishExecutions.call(this, { exercises: { $elemMatch: { exercise_id: exerciseId } } });
+	});
 
 	///////////////////////////
 	// HOUSTON CONFIGURATION //
