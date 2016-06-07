@@ -6,7 +6,7 @@
 	 */
 
 	Template.exerciseRelease.onRendered(function () {
-		this.$('#collapseReleased').on('show.bs.collapse hide.bs.collapse', event => $(event.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	/*
@@ -24,7 +24,12 @@
 		};
 	}
 
-	Template.exerciseRelease_exerciseList.events(
+	Template.exerciseRelease_listPanel.helpers(
+		{
+			randomId: () => Random.id()
+		});
+
+	Template.exerciseRelease_listPanel.events(
 		{
 			'click .a-release': toggleReleaseExercise(true),
 			'click .a-unrelease': toggleReleaseExercise(false)

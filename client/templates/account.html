@@ -67,7 +67,8 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">
 					<a role="button" data-toggle="collapse" href="#collapse-{{id}}"><span class="glyphicon {{#if isResult}}glyphicon-minus-sign{{else}}glyphicon-plus-sign{{/if}}" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
-					<a role="button" data-toggle="collapse" href="#collapse-{{id}}">{{title}} <span class="badge">{{exercises.length}}</span></a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}">{{title}}</a>
+					<span class="badge">{{exercises.length}}</span>
 				</h3>
 			</div>
 			<div id="collapse-{{id}}" class="panel-collapse collapse {{#if isResult}}in{{/if}}">
@@ -143,9 +144,9 @@
 										{{#if isArchive}}
 											<td>{{#unless isExecution}}{{i18n "examination.templateType"}}{{else}}{{i18n "examination.executionType"}}{{/unless}}</td>
 										{{/if}}
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
+										<td></td>
+										<td></td>
+										<td></td>
 									{{/unless}}
 									{{#if isExecution}}
 										{{#unless isArchive}}

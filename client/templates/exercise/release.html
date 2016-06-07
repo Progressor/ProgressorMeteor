@@ -1,69 +1,68 @@
 <template name="exerciseRelease">
-	{{> exerciseRelease_exerciseList title=(i18n "exercise.releaseRequestedSubtitle") exercises=requested}}
-	{{> exerciseRelease_exerciseList title=(i18n "exercise.releasedSubtitle") exercises=released isReleased=true}}
+	{{> exerciseRelease_listPanel title=(i18n "exercise.releaseRequestedSubtitle") exercises=requested}}
+	{{> exerciseRelease_listPanel title=(i18n "exercise.releasedSubtitle") exercises=released isReleased=true}}
 </template>
-<template name="exerciseRelease_exerciseList">
-	<section class="panel panel-default">
-		<div class="panel-heading">
-			{{#unless isReleased}}
-				<h3 class="panel-title">{{title}}</h3>
-			{{else}}
+<template name="exerciseRelease_listPanel">
+	{{#let id=randomId}}
+		<section class="panel panel-default">
+			<div class="panel-heading">
 				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapseReleased"><span class="glyphicon glyphicon-plus-sign" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
-					<a role="button" data-toggle="collapse" href="#collapseReleased">{{title}}</a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}"><span class="glyphicon {{#unless isReleased}}glyphicon-minus-sign{{else}}glyphicon-plus-sign{{/unless}}" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}">{{title}}</a>
+					<span class="badge">{{exercises.length}}</span>
 				</h3>
-			{{/unless}}
-		</div>
-		<div id="{{#if isReleased}}collapseReleased{{/if}}" class="panel-collapse {{#if isReleased}}collapse{{/if}}">
-			<table class="table table-condensed table-striped">
-				<thead>
-					<tr>
-						<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-						<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-						<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-						<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-						<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
-						<th scope="col">{{i18n "form.createdByLabel"}}</th>
-						<th scope="col">{{i18n "form.editedByLabel"}}</th>
-						<th scope="col">{{i18n "form.editedAtLabel"}}</th>
-						{{#unless isReleased}}
-							<th scope="col">{{i18n "exercise.releaseRequestedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
-							<th scope="col">{{i18n "exercise.releaseRequestNotifiedAtLabel"}}</th>
-						{{else}}
-							<th scope="col">{{i18n "exercise.releasedByLabel"}}</th>
-							<th scope="col">{{i18n "exercise.releasedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
-						{{/unless}}
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{{#each exercises}}
+			</div>
+			<div id="collapse-{{id}}" class="panel-collapse collapse {{#unless isReleased}}in{{/unless}}">
+				<table class="table table-condensed table-striped">
+					<thead>
 						<tr>
-							<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
-							<td>{{i18nExerciseType type}}</td>
-							<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-							<td>{{i18nName category}}</td>
-							<td>{{i18nDifficulty difficulty}}</td>
-							<td>{{userName author_id}}</td>
-							<td>{{userName lastEditor_id}}</td>
-							<td>{{i18nDateTime lastEdited}}</td>
-							{{#unless released.confirmed}}
-								<td>{{i18nDateTime released.requested}}</td>
-								<td>{{i18nDateTime released.notified}}</td>
-								<td><a role="button" class="a-release"><span class="glyphicon glyphicon-book" title="{{i18n "exercise.releaseButton"}}" data-toggle="tooltip"></span></a></td>
+							<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+							<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+							<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+							<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+							<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+							<th scope="col">{{i18n "form.createdByLabel"}}</th>
+							<th scope="col">{{i18n "form.editedByLabel"}}</th>
+							<th scope="col">{{i18n "form.editedAtLabel"}}</th>
+							{{#unless isReleased}}
+								<th scope="col">{{i18n "exercise.releaseRequestedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
+								<th scope="col">{{i18n "exercise.releaseRequestNotifiedAtLabel"}}</th>
 							{{else}}
-								<td>{{userName released.confirmor_id}}</td>
-								<td>{{i18nDateTime released.confirmed}}</td>
-								<td><a role="button" class="a-unrelease"><span class="glyphicon glyphicon-lock" title="{{i18n "exercise.unreleaseButton"}}" data-toggle="tooltip"></span></a></td>
+								<th scope="col">{{i18n "exercise.releasedByLabel"}}</th>
+								<th scope="col">{{i18n "exercise.releasedAtLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
 							{{/unless}}
+							<th></th>
 						</tr>
-					{{else}}
-						<tr>
-							<td colspan="11" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
-						</tr>
-					{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</section>
+					</thead>
+					<tbody>
+						{{#each exercises}}
+							<tr>
+								<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
+								<td>{{i18nExerciseType type}}</td>
+								<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+								<td>{{i18nName category}}</td>
+								<td>{{i18nDifficulty difficulty}}</td>
+								<td>{{userName author_id}}</td>
+								<td>{{userName lastEditor_id}}</td>
+								<td>{{i18nDateTime lastEdited}}</td>
+								{{#unless released.confirmed}}
+									<td>{{i18nDateTime released.requested}}</td>
+									<td>{{i18nDateTime released.notified}}</td>
+									<td><a role="button" class="a-release"><span class="glyphicon glyphicon-book" title="{{i18n "exercise.releaseButton"}}" data-toggle="tooltip"></span></a></td>
+								{{else}}
+									<td>{{userName released.confirmor_id}}</td>
+									<td>{{i18nDateTime released.confirmed}}</td>
+									<td><a role="button" class="a-unrelease"><span class="glyphicon glyphicon-lock" title="{{i18n "exercise.unreleaseButton"}}" data-toggle="tooltip"></span></a></td>
+								{{/unless}}
+							</tr>
+						{{else}}
+							<tr>
+								<td colspan="11" class="text-muted">{{i18n "form.noResultsMessage"}}</td>
+							</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	{{/let}}
 </template>
