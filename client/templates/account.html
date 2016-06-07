@@ -10,7 +10,7 @@
 				{{> account_listPanel title=(i18n "account.createdExercisesSubtitle") exercises=(createdExercises this) isExercise=true}}
 				{{> account_listPanel title=(i18n "account.createdExamsSubtitle") exercises=(createdExaminations this) isExamination=true}}
 				{{> account_listPanel title=(i18n "account.createdExecutionSubtitle") exercises=(createdExecutions this) isExecution=true isExamination=true}}
-				{{> account_listPanel title=(i18n "account.archivedExercisesSubtitle") exercises=(archive this) isArchive=true}}
+				{{> account_listPanel title=(i18n "account.archiveSubtitle") exercises=(archive this) isArchive=true}}
 			</div>
 			<div class="col-md-4">
 				<section class="well form-horizontal">
@@ -75,11 +75,16 @@
 					<thead>
 						<tr>
 							<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+							{{#if isArchive}}
+								<th scope="col">{{i18n "account.archivedTypeLabel"}}</th>
+							{{/if}}
 							{{#unless isExamination}}
 								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
 								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								{{#unless isArchive}}
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+								{{/unless}}
 							{{else}}
 								<th scope="col">{{i18n "examination.durationLabel"}}</th>
 								<th scope="col">{{i18n "examination.exerciseNumberLabel"}}</th>
@@ -130,16 +135,36 @@
 										{{/if}}
 									{{/unless}}
 								</td>
+								{{#if archived}}
+									{{#if isExamination}}
+										{{#unless isExecution}}
+											<td>{{i18n "examination.examTypeTitle"}}</td>
+										{{else}}
+										<td>{{i18n "examination.executionTypeTitle"}}</td>
+										{{/unless}}
+									{{else}}
+									<td>{{i18n "exercise.title"}}</td>
+									{{/if}}
+								{{/if}}
 								{{#unless isExamination}}
 									<td>{{i18nExerciseType type}}</td>
 									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-									<td>{{i18nName category}}</td>
-									<td>{{i18nDifficulty difficulty}}</td>
+									{{#unless archived}}
+										<td>{{i18nName category}}</td>
+										<td>{{i18nDifficulty difficulty}}</td>
+									{{/unless}}
 								{{else}}
-									<td>{{durationMinutes}} {{i18n "examination.durationUnitLabel"}}</td>
-									<td>{{numberOfExercises this}}</td>
+									{{#unless archived}}
+										<td>{{durationMinutes}} {{i18n "examination.durationUnitLabel"}}</td>
+										<td>{{numberOfExercises this}}</td>
+									{{else}}
+										<td></td>
+										<td></td>
+									{{/unless}}
 									{{#if isExecution}}
-										<td>{{i18nDateTime startTime}}</td>
+										{{#unless archived}}
+											<td>{{i18nDateTime startTime}}</td>
+										{{/unless}}
 									{{/if}}
 								{{/unless}}
 								{{#if isResult}}
@@ -148,9 +173,9 @@
 									<td>{{userName lastEditor_id}}</td>
 									<td>{{i18nDateTime lastEdited}}</td>
 									{{#unless archived}}
-										<td><a role="button" class="a-archive"><span class="glyphicon glyphicon-folder-close" title="{{i18n "exercise.archiveButton"}}" data-toggle="tooltip"></span></a></td>
+										<td><a role="button" class="a-archive"><span class="glyphicon glyphicon-folder-close" title="{{i18n "account.archiveButton"}}" data-toggle="tooltip"></span></a></td>
 									{{else}}
-										<td><a role="button" class="a-unarchive"><span class="glyphicon glyphicon-folder-open" title="{{i18n "exercise.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
+										<td><a role="button" class="a-unarchive"><span class="glyphicon glyphicon-folder-open" title="{{i18n "account.unarchiveButton"}}" data-toggle="tooltip"></span></a></td>
 									{{/unless}}
 								{{/if}}
 							</tr>

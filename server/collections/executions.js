@@ -29,6 +29,17 @@
 
 				return Progressor.executions.upsert(execution._id, execution).insertedId || execution._id;
 			},
+			toggleArchiveExecution(execution, archived) {
+				check(execution, Match.ObjectIncluding({ _id: String }));
+				check(archived, Boolean);
+
+				execution = Progressor.executions.findOne({ _id: execution._id });
+
+				if (execution.author_id !== this.userId)
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+
+				return Progressor.executions.upsert(execution._id, { $set: { archived } }).rowsAffected;
+			},
 			deleteExecution(execution) {
 				check(execution, Match.ObjectIncluding({ _id: String }));
 

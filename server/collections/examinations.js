@@ -27,6 +27,17 @@
 
 				return Progressor.examinations.upsert(examination._id, examination).insertedId || examination._id;
 			},
+			toggleArchiveExamination(examination, archived) {
+				check(examination, Match.ObjectIncluding({ _id: String }));
+				check(archived, Boolean);
+
+				examination = Progressor.examinations.findOne({ _id: examination._id });
+
+				if (examination.author_id !== this.userId)
+					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+
+				return Progressor.examinations.upsert(examination._id, { $set: { archived } }).rowsAffected;
+			},
 			deleteExamination(examination) {
 				check(examination, Match.ObjectIncluding({ _id: String }));
 

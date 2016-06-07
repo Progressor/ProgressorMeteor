@@ -26,7 +26,7 @@
 			createdExercises: c => _.map(c.createdExercises, e => _.extend({ isExercise: true }, e)),
 			createdExaminations: c => _.map(c.createdExaminations, e => _.extend({ isExamination: true }, e)),
 			createdExecutions: c => _.map(c.createdExecutions, e => _.extend({ isExamination: true, isExecution: true }, e)),
-			archive: c => _.map(c.archivedExercises, e => _.extend({ isExercise: true }, e)),
+			archive: c => _.union(_.map(c.archivedExercises, e => _.extend({ isExercise: true }, e)), _.map(c.archivedExaminations, e => _.extend({ isExamination: true }, e)), _.map(c.archivedExecutions, e => _.extend({ isExamination: true, isExecution: true }, e)) ),
 			users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), user => {
 				const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
 				tmpl().userValues[value] = user;
@@ -84,7 +84,12 @@
 
 	function toggleArchiveExercise(archive) {
 		return function () {
-			Meteor.call('toggleArchiveExercise', { _id: this._id }, archive, Progressor.handleError());
+			if (this.isExercise && !this.isExamination && !this.isExecution)
+				Meteor.call('toggleArchiveExercise', { _id: this._id }, archive, Progressor.handleError());
+			if (!this.isExercise && this.isExamination && !this.isExecution)
+				Meteor.call('toggleArchiveExamination', { _id: this._id }, archive, Progressor.handleError());
+			if (!this.isExercise && this.isExecution && this.isExamination)
+				Meteor.call('toggleArchiveExecution', { _id: this._id }, archive, Progressor.handleError());
 		};
 	}
 
@@ -93,7 +98,8 @@
 			randomId: () => Random.id(),
 			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
 			success: (e, r) => Progressor.isExerciseSuccess(e, r),
-			numberOfExercises: e => e.exercises.length
+			numberOfExercises: e => e.exercises.length,
+			archiveSort: c => getArchiveSort(c)
 		});
 
 	Template.account_listPanel.events(
@@ -101,5 +107,5 @@
 			'click .a-archive': toggleArchiveExercise(true),
 			'click .a-unarchive': toggleArchiveExercise(false)
 		});
-
+	
 })();
