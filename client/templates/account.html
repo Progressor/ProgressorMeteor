@@ -6,9 +6,11 @@
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-8">
-				{{> account_exerciseList title=(i18n "account.solvedExercisesSubtitle") exercises=(transformResults results) isResult=true}}
-				{{> account_exerciseList title=(i18n "account.createdExercisesSubtitle") exercises=createdExercises}}
-				{{> account_exerciseList title=(i18n "account.archivedExercisesSubtitle") exercises=archivedExercises isArchive=true}}
+				{{> account_listPanel title=(i18n "account.solvedExercisesSubtitle") exercises=(results this) isExercise=true isResult=true}}
+				{{> account_listPanel title=(i18n "account.createdExercisesSubtitle") exercises=(createdExercises this) isExercise=true}}
+				{{> account_listPanel title=(i18n "account.createdExamsSubtitle") exercises=(createdExaminations this) isExamination=true}}
+				{{> account_listPanel title=(i18n "account.createdExecutionSubtitle") exercises=(createdExecutions this) isExecution=true isExamination=true}}
+				{{> account_listPanel title=(i18n "account.archivedExercisesSubtitle") exercises=(archive this) isArchive=true}}
 			</div>
 			<div class="col-md-4">
 				<section class="well form-horizontal">
@@ -59,7 +61,7 @@
 		{{/if}}
 	</div>
 </template>
-<template name="account_exerciseList">
+<template name="account_listPanel">
 	{{#let id=randomId}}
 		<section class="panel panel-default">
 			<div class="panel-heading">
@@ -73,10 +75,18 @@
 					<thead>
 						<tr>
 							<th scope="col">{{i18n "exercise.nameLabel"}}</th>
-							<th scope="col">{{i18n "exercise.typeLabel"}}</th>
-							<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
-							<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
-							<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+							{{#unless isExamination}}
+								<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+								<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+							{{else}}
+								<th scope="col">{{i18n "examination.durationLabel"}}</th>
+								<th scope="col">{{i18n "examination.exerciseNumberLabel"}}</th>
+								{{#if isExecution}}
+									<th scope="col">{{i18n "examination.startTime"}}</th>
+								{{/if}}
+							{{/unless}}
 							{{#if isResult}}
 								<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
 							{{else}}
@@ -91,7 +101,15 @@
 							<tr>
 								<td>
 									{{#unless result}}
-										{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
+										{{#unless isExamination}}
+											{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
+										{{else}}
+											{{#if isExecution}}
+												{{#linkTo route="examinationExecutionView" data=this}}{{i18nName this}}{{/linkTo}}
+											{{else}}
+												{{#linkTo route="examinationTemplateEdit" data=this}}{{i18nName this}}{{/linkTo}}
+											{{/if}}
+										{{/unless}}
 										{{#if released}}
 											{{#if released.confirmed}}
 												<span class="glyphicon glyphicon-book text-success" title="{{i18n "exercise.releasedMessage"}}" data-toggle="tooltip"></span>
@@ -112,11 +130,19 @@
 										{{/if}}
 									{{/unless}}
 								</td>
-								<td>{{i18nExerciseType type}}</td>
-								<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
-								<td>{{i18nName category}}</td>
-								<td>{{i18nDifficulty difficulty}}</td>
-								{{#if result}}
+								{{#unless isExamination}}
+									<td>{{i18nExerciseType type}}</td>
+									<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+									<td>{{i18nName category}}</td>
+									<td>{{i18nDifficulty difficulty}}</td>
+								{{else}}
+									<td>{{durationMinutes}} {{i18n "examination.durationUnitLabel"}}</td>
+									<td>{{numberOfExercises this}}</td>
+									{{#if isExecution}}
+										<td>{{i18nDateTime startTime}}</td>
+									{{/if}}
+								{{/unless}}
+								{{#if isResult}}
 									<td>{{i18nDateTime result.solved}}</td>
 								{{else}}
 									<td>{{userName lastEditor_id}}</td>

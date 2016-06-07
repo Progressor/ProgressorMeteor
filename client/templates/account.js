@@ -22,7 +22,11 @@
 		{
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
-			transformResults: r => _.map(r, i => _.extend({ result: _.omit(i, 'exercise') }, i.exercise)),
+			results: c => _.map(c.results, r => _.extend({ isExercise: true, isResult: true, result: _.omit(r, 'exercise') }, r.exercise)),
+			createdExercises: c => _.map(c.createdExercises, e => _.extend({ isExercise: true }, e)),
+			createdExaminations: c => _.map(c.createdExaminations, e => _.extend({ isExamination: true }, e)),
+			createdExecutions: c => _.map(c.createdExecutions, e => _.extend({ isExamination: true, isExecution: true }, e)),
+			archive: c => _.map(c.archivedExercises, e => _.extend({ isExercise: true }, e)),
 			users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), user => {
 				const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
 				tmpl().userValues[value] = user;
@@ -84,14 +88,15 @@
 		};
 	}
 
-	Template.account_exerciseList.helpers(
+	Template.account_listPanel.helpers(
 		{
 			randomId: () => Random.id(),
 			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
-			success: (e, r) => Progressor.isExerciseSuccess(e, r)
+			success: (e, r) => Progressor.isExerciseSuccess(e, r),
+			numberOfExercises: e => e.exercises.length
 		});
 
-	Template.account_exerciseList.events(
+	Template.account_listPanel.events(
 		{
 			'click .a-archive': toggleArchiveExercise(true),
 			'click .a-unarchive': toggleArchiveExercise(false)
