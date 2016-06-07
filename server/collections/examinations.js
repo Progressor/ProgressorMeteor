@@ -33,16 +33,15 @@
 
 				examination = Progressor.examinations.findOne({ _id: examination._id });
 
-				if (examination.author_id !== this.userId)
+				if (examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
 
-				return Progressor.examinations.upsert(examination._id, { $set: { archived } }).rowsAffected;
+				return Progressor.examinations.update(examination._id, { $set: { archived } }).rowsAffected;
 			},
 			deleteExamination(examination) {
 				check(examination, Match.ObjectIncluding({ _id: String }));
 
-				if (examination._id)
-					examination = Progressor.examinations.findOne({ _id: examination._id });
+				examination = Progressor.examinations.findOne({ _id: examination._id });
 
 				if (!this.userId)
 					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
