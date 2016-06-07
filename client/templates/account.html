@@ -105,7 +105,7 @@
 											{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}
 										{{else}}
 											{{#if isExecution}}
-												{{#linkTo route="examinationExecutionView" data=this}}{{i18nName this}}{{/linkTo}}
+												{{#linkTo route="#" data=this}}{{i18nName this}}{{/linkTo}} {{!link to teacher overview}}
 											{{else}}
 												{{#linkTo route="examinationTemplateEdit" data=this}}{{i18nName this}}{{/linkTo}}
 											{{/if}}
