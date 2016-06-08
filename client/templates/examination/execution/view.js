@@ -18,6 +18,7 @@
 		{
 			exercises: () => _.map(getExecution().exercises, (e, i) => _.extend({ weight: e.weight }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
 			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
+			numberOfExercises: () => getExecution().exercises.length,
 			hasResult: e => getResult(e),
 			evaluated: e => Progressor.isExerciseEvaluated(e, getResults(e)),
 			successPercentage: e => Progressor.getExerciseSuccessPercentage(e, getResults(e))

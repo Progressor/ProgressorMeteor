@@ -1,19 +1,16 @@
 <template name="examinationExecutionView">
 	{{i18nTooltips}}
-	<h2>{{i18n "examination.overviewTitle"}} '{{i18nName this}}'</h2>
-	<div class="row">
-		<div class="col-md-12">
-			<div class="well form-horizontal">
-				<p>{{i18nDescription this}}</p>
-				<p>
-					<strong>{{i18n "examination.startTimeLabel"}}:</strong> {{i18nDateTime startTime}}<br />
-					<strong>{{i18n "examination.durationLabel"}}:</strong> {{durationMinutes}} {{i18n "examination.durationUnitLabel"}}
-				</p>
-				<p>
-					<strong>{{i18n "examination.totalWeightLabel"}}:</strong> {{totalWeight}}
-				</p>
-			</div>
-		</div>
+	<h2>{{i18n "examination.examOverviewTitle" (i18nName this)}}</h2>
+	<div class="well form-horizontal">
+		<p>{{i18nDescription this}}</p>
+		<p>
+			<label>{{i18n "examination.durationLabel"}}:</label> {{durationMinutes}} {{i18n "examination.durationUnitLabel"}}<br />
+			<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
+		</p>
+		<p>
+			<label>{{i18n "examination.exerciseNumberLabel"}}:</label> {{numberOfExercises}} <br />
+			<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}
+		</p>
 	</div>
 	<section class="panel panel-default">
 		<div class="panel-heading">
