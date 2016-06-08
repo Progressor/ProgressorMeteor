@@ -159,10 +159,11 @@
 			if (this.userId !== result.user_id && !(execution && this.userId === execution.author_id) && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 				return unpublishResult.call(this, id);
 
-			if (!isAuthorised && execution && result.exercise.type !== 1)
-				result.results = [];
-			else if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
-				result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
+			if (result.results)
+				if (!isAuthorised && execution && result.exercise.type !== 1)
+					result.results = [];
+				else if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
+					result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
 
 			const isPublished = _.contains(published, id);
 			if (!isPublished)

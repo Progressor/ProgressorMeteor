@@ -1,10 +1,50 @@
 (function () {
 	'use strict';
 
-	//evaluation of programming exercises in executor
+	//evaluation of programming exercises: see .\executor.js
 
 	Meteor.methods(
 		{
+			openedExercise(exercise) {
+				check(exercise, Match.ObjectIncluding({ _id: String }));
+
+				exercise = Progressor.exercises.findOne({ _id: exercise._id });
+
+				if (this.userId) {
+					const query = { user_id: this.userId, exercise_id: exercise._id };
+					const result = Progressor.results.findOne(query);
+
+					const now = new Date();
+					if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_OPENED_TYPE))
+						Progressor.results.upsert(result ? result._id : null, {
+							$set: _.extend(query, { exercise: _.omit(exercise, '_id'), solved: now }),
+							$push: { log: { $each: [{ type: Progressor.RESULT_LOG_OPENED_TYPE, timestamp: now }] } }
+						});
+				}
+			},
+			updateExerciseProgress(exercise, update) {
+				check(exercise, Match.ObjectIncluding({ _id: String }));
+				check(update, Match.ObjectIncluding(
+					{
+						activities: Match.Integer,
+						difference: Match.Optional(Match.Integer)
+					}));
+
+				if (this.userId && (update.activities || update.difference)) {
+					const query = { user_id: this.userId, exercise_id: exercise._id };
+					const result = Progressor.results.findOne(query);
+					const lastUpdate = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
+
+					const now = new Date();
+					const logUpdate = _.extend({ type: Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE, timestamp: now }, update);
+					if (lastUpdate) logUpdate.intervalSeconds = (now.getTime() - lastUpdate.timestamp.getTime()) / 1e3;
+
+					Progressor.results.upsert(result ? result._id : null, {
+						$set: query,
+						$push: { log: { $each: [logUpdate] } }
+					});
+				}
+			},
 			evaluateMultipleChoice(exercise, checkedOptions) {
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(
@@ -25,8 +65,33 @@
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
-					const upsertExercise = Progressor.results.findOne(query);
-					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), results, solved: new Date() }));
+					const result = Progressor.results.findOne(query);
+					const lastEvaluation = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE);
+
+					const now = new Date();
+					const updateFields = _.extend(query, { exercise: _.omit(exercise, '_id'), results, solved: now });
+					const logEntries = [], logEvaluated = {
+						type: Progressor.RESULT_LOG_EVALUATED_TYPE, timestamp: now,
+						success: Progressor.isExerciseSuccess(exercise, results),
+						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
+					};
+					if (lastEvaluation) logEvaluated.intervalSeconds = (now.getTime() - logEvaluated.timestamp.getTime()) / 1e3;
+					logEntries.push(logEvaluated);
+
+					if (!result || !result.started) {
+						updateFields.started = now;
+						logEntries.push({ type: Progressor.RESULT_LOG_STARTED_TYPE, timestamp: now });
+					}
+
+					if (Progressor.isExerciseSuccess(exercise, results)) {
+						if (!result || !result.completed) updateFields.completed = now;
+						if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_COMPLETED_TYPE)) logEntries.push({ type: Progressor.RESULT_LOG_COMPLETED_TYPE, timestamp: now });
+					}
+
+					Progressor.results.upsert(result ? result._id : null, {
+						$set: updateFields,
+						$push: { log: { $each: logEntries } }
+					});
 				}
 
 				return results;
@@ -53,8 +118,34 @@
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
-					const upsertExercise = Progressor.results.findOne(query);
-					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), answer, results, solved: new Date() }));
+					const result = Progressor.results.findOne(query);
+					const lastEvaluation = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE);
+
+					const now = new Date();
+					const updateFields = _.extend(query, { exercise: _.omit(exercise, '_id'), answer, results, solved: now });
+					const logEntries = [], logEvaluated = {
+						type: Progressor.RESULT_LOG_EVALUATED_TYPE, timestamp: now,
+						success: Progressor.isExerciseSuccess(exercise, results),
+						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
+					};
+					if (lastEvaluation) logEvaluated.editTimeSeconds = (now.getTime() - lastEvaluation.timestamp.getTime()) / 1e3;
+					if (result && result.answer) logEvaluated.lengthDifference = answer.length - result.answer.length;
+					logEntries.push(logEvaluated);
+
+					if (!result || !result.started) {
+						updateFields.started = now;
+						logEntries.push({ type: Progressor.RESULT_LOG_STARTED_TYPE, timestamp: now });
+					}
+
+					if (Progressor.isExerciseSuccess(exercise, results)) {
+						if (!result || !result.completed) updateFields.completed = now;
+						if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_COMPLETED_TYPE)) logEntries.push({ type: Progressor.RESULT_LOG_COMPLETED_TYPE, timestamp: now });
+					}
+
+					Progressor.results.upsert(result ? result._id : null, {
+						$set: updateFields,
+						$push: { log: { $each: logEntries } }
+					});
 				}
 
 				return results;

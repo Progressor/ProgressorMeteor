@@ -21,9 +21,7 @@
 
 	Template.categoryEdit.onCreated(function () {
 		this.category = new ReactiveVar(getDefaultCategory());
-	});
 
-	Template.categoryEdit.onRendered(function () {
 		this.autorun(() => {
 			const live = Progressor.categories.findOne();
 			const detached = Tracker.nonreactive(() => this.category.get());

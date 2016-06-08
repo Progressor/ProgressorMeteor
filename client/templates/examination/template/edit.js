@@ -35,9 +35,7 @@
 		this.isCreate = new ReactiveVar(false);
 		this.examination = new ReactiveVar(getDefaultExamination());
 		this.filter = new ReactiveDict();
-	});
 
-	Template.examinationTemplateEdit.onRendered(function () {
 		this.autorun(() => {
 			const live = Progressor.examinations.findOne();
 			const detached = Tracker.nonreactive(() => this.examination.get());

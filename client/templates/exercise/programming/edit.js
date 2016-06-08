@@ -27,6 +27,10 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testExecutorIdentifier(value) {
 		return !value || /^[A-Z_][A-Z0-9_]*$/i.test(value);
 	}
@@ -114,6 +118,11 @@
 	}
 
 	Template.programmingEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.isCreate = new ReactiveVar(false);
 		this.exercise = new ReactiveVar(getDefaultExercise());
 		this.executorTypes = new ReactiveVar(null);
@@ -125,11 +134,10 @@
 		this.solutionTyped = false;
 		Session.set('fragment', null);
 		Session.set('solution', null);
-	});
 
-	Template.programmingEdit.onRendered(function () {
-		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
-		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		///////////////////////////////
+		// REACTIVE (LOCAL) EXERCISE //
+		///////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
@@ -147,6 +155,10 @@
 			} else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
+
+		//////////////////////////////
+		// CODEMIRROR CONFIGURATION //
+		//////////////////////////////
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne();
@@ -170,10 +182,25 @@
 			if (!this.executionResults.get().length && result)
 				this.executionResults.set(result.results);
 		});
+
+		//INITIALISATION
+
+		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
+	});
+
+	//COLLAPSIBLE PANELS
+
+	Template.programmingEdit.onRendered(function () {
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	Template.programmingEdit.helpers(
 		{
+
+			//////////////////////
+			// EXERCISE HELPERS //
+			//////////////////////
+
 			safeExercise(context) {
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().exercise.get();
@@ -236,7 +263,10 @@
 			executorTypes: () => tmpl().executorTypes.get() ? tmpl().executorTypes.get().types : [],
 			executorValues: () => tmpl().executorTypes.get() ? _.map(tmpl().executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
 
-			//execution
+			/////////////////////////////////
+			// TEST CASE EXECUTION HELPERS //
+			/////////////////////////////////
+
 			executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
 			blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(tmpl().exercise.get(), tmpl().executionResults.get()),
@@ -245,6 +275,10 @@
 			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
 			executionFatal: () => Progressor.isExerciseFatal(tmpl().exercise.get(), tmpl().executionResults.get())
 		});
+
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
 
 	function changeExercise(callback) {
 		return function (event, template) {
@@ -306,6 +340,11 @@
 
 	Template.programmingEdit.events(
 		{
+
+			///////////////////////
+			// VALIDATION EVENTS //
+			///////////////////////
+
 			'keyup .input-function-name'(event, template) {
 				const $this = $(event.currentTarget), $group = $this.closest('.form-group');
 				const $groups = template.$('.input-function-name').closest('.form-group').removeClass('has-error').end();
@@ -330,6 +369,11 @@
 				if (!testExecutorValue($this.val(), this.type))
 					$group.addClass('has-error');
 			},
+
+			///////////////////////
+			// COLLECTION EVENTS //
+			///////////////////////
+
 			'click .btn-add-function': addExerciseCollection('function', () => getDefaultExercise().functions[0]),
 			'click .btn-remove-function': removeExerciseCollection('function'),
 			'click .btn-add-testcase': addExerciseCollection('testCase', () => getDefaultExercise().testCases[0]),
@@ -348,6 +392,11 @@
 				if (_function.name)
 					_.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
 			}),
+
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
 			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
 			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
@@ -362,6 +411,11 @@
 			'change .input-testcase-input': changeExerciseSubcollection('testCase', 'inputValue'),
 			'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCase', 'expectedOutputValue'),
 			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
+
 			'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
 				_.extend(template.exercise.get(), {
 					fragment: Session.get('fragment'),
@@ -387,7 +441,10 @@
 			}),
 			'click .btn-delete': (e, t) => Meteor.call('deleteExercise', { _id: t.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: t.exercise.get().programmingLanguage }), false)),
 
-			//execution
+			////////////////////////////////
+			// TEST CASE EXECUTION EVENTS //
+			////////////////////////////////
+
 			'click #button-execute'(event, template) {
 				execute(template, _.omit(template.exercise.get(), '_id', 'category'), (error, result) => {
 					const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);

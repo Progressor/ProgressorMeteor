@@ -33,9 +33,7 @@
 	Template.multipleEdit.onCreated(function () {
 		this.isCreate = new ReactiveVar(false);
 		this.exercise = new ReactiveVar(getDefaultExercise());
-	});
 
-	Template.multipleEdit.onRendered(function () {
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
 			const detached = Tracker.nonreactive(() => this.exercise.get());

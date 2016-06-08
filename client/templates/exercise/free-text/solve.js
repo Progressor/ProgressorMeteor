@@ -26,14 +26,38 @@
 		this.validationResult = new ReactiveVar(null);
 		this.evaluationResult = new ReactiveVar(null);
 		this.showSolution = new ReactiveVar(false);
-	});
+		this.progressUpdateInterval = -1;
+		this.progress = { activities: 0, length: 0 };
 
-	Template.textSolve.onRendered(function () {
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
-			if (result)
+			if (result && result.answer)
 				this.validationResult.set(new RegExp(`^${exercise.pattern}$`).test(result.answer));
 		});
+
+		if (!tmpl().isResult.get())
+			this.autorun(() => {
+				const exercise = getExercise(true);
+				if (exercise)
+					Meteor.call('openedExercise', exercise, Progressor.handleError());
+
+				Meteor.clearInterval(this.progressUpdateInterval);
+				this.progressUpdateInterval = Meteor.setInterval(() => {
+					if (exercise) {
+						const answer = this.$('.control-answer').val();
+						Meteor.call('updateExerciseProgress', exercise, {
+							activities: this.progress.activities,
+							difference: answer.length - this.progress.length
+						}, Progressor.handleError());
+						this.progress.activities = 0;
+						this.progress.length = answer ? answer.length : 0;
+					}
+				}, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
+			});
+	});
+
+	Template.multipleSolve.onDestroyed(function () {
+		Meteor.clearInterval(this.progressUpdateInterval);
 	});
 
 	function getExecutionExercise(offset) {
@@ -78,13 +102,10 @@
 	Template.textSolve.events(
 		{
 			'submit #form-answer': e => e.preventDefault(),
+			'keyup .control-answer': (e, t) => t.progress.activities++,
 			'change .control-answer': (e, t) => t.validationResult.set(t.$('.control-answer')[0].checkValidity()),
-			'click #button-solution'(event, template) {
-				template.showSolution.set(true)
-			},
-			'click #button-close'(event, template)  {
-				template.showSolution.set(false);
-			},
+			'click #button-solution': (e, t) => t.showSolution.set(true),
+			'click #button-close': (e, t) => t.showSolution.set(false),
 			'click #button-save-answer'(event, template) {
 				const $control = template.$('.control-answer');
 				if ($control[0].checkValidity()) {

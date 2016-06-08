@@ -33,6 +33,30 @@
 			return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
 	}
 
+	Template.multipleSolve.onCreated(function () {
+		this.progressUpdateInterval = -1;
+		this.progress = { activities: 0 };
+
+		if (!tmpl().isResult.get())
+			this.autorun(() => {
+				const exercise = getExercise(true);
+				if (exercise)
+					Meteor.call('openedExercise', exercise, Progressor.handleError());
+
+				Meteor.clearInterval(this.progressUpdateInterval);
+				this.progressUpdateInterval = Meteor.setInterval(() => {
+					if (exercise) {
+						Meteor.call('updateExerciseProgress', exercise, this.progress, Progressor.handleError());
+						this.progress.activities = 0;
+					}
+				}, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
+			});
+	});
+
+	Template.multipleSolve.onDestroyed(function () {
+		Meteor.clearInterval(this.progressUpdateInterval);
+	});
+
 	Template.multipleSolve.helpers(
 		{
 			safeExercise(exerciseOrResult) {
@@ -62,12 +86,9 @@
 
 	Template.multipleSolve.events(
 		{
-			'click #button-solution'(event, template) {
-				template.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i)));
-			},
-			'click #button-save-answer'(event, template) {
-				Meteor.call('evaluateMultipleChoice', getExercise(), template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((e, r) => template.evaluationResults.set(!e ? r : [])));
-			}
+			'click #button-solution': (e, t) => t.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
+			'change .input-option': (e, t) => t.progress.activities++,
+			'click #button-save-answer': (e, t) => Meteor.call('evaluateMultipleChoice', getExercise(), t.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((e, r) => t.evaluationResults.set(!e ? r : [])))
 		});
 
 })();

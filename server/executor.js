@@ -110,8 +110,34 @@
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
-					const upsertExercise = Progressor.results.findOne(query);
-					Progressor.results.upsert(upsertExercise ? upsertExercise._id : null, _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: new Date() }));
+					const result = Progressor.results.findOne(query);
+					const lastEvaluation = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE);
+
+					const now = new Date();
+					const updateFields = _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: now });
+					const logEntries = [], logEvaluated = {
+						type: Progressor.RESULT_LOG_EVALUATED_TYPE, timestamp: now,
+						success: Progressor.isExerciseSuccess(exercise, results),
+						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
+					};
+					if (lastEvaluation) logEvaluated.editTimeSeconds = (now.getTime() - logEvaluated.timestamp.getTime()) / 1e3;
+					if (result && result.fragment) logEvaluated.lengthDifference = fragment.length - result.fragment.length;
+					logEntries.push(logEvaluated);
+
+					if (!result || !result.started) {
+						updateFields.started = now;
+						logEntries.push({ type: Progressor.RESULT_LOG_STARTED_TYPE, timestamp: now });
+					}
+
+					if (Progressor.isExerciseSuccess(exercise, results)) {
+						if (!result || !result.completed) updateFields.completed = now;
+						if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_COMPLETED_TYPE)) logEntries.push({ type: Progressor.RESULT_LOG_COMPLETED_TYPE, timestamp: now });
+					}
+
+					Progressor.results.upsert(result ? result._id : null, {
+						$set: updateFields,
+						$push: { log: { $each: logEntries } }
+					});
 				}
 
 				if (Progressor.hasInvisibleTestCases(exercise) && (!showInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)))

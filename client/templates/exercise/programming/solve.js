@@ -28,20 +28,44 @@
 		this.blacklist = new ReactiveVar(null);
 		this.blacklistMatches = new ReactiveVar([]);
 		this.showSolution = new ReactiveVar(false);
-		Session.set('fragment', null);
-		Session.set('solution', null);
-	});
+		Session.set('fragment', '');
+		Session.set('solution', '');
+		this.progressUpdateInterval = -1;
+		this.progress = { activities: 0, length: 0 };
 
-	Template.programmingSolve.onRendered(function () {
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
-			if (result)
+			if (result && result.fragment)
 				Session.set('fragment', result.fragment);
 			else if (exercise && exercise.fragment)
 				Session.set('fragment', exercise.fragment);
 			else
 				Meteor.call('getFragment', getExercise().programmingLanguage, { _id: getExercise()._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
 		});
+
+		if (!tmpl().isResult.get())
+			this.autorun(() => {
+				const exercise = getExercise(true);
+				if (exercise)
+					Meteor.call('openedExercise', exercise, Progressor.handleError());
+
+				Meteor.clearInterval(this.progressUpdateInterval);
+				this.progressUpdateInterval = Meteor.setInterval(() => {
+					if (exercise) {
+						const fragment = Session.get('fragment');
+						Meteor.call('updateExerciseProgress', exercise, {
+							activities: this.progress.activities,
+							difference: fragment ? fragment.length - this.progress.length : 0
+						}, Progressor.handleError());
+						this.progress.activities = 0;
+						this.progress.length = fragment ? fragment.length : 0;
+					}
+				}, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
+			});
+	});
+
+	Template.programmingSolve.onDestroyed(function () {
+		Meteor.clearInterval(this.progressUpdateInterval);
 	});
 
 	function getExecutionExercise(offset) {
@@ -91,6 +115,22 @@
 
 	Template.programmingSolve.events(
 		{
+			'keyup .CodeMirror': (e, t) => t.progress.activities++,
+			'keypress .CodeMirror': _.throttle(function (event, template) {
+				if (!template.blacklist.get()) {
+					template.blacklist.set([]);
+					Meteor.call('getBlacklist', getExercise().programmingLanguage, Progressor.handleError((e, r) => template.blacklist.set(!e ? r : null)));
+				} else {
+					const fragment = Session.get('fragment');
+					template.blacklistMatches.set(_.filter(template.blacklist.get(), blk => fragment.indexOf(blk) >= 0));
+					template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
+				}
+			}, 500),
+			'change #select-codemirror-themes'(event, template) {
+				const theme = $(event.currentTarget).val();
+				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
+				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
+			},
 			'click #button-execute'(event, template) {
 				template.showSolution.set(false);
 				const exercise = getExercise();
@@ -106,24 +146,7 @@
 				Session.set('solution', getExercise().solution);
 				template.showSolution.set(true);
 			},
-			'click #button-close'(event, template)  {
-				template.showSolution.set(false);
-			},
-			'keyup .CodeMirror': _.throttle(function (event, template) {
-				if (!template.blacklist.get()) {
-					template.blacklist.set([]);
-					Meteor.call('getBlacklist', getExercise().programmingLanguage, Progressor.handleError((e, r) => template.blacklist.set(!e ? r : null)));
-				} else {
-					const fragment = Session.get('fragment');
-					template.blacklistMatches.set(_.filter(template.blacklist.get(), blk => fragment.indexOf(blk) >= 0));
-					template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
-				}
-			}, 500),
-			'change #select-codemirror-themes'(event, template) {
-				const theme = $(event.currentTarget).val();
-				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
-				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
-			}
+			'click #button-close': (e, t) => t.showSolution.set(false)
 		});
 
 })();
