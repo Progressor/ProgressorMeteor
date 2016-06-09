@@ -73,9 +73,12 @@
 			resultSolved: () => getResult().solved,
 			questionType: () => !getExercise().multipleSolutions ? 'radio' : 'checkbox',
 			resultEvaluation(index) {
-				const status = Progressor.getResultStatus(getExercise(), index, getEvaluationResults());
-				if (status !== 0)
-					return `has-${status > 0 ? 'success' : 'error'}`;
+				const exercise = getExercise();
+				if (!exercise.execution_id) {
+					const status = Progressor.getResultStatus(exercise, index, getEvaluationResults());
+					if (status !== 0)
+						return `has-${status > 0 ? 'success' : 'error'}`;
+				}
 			},
 			checkedStatus(index) {
 				const result = Progressor.results.findOne();

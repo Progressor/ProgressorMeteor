@@ -150,7 +150,7 @@
 
 	//RESULTS
 
-	function publishResults(query, assumeUnauthorised = false) {
+	function publishResults(query, assumeUnauthorised = false, includeDetails = false) {
 		const published = [];
 
 		function publishResult(id, result) {
@@ -181,6 +181,12 @@
 			}
 		}
 
+		let options = {};
+		if (!includeDetails) {
+			_.extend(query, { solved: { $exists: true } });
+			_.extend(options, { fields: { log: 0 } });
+		}
+
 		const handle = Progressor.results.find(query).observe(
 			{
 				added: r => publishResult.call(this, r._id, r),
@@ -192,23 +198,27 @@
 		this.onStop(() => handle.stop());
 	}
 
-	Meteor.publish('myResults', function () {
-		return Progressor.results.find({ user_id: this.userId, 'exercise.category_id': { $exists: true } });
+	Meteor.publish('myResults', function (includeDetails = false) {
+		check(includeDetails, Boolean);
+		publishResults.call(this, { user_id: this.userId, 'exercise.category_id': { $exists: true } });
 	});
-	Meteor.publish('result', function (id, isExecute = false) {
+	Meteor.publish('result', function (id, isExecute = false, includeDetails = false) {
 		check(id, String);
 		check(isExecute, Boolean);
+		check(includeDetails, Boolean);
 		publishResults.call(this, isExecute ? { _id: id } : { _id: id, 'exercise.category_id': { $exists: true } }, isExecute);
 	});
-	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false) {
+	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false, includeDetails = false) {
 		check(exerciseId, String);
 		check(isExecute, Boolean);
+		check(includeDetails, Boolean);
 		publishResults.call(this, isExecute ? { exercise_id: exerciseId } : { exercise_id: exerciseId, 'exercise.category_id': { $exists: true } }, isExecute);
 	});
 
-	Meteor.publish('resultsByExecution', function (executionId, isExecute = false) {
+	Meteor.publish('resultsByExecution', function (executionId, isExecute = false, includeDetails = false) {
 		check(executionId, String);
 		check(isExecute, Boolean);
+		check(includeDetails, Boolean);
 		publishResults.call(this, { 'exercise.execution_id': executionId }, isExecute);
 	});
 

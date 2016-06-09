@@ -87,14 +87,18 @@
 					return result.answer;
 			},
 			validation() {
-				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `has-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'success' : 'error'}`;
-				else if (tmpl().validationResult.get() === false)
-					return 'has-error';
+				const exercise = getExercise();
+				if (!exercise.execution_id) {
+					if (Progressor.isExerciseEvaluated(exercise, getEvaluationResults()))
+						return `has-${Progressor.isExerciseSuccess(exercise, getEvaluationResults()) ? 'success' : 'error'}`;
+					else if (tmpl().validationResult.get() === false)
+						return 'has-error';
+				}
 			},
 			resultEvaluation() {
-				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'ok' : 'remove'}`;
+				const exercise = getExercise();
+				if (!exercise.execution_id && Progressor.isExerciseEvaluated(exercise, getEvaluationResults()))
+					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(exercise, getEvaluationResults()) ? 'ok' : 'remove'}`;
 			},
 			showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
 		});
