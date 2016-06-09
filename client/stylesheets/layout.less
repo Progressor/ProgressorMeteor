@@ -50,3 +50,44 @@ input[type="number"] { max-width: 7em; }
 .separated(left);
 .separated(bottom);
 .separated(right);
+.list-inline.list-multiline > li { padding: 3px; }
+.circle( @size) {
+	display: inline-block;
+	width: @size;
+	line-height: @size;
+	border-radius: 50%;
+	text-align: center;
+}
+.circle-3em-success {
+	.circle(3em);
+	color: white;
+	background-color: @brand-success;
+	border: 2px solid @brand-success;
+}
+.circle-3em-not-evaluated {
+	.circle(3em);
+	color: white;
+	background-color: @brand-info;
+	border: 2px solid @brand-info;
+}
+.circle-3em-partial {
+	.circle(3em);
+	color: white;
+	background-color: @brand-warning;
+	border: 2px solid @brand-warning;
+}
+.circle-3em-not-solved {
+	.circle(3em);
+	color: white;
+	background-color: @brand-danger;
+	border: 2px solid @brand-danger;
+}
+
+.font-size-2_5-em {
+	font-size: 2.5em;
+}
+
+.tooltip-inner {
+	white-space:pre;
+	max-width:none;
+}
