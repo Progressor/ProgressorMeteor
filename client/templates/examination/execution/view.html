@@ -51,8 +51,8 @@
 									<div class="progress-bar progress-bar-danger" style="width: 100%;"></div>
 								{{else}}
 									{{#if evaluated this}}
-										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
 										<div class="progress-bar progress-bar-warning" style="width: {{multiply (subtract 1 (successPercentage this)) 100}}%;"></div>
+										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
 									{{else}}
 										<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
 									{{/if}}
