@@ -109,9 +109,10 @@
 			'click #button-save-answer'(event, template) {
 				const $control = template.$('.control-answer');
 				if ($control[0].checkValidity()) {
-					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError((error, result) => {
+					const exercise = getExercise();
+					Meteor.call('evaluateFreeText', exercise, $control.val(), Progressor.handleError((error, result) => {
 						template.evaluationResult.set(!error ? result : []);
-						if (!error && !result.length)
+						if (!error && (exercise.execution_id || !result.length))
 							Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
 					}));
 				}

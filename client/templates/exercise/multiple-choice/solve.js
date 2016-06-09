@@ -88,7 +88,14 @@
 		{
 			'click #button-solution': (e, t) => t.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
 			'change .input-option': (e, t) => t.progress.activities++,
-			'click #button-save-answer': (e, t) => Meteor.call('evaluateMultipleChoice', getExercise(), t.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((e, r) => t.evaluationResults.set(!e ? r : [])))
+			'click #button-save-answer'(event, template) {
+				const exercise = getExercise();
+				Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError(function (error, result) {
+					template.evaluationResults.set(!error ? result : []);
+					if (!error && exercise.execution_id)
+						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
+				}));
+			}
 		});
 
 })();
