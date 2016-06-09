@@ -87,14 +87,18 @@
 					return result.answer;
 			},
 			validation() {
-				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `has-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'success' : 'error'}`;
-				else if (tmpl().validationResult.get() === false)
-					return 'has-error';
+				const exercise = getExercise();
+				if (!exercise.execution_id) {
+					if (Progressor.isExerciseEvaluated(exercise, getEvaluationResults()))
+						return `has-${Progressor.isExerciseSuccess(exercise, getEvaluationResults()) ? 'success' : 'error'}`;
+					else if (tmpl().validationResult.get() === false)
+						return 'has-error';
+				}
 			},
 			resultEvaluation() {
-				if (Progressor.isExerciseEvaluated(getExercise(), getEvaluationResults()))
-					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(getExercise(), getEvaluationResults()) ? 'ok' : 'remove'}`;
+				const exercise = getExercise();
+				if (!exercise.execution_id && Progressor.isExerciseEvaluated(exercise, getEvaluationResults()))
+					return `glyphicon glyphicon-${Progressor.isExerciseSuccess(exercise, getEvaluationResults()) ? 'ok' : 'remove'}`;
 			},
 			showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
 		});
@@ -109,9 +113,10 @@
 			'click #button-save-answer'(event, template) {
 				const $control = template.$('.control-answer');
 				if ($control[0].checkValidity()) {
-					Meteor.call('evaluateFreeText', getExercise(), $control.val(), Progressor.handleError((error, result) => {
+					const exercise = getExercise();
+					Meteor.call('evaluateFreeText', exercise, $control.val(), Progressor.handleError((error, result) => {
 						template.evaluationResult.set(!error ? result : []);
-						if (!error && !result.length)
+						if (!error && (exercise.execution_id || !result.length))
 							Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
 					}));
 				}

@@ -1,6 +1,6 @@
 <template name="examinationExecutionView">
 	{{i18nTooltips}}
-	<h2>{{i18n "examination.examOverviewTitle" (i18nName this)}}</h2>
+	<h2>{{i18n "examination.overviewTitle" (i18nName this)}}</h2>
 	<div class="well form-horizontal">
 		<p>{{i18nDescription this}}</p>
 		<div class="row">
@@ -54,8 +54,8 @@
 									<div class="progress-bar progress-bar-danger" style="width: 100%;"></div>
 								{{else}}
 									{{#if evaluated this}}
-										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
 										<div class="progress-bar progress-bar-warning" style="width: {{multiply (subtract 1 (successPercentage this)) 100}}%;"></div>
+										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
 									{{else}}
 										<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
 									{{/if}}

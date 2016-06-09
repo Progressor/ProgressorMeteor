@@ -46,6 +46,8 @@
 				return unpublishExercise.call(this, id);
 
 			if (assumeUnauthorised || !isAuthorised) {
+				if (exercise.execution_id)
+					delete exercise.solutionVisible;
 				if (!exercise.solutionVisible)
 					delete exercise.solution;
 				if (Progressor.hasInvisibleTestCases(exercise))
@@ -97,7 +99,7 @@
 		publishExercises.call(this, { category_id: { $exists: true }, 'released.confirmed': { $exists: true } }, true);
 	});
 	Meteor.publish('releasedOrMyExercises', function () {
-		publishExercises.call(this, { category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: this.userId } /*,{ lastEditor_id: this.userId }*/] }, true);
+		publishExercises.call(this, { category_id: { $exists: true }, $or: [{ 'released.confirmed': { $exists: true } }, { author_id: this.userId }] }, true);
 	});
 	Meteor.publish('releasedExercisesForCategory', function (category) {
 		check(category, String);
@@ -110,7 +112,7 @@
 	Meteor.publish('exercise', function (id, isExecute = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishExercises.call(this, { _id: id /*, category_id: { $exists: true }*/ }, false, isExecute);
+		publishExercises.call(this, isExecute ? { _id: id } : { _id: id, category_id: { $exists: true } }, false, isExecute);
 	});
 	Meteor.publish('exerciseByResult', function (id, isExecute = false) {
 		check(id, String);
@@ -148,20 +150,20 @@
 
 	//RESULTS
 
-	function publishResults(query, assumeUnauthorised = false) {
+	function publishResults(query, assumeUnauthorised = false, includeDetails = false) {
 		const published = [];
 
 		function publishResult(id, result) {
 			const isAuthorised = !assumeUnauthorised && (this.userId === result.exercise.author_id || Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN));
 
 			//TODO: add robust execution handling
-			const execution = result.exercise.execution_id ? Progressor.executions.findOne({ _id: result.exercise.execution_id }) : null;
+			const execution = result.exercise && result.exercise.execution_id ? Progressor.executions.findOne({ _id: result.exercise.execution_id }) : null;
 			if (this.userId !== result.user_id && !(execution && this.userId === execution.author_id) && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 				return unpublishResult.call(this, id);
 
 			if (result.results)
 				if (!isAuthorised && execution && result.exercise.type !== 1)
-					result.results = [];
+					result.results = _.map(result.results, r => _.omit(r, 'success'));
 				else if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
 					result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
 
@@ -179,6 +181,12 @@
 			}
 		}
 
+		let options = {};
+		if (!includeDetails) {
+			_.extend(query, { solved: { $exists: true } });
+			_.extend(options, { fields: { log: 0 } });
+		}
+
 		const handle = Progressor.results.find(query).observe(
 			{
 				added: r => publishResult.call(this, r._id, r),
@@ -190,23 +198,27 @@
 		this.onStop(() => handle.stop());
 	}
 
-	Meteor.publish('myResults', function () {
-		return Progressor.results.find({ user_id: this.userId, 'exercise.category_id': { $exists: true } });
+	Meteor.publish('myResults', function (includeDetails = false) {
+		check(includeDetails, Boolean);
+		publishResults.call(this, { user_id: this.userId, 'exercise.category_id': { $exists: true } });
 	});
-	Meteor.publish('result', function (id, isExecute = false) {
+	Meteor.publish('result', function (id, isExecute = false, includeDetails = false) {
 		check(id, String);
 		check(isExecute, Boolean);
-		publishResults.call(this, { _id: id /*, 'exercise.category_id': { $exists: true }*/ }, isExecute);
+		check(includeDetails, Boolean);
+		publishResults.call(this, isExecute ? { _id: id } : { _id: id, 'exercise.category_id': { $exists: true } }, isExecute);
 	});
-	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false) {
+	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false, includeDetails = false) {
 		check(exerciseId, String);
 		check(isExecute, Boolean);
-		publishResults.call(this, { exercise_id: exerciseId /*, 'exercise.category_id': { $exists: true }*/ }, isExecute);
+		check(includeDetails, Boolean);
+		publishResults.call(this, isExecute ? { exercise_id: exerciseId } : { exercise_id: exerciseId, 'exercise.category_id': { $exists: true } }, isExecute);
 	});
 
-	Meteor.publish('resultsByExecution', function (executionId, isExecute = false) {
+	Meteor.publish('resultsByExecution', function (executionId, isExecute = false, includeDetails = false) {
 		check(executionId, String);
 		check(isExecute, Boolean);
+		check(includeDetails, Boolean);
 		publishResults.call(this, { 'exercise.execution_id': executionId }, isExecute);
 	});
 

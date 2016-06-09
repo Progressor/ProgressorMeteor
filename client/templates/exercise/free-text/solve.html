@@ -45,7 +45,7 @@
 					<div class="col-sm-4">
 						<ul class="pager nomargin pull-right">
 							<li class="{{#unless previousExerciseSolveData}}disabled{{/unless}}">{{!class="previous"}}{{#linkTo route="exerciseSolve" data=previousExerciseSolveData}}&larr;&nbsp;{{i18n "form.previousButton"}}{{/linkTo}}</li>
-							<li>{{#linkTo route="examinationExecutionView" data=execution}}{{i18n "examination.overviewTitle"}}{{/linkTo}}</li>
+							<li>{{#linkTo route="examinationExecutionView" data=execution}}{{i18n "examination.overviewButton"}}{{/linkTo}}</li>
 							<li class="{{#unless nextExerciseSolveData}}disabled{{/unless}}">{{!class="next"}}{{#linkTo route="exerciseSolve" data=nextExerciseSolveData}}{{i18n "form.nextButton"}}&nbsp;&rarr;{{/linkTo}}</li>
 						</ul>
 					</div>
@@ -82,27 +82,29 @@
 						{{/if}}
 					{{/unless}}
 				</div>
-					{{#if showSolution}}
-						<div class="col-md-6 width-auto">
-							<div class="text-result">
-								<label>{{i18n "exercise.solutionLabel"}}</label>
-								<ul class="list-group">
-									{{#each solution}}
-										<li class="list-group-item">{{this}}</li>
-									{{/each}}
-								</ul>
-								<button id="button-close" class="btn btn-primary btn-sm">{{i18n "exercise.closeButton"}}</button>
-							</div>
+				{{#if showSolution}}
+					<div class="col-md-6 width-auto">
+						<div class="text-result">
+							<label>{{i18n "exercise.solutionLabel"}}</label>
+							<ul class="list-group">
+								{{#each solution}}
+									<li class="list-group-item">{{this}}</li>
+								{{/each}}
+							</ul>
+							<button id="button-close" class="btn btn-primary btn-sm">{{i18n "exercise.closeButton"}}</button>
 						</div>
-					{{/if}}
+					</div>
+				{{/if}}
 			</div>
 		</section>
-		<hr>
-		<section>
-			<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nName category)}}</h3>
-			<p>
-				{{#markdown}}{{i18nDescription category}}{{/markdown}}
-			</p>
-		</section>
+		{{#if category}}
+			<hr>
+			<section>
+				<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nName category)}}</h3>
+				<p>
+					{{#markdown}}{{i18nDescription category}}{{/markdown}}
+				</p>
+			</section>
+		{{/if}}
 	{{/with}}
 </template>

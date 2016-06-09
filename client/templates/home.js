@@ -14,7 +14,7 @@
 			if (this.introIndex < introTexts[0].length)
 				this.$('#intro').text(introTexts[0].substr(0, ++this.introIndex)); //animate title
 			else if (this.introIndex < introTexts[0].length + introTexts[1].length) {
-				if (this.introIndex == introTexts[0].length)
+				if (this.introIndex === introTexts[0].length)
 					$('<small id="introExplanation"></small>').appendTo(this.$('#intro')); //create & animate explanation
 				this.$('#introExplanation').text(introTexts[1].substr(0, ++this.introIndex - introTexts[0].length));
 			} else {
@@ -39,7 +39,7 @@
 			},
 			nofExercises(lng) {
 				const cnt = Progressor.exercises.find({ programmingLanguage: lng }).count();
-				return `${cnt} ${i18n(`exercise.exercise${cnt != 1 ? 's' : ''}`)}`;
+				return `${cnt} ${i18n(`exercise.exercise${cnt !== 1 ? 's' : ''}`)}`;
 			}
 		}
 	);

@@ -17,7 +17,7 @@
 					const now = new Date();
 					if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_OPENED_TYPE))
 						Progressor.results.upsert(result ? result._id : null, {
-							$set: _.extend(query, { exercise: _.omit(exercise, '_id'), solved: now }),
+							$set: _.extend(query, { exercise: _.omit(exercise, '_id') /*, solved: now*/ }),
 							$push: { log: { $each: [{ type: Progressor.RESULT_LOG_OPENED_TYPE, timestamp: now }] } }
 						});
 				}
@@ -61,7 +61,7 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
-				const results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i) === _.contains(checkedOptions, i), checked: _.contains(checkedOptions, i) }));
+				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i) === _.contains(checkedOptions, i), checked: _.contains(checkedOptions, i) }));
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
@@ -93,6 +93,9 @@
 						$push: { log: { $each: logEntries } }
 					});
 				}
+
+				if (exercise.execution_id)
+					results = _.map(results, r => _.omit(r, 'success'));
 
 				return results;
 			},
@@ -147,6 +150,9 @@
 						$push: { log: { $each: logEntries } }
 					});
 				}
+
+				if (exercise.execution_id)
+					results = _.map(results, r => _.omit(r, 'success'));
 
 				return results;
 			}
