@@ -35,12 +35,13 @@
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
-			if (result && result.fragment)
-				Session.set('fragment', result.fragment);
-			else if (exercise && exercise.fragment)
-				Session.set('fragment', exercise.fragment);
-			else
-				Meteor.call('getFragment', getExercise().programmingLanguage, { _id: getExercise()._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
+			if (!Session.get('fragment'))
+				if (result && result.fragment)
+					Session.set('fragment', result.fragment);
+				else if (exercise && exercise.fragment)
+					Session.set('fragment', exercise.fragment);
+				else
+					Meteor.call('getFragment', getExercise().programmingLanguage, { _id: getExercise()._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
 		});
 
 		if (!tmpl().isResult.get())
