@@ -3,14 +3,17 @@
 	<h2>{{i18n "examination.examOverviewTitle" (i18nName this)}}</h2>
 	<div class="well form-horizontal">
 		<p>{{i18nDescription this}}</p>
-		<p>
+		<div class="row">
+			<div class="col-md-2">
 			<label>{{i18n "examination.durationLabel"}}:</label> {{durationMinutes}} {{i18n "examination.durationUnitLabel"}}<br />
 			<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
-		</p>
-		<p>
-			<label>{{i18n "examination.exerciseNumberLabel"}}:</label> {{exercises.length}} <br />
-			<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}
-		</p>
+			<label>{{i18n "examination.endTimeLabel"}}:</label> {{i18nDateTime (endTime startTime durationMinutes)}}
+		</div>
+			<div class="col-md-2">
+				<label>{{i18n "examination.exerciseNumberLabel"}}:</label> {{exercises.length}} <br />
+				<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}
+			</div>
+		</div>
 	</div>
 	<section class="panel panel-default">
 		<div class="panel-heading">

@@ -20,6 +20,7 @@
 			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
 			hasResult: e => getResult(e),
 			evaluated: e => Progressor.isExerciseEvaluated(e, getResults(e)),
+			endTime: (t, d) => new Date(t.getTime() + d * 60000),
 			successPercentage: e => Progressor.getExerciseSuccessPercentage(e, getResults(e))
 		});
 
