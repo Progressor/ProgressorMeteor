@@ -65,7 +65,7 @@
 				if (AccountsTemplates.getState() === 'resetPwd') {
 					event.preventDefault();
 					let newPassword = template.$('#at-field-password').val(), confirmPassword = template.$('#at-field-password_again').val();
-					if (newPassword && newPassword == confirmPassword) {
+					if (newPassword && newPassword === confirmPassword) {
 						let { token, done } = Session.get('onResetPasswordLink_arguments');
 						Accounts.resetPassword(token, newPassword, error => {
 							if (!error) {
