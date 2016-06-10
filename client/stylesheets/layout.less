@@ -34,6 +34,8 @@ input[type="number"] { max-width: 7em; }
 .cursor-default { cursor: default; }
 .width-auto { width: auto; }
 .nomargin { margin: 0; }
+.list-inline.list-multiline > li { padding: 3px; }
+.tooltip-inner { white-space: pre; max-width: none; }
 .absolute {
 	position: absolute;
 	&.top-left { top: @default-margin; left: @default-margin; }
@@ -52,45 +54,14 @@ input[type="number"] { max-width: 7em; }
 .separated(left);
 .separated(bottom);
 .separated(right);
-.list-inline.list-multiline > li { padding: 3px; }
-.circle( @size) {
-	display: inline-block;
-	width: @size;
-	line-height: @size;
-	border-radius: 50%;
-	text-align: center;
-}
-.circle-3em-success {
-	.circle(3em);
-	color: white;
-	background-color: @brand-success;
-	border: 2px solid @brand-success;
-}
-.circle-3em-not-evaluated {
-	.circle(3em);
-	color: white;
-	background-color: @brand-info;
-	border: 2px solid @brand-info;
-}
-.circle-3em-partial {
-	.circle(3em);
-	color: white;
-	background-color: @brand-warning;
-	border: 2px solid @brand-warning;
-}
-.circle-3em-not-solved {
-	.circle(3em);
-	color: white;
-	background-color: @brand-danger;
-	border: 2px solid @brand-danger;
-}
-.font-size-1_5-em {
-	font-size: 1.5em;
-}
-.tooltip-inner {
-	white-space: pre;
-	max-width: none;
-}
-.no-activity {
-	font-size: 8em;
+.circle(@size, @background-color, @color) { display: inline-block; width: @size; line-height: @size; text-align: center; background-color: @background-color; border-radius: 50%; color: @color; }
+.log-overview {
+	&-indicator {
+		&-not-solved { .circle(3em, @brand-danger, white); /*border: 2px solid @brand-danger;*/ }
+		&-partial { .circle(3em, @brand-warning, white); /*border: 2px solid @brand-warning;*/ }
+		&-success { .circle(3em, @brand-success, white); /*border: 2px solid @brand-success;*/ }
+		&-not-evaluated { .circle(3em, @brand-info, white); /*border: 2px solid @brand-info;*/ }
+	}
+	&-value { font-size: 1.5em; }
+	&-no-activity { font-size: 8em; }
 }

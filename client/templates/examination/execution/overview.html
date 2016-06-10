@@ -5,9 +5,9 @@
 		<p>{{i18nDescription this}}</p>
 		<div class="row">
 			<div class="col-md-2">
-				<label>{{i18n "examination.exerciseNumberLabel"}}:</label> {{exercises.length}}<br />
+				<label>{{i18n "examination.numberOfExercisesLabel"}}:</label> {{exercises.length}}<br />
 				<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}} <br />
-				<label>{{i18n "examination.totalExamineesLabel"}}:</label> {{totalExaminees}}
+				<label>{{i18n "examination.numberOfExamineesLabel"}}:</label> {{totalExaminees}}
 			</div>
 			<div class="col-md-2">
 				<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
@@ -37,7 +37,7 @@
 								<ul class="list-inline list-multiline">
 									{{#each exercises}}
 										<li>
-												<span class="circle-3em-{{#unless hasResult .. this}}not-solved{{else}}{{#if evaluated .. this}}{{#if success .. this}}success{{else}}partial{{/if}}{{else}}not-evaluated{{/if}}{{/unless}}" data-html="true" title="<b>{{this.name}}</b><br />{{i18n "exercise.typeLabel"}}: <b>{{i18nExerciseType this.type}}</b><br />{{i18n "exercise.weightLabel"}}: <b>{{this.weight}}</b>" data-toggle="tooltip">
+												<span class="log-overview-indicator-{{#unless hasResult .. this}}not-solved{{else}}{{#if evaluated .. this}}{{#if success .. this}}success{{else}}partial{{/if}}{{else}}not-evaluated{{/if}}{{/unless}}" data-html="true" title="<b>{{this.name}}</b><br />{{i18n "exercise.typeLabel"}}: <b>{{i18nExerciseType this.type}}</b><br />{{i18n "exercise.weightLabel"}}: <b>{{this.weight}}</b>" data-toggle="tooltip">
 													{{multiply (successPercentage .. this) 100}}%
 												</span>
 											{{#linkTo route="resultView" data=this}}link{{/linkTo}}
@@ -48,13 +48,13 @@
 							<div class="col-sm-5 text-center">
 								{{#if hasActivity this}}
 									<strong class="xsmall block">Evaluationen</strong>
-									<span class="font-size-1_5-em">{{logEvaluations this}}</span>
+									<span class="log-overview-value">{{logEvaluations this}}</span>
 									<strong class="xsmall block">Aktionen</strong>
-									<span class="font-size-1_5-em">{{round (logActivity this)}}</span>
+									<span class="log-overview-value">{{round (logActivity this)}}</span>
 									<strong class="xsmall block">Zeichen</strong>
-									<span class="font-size-1_5-em">{{round (logDifference this)}}</span>
+									<span class="log-overview-value">{{round (logDifference this)}}</span>
 								{{else}}
-									<span class="glyphicon glyphicon-remove no-activity text-danger"></span>
+									<span class="glyphicon glyphicon-remove text-danger log-overview-no-activity"></span>
 								{{/if}}
 							</div>
 						</div>
@@ -66,12 +66,12 @@
 	<hr />
 	<div class="row">
 		<div class="col-md-3 text-muted">
-			<div class="h4">{{i18n "examination.progressInstructionSubtitle"}}</div>
-			<p class="pre-line">{{i18n "examination.progressInstructionMessage"}}</p>
+			<div class="h4">{{i18n "examination.help.progressTitle"}}</div>
+			<p class="pre-line">{{i18n "examination.help.progress"}}</p>
 		</div>
 		<div class="col-md-9 text-muted">
-			<div class="h4">{{i18n "examination.resultLogInstructionSubtitle"}}</div>
-			<p class="pre-line">{{i18n "examination.resultLogInstructionMessage" evaluationsIntervalMin activityIntervalMin}}</p>
+			<div class="h4">{{i18n "examination.help.logOverviewTitle"}}</div>
+			<p class="pre-line">{{i18n "examination.help.logOverview" evaluationsIntervalMin activityIntervalMin}}</p>
 		</div>
 	</div>
 </template>

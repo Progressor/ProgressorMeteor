@@ -126,13 +126,13 @@
 			'click .btn-up': changeExecution(function (event, template) {
 				var index = this.exerciseIndex;
 				var ex2 = template.execution.get().exercises[index - 1];
-				template.execution.get().exercises[index - 1] = template.execution.get().exercises[index]
+				template.execution.get().exercises[index - 1] = template.execution.get().exercises[index];
 				template.execution.get().exercises[index] = ex2;
 			}),
 			'click .btn-down': changeExecution(function (event, template) {
 				var index = this.exerciseIndex;
 				var ex2 = template.execution.get().exercises[index + 1];
-				template.execution.get().exercises[index + 1] = template.execution.get().exercises[index]
+				template.execution.get().exercises[index + 1] = template.execution.get().exercises[index];
 				template.execution.get().exercises[index] = ex2;
 			}),
 			'click .btn-remove-examinee': removeExecutionCollection('examinee'),
@@ -146,15 +146,16 @@
 			}),
 			'click .btn-save': function (event, template) {
 				if (testValidExecution(template.execution.get()))
-					Meteor.call('saveExecution', template.execution.get(), Progressor.handleError(function(result){
+					Meteor.call('saveExecution', template.execution.get(), Progressor.handleError(function (result) {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
 						Router.go('examinationExecutionEdit', { _id: result });
-					}, false))
+					}, false));
 				else
-					Progressor.showAlert(i18n('execution.executionIsNotValidMessage'));
+					Progressor.showAlert(i18n('examination.executionIsNotValidMessage'));
 			},
 			'click .btn-delete': (e, t) => Meteor.call('deleteExecution', { _id: t.execution.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
-			'click btn-start-execution' : function (event,template){}
+			'click btn-start-execution': function (event, template) {
+			}
 		});
 
 })();
