@@ -145,7 +145,7 @@
 			if (!live || !detached || live._id !== detached._id) {
 				let _exercise = live || getDefaultExercise();
 				if (this.isCreate.get())
-					_exercise = _.omit(_exercise, '_id', 'released', 'author_id', 'lastEditor_id', 'lastEdited');
+					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
 				this.exercise.set(Progressor.joinCategory(_exercise));
 				this.executionResults.set([]);
 				this.fragmentTyped = false;

@@ -2,5 +2,142 @@
 	{{> examinationExecutionEdit}}
 </template>
 <template name="examinationExecutionEdit">
-	...
+	{{i18nTooltips}}
+	{{#with safeExecution this}}
+		<header>
+			<h2>{{#if _id}}{{i18n "examination.editExecutionTitle" (i18nName this)}}{{else}}{{i18n "examination.createTitle"}}{{/if}}</h2>
+		</header>
+		<div class="row">
+			<section class="col-md-7">
+				<ul class="nav nav-tabs" role="tablist">
+					{{#each i18nExecutionNamesDescriptions}}
+						<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+					{{/each}}
+				</ul>
+				<div class="tab-content">
+					{{#each i18nExecutionNamesDescriptions}}
+						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+							<div class="form-group form-group-sm">
+								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
+							</div>
+							<div class="form-group form-group-sm">
+								<label for="textarea-description-{{_id}}" class="control-label">
+									{{i18n "exercise.descriptionLabel"}} ({{_id}})
+									<span class="text-info font-weight-normal">
+										&mdash;
+										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
+										{{i18n "form.supportsMarkdown"}}
+									</span>
+								</label>
+								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
+							</div>
+						</div>
+					{{/each}}
+				</div>
+				<div class="form-inline">
+					<div class="form-group form-group-sm">
+						<label for="input-duration">{{i18n "examination.durationLabel"}} ({{i18n "examination.durationUnitLabel"}})</label>
+						<input type="number" id="input-duration" class="form-control separated-left" min="0" value="{{durationMinutes}}" />
+					</div>
+				</div>
+				<section>
+					<h4>{{i18n "examination.exercisesSubtitle"}}</h4>
+					{{#if this.exercises}}
+						<table id="includedExercises" class="table table-condensed table-striped">
+							<thead>
+								<tr>
+									<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+									<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+									<th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+									<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+									<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+									<th scope="col">{{i18n "form.createdByLabel"}}</th>
+									<th scope="col">{{i18n "exercise.weightLabel"}}</th>
+									<td></td>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each exercises}}
+									<tr>
+										<td>{{#linkTo route="exerciseEdit" data=this}}{{i18nName this}}{{/linkTo}}</td>
+										<td>{{i18nExerciseType type}}</td>
+										<td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+										<td>{{i18nName category}}</td>
+										<td>{{i18nDifficulty difficulty}}</td>
+										<td>{{userName author_id}}</td>
+										<td><input type="number" class="form-control input-sm input-weight" min="0" value="{{weight}}" /></td>
+										<td>
+											<button class="btn btn-info btn-sm btn-up" title="{{i18n "form.moveUpButton"}}" disabled={{isFirst}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-up"></span></button>
+										</td>
+										<td>
+											<button class="btn btn-info btn-sm btn-down" title="{{i18n "form.moveDownButton"}}" disabled={{isLast}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-down"></span></button>
+										</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+					{{else}}
+						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+					{{/if}}
+				</section>
+				<div class="btn-toolbar separated-top separated-bottom">
+					<div class="btn-group">
+						<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
+						<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-info btn-start-execution">{{i18n "examination.startExecutionButton"}}</button>
+					</div>
+				</div>
+			</section>
+			<section class="col-md-5 form-horizontal">
+				<h3>{{i18n "examination.examineesSubtitle"}}</h3>
+				<p class="text-muted">{{i18n "examination.examineesRules"}}</p>
+				<div class="form-group">
+					<label for="input-add-examinee" class="col-md-3 control-label">{{i18n "examination.nameLabel"}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control typeahead" id="input-add-examinee" autocomplete="off" spellcheck="false" data-source="users" data-template="examinationExecutionEdit_addExamineeItem" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-9 col-md-offset-3">
+						<button id="button-add-examinee" class="btn btn-sm btn-primary">{{i18n "examination.addExamineeLabelButton"}}</button>
+					</div>
+				</div>
+				{{#if examinees}}
+					<table id="examinees" class="table table-condensed table-striped">
+						<thead>
+							<tr>
+								<th scope="col">{{i18n "examination.examinees"}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#each examinees}}
+								<tr>
+									<td>{{userName this}}</td>
+									<td>
+										<button class="btn btn-danger btn-sm btn-remove-examinee" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
+									</td>
+								</tr>
+							{{/each}}
+						</tbody>
+					</table>
+				{{else}}
+					<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+				{{/if}}
+			</section>
+		</div>
+	{{/with}}
+</template>
+<template name="examinationExecutionEdit_addExamineeItem">
+	{{#if name}}
+		{{#if email}}
+			{{name}} <em>({{email}})</em>
+		{{else}}
+			{{name}}
+		{{/if}}
+	{{else}}
+		{{email}}
+	{{/if}}
 </template>

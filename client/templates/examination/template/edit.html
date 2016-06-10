@@ -140,6 +140,12 @@
 										<td>
 											<button class="btn btn-danger btn-sm btn-remove-exercise" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
 										</td>
+										<td>
+											<button class="btn btn-info btn-sm btn-up" title="{{i18n "form.moveUpButton"}}" disabled={{isFirst}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-up"></span></button>
+										</td>
+										<td>
+											<button class="btn btn-info btn-sm btn-down" title="{{i18n "form.moveDownButton"}}" disabled={{isLast}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-down"></span></button>
+										</td>
 									</tr>
 								{{/each}}
 							</tbody>
@@ -148,8 +154,17 @@
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 					{{/if}}
 				</section>
-				<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
-				<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
+				<div class="btn-toolbar separated-top separated-bottom">
+					<div class="btn-group">
+						<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
+						<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
+					</div>
+					{{#if _id}}
+						<div class="btn-group">
+							{{#linkTo route="examinationExecutionCreate" class="btn btn-info" query=executionCreateQuery}}{{i18n "examination.createExecutionButton"}}{{/linkTo}}
+						</div>
+					{{/if}}
+				</div>
 			</section>
 		</div>
 	{{/with}}

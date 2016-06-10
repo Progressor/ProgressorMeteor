@@ -39,12 +39,9 @@
 		this.autorun(() => {
 			const live = Progressor.examinations.findOne();
 			const detached = Tracker.nonreactive(() => this.examination.get());
-			if (!live || !detached || live._id !== detached._id) {
-				let _examination = live || getDefaultExamination();
-				if (this.isCreate.get())
-					_examination = _.omit(_examination, '_id', 'author_id', 'lastEditor_id', 'lastEdited');
-				this.examination.set(_examination);
-			} else if (live.lastEditor_id !== Meteor.userId())
+			if (!live || !detached || live._id !== detached._id)
+				this.examination.set(live || getDefaultExamination());
+			else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
@@ -55,6 +52,7 @@
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().examination.get();
 			},
+			executionCreateQuery: () => ({ examination: tmpl().examination.get()._id }),
 			i18nExaminationNames: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(tmpl().examination.get(), id)
@@ -78,7 +76,13 @@
 				}
 			},
 			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`),
-			exercises: () => _.map(tmpl().examination.get().exercises, (e, i) => _.extend({ exerciseIndex: i, weight: e.weight }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id }))))
+			exercises: () => _.map(tmpl().examination.get().exercises, (e, i) => _.extend(
+				{
+					exerciseIndex: i,
+					isFirst: i === 0,
+					isLast: i === tmpl().examination.get().exercises.length - 1,
+					weight: e.weight
+				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id }))))
 		});
 
 	function changeExamination(callback) {
@@ -131,11 +135,25 @@
 			'click .btn-remove-exercise': removeExaminationCollection('exercise'),
 			'click .btn-save'(event, template) {
 				if (testValidExamination(template.examination.get()))
-					Meteor.call('saveExamination', template.examination.get(), Progressor.handleError(r => Router.go('examinationTemplateEdit', { _id: r }), false));
+					Meteor.call('saveExamination', template.examination.get(), Progressor.handleError(function (result) {
+						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
+						Router.go('examinationTemplateEdit', { _id: result });
+					}, false));
 				else
 					Progressor.showAlert(i18n('examination.templateIsNotValidMessage'));
 			},
-			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false))
+			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
+			'click .btn-up': changeExamination(function (event, template) {
+				var index = this.exerciseIndex;
+				var ex2 = template.examination.get().exercises[index - 1];
+				template.examination.get().exercises[index - 1] = template.examination.get().exercises[index]
+				template.examination.get().exercises[index] = ex2;
+			}),
+			'click .btn-down': changeExamination(function (event, template) {
+				var index = this.exerciseIndex;
+				var ex2 = template.examination.get().exercises[index + 1];
+				template.examination.get().exercises[index + 1] = template.examination.get().exercises[index]
+				template.examination.get().exercises[index] = ex2;
+			})
 		});
-
 })();
