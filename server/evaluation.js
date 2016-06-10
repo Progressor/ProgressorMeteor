@@ -131,7 +131,7 @@
 						success: Progressor.isExerciseSuccess(exercise, results),
 						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
 					};
-					if (lastEvaluation) logEvaluated.editTimeSeconds = (now.getTime() - lastEvaluation.timestamp.getTime()) / 1e3;
+					if (lastEvaluation) logEvaluated.intervalSeconds = (now.getTime() - lastEvaluation.timestamp.getTime()) / 1e3;
 					if (result && result.answer) logEvaluated.lengthDifference = answer.length - result.answer.length;
 					logEntries.push(logEvaluated);
 
