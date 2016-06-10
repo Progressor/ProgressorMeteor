@@ -53,13 +53,13 @@
 				Meteor.clearInterval(this.progressUpdateInterval);
 				this.progressUpdateInterval = Meteor.setInterval(() => {
 					if (exercise) {
-						const fragment = Session.get('fragment');
+						const fragment = Session.get('fragment'), length = fragment ? fragment.length : 0;
 						Meteor.call('updateExerciseProgress', exercise, {
 							activities: this.progress.activities,
-							difference: fragment ? fragment.length - this.progress.length : 0
+							difference: fragment ? length - this.progress.length : 0
 						}, Progressor.handleError());
 						this.progress.activities = 0;
-						this.progress.length = fragment ? fragment.length : 0;
+						this.progress.length = length;
 					}
 				}, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
 			});
