@@ -123,7 +123,7 @@
 						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
 					};
 					if (lastLog) logEvaluated.intervalSeconds = (now.getTime() - lastLog.timestamp.getTime()) / 1e3;
-					if (result && result.fragment) logEvaluated.lengthDifference = fragment.length - result.fragment.length;
+					if (result && result.fragment) logEvaluated.difference = fragment.length - result.fragment.length;
 					logEntries.push(logEvaluated);
 
 					if (Progressor.isExerciseSuccess(exercise, results)) {
