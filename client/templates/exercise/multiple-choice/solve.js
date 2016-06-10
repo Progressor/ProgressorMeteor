@@ -35,7 +35,7 @@
 
 	Template.multipleSolve.onCreated(function () {
 		this.progressUpdateInterval = -1;
-		this.progress = { activities: 0 };
+		this.progress = { started: false, activities: 0 };
 
 		if (!tmpl().isResult.get())
 			this.autorun(() => {
@@ -46,7 +46,7 @@
 				Meteor.clearInterval(this.progressUpdateInterval);
 				this.progressUpdateInterval = Meteor.setInterval(() => {
 					if (exercise) {
-						Meteor.call('updateExerciseProgress', exercise, this.progress, Progressor.handleError());
+						Meteor.call('updateExerciseProgress', exercise, { activities: this.progress.activities }, Progressor.handleError());
 						this.progress.activities = 0;
 					}
 				}, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
@@ -90,7 +90,13 @@
 	Template.multipleSolve.events(
 		{
 			'click #button-solution': (e, t) => t.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
-			'change .input-option': (e, t) => t.progress.activities++,
+			'change .input-option'(event, template) {
+				if (!template.progress.started) {
+					template.progress.started = true;
+					Meteor.call('startedExercise', exercise, Progressor.handleError());
+				}
+				template.progress.activities++;
+			},
 			'click #button-save-answer'(event, template) {
 				const exercise = getExercise();
 				Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError(function (error, result) {

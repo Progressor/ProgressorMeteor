@@ -111,7 +111,9 @@
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
 					const result = Progressor.results.findOne(query);
-					const lastEvaluation = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE);
+					const lastLog = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE)
+													|| Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_STARTED_TYPE)
+													|| Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_OPENED_TYPE);
 
 					const now = new Date();
 					const updateFields = _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: now });
@@ -120,14 +122,9 @@
 						success: Progressor.isExerciseSuccess(exercise, results),
 						successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
 					};
-					if (lastEvaluation) logEvaluated.intervalSeconds = (now.getTime() - logEvaluated.timestamp.getTime()) / 1e3;
+					if (lastLog) logEvaluated.intervalSeconds = (now.getTime() - lastLog.timestamp.getTime()) / 1e3;
 					if (result && result.fragment) logEvaluated.lengthDifference = fragment.length - result.fragment.length;
 					logEntries.push(logEvaluated);
-
-					if (!result || !result.started) {
-						updateFields.started = now;
-						logEntries.push({ type: Progressor.RESULT_LOG_STARTED_TYPE, timestamp: now });
-					}
 
 					if (Progressor.isExerciseSuccess(exercise, results)) {
 						if (!result || !result.completed) updateFields.completed = now;

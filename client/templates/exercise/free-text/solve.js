@@ -27,7 +27,7 @@
 		this.evaluationResult = new ReactiveVar(null);
 		this.showSolution = new ReactiveVar(false);
 		this.progressUpdateInterval = -1;
-		this.progress = { activities: 0, length: 0 };
+		this.progress = { started: false, activities: 0, length: 0 };
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
@@ -106,7 +106,13 @@
 	Template.textSolve.events(
 		{
 			'submit #form-answer': e => e.preventDefault(),
-			'keyup .control-answer': (e, t) => t.progress.activities++,
+			'keyup .control-answer'(event, template) {
+				if (!template.progress.started) {
+					template.progress.started = true;
+					Meteor.call('startedExercise', exercise, Progressor.handleError());
+				}
+				template.progress.activities++;
+			},
 			'change .control-answer': (e, t) => t.validationResult.set(t.$('.control-answer')[0].checkValidity()),
 			'click #button-solution': (e, t) => t.showSolution.set(true),
 			'click #button-close': (e, t) => t.showSolution.set(false),

@@ -31,7 +31,7 @@
 		Session.set('fragment', '');
 		Session.set('solution', '');
 		this.progressUpdateInterval = -1;
-		this.progress = { activities: 0, length: 0 };
+		this.progress = { started: false, activities: 0, length: 0 };
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
@@ -116,7 +116,13 @@
 
 	Template.programmingSolve.events(
 		{
-			'keyup .CodeMirror': (e, t) => t.progress.activities++,
+			'keyup .CodeMirror'(event, template) {
+				if (!template.progress.started) {
+					template.progress.started = true;
+					Meteor.call('startedExercise', exercise, Progressor.handleError());
+				}
+				template.progress.activities++;
+			},
 			'keypress .CodeMirror': _.throttle(function (event, template) {
 				if (!template.blacklist.get()) {
 					template.blacklist.set([]);
