@@ -156,6 +156,17 @@
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
+		//INITIALISATION
+
+		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
+	});
+
+	Template.programmingEdit.onRendered(function () {
+
+		//COLLAPSIBLE PANELS
+
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+
 		//////////////////////////////
 		// CODEMIRROR CONFIGURATION //
 		//////////////////////////////
@@ -182,16 +193,6 @@
 			if (!this.executionResults.get().length && result)
 				this.executionResults.set(result.results);
 		});
-
-		//INITIALISATION
-
-		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
-	});
-
-	//COLLAPSIBLE PANELS
-
-	Template.programmingEdit.onRendered(function () {
-		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
 	});
 
 	Template.programmingEdit.helpers(
@@ -282,7 +283,7 @@
 
 	function changeExercise(callback) {
 		return function (event, template) {
-			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
 			template.exercise.dep.changed();
 			return ret;
 		};
@@ -301,7 +302,7 @@
 
 	function changeExerciseCollection(collectionName, propertySupplier) {
 		return changeExercise(function (event, template, $this) {
-			_.extend(template.exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this));
+			_.extend(template.exercise.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this, this));
 		});
 	}
 
@@ -313,13 +314,13 @@
 
 	function addExerciseCollection(collectionName, itemSupplier) {
 		return changeExercise(function (event, template, $this) {
-			template.exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this));
+			template.exercise.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this, this));
 		});
 	}
 
 	function removeExerciseCollection(collectionName) {
 		return changeExercise(function (event, template) {
-			let collection = template.exercise.get()[`${collectionName}s`];
+			const collection = template.exercise.get()[`${collectionName}s`];
 			collection.splice(this[`${collectionName}Index`], 1);
 			if (!collection.length)
 				collection.push(getDefaultExercise()[`${collectionName}s`][0]);
