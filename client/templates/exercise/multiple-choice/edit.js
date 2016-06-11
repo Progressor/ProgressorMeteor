@@ -85,7 +85,7 @@
 
 	function changeExercise(callback) {
 		return function (event, template) {
-			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
 			template.exercise.dep.changed();
 			return ret;
 		};

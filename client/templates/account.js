@@ -14,7 +14,7 @@
 	});
 
 	Template.account.onRendered(function () {
-		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-plus-sign glyphicon-minus-sign'));
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
 		Meteor.typeahead.inject();
 	});
 

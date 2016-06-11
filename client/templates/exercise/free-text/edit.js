@@ -87,7 +87,7 @@
 
 	function changeExercise(callback) {
 		return function (event, template) {
-			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
 			template.exercise.dep.changed();
 			return ret;
 		};
@@ -106,7 +106,7 @@
 
 	function changeExerciseCollection(collectionName, itemSupplier) {
 		return changeExercise(function (event, template, $this) {
-			template.exercise.get()[collectionName][this[`${collectionName}Index`]] = itemSupplier.call(this, event, template, $this);
+			template.exercise.get()[collectionName][this[`${collectionName}Index`]] = itemSupplier.call(this, event, template, $this, this);
 		});
 	}
 
@@ -118,7 +118,7 @@
 
 	function removeExerciseCollection(collectionName) {
 		return changeExercise(function (event, template) {
-			let collection = template.exercise.get()[collectionName];
+			const collection = template.exercise.get()[collectionName];
 			collection.splice(this[`${collectionName}Index`], 1);
 			if (!collection.length)
 				collection.push(getDefaultExercise()[collectionName][0]);

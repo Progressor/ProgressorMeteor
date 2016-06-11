@@ -45,7 +45,7 @@
 					<div class="col-sm-4">
 						<ul class="pager nomargin pull-right">
 							<li class="{{#unless previousExerciseSolveData}}disabled{{/unless}}">{{!class="previous"}}{{#linkTo route="exerciseSolve" data=previousExerciseSolveData}}&larr;&nbsp;{{i18n "form.previousButton"}}{{/linkTo}}</li>
-							<li>{{#linkTo route="examinationExecutionView" data=execution}}{{i18n "examination.overviewButton"}}{{/linkTo}}</li>
+							<li>{{#linkTo route="examinationExecutionExamineeView" data=execution}}{{i18n "examination.overviewButton"}}{{/linkTo}}</li>
 							<li class="{{#unless nextExerciseSolveData}}disabled{{/unless}}">{{!class="next"}}{{#linkTo route="exerciseSolve" data=nextExerciseSolveData}}{{i18n "form.nextButton"}}&nbsp;&rarr;{{/linkTo}}</li>
 						</ul>
 					</div>

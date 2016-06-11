@@ -4,8 +4,8 @@
 	function getDefaultExecution() {
 		return {
 			names: [],
-			exercises: [],
-			descriptions: []
+			descriptions: [],
+			exercises: []
 		};
 	}
 
@@ -13,9 +13,9 @@
 		if (examination)
 			return {
 				examination_id: examination._id,
-				durationMinutes: examination.durationMinutes,
 				names: examination.names,
 				descriptions: [],
+				durationMinutes: examination.durationMinutes,
 				exercises: _.map(examination.exercises, e => ({ weight: e.weight, base_id: e.exercise_id }))
 			};
 	}
@@ -81,6 +81,7 @@
 					isLast: i === tmpl().execution.get().exercises.length - 1,
 					weight: e.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.base_id })))),
+
 			users() {
 				const addedIds = tmpl().execution.get().examinees || [];
 				return _.map(Meteor.users.find({ _id: { $nin: addedIds } }).fetch(), user => {
@@ -89,12 +90,11 @@
 					return { value: value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
 				});
 			}
-
 		});
 
 	function changeExecution(callback) {
 		return function (event, template) {
-			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
 			template.execution.dep.changed();
 			return ret;
 		};
@@ -111,42 +111,55 @@
 		});
 	}
 
+	function changeExecutionCollection(collectionName, propertySupplier) {
+		return changeExecution(function (event, template, $this) {
+			_.extend(template.execution.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this, this));
+		});
+	}
+
+	function addExecutionCollection(collectionName, itemSupplier) {
+		return changeExecution(function (event, template, $this) {
+			if (!template.execution.get()[`${collectionName}s`])
+				template.execution.get()[`${collectionName}s`] = [];
+			template.execution.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this, this));
+		});
+	}
+
 	function removeExecutionCollection(collectionName) {
 		return changeExecution(function (event, template) {
-			let collection = template.execution.get()[`${collectionName}s`];
-			collection.splice(this[`${collectionName}Index`], 1);
+			template.execution.get()[`${collectionName}s`].splice(this[`${collectionName}Index`], 1);
+			if (!template.execution.get()[`${collectionName}s`].length)
+				delete template.execution.get()[`${collectionName}s`];
+		});
+	}
+
+	function reorderExecutionCollection(collectionName, offset) {
+		return changeExecution(function (event, template) {
+			const collection = template.execution.get()[`${collectionName}s`], index = this[`${collectionName}Index`];
+			collection.splice(index + offset, 0, ...collection.splice(index, 1));
 		});
 	}
 
 	Template.examinationExecutionEdit.events(
 		{
+			'click .btn-move-exercise-up': reorderExecutionCollection('exercise', -1),
+			'click .btn-move-exercise-down': reorderExecutionCollection('exercise', +1),
+
+			'click #button-add-examinee': addExecutionCollection('examinee', (event, template) => {
+				const $input = template.$('#input-add-examinee'), user = template.userValues[$input.val()];
+				$input.val(null);
+				return user._id;
+			}),
+			'click .btn-remove-examinee': removeExecutionCollection('examinee'),
+
 			'change [id^="input-name-"]': changeExecutionTranslation('name'),
 			'change [id^="textarea-description-"]': changeExecutionTranslation('description'),
 			'change #input-duration': changeExecution((event, template, $this) => template.execution.get().durationMinutes = parseInt($this.val())),
-			'click .btn-up': changeExecution(function (event, template) {
-				var index = this.exerciseIndex;
-				var ex2 = template.execution.get().exercises[index - 1];
-				template.execution.get().exercises[index - 1] = template.execution.get().exercises[index];
-				template.execution.get().exercises[index] = ex2;
-			}),
-			'click .btn-down': changeExecution(function (event, template) {
-				var index = this.exerciseIndex;
-				var ex2 = template.execution.get().exercises[index + 1];
-				template.execution.get().exercises[index + 1] = template.execution.get().exercises[index];
-				template.execution.get().exercises[index] = ex2;
-			}),
-			'click .btn-remove-examinee': removeExecutionCollection('examinee'),
-			'click #button-add-examinee': changeExecution(function (event, template) {
-				const $input = template.$('#input-add-examinee'), user = template.userValues[$input.val()];
-				if (!template.execution.get().examinees)
-					template.execution.get().examinees = [user._id];
-				else
-					template.execution.get().examinees.push(user._id);
-				$input.val(null);
-			}),
-			'click .btn-save': function (event, template) {
+			'change .input-weight': changeExecutionCollection('exercise', (e, t, $) => ({ weight: parseInt($.val()) })),
+
+			'click .btn-save'(event, template) {
 				if (testValidExecution(template.execution.get()))
-					Meteor.call('saveExecution', template.execution.get(), Progressor.handleError(function (result) {
+					Meteor.call('saveExecution', template.execution.get(), Progressor.handleError(result => {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
 						Router.go('examinationExecutionEdit', { _id: result });
 					}, false));

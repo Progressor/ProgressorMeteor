@@ -13,13 +13,13 @@
 						exercises: [Match.ObjectIncluding({ base_id: String, weight: Number })]
 					}));
 
-				const _executions = execution._id ? Progressor.executions.findOne({ _id: execution._id }) : execution;
+				const _execution = execution._id ? Progressor.executions.findOne({ _id: execution._id }) : execution;
 
 				if (!this.userId)
 					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
-				else if (_executions._id && _executions.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				else if (_execution._id && _execution.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-				else if (_executions._id && _executions.released && _executions.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				else if (_execution._id && _execution.released && _execution.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				if (!execution.author_id)

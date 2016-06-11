@@ -125,6 +125,8 @@
 									<th scope="col">{{i18n "form.createdByLabel"}}</th>
 									<th scope="col">{{i18n "exercise.weightLabel"}}</th>
 									<td></td>
+									<td></td>
+									<td></td>
 								</tr>
 							</thead>
 							<tbody>
@@ -141,10 +143,10 @@
 											<button class="btn btn-danger btn-sm btn-remove-exercise" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
 										</td>
 										<td>
-											<button class="btn btn-info btn-sm btn-up" title="{{i18n "form.moveUpButton"}}" disabled={{isFirst}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-up"></span></button>
+											<button class="btn btn-info btn-sm btn-move-exercise-up" disabled={{isFirst}} title="{{i18n "form.moveUpButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-up"></span></button>
 										</td>
 										<td>
-											<button class="btn btn-info btn-sm btn-down" title="{{i18n "form.moveDownButton"}}" disabled={{isLast}} data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-down"></span></button>
+											<button class="btn btn-info btn-sm btn-move-exercise-down" disabled={{isLast}} title="{{i18n "form.moveDownButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-arrow-down"></span></button>
 										</td>
 									</tr>
 								{{/each}}
@@ -154,7 +156,7 @@
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 					{{/if}}
 				</section>
-				<div class="btn-toolbar separated-top separated-bottom">
+				<div class="btn-toolbar separated-top">
 					<div class="btn-group">
 						<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
 						<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>

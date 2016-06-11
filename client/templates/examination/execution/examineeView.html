@@ -1,0 +1,69 @@
+<template name="examinationExecutionExamineeView">
+	{{i18nTooltips}}
+	<h2>{{i18n "examination.overviewTitle" (i18nName this)}}</h2>
+	<div class="well form-horizontal">
+		<p>{{i18nDescription this}}</p>
+		<div class="row">
+			<div class="col-md-2">
+				<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
+				<label>{{i18n "examination.endTimeLabel"}}:</label> {{i18nDateTime (endTime startTime durationMinutes)}}
+			</div>
+			<div class="col-md-10">
+				<label>{{i18n "examination.durationLabel"}}:</label> {{durationMinutes}} {{i18n "examination.durationUnitLabel"}}<br />
+				<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}
+			</div>
+		</div>
+	</div>
+	<section class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">{{i18n "examination.exercisesSubtitle"}}</h3>
+		</div>
+		<table class="table table-condensed table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{{i18n "exercise.nameLabel"}}</th>
+					<th scope="col">{{i18n "exercise.typeLabel"}}</th>
+					<th scope="col">{{i18n "exercise.weightLabel"}}</th>
+					<th scope="col">{{i18n "exercise.weightLabel"}} [%]</th>
+					<th scope="col">{{i18n "examination.progressLabel"}}</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="pre-line text-muted">{{i18n "examination.help.progress"}}</td>
+				</tr>
+			</tfoot>
+			<tbody>
+				{{#each exercises}}
+					<tr>
+						<td>{{add @index 1}}</td>
+						<td>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</td>
+						<td>{{i18nExerciseType type}}</td>
+						<td>{{weight}}</td>
+						<td>{{round (multiply (divide weight totalWeight) 100)}}%</td>
+						<td>
+							<div class="progress nomargin">
+								{{#unless hasResult this}}
+									<div class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+								{{else}}
+									{{#if evaluated this}}
+										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
+										<div class="progress-bar progress-bar-warning" style="width: {{multiply (subtract 1 (successPercentage this)) 100}}%;"></div>
+									{{else}}
+										<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
+									{{/if}}
+								{{/unless}}
+							</div>
+						</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+</template>

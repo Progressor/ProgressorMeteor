@@ -66,7 +66,7 @@
 		<section class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapse-{{id}}"><span class="glyphicon {{#if isResult}}glyphicon-minus-sign{{else}}glyphicon-plus-sign{{/if}}" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
+					<a role="button" data-toggle="collapse" href="#collapse-{{id}}"><span class="glyphicon {{#if isResult}}glyphicon-collapse-up{{else}}glyphicon-collapse-down{{/if}}" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
 					<a role="button" data-toggle="collapse" href="#collapse-{{id}}">{{title}}</a>
 					<span class="badge">{{exercises.length}}</span>
 				</h3>
@@ -82,11 +82,11 @@
 								<th scope="col">{{i18n "exercise.categoryLabel"}}</th>
 								<th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
 							{{else}}
-								<th scope="col">{{i18n "examination.durationLabel"}}</th>
-								<th scope="col">{{i18n "examination.numberOfExercisesLabel"}}</th>
 								{{#if isExecution}}
 									<th scope="col">{{i18n "examination.startTimeLabel"}}</th>
 								{{/if}}
+								<th scope="col">{{i18n "examination.durationLabel"}}</th>
+								<th scope="col">{{i18n "examination.numberOfExercisesLabel"}}</th>
 							{{/unless}}
 							{{#if isResult}}
 								<th scope="col">{{i18n "exercise.solvedLabel"}} <span class="glyphicon glyphicon-chevron-down"></span></th>
@@ -126,7 +126,11 @@
 											{{#unless isExecution}}
 												{{#linkTo route="examinationTemplateEdit" data=this}}{{i18nName this}}{{/linkTo}}
 											{{else}}
-												{{#linkTo route="examinationExecutionEdit" data=this}}{{i18nName this}}{{/linkTo}} {{!link to teacher overview}}
+												{{#unless startTime}}
+													{{#linkTo route="examinationExecutionEdit" data=this}}{{i18nName this}}{{/linkTo}}
+												{{else}}
+													{{#linkTo route="examinationExecutionView" data=this}}{{i18nName this}}{{/linkTo}}
+												{{/unless}}
 											{{/unless}}
 										{{/if}}
 									{{/if}}
@@ -138,6 +142,9 @@
 									<td>{{i18nDifficulty difficulty}}</td>
 								{{else}}
 									{{#unless isArchive}}
+										{{#if isExecution}}
+											<td>{{i18nDateTime startTime}}</td>
+										{{/if}}
 										<td>{{durationMinutes}} {{i18n "examination.durationUnitLabel"}}</td>
 										<td>{{exercises.length}}</td>
 									{{else}}
@@ -148,11 +155,6 @@
 										<td>{{i18n "form.notAvailable"}}</td>
 										<td>{{i18n "form.notAvailable"}}</td>
 									{{/unless}}
-									{{#if isExecution}}
-										{{#unless isArchive}}
-											<td>{{i18nDateTime startTime}}</td>
-										{{/unless}}
-									{{/if}}
 								{{/if}}
 								{{#if isResult}}
 									<td>{{i18nDateTime result.solved}}</td>

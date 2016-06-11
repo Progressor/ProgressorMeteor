@@ -87,7 +87,7 @@
 
 	function changeExamination(callback) {
 		return function (event, template) {
-			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null);
+			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
 			template.examination.dep.changed();
 			return ret;
 		};
@@ -106,14 +106,26 @@
 
 	function changeExaminationCollection(collectionName, propertySupplier) {
 		return changeExamination(function (event, template, $this) {
-			_.extend(template.examination.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this));
+			_.extend(template.examination.get()[`${collectionName}s`][this[`${collectionName}Index`]], propertySupplier.call(this, event, template, $this, this));
+		});
+	}
+
+	function addExaminationCollection(collectionName, itemSupplier) {
+		return changeExamination(function (event, template, $this) {
+			template.examination.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this, this));
 		});
 	}
 
 	function removeExaminationCollection(collectionName) {
 		return changeExamination(function (event, template) {
-			let collection = template.examination.get()[`${collectionName}s`];
-			collection.splice(this[`${collectionName}Index`], 1);
+			template.examination.get()[`${collectionName}s`].splice(this[`${collectionName}Index`], 1);
+		});
+	}
+
+	function reorderExaminationCollection(collectionName, offset) {
+		return changeExamination(function (event, template) {
+			const collection = template.examination.get()[`${collectionName}s`], index = this[`${collectionName}Index`];
+			collection.splice(index + offset, 0, ...collection.splice(index, 1));
 		});
 	}
 
@@ -126,34 +138,26 @@
 			'change #select-difficulty': (e, t) => t.filter.set('difficulty', parseInt($(e.currentTarget).val())),
 			'change #checkbox-released': (e, t) => t.filter.set('visibilityReleased', $(e.currentTarget).prop('checked')),
 			'change #checkbox-unreleased': (e, t) => t.filter.set('visibilityUnreleased', $(e.currentTarget).prop('checked')),
+
+			'click .btn-add-exercise': addExaminationCollection('exercise', (e, t, $, c) => ({ exercise_id: c._id })),
+			'click .btn-remove-exercise': removeExaminationCollection('exercise'),
+			'click .btn-move-exercise-up': reorderExaminationCollection('exercise', -1),
+			'click .btn-move-exercise-down': reorderExaminationCollection('exercise', +1),
+
 			'change [id^="input-name-"]': changeExaminationTranslation('name'),
 			'change #input-duration': changeExamination((e, t, $) => t.examination.get().durationMinutes = parseInt($.val())),
 			'change .input-weight': changeExaminationCollection('exercise', (e, t, $) => ({ weight: parseInt($.val()) })),
-			'click .btn-add-exercise': changeExamination(function (event, template) {
-				template.examination.get().exercises.push({ exercise_id: this._id });
-			}),
-			'click .btn-remove-exercise': removeExaminationCollection('exercise'),
+
 			'click .btn-save'(event, template) {
 				if (testValidExamination(template.examination.get()))
-					Meteor.call('saveExamination', template.examination.get(), Progressor.handleError(function (result) {
+					Meteor.call('saveExamination', template.examination.get(), Progressor.handleError(result => {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
 						Router.go('examinationTemplateEdit', { _id: result });
 					}, false));
 				else
 					Progressor.showAlert(i18n('examination.templateIsNotValidMessage'));
 			},
-			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
-			'click .btn-up': changeExamination(function (event, template) {
-				var index = this.exerciseIndex;
-				var ex2 = template.examination.get().exercises[index - 1];
-				template.examination.get().exercises[index - 1] = template.examination.get().exercises[index]
-				template.examination.get().exercises[index] = ex2;
-			}),
-			'click .btn-down': changeExamination(function (event, template) {
-				var index = this.exerciseIndex;
-				var ex2 = template.examination.get().exercises[index + 1];
-				template.examination.get().exercises[index + 1] = template.examination.get().exercises[index]
-				template.examination.get().exercises[index] = ex2;
-			})
+			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false))
 		});
+
 })();

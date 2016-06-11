@@ -99,7 +99,7 @@
 			},
 			'click #button-save-answer'(event, template) {
 				const exercise = getExercise();
-				Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError(function (error, result) {
+				Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((error, result) => {
 					template.evaluationResults.set(!error ? result : []);
 					if (!error && exercise.execution_id)
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
