@@ -7,7 +7,7 @@
 			<div class="col-md-2">
 				<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
 				<label>{{i18n "examination.endTimeLabel"}}:</label> {{i18nDateTime (endTime startTime durationMinutes)}}<br />
-				<label>{{i18n "examination.numberOfExamineesLabel"}}:</label> {{totalExaminees}}
+				<label>{{i18n "examination.numberOfExamineesLabel"}}:</label> {{examinees.length}}
 			</div>
 			<div class="col-md-10">
 				<div class="form-inline">
@@ -28,45 +28,54 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		{{#each examinees}}
-			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">#{{add @index 1}}<span class="separated-left">{{nameOfExaminee this}}</span> <span class="pull-right"><strong>{{round (multiply (divide (numberOfResults this) exercises.length) 100)}}%</strong></span></h3>
-					</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-7" style="border-right: 1px solid #333;"> <!--ToDo: correct border line issue -->
-								<ul class="list-inline list-multiline">
-									{{#each exercises}}
-										<li>
-												<span class="log-overview-indicator-{{#unless hasResult .. this}}not-solved{{else}}{{#if evaluated .. this}}{{#if success .. this}}success{{else}}partial{{/if}}{{else}}not-evaluated{{/if}}{{/unless}}" data-html="true" title="<b>{{this.name}}</b><br />{{i18n "exercise.typeLabel"}}: <b>{{i18nExerciseType this.type}}</b><br />{{i18n "exercise.weightLabel"}}: <b>{{this.weight}}</b>" data-toggle="tooltip">
-													{{multiply (successPercentage .. this) 100}}%
-												</span>
-											{{#linkTo route="resultView" data=this}}link{{/linkTo}}
-										</li>
-									{{/each}}
-								</ul>
-							</div>
-							<div class="col-sm-5 text-center">
-								{{#if hasActivity this}}
-									<strong class="xsmall block">Evaluationen</strong>
-									<span class="log-overview-value">{{logEvaluations this}}</span>
-									<strong class="xsmall block">Aktionen</strong>
-									<span class="log-overview-value">{{round (logActivity this)}}</span>
-									<strong class="xsmall block">Zeichen</strong>
-									<span class="log-overview-value">{{round (logDifference this)}}</span>
-								{{else}}
-									<span class="glyphicon glyphicon-remove text-danger log-overview-no-activity"></span>
-								{{/if}}
+	{{#if examinees}}
+		<div class="row">
+			{{#each examinees}}
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								#{{add @index 1}}
+								<span class="separated-left">{{userName this}}</span>
+								<strong class="pull-right">{{round (multiply (totalSuccessPercentage this) 100)}}%</strong>
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-7" style="border-right: 1px solid #333;">
+									<ul class="list-inline list-multiline">
+										{{#each exercises this}}
+											<li>
+												{{#linkTo route="resultView" data=result}}
+													<span class="log-overview-indicator-{{exerciseStatus this}}" title="<strong>{{i18nName this}}</strong><br />{{i18n "exercise.typeLabel"}}: <strong>{{i18nExerciseType type}}</strong><br />{{i18n "exercise.weightLabel"}}: <strong>{{weight}}</strong>" data-html="true" data-toggle="tooltip">
+														{{round (multiply (successPercentage this) 100)}}%
+													</span>
+												{{/linkTo}}
+											</li>
+										{{/each}}
+									</ul>
+								</div>
+								<div class="col-sm-5 text-center">
+									{{#if hasActivity this}}
+										<strong class="xsmall block">Evaluationen</strong>
+										<span class="log-overview-value">{{logEvaluations this}}</span>
+										<strong class="xsmall block">Aktionen</strong>
+										<span class="log-overview-value">{{round (logActivity this)}}</span>
+										<strong class="xsmall block">Zeichen</strong>
+										<span class="log-overview-value">{{round (logDifference this)}}</span>
+									{{else}}
+										<span class="glyphicon glyphicon-remove text-danger log-overview-no-activity"></span>
+									{{/if}}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		{{/each}}
-	</div>
+			{{/each}}
+		</div>
+	{{else}}
+		<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+	{{/if}}
 	<hr />
 	<div class="row">
 		<div class="col-md-3 text-muted">

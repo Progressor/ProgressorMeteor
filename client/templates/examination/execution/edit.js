@@ -74,13 +74,13 @@
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty)
 			})),
-			exercises: () => _.map(tmpl().execution.get().exercises, (e, i) => _.extend(
+			exercises: () => _.map(tmpl().execution.get().exercises, (exercise, index) => _.extend(
 				{
-					exerciseIndex: i,
-					isFirst: i === 0,
-					isLast: i === tmpl().execution.get().exercises.length - 1,
-					weight: e.weight
-				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.base_id })))),
+					exerciseIndex: index,
+					isFirst: index === 0,
+					isLast: index === tmpl().execution.get().exercises.length - 1,
+					weight: exercise.weight
+				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
 
 			users() {
 				const addedIds = tmpl().execution.get().examinees || [];

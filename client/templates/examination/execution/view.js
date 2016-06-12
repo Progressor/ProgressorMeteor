@@ -11,27 +11,14 @@
 		return Progressor.executions.findOne();
 	}
 
-	function getExercise(_id) {
-		return Progressor.exercises.findOne({ _id: _id });
-	}
-
-	function getResultByExaminee(user_id, exercise) {
-		return Progressor.results.findOne({ user_id: user_id, exercise_id: exercise.exercise_id });
-	}
-
-	function getResultsByExaminee(user_id, exercise) {
-		const result = getResultByExaminee(user_id, exercise);
-		if (result) return result.results;
-	}
-
-	function getResultLogs(userId, logTimeoutSeconds, ...logTypes) {
+	function getResultLogs(user, logTimeoutSeconds, ...logTypes) {
 		const logFilter = new Date(new Date().getTime() - logTimeoutSeconds * 1000);
-		const results = Progressor.results.find({ exercise_id: { $in: _.pluck(getExecution().exercises, 'exercise_id') }, user_id: userId }).fetch();
+		const results = Progressor.results.find({ exercise_id: { $in: _.pluck(getExecution().exercises, 'exercise_id') }, user_id: user._id }).fetch();
 		return _.chain(results).pluck('log').flatten().filter(l => _.contains(logTypes, l.type) && logFilter <= l.timestamp).value();
 	}
 
-	function getResultLog(userId, logTimeoutSeconds, ...logTypes) {
-		return Progressor.getNewestResultLog(getResultLogs(userId, logTimeoutSeconds, ...logTypes), ...logTypes);
+	function getResultLog(user, logTimeoutSeconds, ...logTypes) {
+		return Progressor.getNewestResultLog(getResultLogs(user, logTimeoutSeconds, ...logTypes), ...logTypes);
 	}
 
 	Template.examinationExecutionView.onCreated(function () {
@@ -46,33 +33,45 @@
 
 	Template.examinationExecutionView.helpers(
 		{
-			exercises: () => _.map(getExecution().exercises, (e, i) => _.extend({ name: i18n.getName(getExercise(e.exercise_id)), type: getExercise(e.exercise_id).type }, e)),
-			nameOfExaminee: user_id => Progressor.getUserName(Meteor.users.findOne({ _id: user_id }), true) || Progressor.getUserEmail(Meteor.users.findOne({ _id: user_id })),
-			numberOfResults: (u) => Progressor.results.find({ user_id: u }).fetch().length,
-			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
-			totalExaminees: () => getExecution().examinees.length,
-			endTime: (t, d) => new Date(t.getTime() + d * 60 * 1000),
-			hasResult: (u, e) => getResultByExaminee(u, e),
-			evaluated: (u, e) => e.type === 1 && Progressor.isExerciseEvaluated(e, getResultsByExaminee(u, e)),
-			success: (u, e) => Progressor.isExerciseSuccess(e, getResultsByExaminee(u, e)),
-			successPercentage: (user_id, exercise) => Progressor.getExerciseSuccessPercentage(exercise, getResultsByExaminee(user_id, exercise)),
 			extendDuration: () => tmpl().extendDuration.get(),
-			hasActivity(userId) {
-				tmpl().intervalDependency.depend();
-				return getResultLogs(userId, ACTIVITY_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_STARTED_TYPE, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE).length;
+			endTime: (t, d) => t ? new Date(t.getTime() + d * 60 * 1000) : t,
+			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
+			examinees() {
+				const execution = getExecution();
+				if (execution)
+					if (execution.examinees && execution.examinees.length) return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
+					else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).value();
 			},
-			logEvaluations(userId) {
-				tmpl().intervalDependency.depend();
-				return getResultLogs(userId, EVALUATION_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_EVALUATED_TYPE).length;
+			exercises: user => _.map(getExecution().exercises, exercise => _.extend(
+				{
+					weight: exercise.weight,
+					result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null
+				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id })))),
+			exerciseStatus: e => !e.result ? 'not-solved' : !Progressor.isExerciseEvaluated(e, e.result.results) ? 'not-evaluated' : Progressor.isExerciseSuccess(e, e.result.results) ? 'success' : 'partial',
+			successPercentage: e => Progressor.getExerciseSuccessPercentage(e, e.result ? e.result.results : null),
+			totalSuccessPercentage(user) {
+				const execution = getExecution();
+				return _.chain(execution.exercises)
+								 .map(e => _.extend({ exercise: Progressor.exercises.findOne({ _id: e.exercise_id }), result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: e.exercise_id }) : null }))
+								 .reduce((p, j) => p + Progressor.getExerciseSuccessPercentage(j.exercise, j.result ? j.result.results : null), 0).value() / execution.exercises.length;
 			},
-			logActivity(userId) {
+
+			hasActivity(user) {
 				tmpl().intervalDependency.depend();
-				const log = getResultLog(userId, 30, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
+				return getResultLogs(user, ACTIVITY_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_STARTED_TYPE, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE).length;
+			},
+			logEvaluations(user) {
+				tmpl().intervalDependency.depend();
+				return getResultLogs(user, EVALUATION_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_EVALUATED_TYPE).length;
+			},
+			logActivity(user) {
+				tmpl().intervalDependency.depend();
+				const log = getResultLog(user, 30, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
 				return log ? log.intervalSeconds ? log.activities / log.intervalSeconds : log.activities : 0;
 			},
-			logDifference(userId) {
+			logDifference(user) {
 				tmpl().intervalDependency.depend();
-				const log = getResultLog(userId, 30, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
+				const log = getResultLog(user, 30, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
 				return log ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
 			},
 			activityIntervalMin: () => ACTIVITY_INTERVAL_MINUTES,

@@ -31,7 +31,7 @@
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
-			if (result && result.answer)
+			if (exercise && result && result.answer)
 				this.validationResult.set(new RegExp(`^${exercise.pattern}$`).test(result.answer));
 		});
 
