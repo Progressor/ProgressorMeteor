@@ -47,6 +47,7 @@
 		this.showSolution = new ReactiveVar(false);
 		this.progressUpdateInterval = -1;
 		this.progress = { started: false, activities: 0, length: 0 };
+		this.exerciseId = null;
 		Session.set('fragment', '');
 		Session.set('solution', '');
 
@@ -56,13 +57,15 @@
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
-			if (!Session.get('fragment'))
+			if (!result && !exercise || (result ? result.exercise_id : exercise._id) !== this.exerciseId) {
 				if (result && result.fragment)
 					Session.set('fragment', result.fragment);
 				else if (exercise && exercise.fragment)
 					Session.set('fragment', exercise.fragment);
 				else
-					Meteor.call('getFragment', getExercise().programmingLanguage, { _id: getExercise()._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
+					Meteor.call('getFragment', exercise.programmingLanguage, { _id: exercise._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
+				this.exerciseId = result ? result.exercise_id : exercise._id;
+			}
 		});
 
 		if (!tmpl().isResult.get())
