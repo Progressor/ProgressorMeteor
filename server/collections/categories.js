@@ -3,12 +3,16 @@
 
 	Meteor.methods(
 		{
+
+			/**
+			 * Creates or updates a category.
+			 * @param category {{programmingLanguage: string}} category to save
+			 * @returns {number} the unique identifier of the category
+			 */
 			saveCategory(category) {
 				check(category, Match.ObjectIncluding(
 					{
-						programmingLanguage: String,
-						names: [Match.ObjectIncluding({ language: String, name: String })],
-						descriptions: [Match.ObjectIncluding({ language: String, description: String })]
+						programmingLanguage: String
 					}));
 
 				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
@@ -21,6 +25,12 @@
 
 				return Progressor.categories.upsert(category._id, category).insertedId || category._id;
 			},
+
+			/**
+			 * Deletes a category.
+			 * @param category {{_id: string}} category to delete
+			 * @returns {number} the number of categories affected
+			 */
 			deleteCategory(category) {
 				check(category, Match.ObjectIncluding({ _id: String }));
 

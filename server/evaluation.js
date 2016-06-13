@@ -5,6 +5,11 @@
 
 	Meteor.methods(
 		{
+
+			/**
+			 * Creates a result log entry when an exercise is opened.
+			 * @param exercise {{_id: string}} exercise to create log entry for
+			 */
 			openedExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 
@@ -22,6 +27,11 @@
 						});
 				}
 			},
+
+			/**
+			 * Creates a result log entry when the user starts to solve an exercise.
+			 * @param exercise {{_id: string}} exercise to create log entry for
+			 */
 			startedExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 
@@ -40,6 +50,12 @@
 					}
 				}
 			},
+
+			/**
+			 * Creates a result progress update log entry.
+			 * @param exercise {{_id: string}} exercise to create log entry for
+			 * @param update {{activities: number}}
+			 */
 			updateExerciseProgress(exercise, update) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 				check(update, Match.ObjectIncluding(
@@ -65,6 +81,13 @@
 					});
 				}
 			},
+
+			/**
+			 * Evaluates a multiple choice exercise.
+			 * @param exercise {{_id: string}|{options: {options: *[][], solutions: number[]}}} exercise to evaluate
+			 * @param checkedOptions {number[]} the indices of the checked options
+			 * @returns {{success: boolean, checked: boolean}[]}
+			 */
 			evaluateMultipleChoice(exercise, checkedOptions) {
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(
@@ -116,6 +139,13 @@
 
 				return results;
 			},
+
+			/**
+			 * Evaluates a free text exercise.
+			 * @param exercise {{_id: string}|{options: {options: *[][], solutions: number[]}}} exercise to evaluate
+			 * @param answer {string} the answer entered by the user
+			 * @returns {{success: boolean}[]}
+			 */
 			evaluateFreeText(exercise, answer) {
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(

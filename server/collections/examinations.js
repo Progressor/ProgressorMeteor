@@ -3,10 +3,15 @@
 
 	Meteor.methods(
 		{
+
+			/**
+			 * Creates or updates an examination.
+			 * @param examination {{durationMinutes: number, exercises: {base_id: string, weight: number}[]}} examination to save
+			 * @returns {number} the unique identifier of the examination
+			 */
 			saveExamination(examination){
 				check(examination, Match.ObjectIncluding(
 					{
-						names: [Match.ObjectIncluding({ language: String, name: String })],
 						durationMinutes: Match.Integer,
 						exercises: [Match.ObjectIncluding({ exercise_id: String, weight: Number })]
 					}));
@@ -27,6 +32,13 @@
 
 				return Progressor.examinations.upsert(examination._id, examination).insertedId || examination._id;
 			},
+
+			/**
+			 * Toggles the archive flag on an examination.
+			 * @param examination {{_id: string}} examination to toggle archive flag on
+			 * @param archived {boolean} whether to add or remove the archive flag
+			 * @returns {number} the number of examinations affected
+			 */
 			toggleArchiveExamination(examination, archived) {
 				check(examination, Match.ObjectIncluding({ _id: String }));
 				check(archived, Boolean);
@@ -38,6 +50,12 @@
 
 				return Progressor.examinations.update(examination._id, { $set: { archived } }).rowsAffected;
 			},
+
+			/**
+			 * Deletes an examination.
+			 * @param examination {{_id: string}} examination to delete
+			 * @returns {number} the number of examinations affected
+			 */
 			deleteExamination(examination) {
 				check(examination, Match.ObjectIncluding({ _id: String }));
 

@@ -5,13 +5,13 @@
 	// SUBSCRIPTIONS //
 	///////////////////
 
-	//USERS
+	// users //
 
 	Meteor.publish('users', function () {
 		return Meteor.users.find({ _id: { $ne: this.userId } }, { fields: { _id: 1, emails: 1, profile: 1, roles: 1 } });
 	});
 
-	//CATEGORIES
+	// categories //
 
 	Meteor.publish('categories', function () {
 		return Progressor.categories.find();
@@ -25,7 +25,7 @@
 		return Progressor.categories.find({ programmingLanguage: language });
 	});
 
-	//EXERCISES
+	// exercise //
 
 	function publishExercises(query, assumeReleased = false, assumeUnauthorised = false) {
 		const published = [];
@@ -42,9 +42,14 @@
 			const isAuthorised = exercise && this.userId === exercise.author_id || Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN);
 
 			//TODO: add robust execution handling
-			if (!exercise || !isAuthorised && !exercise.execution_id && !(exercise.released && exercise.released.confirmed) && exercise.type === 1 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))
+			if (!exercise || !isAuthorised //in order to access the exercise, the user must have access
+											 && !exercise.execution_id //or the exericse has to be part of an examination
+											 && !(exercise.released && exercise.released.confirmed) //or the exercise has to be released
+											 && exercise.type === 1 //or the exercise has to be a multiple choice or free text exercise (which are immediately visible)
+											 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))  //or it has to be solved
 				return unpublishExercise.call(this, id);
 
+			//delete sensitive information
 			if (assumeUnauthorised || !isAuthorised) {
 				if (exercise.execution_id)
 					delete exercise.solutionVisible;
@@ -74,6 +79,8 @@
 				changed: e => publishExercise.call(this, e._id, e),
 				removed: e => unpublishExercise.call(this, e._id)
 			});
+
+		//include results, programming exercises have to be tested
 		const handleResults = !assumeReleased ? getResults().observe(
 			{
 				added: r => publishExercise.call(this, r.exercise_id),
@@ -89,7 +96,7 @@
 		});
 	}
 
-	//CATEGORISED EXERCISES
+	//categorised exercises
 
 	Meteor.publish('releaseRequestedExercises', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
@@ -121,7 +128,7 @@
 		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
 
-	//EXAMINATION EXERCISES
+	//examination exercises
 
 	Meteor.publish('exercisesByExecution', function (executionId, isExecute = false) {
 		check(executionId, String);
@@ -129,7 +136,7 @@
 		publishExercises.call(this, { execution_id: executionId }, true, isExecute);
 	});
 
-	//RELEASE REQUEST COUNT
+	//release request count
 
 	Meteor.publish('numberOfExercisesToRelease', function () {
 		if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
@@ -148,7 +155,7 @@
 		this.onStop(() => handle.stop());
 	});
 
-	//RESULTS
+	// results //
 
 	function publishResults(query, assumeUnauthorised = false, includeDetails = false) {
 		const published = [];
@@ -161,6 +168,7 @@
 			if (this.userId !== result.user_id && !(execution && this.userId === execution.author_id) && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 				return unpublishResult.call(this, id);
 
+			//remove sensitive information
 			if (result.results)
 				if (!isAuthorised && execution && result.exercise.type !== 1)
 					result.results = _.map(result.results, r => _.omit(r, 'success'));
@@ -222,7 +230,7 @@
 		publishResults.call(this, { 'exercise.execution_id': executionId }, isExecute);
 	});
 
-	//EXAMINATIONS
+	// examinations //
 
 	function publishExaminations(query) {
 		const published = [];
@@ -264,7 +272,7 @@
 		publishExaminations.call(this, { _id: id });
 	});
 
-	//EXECUTIONS
+	// executions //
 
 	function publishExecutions(query) {
 		const published = [];

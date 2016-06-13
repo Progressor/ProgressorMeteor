@@ -15,6 +15,10 @@
 
 	Meteor.methods(
 		{
+			/**
+			 * Gets the data types the executor supports. Result includes example values for the types.
+			 * @returns {{types: {_id: string, label: string, parameterCount: number, pattern: string, max: number}[], values: {types: string[], values: *[]}[]}}
+			 */
 			getExecutorTypes() {
 				const integerPattern = '[-+]?[0-9]+', floatingPointPattern = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
 				return {
@@ -45,6 +49,12 @@
 					]
 				};
 			},
+
+			/**
+			 * Fetches the Executor's version information for a specific programming language.
+			 * @param language {string} identifier of programming language to get version information for
+			 * @returns {{languageVersion: string, compilerName: string, compilerVersion: string, platformName: string, platformVersion: string, platformArchitecture: string}}
+			 */
 			getVersionInformation(language) {
 				check(language, String);
 
@@ -56,6 +66,12 @@
 
 				return versionInfo;
 			},
+
+			/**
+			 * Fetches the blacklist for a specific programming language from the Executor.
+			 * @param language {string} identifier of programming language to get version information for
+			 * @returns {string[]}
+			 */
 			getBlacklist(language) {
 				check(language, String);
 
@@ -67,6 +83,13 @@
 
 				return blacklist;
 			},
+
+			/**
+			 * Fetches a generated code fragment for a specific exercise from the Executor.
+			 * @param language {string} identifier of programming language to get version information for
+			 * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[]}} exercise to generate code fragment for
+			 * @returns {string}
+			 */
 			getFragment(language, exercise) {
 				check(language, String);
 				check(exercise, Match.OneOf(
@@ -92,7 +115,16 @@
 
 				return fragment;
 			},
-			execute(language, exercise, fragment, showInvisible = false) {
+
+			/**
+			 * Fetches the programming exercise evaluation from the Executor.
+			 * @param language {string} identifier of programming language to get version information for
+			 * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[], testCases: {functionName: string, inputValues: string[], expectedOutputValues: string[]}[]}} exercise to generate code fragment for
+			 * @param fragment {string} code fragment to execute
+			 * @param includeInvisible {boolean} whether to include invisible test cases in the results
+			 * @returns {{success: boolean, fatal: boolean, result: string, performance: {}}[]}
+			 */
+			execute(language, exercise, fragment, includeInvisible = false) {
 				check(language, String);
 				check(exercise, Match.OneOf(
 					Match.ObjectIncluding(
@@ -105,7 +137,7 @@
 							testCases: [Match.ObjectIncluding({ functionName: String, inputValues: [String], expectedOutputValues: [String] })]
 						})));
 				check(fragment, String);
-				check(showInvisible, Boolean);
+				check(includeInvisible, Boolean);
 
 				this.unblock();
 
@@ -148,7 +180,7 @@
 					});
 				}
 
-				if (Progressor.hasInvisibleTestCases(exercise) && (!showInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)))
+				if (Progressor.hasInvisibleTestCases(exercise) && (!includeInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)))
 					return _.flatten([Progressor.getVisibleResults(exercise, results), { invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) }]);
 				else
 					return results;

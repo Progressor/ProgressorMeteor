@@ -3,6 +3,12 @@
 
 	Meteor.methods(
 		{
+
+			/**
+			 * Creates or updates an exercise.
+			 * @param exercise {{programmingLanguage: string, category_id: string, difficulty: number, type: number}} exercise to save
+			 * @returns {number} the unique identifier of the exercise
+			 */
 			saveExercise(exercise) {
 				check(exercise, Match.ObjectIncluding(
 					{
@@ -28,6 +34,13 @@
 
 				return Progressor.exercises.upsert(exercise._id, exercise).insertedId || exercise._id;
 			},
+
+			/**
+			 * Toggles the archive flag on an exercise.
+			 * @param exercise {{_id: string}} exercise to toggle archive flag on
+			 * @param archived {boolean} whether to add or remove the archive flag
+			 * @returns {number} the number of exercises affected
+			 */
 			toggleArchiveExercise(exercise, archived) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 				check(archived, Boolean);
@@ -39,6 +52,12 @@
 
 				return Progressor.exercises.update(exercise._id, { $set: { archived } }).rowsAffected;
 			},
+
+			/**
+			 * Deletes an exercise.
+			 * @param exercise {{_id: string}} exercise to delete
+			 * @returns {number} the number of exercises affected
+			 */
 			deleteExercise(exercise) {
 				check(exercise, Match.ObjectIncluding({ _id: String }));
 

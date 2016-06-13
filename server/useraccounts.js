@@ -3,6 +3,12 @@
 
 	Meteor.methods(
 		{
+			/**
+			 * Adds or removes a user to/from a role.
+			 * @param users {string[]} identifiers of users to affect
+			 * @param roles {string[]} identifiers of roles to affect
+			 * @param isInRole {boolean} whether to add users to roles or to remove user from them
+			 */
 			toggleUsersRoles(users, roles, isInRole) {
 				check(users, [String]);
 				check(roles, [String]);
