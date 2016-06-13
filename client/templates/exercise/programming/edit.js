@@ -130,6 +130,7 @@
 		this.executionResults = new ReactiveVar([]);
 		this.blacklist = new ReactiveVar(null);
 		this.blacklistMatches = new ReactiveVar([]);
+		this.versionInformation = new ReactiveVar(null);
 		this.fragmentTyped = false;
 		this.solutionTyped = false;
 		Session.set('fragment', null);
@@ -147,6 +148,7 @@
 				if (this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
 				this.exercise.set(Progressor.joinCategory(_exercise));
+				Meteor.call('getVersionInformation', live.programmingLanguage, Progressor.handleError(r => this.versionInformation.set(r), false));
 				this.executionResults.set([]);
 				this.fragmentTyped = false;
 				this.solutionTyped = false;
@@ -270,6 +272,10 @@
 
 			executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
 			blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
+			versionInformation() {
+				const versionInformation = tmpl().versionInformation.get();
+				if (versionInformation) return i18n('exercise.help.versionInformationMessage', versionInformation.languageVersion, versionInformation.compilerName, versionInformation.compilerVersion, versionInformation.platformName, versionInformation.platformVersion, versionInformation.platformArchitecture);
+			},
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(tmpl().exercise.get(), tmpl().executionResults.get()),
 			testCaseEvaluated: c => Progressor.isTestCaseEvaluated(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
 			testCaseSuccess: c => Progressor.isTestCaseSuccess(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),

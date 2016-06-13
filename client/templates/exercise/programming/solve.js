@@ -27,6 +27,7 @@
 		this.executionResults = new ReactiveVar([]);
 		this.blacklist = new ReactiveVar(null);
 		this.blacklistMatches = new ReactiveVar([]);
+		this.versionInformation = new ReactiveVar(null);
 		this.showSolution = new ReactiveVar(false);
 		Session.set('fragment', '');
 		Session.set('solution', '');
@@ -47,8 +48,10 @@
 		if (!tmpl().isResult.get())
 			this.autorun(() => {
 				const exercise = getExercise(true);
-				if (exercise)
+				if (exercise) {
 					Meteor.call('openedExercise', exercise, Progressor.handleError());
+					Meteor.call('getVersionInformation', exercise.programmingLanguage, Progressor.handleError(r => this.versionInformation.set(r), false));
+				}
 
 				Meteor.clearInterval(this.progressUpdateInterval);
 				this.progressUpdateInterval = Meteor.setInterval(() => {
@@ -104,6 +107,10 @@
 			},
 			executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
 			blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
+			versionInformation() {
+				const versionInformation = tmpl().versionInformation.get();
+				if (versionInformation) return i18n('exercise.help.versionInformationMessage', versionInformation.languageVersion, versionInformation.compilerName, versionInformation.compilerVersion, versionInformation.platformName, versionInformation.platformVersion, versionInformation.platformArchitecture);
+			},
 			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
 			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),
@@ -119,7 +126,7 @@
 			'keyup .CodeMirror'(event, template) {
 				if (!template.progress.started) {
 					template.progress.started = true;
-					Meteor.call('startedExercise', exercise, Progressor.handleError());
+					Meteor.call('startedExercise', getExercise(), Progressor.handleError());
 				}
 				template.progress.activities++;
 			},

@@ -93,7 +93,7 @@
 			'change .input-option'(event, template) {
 				if (!template.progress.started) {
 					template.progress.started = true;
-					Meteor.call('startedExercise', exercise, Progressor.handleError());
+					Meteor.call('startedExercise', getExercise(), Progressor.handleError());
 				}
 				template.progress.activities++;
 			},

@@ -45,6 +45,17 @@
 					]
 				};
 			},
+			getVersionInformation(language) {
+				check(language, String);
+
+				this.unblock();
+
+				const { connection, client } = connectExecutor();
+				const versionInfo = Meteor.wrapAsync(client.getVersionInformation, client)(language);
+				connection.end();
+
+				return versionInfo;
+			},
 			getBlacklist(language) {
 				check(language, String);
 
