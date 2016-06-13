@@ -40,7 +40,7 @@
 				const execution = getExecution();
 				if (execution)
 					if (execution.examinees && execution.examinees.length) return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
-					else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).value();
+					else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).sortBy(u => Progressor.getUserName(u).toLowerCase()).value();
 			},
 			nofResults: u => u ? Progressor.results.find({ user_id: u._id, solved: { $exists: true } }).count() : 0,
 			exercises: user => _.map(getExecution().exercises, exercise => _.extend(
