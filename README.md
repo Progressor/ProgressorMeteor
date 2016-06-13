@@ -25,25 +25,37 @@ This application depends on the official packages
 
 It also depends on a number of third-party *Meteor* packages.
 
-1. [anti:i18n](https://atmospherejs.com/anti/i18n)
-   for internationalisation (translation)
-2. [momentjs:moment](https://atmospherejs.com/momentjs/moment)
-   for internationalisation (date & time formatting)
-3. [alanning:roles](https://atmospherejs.com/alanning/roles)
-   for role-based authorisation
-4. [zimme:iron-router-auth](https://atmospherejs.com/zimme/iron-router-auth)
-   for authentication- and authorisation-based routing
-5. [huttonr:bootstrap3](https://atmospherejs.com/huttonr/bootstrap3)
-   for the newest highly configurable `less` version of [Bootstrap](http://getbootstrap.com/)
-   * The [Flatly](http://bootswatch.com/flatly/) design is provided by [Bootswatch](http://bootswatch.com/).
-6. [useraccounts:bootstrap](https://atmospherejs.com/useraccounts/bootstrap)
-   for the unified design of the login & register page
-7. [sacha:spin](https://atmospherejs.com/sacha/spin)
-   for the loading spinner
-8. [chuangbo:marked](https://atmospherejs.com/chuangbo/marked)
-   for [GitHub Flavoured Markdown](https://guides.github.com/features/mastering-markdown/)
-9. [houston:admin](https://atmospherejs.com/houston/admin)
-   for the *MongoDB* admin frontend
+1.  [anti:i18n](https://atmospherejs.com/anti/i18n)
+    for internationalisation (translation)
+2.  [momentjs:moment](https://atmospherejs.com/momentjs/moment)
+    for internationalisation (date & time formatting)
+3.  [alanning:roles](https://atmospherejs.com/alanning/roles)
+    for role-based authorisation
+4.  [zimme:iron-router-auth](https://atmospherejs.com/zimme/iron-router-auth)
+    for authentication- and authorisation-based routing
+5.  [huttonr:bootstrap3](https://atmospherejs.com/huttonr/bootstrap3)
+    for the newest highly configurable `less` version of [Bootstrap](http://getbootstrap.com/)
+    * The [Flatly](http://bootswatch.com/flatly/) design is provided by [Bootswatch](http://bootswatch.com/).
+6.  [useraccounts:bootstrap](https://atmospherejs.com/useraccounts/bootstrap)
+    for the unified design of the login & register page
+7.  [sacha:spin](https://atmospherejs.com/sacha/spin)
+    for the loading spinner
+8.  [chuangbo:marked](https://atmospherejs.com/chuangbo/marked)
+    for [GitHub Flavoured Markdown](https://guides.github.com/features/mastering-markdown/)
+9.  [houston:admin](https://atmospherejs.com/houston/admin)
+    for the *MongoDB* admin frontend
+10. [perak:codemirror](https://atmospherejs.com/perak/codemirror)
+    for syntax highlighting using *CodeMirror*
+11. [meteorhacks:kadira](https://atmospherejs.com/meteorhacks/kadira)
+    for monitoring using [*Kadira*](https://kadira.io/) (see Monitoring section)
+12. [sergeyt:typeahead](https://atmospherejs.com/sergeyt/typeahead)
+    for autocomplete support using *typeahead.js*
+13. [percolate:synced-cron](https://atmospherejs.com/percolate/synced-cron)
+    for jobs similar to *Cron* (or scheduled tasks)
+14. [meteorhacks:ssr](https://atmospherejs.com/meteorhacks/ssr)
+    provides Server Side Rendering capabilities in order to send emails
+15. [pascoual:pdfkitx](https://atmospherejs.com/pascoual/pdfkitx)
+    for generating PDF documents using [PDFKit](http://pdfkit.org/)
 
 ### Configuration
 
