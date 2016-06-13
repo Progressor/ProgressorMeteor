@@ -5,6 +5,10 @@
 		return Template.instance();
 	}
 
+	//////////////////////
+	// REACTIVE HELPERS //
+	//////////////////////
+
 	function getExercise(forceRefresh = false) {
 		return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
@@ -21,7 +25,19 @@
 			return tmpl().executionResults.get();
 	}
 
+	function getExecutionExercise(offset) {
+		const execution = Progressor.executions.findOne();
+		let exerciseIndex = -1;
+		if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset])
+			return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
+	}
+
 	Template.programmingSolve.onCreated(function () {
+
+		//////////////////////////////////
+		// TEMPLATE & SESSION VARIABLES //
+		//////////////////////////////////
+
 		this.isResult = new ReactiveVar(false);
 		this.executionStatus = new ReactiveVar(0x0);
 		this.executionResults = new ReactiveVar([]);
@@ -29,10 +45,14 @@
 		this.blacklistMatches = new ReactiveVar([]);
 		this.versionInformation = new ReactiveVar(null);
 		this.showSolution = new ReactiveVar(false);
-		Session.set('fragment', '');
-		Session.set('solution', '');
 		this.progressUpdateInterval = -1;
 		this.progress = { started: false, activities: 0, length: 0 };
+		Session.set('fragment', '');
+		Session.set('solution', '');
+
+		////////////////////
+		// INITIALISATION //
+		////////////////////
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
@@ -49,8 +69,13 @@
 			this.autorun(() => {
 				const exercise = getExercise(true);
 				if (exercise) {
-					Meteor.call('openedExercise', exercise, Progressor.handleError());
 					Meteor.call('getVersionInformation', exercise.programmingLanguage, Progressor.handleError(r => this.versionInformation.set(r), false));
+
+					/////////////
+					// LOGGING //
+					/////////////
+
+					Meteor.call('openedExercise', exercise, Progressor.handleError());
 				}
 
 				Meteor.clearInterval(this.progressUpdateInterval);
@@ -72,12 +97,9 @@
 		Meteor.clearInterval(this.progressUpdateInterval);
 	});
 
-	function getExecutionExercise(offset) {
-		const execution = Progressor.executions.findOne();
-		let exerciseIndex = -1;
-		if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset])
-			return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
-	}
+	/////////////
+	// HELPERS //
+	/////////////
 
 	Template.programmingSolve.helpers(
 		{
@@ -123,6 +145,11 @@
 
 	Template.programmingSolve.events(
 		{
+
+			/////////////
+			// LOGGING //
+			/////////////
+
 			'keyup .CodeMirror'(event, template) {
 				if (!template.progress.started) {
 					template.progress.started = true;
@@ -130,6 +157,11 @@
 				}
 				template.progress.activities++;
 			},
+
+			///////////////
+			// BLACKLIST //
+			///////////////
+
 			'keypress .CodeMirror': _.throttle(function (event, template) {
 				if (!template.blacklist.get()) {
 					template.blacklist.set([]);
@@ -140,11 +172,11 @@
 					template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
 				}
 			}, 500),
-			'change #select-codemirror-themes'(event, template) {
-				const theme = $(event.currentTarget).val();
-				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
-				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
-			},
+
+			//////////////////
+			// EXECUTE CODE //
+			//////////////////
+
 			'click #button-execute'(event, template) {
 				template.showSolution.set(false);
 				const exercise = getExercise();
@@ -156,6 +188,21 @@
 					template.executionStatus.set(template.executionStatus.get() & ~0x1);
 				}));
 			},
+
+			/////////////////
+			// CODE MIRROR //
+			/////////////////
+
+			'change #select-codemirror-themes'(event, template) {
+				const theme = $(event.currentTarget).val();
+				template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
+				Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
+			},
+
+			//////////////
+			// SOLUTION //
+			//////////////
+
 			'click #button-solution'(event, template)  {
 				Session.set('solution', getExercise().solution);
 				template.showSolution.set(true);

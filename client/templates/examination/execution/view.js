@@ -7,6 +7,10 @@
 		return Template.instance();
 	}
 
+	//////////////////////
+	// REACTIVE HELPERS //
+	//////////////////////
+
 	function getExecution() {
 		return Progressor.executions.findOne();
 	}
@@ -22,8 +26,19 @@
 	}
 
 	Template.examinationExecutionView.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.extendDuration = new ReactiveVar(false);
 		this.intervalDependency = new Tracker.Dependency();
+
+		///////////////////////
+		// FALLBACK INTERVAL //
+		///////////////////////
+
+		//this interval is needed if there are no more updates to the results
 		this.interval = Meteor.setInterval(() => this.intervalDependency.changed(), 15 * 1000);
 	});
 
@@ -33,6 +48,11 @@
 
 	Template.examinationExecutionView.helpers(
 		{
+
+			////////////////////
+			// RESULT HELPERS //
+			////////////////////
+
 			extendDuration: () => tmpl().extendDuration.get(),
 			endTime: (t, d) => t ? new Date(t.getTime() + d * 60 * 1000) : t,
 			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
@@ -57,6 +77,10 @@
 								 .reduce((p, j) => p + Progressor.getExerciseSuccessPercentage(j.exercise, j.result ? j.result.results : null), 0).value() / execution.exercises.length;
 			},
 
+			/////////////////
+			// LOG HELPERS //
+			/////////////////
+
 			hasActivity(user) {
 				tmpl().intervalDependency.depend();
 				return getResultLogs(user, ACTIVITY_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_STARTED_TYPE, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE).length;
@@ -78,6 +102,10 @@
 			activityIntervalMin: () => ACTIVITY_INTERVAL_MINUTES,
 			evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES
 		});
+
+	////////////
+	// EVENTS //
+	////////////
 
 	Template.examinationExecutionView.events(
 		{

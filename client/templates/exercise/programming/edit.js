@@ -158,14 +158,18 @@
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 
-		//INITIALISATION
+		////////////////////
+		// INITIALISATION //
+		////////////////////
 
 		Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
 	});
 
 	Template.programmingEdit.onRendered(function () {
 
-		//COLLAPSIBLE PANELS
+		////////////////////////
+		// COLLAPSIBLE PANELS //
+		////////////////////////
 
 		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
 

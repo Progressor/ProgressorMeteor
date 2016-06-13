@@ -15,6 +15,10 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testRegExp(pattern) {
 		try {
 			return !pattern || new RegExp(pattern);
@@ -39,8 +43,17 @@
 	}
 
 	Template.textEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.isCreate = new ReactiveVar(false);
 		this.exercise = new ReactiveVar(getDefaultExercise());
+
+		///////////////////////////////
+		// REACTIVE (LOCAL) EXERCISE //
+		///////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
@@ -54,6 +67,10 @@
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
+
+	//////////////////////
+	// EXERCISE HELPERS //
+	//////////////////////
 
 	Template.textEdit.helpers(
 		{
@@ -84,6 +101,10 @@
 			})),
 			solution: () => _.map(tmpl().exercise.get().solution, (solution, solutionIndex) => ({ value: solution, solutionIndex }))
 		});
+
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
 
 	function changeExercise(callback) {
 		return function (event, template) {
@@ -127,8 +148,18 @@
 
 	Template.textEdit.events(
 		{
+
+			///////////////////////
+			// COLLECTION EVENTS //
+			///////////////////////
+
 			'click .btn-add-solution': addExerciseCollection('solution', () => getDefaultExercise().solution[0]),
 			'click .btn-remove-solution': removeExerciseCollection('solution'),
+
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'keyup #input-pattern'(event, template) {
 				const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error'), pattern = $this.val();
 				if (!testRegExp(pattern))
@@ -148,6 +179,11 @@
 			'keyup #input-pattern, change #input-pattern': changeExercise((e, t, $) => $.val().length ? t.exercise.get().pattern = $.val() : delete t.exercise.get().pattern),
 			'change .input-solution': changeExerciseCollection('solution', (e, t, $) => $.val()),
 			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
+
 			'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
 				if ($this.hasClass('btn-release-request'))
 					template.exercise.get().released = { requested: new Date() };

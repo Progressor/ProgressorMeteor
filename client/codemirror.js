@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	//language codes are in application-constants
+	//language codes are in \lib\application-constants.js
 
 	const themes = ['3024-day', '3024-night',
 									'ambiance-mobile', 'ambiance',
@@ -28,9 +28,29 @@
 	};
 
 	_.extend(Progressor, {
+
+		/**
+		 * Gets the supported CodeMirror themes.
+		 * @returns {string[]}
+		 */
 		getCodeMirrorThemes: () => themes,
+
+		/**
+		 * Gets the default CodeMirror theme.
+		 * @returns string
+		 */
 		getCodeMirrorDefaultTheme: () => defaultTheme,
+
+		/**
+		 * Gets the default CodeMirror mode (file type).
+		 * @returns string
+		 */
 		getCodeMirrorDefaultMode: () => defaultMode,
+
+		/**
+		 * Generates a simple CodeMirror configuration object for the current user.
+		 * @returns {{lineNumbers: boolean, lineWrapping: boolean, theme: string, mode: string}}
+		 */
 		getCodeMirrorConfiguration() {
 			const user = Meteor.user();
 			let ret = config;

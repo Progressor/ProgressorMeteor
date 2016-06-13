@@ -5,6 +5,10 @@
 		return Template.instance();
 	}
 
+	//only functionality:
+	//delegation to correct exercise type;
+	//if none selected, show selection
+
 	Template.exerciseEdit.onCreated(function () {
 		this.createType = new ReactiveVar(null);
 	});
@@ -20,9 +24,7 @@
 
 	Template.exerciseEdit.events(
 		{
-			'change #select-type'(event, template) {
-				template.createType.set(Progressor.getExerciseType(parseInt($(event.currentTarget).val())));
-			}
+			'change #select-type': (e, t) => t.createType.set(Progressor.getExerciseType(parseInt($(e.currentTarget).val())))
 		});
 
 })();

@@ -1,6 +1,10 @@
 (function () {
 	'use strict';
 
+	//////////////////////
+	// REACTIVE HELPERS //
+	//////////////////////
+
 	function getExecution() {
 		return Progressor.executions.findOne();
 	}
@@ -13,6 +17,10 @@
 		const result = getResult(exercise);
 		if (result) return result.results;
 	}
+
+	/////////////
+	// HELPERS //
+	/////////////
 
 	Template.examinationExecutionExamineeView.helpers(
 		{

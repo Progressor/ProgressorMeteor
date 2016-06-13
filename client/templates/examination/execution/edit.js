@@ -24,6 +24,10 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testValidExecution({ names, descriptions, durationMinutes, exercises }) {
 		const notEmpty = /[^\s]+/;
 		return names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
@@ -33,13 +37,18 @@
 	}
 
 	Template.examinationExecutionEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.isCreate = new ReactiveVar(false);
 		this.execution = new ReactiveVar(getDefaultExecution());
 		this.userValues = [];
-	});
 
-	Template.examinationExecutionEdit.onRendered(function () {
-		Meteor.typeahead.inject();
+		////////////////////////////////
+		// REACTIVE (LOCAL) EXECUTION //
+		////////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.executions.findOne();
@@ -52,8 +61,19 @@
 		});
 	});
 
+	///////////////////////
+	// USER AUTOCOMPLETE //
+	///////////////////////
+
+	Template.examinationExecutionEdit.onRendered(() => Meteor.typeahead.inject());
+
 	Template.examinationExecutionEdit.helpers(
 		{
+
+			///////////////////////
+			// EXECUTION HELPERS //
+			///////////////////////
+
 			safeExecution(context) {
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().execution.get();
@@ -82,6 +102,10 @@
 					weight: exercise.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
 
+			/////////////////////////
+			// USER SEARCH HELPERS //
+			/////////////////////////
+
 			users() {
 				const addedIds = tmpl().execution.get().examinees || [];
 				return _.map(Meteor.users.find({ _id: { $nin: addedIds } }).fetch(), user => {
@@ -91,6 +115,10 @@
 				});
 			}
 		});
+
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
 
 	function changeExecution(callback) {
 		return function (event, template) {
@@ -142,9 +170,13 @@
 
 	Template.examinationExecutionEdit.events(
 		{
+
+			///////////////////////
+			// COLLECTION EVENTS //
+			///////////////////////
+
 			'click .btn-move-exercise-up': reorderExecutionCollection('exercise', -1),
 			'click .btn-move-exercise-down': reorderExecutionCollection('exercise', +1),
-
 			'click #button-add-examinee': addExecutionCollection('examinee', (event, template) => {
 				const $input = template.$('#input-add-examinee'), user = template.userValues[$input.val()];
 				$input.val(null);
@@ -152,10 +184,18 @@
 			}),
 			'click .btn-remove-examinee': removeExecutionCollection('examinee'),
 
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'change [id^="input-name-"]': changeExecutionTranslation('name'),
 			'change [id^="textarea-description-"]': changeExecutionTranslation('description'),
 			'change #input-duration': changeExecution((event, template, $this) => template.execution.get().durationMinutes = parseInt($this.val())),
 			'change .input-weight': changeExecutionCollection('exercise', (e, t, $) => ({ weight: parseInt($.val()) })),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
 
 			'click .btn-save'(event, template) {
 				if (testValidExecution(template.execution.get()))

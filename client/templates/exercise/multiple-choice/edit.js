@@ -20,6 +20,10 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, options }) {
 		const notEmpty = /[^\s]+/;
 		return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
@@ -31,8 +35,17 @@
 	}
 
 	Template.multipleEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.isCreate = new ReactiveVar(false);
 		this.exercise = new ReactiveVar(getDefaultExercise());
+
+		///////////////////////////////
+		// REACTIVE (LOCAL) EXERCISE //
+		///////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
@@ -46,6 +59,10 @@
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
+
+	//////////////////////
+	// EXERCISE HELPERS //
+	//////////////////////
 
 	Template.multipleEdit.helpers(
 		{
@@ -83,6 +100,10 @@
 			})
 		});
 
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
+
 	function changeExercise(callback) {
 		return function (event, template) {
 			const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
@@ -104,12 +125,22 @@
 
 	Template.multipleEdit.events(
 		{
+
+			///////////////////////
+			// COLLECTION EVENTS //
+			///////////////////////
+
 			'click .btn-add-option': changeExercise(function (event, template, $this) {
 				_.each(template.exercise.get().options, e => e.options.splice(this.optionIndex + 1, 0, getDefaultExercise().options[0].options[0]));
 			}),
 			'click .btn-remove-option': changeExercise(function (event, template, $this) {
 				_.each(template.exercise.get().options, e => e.options.splice(this.optionIndex, 1));
 			}),
+
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? t.exercise.get().programmingLanguage = $.val() : null),
 			'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
 			'change #select-difficulty': changeExercise((e, t, $) => t.exercise.get().difficulty = parseInt($.val())),
@@ -127,6 +158,11 @@
 			}),
 			'change #checkbox-multiple-solutions': changeExercise((e, t, $) => t.exercise.get().multipleSolutions = $.prop('checked')),
 			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
+
 			'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
 				if ($this.hasClass('btn-release-request'))
 					template.exercise.get().released = { requested: new Date() };

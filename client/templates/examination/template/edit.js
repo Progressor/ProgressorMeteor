@@ -12,12 +12,20 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testValidExamination({ names, durationMinutes, exercises }) {
 		const notEmpty = /[^\s]+/;
 		return names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
 					 && durationMinutes > 0
 					 && exercises && exercises.length && _.every(exercises, e => e.weight > 0);
 	}
+
+	////////////////////////////
+	// EXERCISE SEARCH FILTER //
+	////////////////////////////
 
 	function getFilter() {
 		const flt = {};
@@ -32,9 +40,18 @@
 	}
 
 	Template.examinationTemplateEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.isCreate = new ReactiveVar(false);
 		this.examination = new ReactiveVar(getDefaultExamination());
 		this.filter = new ReactiveDict();
+
+		//////////////////////////////////
+		// REACTIVE (LOCAL) EXAMINATION //
+		//////////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.examinations.findOne();
@@ -48,6 +65,11 @@
 
 	Template.examinationTemplateEdit.helpers(
 		{
+
+			/////////////////////////
+			// EXAMINATION HELPERS //
+			/////////////////////////
+
 			safeExamination(context) {
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().examination.get();
@@ -68,6 +90,18 @@
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty)
 			})),
+			exercises: () => _.map(tmpl().examination.get().exercises, (e, i) => _.extend(
+				{
+					exerciseIndex: i,
+					isFirst: i === 0,
+					isLast: i === tmpl().examination.get().exercises.length - 1,
+					weight: e.weight
+				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
+
+			/////////////////////////////
+			// EXERCISE SEARCH HELPERS //
+			/////////////////////////////
+
 			results() {
 				const flt = getFilter();
 				if (!_.isEmpty(flt)) {
@@ -75,15 +109,12 @@
 					return _.chain(Progressor.exercises.find(_.extend(flt, { _id: { $nin: addedIds } }), { sort: [['lastEdited', 'desc']], limit: 25 }).fetch()).map(Progressor.joinCategory)/*.sortBy(i18n.getName)*/.value();
 				}
 			},
-			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`),
-			exercises: () => _.map(tmpl().examination.get().exercises, (e, i) => _.extend(
-				{
-					exerciseIndex: i,
-					isFirst: i === 0,
-					isLast: i === tmpl().examination.get().exercises.length - 1,
-					weight: e.weight
-				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id }))))
+			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
 		});
+
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
 
 	function changeExamination(callback) {
 		return function (event, template) {
@@ -131,22 +162,27 @@
 
 	Template.examinationTemplateEdit.events(
 		{
-			'keyup #input-name': _.debounce((e, t) => t.filter.set('name', $(e.currentTarget).val()), 250),
-			'change #select-type': (e, t) => t.filter.set('type', parseInt($(e.currentTarget).val())),
-			'change #select-language': (e, t) => t.filter.set('language', $(e.currentTarget).val()),
-			'change #select-category': (e, t) => t.filter.set('category', $(e.currentTarget).val()),
-			'change #select-difficulty': (e, t) => t.filter.set('difficulty', parseInt($(e.currentTarget).val())),
-			'change #checkbox-released': (e, t) => t.filter.set('visibilityReleased', $(e.currentTarget).prop('checked')),
-			'change #checkbox-unreleased': (e, t) => t.filter.set('visibilityUnreleased', $(e.currentTarget).prop('checked')),
+
+			///////////////////////
+			// COLLECTION EVENTS //
+			///////////////////////
 
 			'click .btn-add-exercise': addExaminationCollection('exercise', (e, t, $, c) => ({ exercise_id: c._id })),
 			'click .btn-remove-exercise': removeExaminationCollection('exercise'),
 			'click .btn-move-exercise-up': reorderExaminationCollection('exercise', -1),
 			'click .btn-move-exercise-down': reorderExaminationCollection('exercise', +1),
 
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'change [id^="input-name-"]': changeExaminationTranslation('name'),
 			'change #input-duration': changeExamination((e, t, $) => t.examination.get().durationMinutes = parseInt($.val())),
 			'change .input-weight': changeExaminationCollection('exercise', (e, t, $) => ({ weight: parseInt($.val()) })),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
 
 			'click .btn-save'(event, template) {
 				if (testValidExamination(template.examination.get()))
@@ -157,7 +193,20 @@
 				else
 					Progressor.showAlert(i18n('examination.templateIsNotValidMessage'));
 			},
-			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false))
+			'click .btn-delete': (e, t) => Meteor.call('deleteExamination', { _id: t.examination.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
+
+			////////////////////////////
+			// EXERCISE SEARCH EVENTS //
+			////////////////////////////
+
+			'keyup #input-name': _.debounce((e, t) => t.filter.set('name', $(e.currentTarget).val()), 250),
+			'change #select-type': (e, t) => t.filter.set('type', parseInt($(e.currentTarget).val())),
+			'change #select-language': (e, t) => t.filter.set('language', $(e.currentTarget).val()),
+			'change #select-category': (e, t) => t.filter.set('category', $(e.currentTarget).val()),
+			'change #select-difficulty': (e, t) => t.filter.set('difficulty', parseInt($(e.currentTarget).val())),
+			'change #checkbox-released': (e, t) => t.filter.set('visibilityReleased', $(e.currentTarget).prop('checked')),
+			'change #checkbox-unreleased': (e, t) => t.filter.set('visibilityUnreleased', $(e.currentTarget).prop('checked'))
+
 		});
 
 })();

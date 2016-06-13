@@ -1,17 +1,17 @@
 (function () {
 	'use strict';
 
-	/*
-	 * MAIN TEMPLATE
-	 */
+	///////////////////
+	// MAIN TEMPLATE //
+	///////////////////
 
 	Template.exerciseRelease.onRendered(function () {
 		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
 	});
 
-	/*
-	 * SUB-TEMPLATE EXERCISE LIST
-	 */
+	////////////////////////////////
+	// SUB-TEMPLATE EXERCISE LIST //
+	////////////////////////////////
 
 	function toggleReleaseExercise(release) {
 		return function () {

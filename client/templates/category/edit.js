@@ -12,6 +12,10 @@
 		return Template.instance();
 	}
 
+	/////////////////////////
+	// TEST ENTERED VALUES //
+	/////////////////////////
+
 	function testValidCategory({ programmingLanguage, names, descriptions }) {
 		const notEmpty = /[^\s]+/;
 		return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
@@ -20,7 +24,16 @@
 	}
 
 	Template.categoryEdit.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
 		this.category = new ReactiveVar(getDefaultCategory());
+
+		///////////////////////////////
+		// REACTIVE (LOCAL) CATEGORY //
+		///////////////////////////////
 
 		this.autorun(() => {
 			const live = Progressor.categories.findOne();
@@ -31,6 +44,10 @@
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
 	});
+
+	/////////////
+	// HELPERS //
+	/////////////
 
 	Template.categoryEdit.helpers(
 		{
@@ -47,6 +64,10 @@
 				description: i18n.getDescriptionForLanguage(tmpl().category.get(), id)
 			}))
 		});
+
+	////////////////////
+	// EVENT WRAPPERS //
+	////////////////////
 
 	function changeCategory(callback) {
 		return function (event, template) {
@@ -69,9 +90,19 @@
 
 	Template.categoryEdit.events(
 		{
+
+			////////////////////////
+			// DATA CHANGE EVENTS //
+			////////////////////////
+
 			'change #select-language': changeCategory((e, t, $) => !t.category.get()._id ? t.category.get().programmingLanguage = $.val() : null),
 			'change [id^="input-name-"]': changeCategoryTranslation('name'),
 			'change [id^="textarea-description-"]': changeCategoryTranslation('description'),
+
+			////////////////////////
+			// PERSISTENCE EVENTS //
+			////////////////////////
+
 			'click .btn-save'(event, template) {
 				if (testValidCategory(template.category.get()))
 					Meteor.call('saveCategory', template.category.get(), Progressor.handleError(r => Router.go('categoryExercises', { _id: r }), false));

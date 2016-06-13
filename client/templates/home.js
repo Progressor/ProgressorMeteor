@@ -1,12 +1,9 @@
 (function () {
 	'use strict';
 
-	const cols = { xs: 6, sm: 4, md: 3, lg: 2 };
-	const introTexts = [i18n('layout.logo') + ' ', i18n('layout.explanation')];
-
-	function getSeparators(idx) {
-		return _.filter(_.map(cols, (no, cod) => (idx + 1) % (12 / no) === 0 ? cod : null), cod => !!cod);
-	}
+	/////////////////////
+	// INTRO ANIMATION //
+	/////////////////////
 
 	Template.home.onRendered(function () {
 		this.introIndex = 0;
@@ -27,6 +24,17 @@
 	Template.home.onDestroyed(function () {
 		Meteor.clearInterval(this.introInterval);
 	});
+
+	////////////////////////////////////////
+	// PROGRAMMING LANGUAGE VISUALISATION //
+	////////////////////////////////////////
+
+	const cols = { xs: 6, sm: 4, md: 3, lg: 2 };
+	const introTexts = [i18n('layout.logo') + ' ', i18n('layout.explanation')];
+
+	function getSeparators(idx) {
+		return _.filter(_.map(cols, (no, cod) => (idx + 1) % (12 / no) === 0 ? cod : null), cod => !!cod);
+	}
 
 	Template.home.helpers(
 		{

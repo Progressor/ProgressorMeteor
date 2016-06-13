@@ -1,0 +1,19 @@
+//////////////////////
+// IMPORT BOOTSTRAP //
+//////////////////////
+@import "../lib/bootstrap-variables.less";
+@import "../lib/bootstrap-mixins.less";
+/////////////
+// LOGGING //
+/////////////
+.circle(@size, @background-color, @color) { display: inline-block; width: @size; line-height: @size; text-align: center; background-color: @background-color; border-radius: 50%; color: @color; }
+.log-overview {
+	&-indicator {
+		&-not-solved { .circle(3em, @brand-danger, white); /*border: 2px solid @brand-danger;*/ }
+		&-partial { .circle(3em, @brand-warning, white); /*border: 2px solid @brand-warning;*/ }
+		&-success { .circle(3em, @brand-success, white); /*border: 2px solid @brand-success;*/ }
+		&-not-evaluated { .circle(3em, @brand-info, white); /*border: 2px solid @brand-info;*/ }
+	}
+	&-value { font-size: 1.5em; }
+	&-no-activity { font-size: 8em; }
+}

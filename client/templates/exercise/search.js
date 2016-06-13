@@ -7,6 +7,10 @@
 		return Template.instance();
 	}
 
+	///////////////////
+	// SEARCH FILTER //
+	///////////////////
+
 	function getFilter() {
 		const flt = {};
 		if (tmpl().filter.get('name') && tmpl().filter.get('name').length > 2) flt.names = { $elemMatch: { name: new RegExp(tmpl().filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
@@ -16,12 +20,21 @@
 		return flt;
 	}
 
+	////////////////////////
+	// TEMPLATE VARIABLES //
+	////////////////////////
+
 	Template.exerciseSearch.onCreated(function () {
 		this.filter = new ReactiveDict();
 	});
 
 	Template.exerciseSearch.helpers(
 		{
+
+			//////////////////////
+			// EXERCISE HELPERS //
+			//////////////////////
+
 			columnWidth: () => 12 / NUMBER_OF_COLUMNS,
 			exerciseSearchData: l => () => ({ _id: l }),
 			difficultiesExercises(difficulties, exercises) {
@@ -50,12 +63,21 @@
 				if (!i) return i18n.getProgrammingLanguage(l);
 				else return `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
 			},
+
+			////////////////////
+			// SEARCH HELPERS //
+			////////////////////
+
 			results() {
 				const flt = getFilter();
 				if (!_.isEmpty(flt)) return _.chain(Progressor.exercises.find(flt, { sort: [['requested.released', 'desc']], limit: 25 }).fetch()).map(Progressor.joinCategory)/*.sortBy(i18n.getName)*/.value();
 			},
 			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
 		});
+
+	///////////////////
+	// SEARCH EVENTS //
+	///////////////////
 
 	Template.exerciseSearch.events(
 		{

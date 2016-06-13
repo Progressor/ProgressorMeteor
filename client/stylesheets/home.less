@@ -1,8 +1,11 @@
+//////////////////////
+// IMPORT BOOTSTRAP //
+//////////////////////
 @import "../lib/bootstrap-variables.less";
 @import "../lib/bootstrap-mixins.less";
-/*
- * INTRO
- */
+///////////
+// INTRO //
+///////////
 @font-face {
 	font-family: OCRAEXT;
 	src: url("/fonts/OCRAEXT.TTF") format("truetype"); //source: http://fontzone.net/font-details/ocr-a-extended
@@ -19,14 +22,16 @@
 @-moz-keyframes pulsate { .keyframes-pulsate(); }
 @-o-keyframes pulsate { .keyframes-pulsate(); }
 @keyframes pulsate { .keyframes-pulsate(); }
-/*
- * PROGRAMMING LANGUAGES
- */
+///////////////////////////
+// PROGRAMMING LANGUAGES //
+///////////////////////////
 .language-link { cursor: pointer; }
 div.language-logo { text-align: center; }
 i.language-logo { font-size: 10em; color: @brand-primary; }
 .panel-primary i.language-logo { color: #FFFFFF; }
-//custom logos
+//
+// custom logos //
+//
 i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; height: 1em; width: 1em; background-repeat: no-repeat; -webkit-background-size: 1em; background-size: 1em; }
 .logo-custom(@lang) {
 	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-void-%s.svg")', @lang, replace('@{brand-primary}', '#', '')); }

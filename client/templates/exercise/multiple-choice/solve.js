@@ -5,6 +5,10 @@
 		return Template.instance();
 	}
 
+	//////////////////////
+	// REACTIVE HELPERS //
+	//////////////////////
+
 	function getExercise(forceRefresh = false) {
 		return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
 	}
@@ -21,11 +25,6 @@
 			return tmpl().evaluationResults.get();
 	}
 
-	Template.multipleSolve.onCreated(function () {
-		this.isResult = new ReactiveVar(false);
-		this.evaluationResults = new ReactiveVar([]);
-	});
-
 	function getExecutionExercise(offset) {
 		const execution = Progressor.executions.findOne();
 		let exerciseIndex = -1;
@@ -34,8 +33,19 @@
 	}
 
 	Template.multipleSolve.onCreated(function () {
+
+		////////////////////////
+		// TEMPLATE VARIABLES //
+		////////////////////////
+
+		this.isResult = new ReactiveVar(false);
+		this.evaluationResults = new ReactiveVar([]);
 		this.progressUpdateInterval = -1;
 		this.progress = { started: false, activities: 0 };
+
+		/////////////
+		// LOGGING //
+		/////////////
 
 		if (!tmpl().isResult.get())
 			this.autorun(() => {
@@ -56,6 +66,10 @@
 	Template.multipleSolve.onDestroyed(function () {
 		Meteor.clearInterval(this.progressUpdateInterval);
 	});
+
+	/////////////
+	// HELPERS //
+	/////////////
 
 	Template.multipleSolve.helpers(
 		{
@@ -89,7 +103,17 @@
 
 	Template.multipleSolve.events(
 		{
+
+			/////////////
+			// LOGGING //
+			/////////////
+
 			'click #button-solution': (e, t) => t.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
+
+			/////////////////
+			// SAVE ANSWER //
+			/////////////////
+
 			'change .input-option'(event, template) {
 				if (!template.progress.started) {
 					template.progress.started = true;
