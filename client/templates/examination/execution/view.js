@@ -42,6 +42,7 @@
 					if (execution.examinees && execution.examinees.length) return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
 					else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).value();
 			},
+			nofResults: u => Progressor.results.find({ user_id: u._id, solved: { $exists: true } }).count(),
 			exercises: user => _.map(getExecution().exercises, exercise => _.extend(
 				{
 					weight: exercise.weight,
