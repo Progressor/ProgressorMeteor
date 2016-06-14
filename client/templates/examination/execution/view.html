@@ -48,7 +48,7 @@
 						</div>
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-sm-7" style="border-right: 1px solid #333;">
+								<div class="col-sm-7 col-log-overview">
 									<ul class="list-inline list-multiline">
 										{{#each exercises this}}
 											<li>
@@ -67,7 +67,7 @@
 										{{/each}}
 									</ul>
 								</div>
-								<div class="col-sm-5 text-center">
+								<div class="col-sm-5 col-log-overview text-center">
 									{{#if hasActivity this}}
 										<strong class="xsmall block">Evaluationen</strong>
 										<span class="log-overview-value">{{logEvaluations this}}</span>

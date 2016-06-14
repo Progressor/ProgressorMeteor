@@ -3,6 +3,15 @@
 //////////////////////
 @import "../lib/bootstrap-variables.less";
 @import "../lib/bootstrap-mixins.less";
+///////////////////
+// VERTICAL LINE //
+///////////////////
+.col-log-overview(@position) {
+	border: @brand-primary solid 0;
+	border-@{position}-width: 1px;
+}
+.col-log-overview { .col-log-overview(right); }
+.col-log-overview ~ .col-log-overview { .col-log-overview(left); margin-left: -1px; }
 /////////////
 // LOGGING //
 /////////////
