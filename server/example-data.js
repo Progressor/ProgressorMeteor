@@ -92,7 +92,10 @@ Meteor.startup(function () {
 					{ language: 'en', name: `Basics - ${new Date().getFullYear()}` },
 					{ language: 'de', name: `Basics - ${new Date().getFullYear()}` }
 				],
-				descriptions: e.descriptions,
+				descriptions: [
+					{ language: 'en', description: 'The basic syntax of a programming language is shown by means of a simple Hello World exercise.' },
+					{ language: 'en', description: 'Die Grundlagen einer Programmiersprache werden am besten mit einer einfachen Hallo Welt-Aufgabe gezeigt.' }
+				],
 				startTime: new Date(new Date().getFullYear(), 0, 1),
 				durationMinutes: e.durationMinutes,
 				exercises: _.chain(e.exercises).map(exercise => ({
