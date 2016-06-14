@@ -101,6 +101,7 @@
 					isLast: index === tmpl().execution.get().exercises.length - 1,
 					weight: exercise.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
+			totalWeight: e => _.reduce(e.exercises, (w, e) => w + e.weight, 0),
 
 			/////////////////////////
 			// USER SEARCH HELPERS //

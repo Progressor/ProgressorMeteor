@@ -78,6 +78,17 @@
 									</tr>
 								{{/each}}
 							</tbody>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="text-right"><label>{{i18n "examination.totalWeightLabel"}}:</label></td>
+									<td>{{totalWeight this}}</td>
+								</tr>
+							</tfoot>
 						</table>
 					{{else}}
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
@@ -85,13 +96,13 @@
 				</section>
 				<div class="btn-toolbar separated-top">
 					{{#unless startTime}}
-						<div class="btn-group">
+						<div class="btn-group separated-bottom">
 							<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
 							<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
 						</div>
 					{{/unless}}
 					{{#if _id}}
-						<div class="btn-group">
+						<div class="btn-group separated-bottom">
 							{{#unless startTime}}
 								<button class="btn btn-info btn-start-execution">{{i18n "examination.startExecutionButton"}}</button>
 							{{/unless}}

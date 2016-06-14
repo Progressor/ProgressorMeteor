@@ -97,6 +97,7 @@
 					isLast: i === tmpl().examination.get().exercises.length - 1,
 					weight: e.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
+			totalWeight: e => _.reduce(e.exercises, (w, e) => w + e.weight, 0),
 
 			/////////////////////////////
 			// EXERCISE SEARCH HELPERS //
