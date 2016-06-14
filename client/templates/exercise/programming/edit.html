@@ -1,6 +1,6 @@
 <template name="programmingEdit">
 	{{i18nTooltips}}
-	{{#with safeExercise this}}
+	{{#with safeExercise}}
 		<header>
 			{{#if _id}}
 				<nav>
@@ -274,7 +274,7 @@
 									{{#unless hasSingleFunction}}
 										<option value="">{{i18n "form.selectPleaseChoose"}}</option>
 									{{/unless}}
-									{{#each functions this}}
+									{{#each functions}}
 										{{#if name}}
 											<option selected={{isActive}}>{{name}}</option>
 										{{/if}}
@@ -302,9 +302,9 @@
 							{{else}}
 								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 							{{/each}}
-							{{#if testCaseEvaluated this}}
+							{{#if testCaseEvaluated}}
 								{{#unless executionFatal}}
-									{{#unless testCaseSuccess this}}
+									{{#unless testCaseSuccess}}
 										<small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
 										<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
 									{{/unless}}
@@ -314,9 +314,9 @@
 						<div class="col-sm-2">
 							<button class="btn btn-success btn-sm btn-add-testcase" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
 							<button class="btn btn-danger btn-sm btn-remove-testcase" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
-							{{#if testCaseEvaluated this}}
+							{{#if testCaseEvaluated}}
 							{{! #unless executionFatal}}
-								<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
+								<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess}}success{{else}}danger{{/if}}"></span></span>
 							{{! /unless}}
 							{{/if}}
 						</div>

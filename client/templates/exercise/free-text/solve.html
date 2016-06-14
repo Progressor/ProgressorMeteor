@@ -1,6 +1,6 @@
 <template name="textSolve">
 	{{i18nTooltips}}
-	{{#with safeExercise this}}
+	{{#with safeExercise}}
 		<header>
 			{{#unless execution_id}}
 				<nav class="row">
@@ -20,7 +20,7 @@
 							{{/unless}}
 						</ol>
 					</div>
-					{{#if canEdit this}}
+					{{#if canEdit}}
 						<div class="col-sm-4 text-right">
 							<ul class="breadcrumb">
 								<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>

@@ -49,12 +49,12 @@
 						<td>{{round (multiply (divide weight totalWeight) 100)}}%</td>
 						<td>
 							<div class="progress nomargin">
-								{{#unless hasResult this}}
+								{{#unless hasResult}}
 									<div class="progress-bar progress-bar-danger" style="width: 100%;"></div>
 								{{else}}
-									{{#if evaluated this}}
-										<div class="progress-bar progress-bar-success" style="width: {{multiply (successPercentage this) 100}}%;"></div>
-										<div class="progress-bar progress-bar-warning" style="width: {{multiply (subtract 1 (successPercentage this)) 100}}%;"></div>
+									{{#if evaluated}}
+										<div class="progress-bar progress-bar-success" style="width: {{multiply successPercentage 100}}%;"></div>
+										<div class="progress-bar progress-bar-warning" style="width: {{multiply (subtract 1 successPercentage) 100}}%;"></div>
 									{{else}}
 										<div class="progress-bar progress-bar-info" style="width: 100%;"></div>
 									{{/if}}

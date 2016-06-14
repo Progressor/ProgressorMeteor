@@ -73,12 +73,14 @@
 
 	Template.multipleSolve.helpers(
 		{
-			safeExercise(exerciseOrResult) {
-				tmpl().isResult.set(exerciseOrResult.exercise_id);
-				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
+			safeExercise() {
+				tmpl().isResult.set(this.exercise_id);
+				return this.exercise_id ? this.exercise : this;
 			},
 			isResult: () => tmpl().isResult.get(),
-			canEdit: e => !tmpl().isResult.get() && (e.author_id === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)),
+			canEdit() {
+				return !tmpl().isResult.get() && (this.author_id === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN));
+			},
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			previousExerciseSolveData: () => getExecutionExercise(-1),

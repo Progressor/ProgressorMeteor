@@ -16,8 +16,8 @@
 	Template.exerciseEdit.helpers(
 		{
 			exerciseTypes: () => Progressor.getExerciseTypes(),
-			exerciseType(exercise) {
-				const type = tmpl().createType.get() || Progressor.getExerciseType((exercise.exercise_id ? exercise.exercise : exercise).type);
+			exerciseType() {
+				const type = tmpl().createType.get() || Progressor.getExerciseType((this.exercise_id ? this.exercise : this).type);
 				return type ? `${type.template}Edit` : null;
 			}
 		});

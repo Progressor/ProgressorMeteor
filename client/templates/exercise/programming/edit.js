@@ -209,8 +209,8 @@
 			// EXERCISE HELPERS //
 			//////////////////////
 
-			safeExercise(context) {
-				tmpl().isCreate.set(!context || !context._id);
+			safeExercise() {
+				tmpl().isCreate.set(!this || !this._id);
 				return tmpl().exercise.get();
 			},
 			canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
@@ -236,16 +236,18 @@
 				description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
 			})),
 			hasSingleFunction: () => _.filter(tmpl().exercise.get().functions, f => f.name).length === 1,
-			functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
-				original: _function, functionIndex,
-				isActive: testCase && testCase.functionName === _function.name,
-				outputType: _function.outputTypes[0],
-				inputs: _.chain(_function.inputNames.length > _function.inputTypes.length ? _function.inputNames.length : _function.inputTypes.length || 1).range().map(i => ({
-					functionIndex, inputNameIndex: i, inputTypeIndex: i,
-					name: _function.inputNames ? _function.inputNames[i] : null,
-					type: _function.inputTypes ? _function.inputTypes[i] : null
-				})).value()
-			})),
+			functions() {
+				return _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
+					original: _function, functionIndex,
+					isActive: this && this.functionName === _function.name,
+					outputType: _function.outputTypes[0],
+					inputs: _.chain(_function.inputNames.length > _function.inputTypes.length ? _function.inputNames.length : _function.inputTypes.length || 1).range().map(i => ({
+						functionIndex, inputNameIndex: i, inputTypeIndex: i,
+						name: _function.inputNames ? _function.inputNames[i] : null,
+						type: _function.inputTypes ? _function.inputTypes[i] : null
+					})).value()
+				}));
+			},
 			testCases: () => _.map(tmpl().exercise.get().testCases, (testCase, testCaseIndex) => {
 				function adjustValues(valueProperty, nameProperty, typeProperty) {
 					const values = testCase[`${valueProperty}s`], names = _function ? _function[`${nameProperty}s`] : null, types = _function ? _function[`${typeProperty}s`] : null;
@@ -282,9 +284,15 @@
 				if (versionInformation) return i18n('exercise.help.versionInformationMessage', versionInformation.languageVersion, versionInformation.compilerName, versionInformation.compilerVersion, versionInformation.platformName, versionInformation.platformVersion, versionInformation.platformArchitecture);
 			},
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(tmpl().exercise.get(), tmpl().executionResults.get()),
-			testCaseEvaluated: c => Progressor.isTestCaseEvaluated(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
-			testCaseSuccess: c => Progressor.isTestCaseSuccess(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
-			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
+			testCaseEvaluated() {
+				return Progressor.isTestCaseEvaluated(tmpl().exercise.get(), this.original, tmpl().executionResults.get());
+			},
+			testCaseSuccess(){
+				return Progressor.isTestCaseSuccess(tmpl().exercise.get(), this.original, tmpl().executionResults.get());
+			},
+			testCaseActualOutput(){
+				return Progressor.getActualTestCaseOutput(tmpl().exercise.get(), this.original, tmpl().executionResults.get());
+			},
 			executionFatal: () => Progressor.isExerciseFatal(tmpl().exercise.get(), tmpl().executionResults.get())
 		});
 

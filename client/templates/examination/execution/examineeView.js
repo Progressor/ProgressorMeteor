@@ -5,10 +5,6 @@
 	// REACTIVE HELPERS //
 	//////////////////////
 
-	function getExecution() {
-		return Progressor.executions.findOne();
-	}
-
 	function getResult(exercise) {
 		return Progressor.results.findOne({ exercise_id: exercise._id });
 	}
@@ -24,12 +20,20 @@
 
 	Template.examinationExecutionExamineeView.helpers(
 		{
-			exercises: () => _.map(getExecution().exercises, (e, i) => _.extend({ weight: e.weight }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
-			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight, 0),
-			hasResult: e => getResult(e),
-			evaluated: e => e.type === 1 && Progressor.isExerciseEvaluated(e, getResults(e)),
+			exercises() {
+				return _.map(this.exercises, (e, i) => _.extend({ weight: e.weight }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id }))));
+			},
+			hasResult() {
+				return getResult(this);
+			},
+			evaluated() {
+				return this.type === 1 && Progressor.isExerciseEvaluated(this, getResults(this));
+			},
+			successPercentage() {
+				return Progressor.getExerciseSuccessPercentage(this, getResults(this));
+			},
 			endTime: (t, d) => new Date(t.getTime() + d * 60000),
-			successPercentage: e => Progressor.getExerciseSuccessPercentage(e, getResults(e))
+			totalWeight: () => _.reduce(Progressor.executions.findOne().exercises, (w, e) => w + e.weight, 0)
 		});
 
 })();

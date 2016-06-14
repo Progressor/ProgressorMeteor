@@ -6,7 +6,9 @@
 
 	Template.exerciseSolve.helpers(
 		{
-			exerciseType: t => `${Progressor.getExerciseType((t.exercise_id ? t.exercise : t).type).template}Solve`
+			exerciseType() {
+				return `${Progressor.getExerciseType((this.exercise_id ? this.exercise : this).type).template}Solve`;
+			}
 		});
 
 })();

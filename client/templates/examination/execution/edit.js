@@ -74,8 +74,8 @@
 			// EXECUTION HELPERS //
 			///////////////////////
 
-			safeExecution(context) {
-				tmpl().isCreate.set(!context || !context._id);
+			safeExecution() {
+				tmpl().isCreate.set(!this || !this._id);
 				return tmpl().execution.get();
 			},
 			examinationTemplateEditData: () => ({ _id: Progressor.executions.findOne().examination_id }),
@@ -102,7 +102,7 @@
 					isLast: index === tmpl().execution.get().exercises.length - 1,
 					weight: exercise.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
-			totalWeight: e => _.reduce(e.exercises, (w, e) => w + e.weight, 0),
+			totalWeight: () => _.reduce(this.exercises, (w, e) => w + e.weight, 0),
 
 			/////////////////////////
 			// USER SEARCH HELPERS //

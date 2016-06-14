@@ -106,12 +106,14 @@
 
 	Template.programmingSolve.helpers(
 		{
-			safeExercise(exerciseOrResult) {
-				tmpl().isResult.set(!!exerciseOrResult.exercise_id);
-				return exerciseOrResult.exercise_id ? exerciseOrResult.exercise : exerciseOrResult;
+			safeExercise() {
+				tmpl().isResult.set(!!this.exercise_id);
+				return this.exercise_id ? this.exercise : this;
 			},
 			isResult: () => tmpl().isResult.get(),
-			canEdit: e => !tmpl().isResult.get() && (e.author_id === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN)),
+			canEdit(){
+				return !tmpl().isResult.get() && (this.author_id === Meteor.userId() || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN));
+			},
 			exerciseSearchData: () => ({ _id: getExercise().programmingLanguage }),
 			exerciseSolveData: () => ({ _id: getResult() ? getResult().exercise_id : getExercise()._id }),
 			previousExerciseSolveData: () => getExecutionExercise(-1),
@@ -136,12 +138,22 @@
 				const versionInformation = tmpl().versionInformation.get();
 				if (versionInformation) return i18n('exercise.help.versionInformationMessage', versionInformation.languageVersion, versionInformation.compilerName, versionInformation.compilerVersion, versionInformation.platformName, versionInformation.platformVersion, versionInformation.platformArchitecture);
 			},
-			testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
-			testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
+			testCaseSignature(){
+				return Progressor.getTestCaseSignature(getExercise(), this);
+			},
+			testCaseExpectedOutput(){
+				return Progressor.getExpectedTestCaseOutput(getExercise(), this);
+			},
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(getExercise(), getExecutionResults()),
-			testCaseSuccess: c => Progressor.isTestCaseSuccess(getExercise(), c, getExecutionResults()),
-			testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
-			testCaseExecutionTime: c => Progressor.getTestCaseExecutionTime(getExercise(), c, getExecutionResults()),
+			testCaseSuccess(){
+				return Progressor.isTestCaseSuccess(getExercise(), this, getExecutionResults());
+			},
+			testCaseActualOutput(){
+				return Progressor.getActualTestCaseOutput(getExercise(), this, getExecutionResults());
+			},
+			testCaseExecutionTime() {
+				return Progressor.getTestCaseExecutionTime(getExercise(), this, getExecutionResults());
+			},
 			executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults()),
 			showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
 		});

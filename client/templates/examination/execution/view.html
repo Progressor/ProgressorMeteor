@@ -52,24 +52,24 @@
 							<h3 class="panel-title">
 								#{{add @index 1}}
 								<span class="separated-left">{{userName this}}</span>
-								<strong class="pull-right">{{nofResults this}}/{{../exercises.length}}</strong>
+								<strong class="pull-right">{{nofResults}}/{{../exercises.length}}</strong>
 							</h3>
 						</div>
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-7 col-log-overview">
 									<ul class="list-inline list-multiline">
-										{{#each exercises this}}
+										{{#each exercises}}
 											<li>
 												{{#if result}}
 													{{#linkTo route="resultView" data=result}}
-														<span class="log-overview-indicator-{{exerciseStatus this}}" title="<strong>{{i18nName this}}</strong><br />{{i18n "exercise.typeLabel"}}: <strong>{{i18nExerciseType type}}</strong><br />{{i18n "exercise.weightLabel"}}: <strong>{{weight}}</strong>" data-html="true" data-toggle="tooltip">
-															{{round (multiply (successPercentage this) 100)}}%
+														<span class="log-overview-indicator-{{exerciseStatus}}" title="<strong>{{i18nName this}}</strong><br />{{i18n "exercise.typeLabel"}}: <strong>{{i18nExerciseType type}}</strong><br />{{i18n "exercise.weightLabel"}}: <strong>{{weight}}</strong>" data-html="true" data-toggle="tooltip">
+															{{round (multiply successPercentage 100)}}%
 														</span>
 													{{/linkTo}}
 												{{else}}
-													<span class="log-overview-indicator-{{exerciseStatus this}}" title="<strong>{{i18nName this}}</strong><br />{{i18n "exercise.typeLabel"}}: <strong>{{i18nExerciseType type}}</strong><br />{{i18n "exercise.weightLabel"}}: <strong>{{weight}}</strong>" data-html="true" data-toggle="tooltip">
-														{{round (multiply (successPercentage this) 100)}}%
+													<span class="log-overview-indicator-{{exerciseStatus}}" title="<strong>{{i18nName this}}</strong><br />{{i18n "exercise.typeLabel"}}: <strong>{{i18nExerciseType type}}</strong><br />{{i18n "exercise.weightLabel"}}: <strong>{{weight}}</strong>" data-html="true" data-toggle="tooltip">
+														{{round (multiply successPercentage 100)}}%
 													</span>
 												{{/if}}
 											</li>
@@ -77,13 +77,13 @@
 									</ul>
 								</div>
 								<div class="col-sm-5 col-log-overview text-center">
-									{{#if hasActivity this}}
-										<strong class="xsmall block">Evaluationen</strong>
-										<span class="log-overview-value">{{logEvaluations this}}</span>
-										<strong class="xsmall block">Aktionen</strong>
-										<span class="log-overview-value">{{round (logActivity this)}}</span>
-										<strong class="xsmall block">Zeichen</strong>
-										<span class="log-overview-value">{{round (logDifference this)}}</span>
+									{{#if hasActivity}}
+										<strong class="xsmall block">{{i18n "examination.logEvaluationsLabel"}}</strong>
+										<span class="log-overview-value">{{logEvaluations}}</span>
+										<strong class="xsmall block">{{i18n "examination.logActivityLabel"}}</strong>
+										<span class="log-overview-value">{{round logActivity}}</span>
+										<strong class="xsmall block">{{i18n "examination.logDifferenceLabel"}}</strong>
+										<span class="log-overview-value">{{round logDifference}}</span>
 									{{else}}
 										<span class="glyphicon glyphicon-remove text-danger log-overview-no-activity"></span>
 									{{/if}}
