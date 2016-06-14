@@ -61,7 +61,7 @@
 				<div class="col-md-6">
 					<ul class="list-unstyled separated-left">
 						{{#each i18nOptions this}}
-							<li class="{{#if ../solutionVisible}}{{resultEvaluation @index}}{{/if}}">
+							<li class="{{resultEvaluation @index}}">
 								<div class="{{questionType}}">
 									<label>
 										<input type="{{questionType}}" name="input-option" value="{{@index}}" class="input-option" {{checkedStatus @index}} disabled={{isResult}}>

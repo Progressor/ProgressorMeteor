@@ -94,15 +94,15 @@
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 					{{/if}}
 				</section>
-				<div class="btn-toolbar separated-top">
+				<div class="btn-toolbar separated-top separated-bottom">
 					{{#unless startTime}}
-						<div class="btn-group separated-bottom">
+						<div class="btn-group">
 							<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
 							<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
 						</div>
 					{{/unless}}
 					{{#if _id}}
-						<div class="btn-group separated-bottom">
+						<div class="btn-group">
 							{{#unless startTime}}
 								<button class="btn btn-info btn-start-execution">{{i18n "examination.startExecutionButton"}}</button>
 							{{/unless}}

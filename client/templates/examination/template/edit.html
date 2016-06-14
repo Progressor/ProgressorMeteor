@@ -129,6 +129,20 @@
 									<td></td>
 								</tr>
 							</thead>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="text-right"><label>{{i18n "examination.totalWeightLabel"}}:</label></td>
+									<td>{{totalWeight this}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tfoot>
 							<tbody>
 								{{#each exercises}}
 									<tr>
@@ -151,29 +165,18 @@
 									</tr>
 								{{/each}}
 							</tbody>
-							<tfoot>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td class="text-right"><label>{{i18n "examination.totalWeightLabel"}}:</label></td>
-									<td>{{totalWeight this}}</td>
-								</tr>
-							</tfoot>
 						</table>
 					{{else}}
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 					{{/if}}
 				</section>
-				<div class="btn-toolbar separated-top">
-					<div class="btn-group separated-bottom">
+				<div class="btn-toolbar separated-top separated-bottom">
+					<div class="btn-group">
 						<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
 						<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
 					</div>
 					{{#if _id}}
-						<div class="btn-group ">
+						<div class="btn-group">
 							{{#linkTo route="examinationExecutionCreate" class="btn btn-info" query=executionCreateQuery}}{{i18n "examination.createExecutionButton"}}{{/linkTo}}
 						</div>
 					{{/if}}
