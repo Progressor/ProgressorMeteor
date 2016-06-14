@@ -157,7 +157,9 @@
 			'change .input-option-checked': changeExercise(function (event, template, $this) {
 				const $multiple = template.$('#checkbox-multiple-solutions');
 				template.exercise.get().solution = _.chain([_.filter(template.exercise.get().solution, i => i !== this.optionIndex), _.first([this.optionIndex], $this.prop('checked') && $this.val() === 'true' ? 1 : 0)]).flatten().sortBy(_.identity).value();
-				$multiple.prop('disabled', template.exercise.get().solution.length > 1).prop('checked', $multiple.prop('checked') || template.exercise.get().solution.length > 1);
+				$multiple.prop('disabled', template.exercise.get().solution.length > 1);
+				if (template.exercise.get().solution.length > 1)
+					template.exercise.get().multipleSolutions = true;
 			}),
 			'change #checkbox-multiple-solutions': changeExercise((e, t, $) => t.exercise.get().multipleSolutions = $.prop('checked')),
 			'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
