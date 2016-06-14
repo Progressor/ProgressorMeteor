@@ -10,8 +10,10 @@
 	border: 0 solid @brand-primary;
 	border-@{position}-width: 1px;
 }
-.col-log-overview { .col-log-overview(right); }
-.col-log-overview ~ .col-log-overview { .col-log-overview(left); margin-left: -1px; }
+.col-log-overview {
+	.col-log-overview(right);
+	~ .col-log-overview { .col-log-overview(left); margin-left: -1px; }
+}
 /////////////
 // LOGGING //
 /////////////
