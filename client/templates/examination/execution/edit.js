@@ -91,7 +91,9 @@
 					isLast: index === tmpl().execution.get().exercises.length - 1,
 					weight: exercise.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
-			totalWeight: () => _.reduce(this.exercises, (w, e) => w + e.weight, 0),
+			totalWeight() {
+				return _.reduce(this.exercises, (w, e) => e.weight ? e.weight + w : w, 0);
+			},
 
 			/////////////////////////
 			// USER SEARCH HELPERS //
@@ -198,9 +200,9 @@
 					Progressor.showAlert(i18n('examination.executionIsNotValidMessage'));
 			},
 			'click .btn-delete': (e, t) => Meteor.call('deleteExecution', { _id: t.execution.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
-			'click btn-start-execution'(event, template) {
-				Meteor.call('startExecution', { _id: template.execution._id }, Progressor.handleError(() => {
-					Router.go('examinationExecutionView', { _id: template.execution._id });
+			'click .btn-start-execution'(event, template) {
+				Meteor.call('startExecution', { _id: template.execution.get()._id }, Progressor.handleError(() => {
+					Router.go('examinationExecutionView', { _id: template.execution.get()._id });
 				}, false));
 			},
 

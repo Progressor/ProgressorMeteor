@@ -97,10 +97,12 @@
 	{{else}}
 		<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
 	{{/if}}
-	<div class="btn-group separated-top separated-bottom">
-		<button class="btn btn-info btn-export-pdf-empty">{{i18n "examination.exportPDFEmptyButton"}}</button>
-		<button class="btn btn-info btn-export-pdf-solved">{{i18n "examination.exportPDFSolvedButton"}}</button>
-		<button class="btn btn-info btn-export-csv">{{i18n "examination.exportCSVButton"}}</button>
+	<div class="btn-toolbar separated-top separated-bottom">
+		<div class="btn-group">
+			<button class="btn btn-info btn-export-pdf-empty">{{i18n "examination.exportPDFEmptyButton"}}</button>
+			<button class="btn btn-info btn-export-pdf-solved">{{i18n "examination.exportPDFSolvedButton"}}</button>
+			<button class="btn btn-info btn-export-csv">{{i18n "examination.exportCSVButton"}}</button>
+		</div>
 	</div>
 	<hr />
 	<div class="row">

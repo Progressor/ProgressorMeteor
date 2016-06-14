@@ -100,7 +100,7 @@
 					weight: e.weight
 				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
 			totalWeight() {
-				return _.reduce(this.exercises, (w, e) => w + e.weight, 0);
+				return _.reduce(this.exercises, (w, e) => e.weight ? e.weight + w : w, 0);
 			},
 
 			/////////////////////////////
