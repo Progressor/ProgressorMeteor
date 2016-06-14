@@ -208,7 +208,10 @@
 					Progressor.showAlert(i18n('examination.executionIsNotValidMessage'));
 			},
 			'click .btn-delete': (e, t) => Meteor.call('deleteExecution', { _id: t.execution.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
-			'click btn-start-execution': function (event, template) {
+			'click btn-start-execution'(event, template) {
+				Meteor.call('startExecution', { _id: template.execution._id }, Progressor.handleError(() => {
+					Router.go('examinationExecutionView', { _id: template.execution._id });
+				}, false));
 			}
 		});
 
