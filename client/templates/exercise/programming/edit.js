@@ -148,7 +148,6 @@
 				if (this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
 				this.exercise.set(Progressor.joinCategory(_exercise));
-				Meteor.call('getVersionInformation', live.programmingLanguage, Progressor.handleError(r => this.versionInformation.set(r), false));
 				this.executionResults.set([]);
 				this.fragmentTyped = false;
 				this.solutionTyped = false;
@@ -193,8 +192,10 @@
 				}));
 			if (this.exercise.get() && this.exercise.get().programmingLanguage) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(this.exercise.get().programmingLanguage);
-				if (programmingLanguage)
+				if (programmingLanguage) {
+					Meteor.call('getVersionInformation', programmingLanguage._id, Progressor.handleError(r => this.versionInformation.set(r), false));
 					this.$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
+				}
 			}
 			if (!this.executionResults.get().length && result)
 				this.executionResults.set(result.results);
