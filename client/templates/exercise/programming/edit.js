@@ -93,9 +93,9 @@
 	function testValidExercise(exercise) {
 		const notEmpty = /[^\s]+/;
 		const { programmingLanguage, category_id, difficulty, names, descriptions, functions, testCases, released } = exercise;
-		const category = Progressor.categories.find({ _id: category_id });
+		const category = Progressor.categories.findOne({ _id: category_id });
 		return programmingLanguage && _.any(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
-					 && category_id && !category && !(category.private && released)
+					 && category_id && category && !(category.private && released)
 					 && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
 					 && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
 					 && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
