@@ -23,7 +23,7 @@
 					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
 				else if (_execution._id && _execution.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-				else if (_execution._id && _execution.released && _execution.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				else if (_execution._id && _execution.startTime && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				if (!execution.author_id)
@@ -48,6 +48,8 @@
 					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
 				else if (execution._id && execution.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+				else if (execution._id && execution.startTime && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				return Progressor.executions.update(execution._id, {
 					$set: {
@@ -82,7 +84,7 @@
 			/**
 			 * Deletes an execution.
 			 * @param execution {{_id: string}} execution to delete
-			 * @returns {number} the number of executions affected
+			 * @returns {number} the number of documents affected
 			 */
 			deleteExecution(execution) {
 				check(execution, Match.ObjectIncluding({ _id: String }));
@@ -94,7 +96,9 @@
 				else if (execution._id && execution.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
 
-				return Progressor.executions.remove(execution._id).rowsAffected;
+				return Progressor.executions.remove(execution._id).rowsAffected
+							 + Progressor.exercises.remove({ execution_id: execution._id }).rowsAffected
+							 + Progressor.results.remove({ 'exercises.execution_id': execution._id }).rowsAffected;
 			}
 		});
 
