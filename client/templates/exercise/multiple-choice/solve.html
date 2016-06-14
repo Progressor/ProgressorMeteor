@@ -61,7 +61,7 @@
 				<div class="col-md-6">
 					<ul class="list-unstyled separated-left">
 						{{#each i18nOptions this}}
-							<li class="{{resultEvaluation @index}}">
+							<li class="{{#if ../solutionVisible}}{{resultEvaluation @index}}{{/if}}">
 								<div class="{{questionType}}">
 									<label>
 										<input type="{{questionType}}" name="input-option" value="{{@index}}" class="input-option" {{checkedStatus @index}} disabled={{isResult}}>
@@ -73,9 +73,6 @@
 					</ul>
 					{{#unless isResult}}
 						<button id="button-save-answer" class="btn btn-primary btn-sm">{{i18n "exercise.saveAnswerButton"}}</button>
-						{{#if solutionVisible}}
-							<button id="button-solution" class="btn btn-primary btn-sm">{{i18n "exercise.showSolutionButton"}}</button>
-						{{/if}}
 					{{/unless}}
 				</div>
 			</div>
