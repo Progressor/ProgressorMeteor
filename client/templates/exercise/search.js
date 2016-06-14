@@ -38,7 +38,7 @@
 			columnWidth: () => 12 / NUMBER_OF_COLUMNS,
 			exerciseSearchData: l => () => ({ _id: l }),
 			difficultiesExercises(difficulties, exercises) {
-				const exercisesSorted = _.chain(exercises).sortBy(i18n.getName);
+				const exercisesSorted = _.chain(exercises).sortBy(e => i18n.getName(e).toLowerCase());
 				return _.map(difficulties, difficulty => {
 					const difficultyExercises = exercisesSorted.where({ difficulty }).value(), nofDifficultyExercises = difficultyExercises.length, exercisesPerColumn = Math.ceil(nofDifficultyExercises / NUMBER_OF_COLUMNS);
 					return {
@@ -50,7 +50,7 @@
 			},
 			exerciseTypes: Progressor.getExerciseTypes,
 			difficulties: Progressor.getDifficulties,
-			categories: () => Progressor.categories.find().fetch(),
+			categories: () => Progressor.categories.find({ private: { $exists: false } }).fetch(),
 			evaluated() {
 				const result = Progressor.results.findOne({ exercise_id: this._id });
 				return result && Progressor.isExerciseEvaluated(this, result.results);

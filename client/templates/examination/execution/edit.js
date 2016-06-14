@@ -84,17 +84,6 @@
 				name: i18n.getNameForLanguage(tmpl().execution.get(), id),
 				description: i18n.getDescriptionForLanguage(tmpl().execution.get(), id)
 			})),
-			exerciseTypes: Progressor.getExerciseTypes,
-			difficulties: Progressor.getDifficulties,
-			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
-				name: i18n.getProgrammingLanguage(language._id)
-			})),
-			i18nCategories: () => Progressor.categories.find({ programmingLanguage: tmpl().filter.get('language') }).map(category => _.extend({}, category, {
-				name: i18n.getName(category)
-			})),
-			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
-				_id: difficulty, name: i18n.getDifficulty(difficulty)
-			})),
 			exercises: () => _.map(tmpl().execution.get().exercises, (exercise, index) => _.extend(
 				{
 					exerciseIndex: index,

@@ -7,7 +7,7 @@
 					<ol class="breadcrumb">
 						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nName category}}{{/linkTo}}</li>
+						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
 						<li class="active">{{i18nDifficulty difficulty}}</li>
 						<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
 						<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>

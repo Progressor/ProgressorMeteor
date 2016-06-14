@@ -1,7 +1,17 @@
 Meteor.startup(function () {
 	'use strict';
 
-	if (Progressor.categories.find().count() === 0
+	_.each(Progressor.getProgrammingLanguages(), l => {
+		if (!Progressor.categories.find({ programmingLanguage: l._id, private: true }).count())
+			Progressor.categories.insert(
+				{
+					programmingLanguage: l._id,
+					private: true,
+					lastEdited: new Date()
+				});
+	});
+
+	if (Progressor.categories.find({ private: { $exists: false } }).count() === 0
 			&& Progressor.exercises.find().count() === 0
 			&& Progressor.results.find().count() === 0
 			&& Progressor.examinations.find().count() === 0

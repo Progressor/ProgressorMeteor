@@ -15,8 +15,12 @@
 						programmingLanguage: String
 					}));
 
+				const _category = category._id ? Progressor.categories.findOne({ _id: category._id }) : category;
+
 				if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
+				else if (_category.private)
+					throw new Meteor.Error('illegal-operation', 'You cannot edit a private pseudo-category.');
 
 				if (!category.author_id)
 					category.author_id = this.userId;

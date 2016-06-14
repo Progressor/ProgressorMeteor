@@ -8,7 +8,7 @@
 						<ol class="breadcrumb">
 							<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
 							<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-							<li>{{#linkTo route="categoryExercises" data=category}}{{i18nName category}}{{/linkTo}}</li>
+							<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
 							<li class="active">{{i18nDifficulty difficulty}}</li>
 							{{#unless isResult}}
 								<li class="active">{{i18nName this}}</li>
@@ -164,13 +164,15 @@
 			</div>
 		</section>
 		{{#if category}}
-			<hr />
-			<section>
-				<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nName category)}}</h3>
-				<p>
-					{{#markdown}}{{i18nDescription category}}{{/markdown}}
-				</p>
-			</section>
+			{{#unless category.private}}
+				<hr />
+				<section>
+					<h3>{{i18n "exercise.categoryDescriptionSubtitle" (i18nName category)}}</h3>
+					<p>
+						{{#markdown}}{{i18nDescription category}}{{/markdown}}
+					</p>
+				</section>
+			{{/unless}}
 		{{/if}}
 	{{/with}}
 </template>
