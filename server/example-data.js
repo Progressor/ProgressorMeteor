@@ -93,7 +93,7 @@ Meteor.startup(function () {
 					{ language: 'de', name: `Basics - ${new Date().getFullYear()}` }
 				],
 				descriptions: e.descriptions,
-				startTime: new Date(new Date().getYear(), 0, 1),
+				startTime: new Date(new Date().getFullYear(), 0, 1),
 				durationMinutes: e.durationMinutes,
 				exercises: _.chain(e.exercises).map(exercise => ({
 					weight: exercise.weight,
