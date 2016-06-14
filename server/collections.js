@@ -330,6 +330,10 @@
 		check(exerciseId, String);
 		publishExecutions.call(this, { exercises: { $elemMatch: { exercise_id: exerciseId } } });
 	});
+	Meteor.publish('executionsByExamination', function (examinationId) {
+		check(examinationId, String);
+		publishExecutions.call(this, { examination_id: examinationId });
+	});
 
 	///////////////////////////
 	// HOUSTON CONFIGURATION //
