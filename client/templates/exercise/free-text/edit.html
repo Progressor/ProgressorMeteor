@@ -107,7 +107,7 @@
 				<div class="form-group form-group-sm">
 					<label for="input-pattern" class="control-label">
 						{{i18n "exercise.solutionPatternLabel"}}
-						{{!-- <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> --}}
+						<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
 					</label>
 					<input type="text" id="input-pattern" class="form-control" value="{{pattern}}" />
 				</div>
@@ -132,7 +132,6 @@
 					<div class="form-group form-group-sm">
 						<label for="textarea-solution" class="control-label">
 							{{i18n "exercise.solutionLabel"}}
-							{{!-- <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> --}}
 						</label>
 						{{#with (solution.[0])}}
 							<textarea id="textarea-solution" class="input-solution form-control" rows="5" cols="40">{{value}}</textarea>
