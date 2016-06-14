@@ -8,7 +8,10 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				{{#linkTo route="home" class="navbar-brand"}}<img src="/images/logo-progressor.png" alt="{{i18n "layout.title"}}" id="imageLogo" width="280" height="46" />{{/linkTo}}
+				{{#linkTo route="home" class="navbar-brand"}}
+					<span id="textLogo" class="navbar-link">{{i18n "layout.logo"}}</span>
+					<img src="/images/logo-progressor.png" alt="{{i18n "layout.title"}}" id="imageLogo" width="280" height="46" />
+				{{/linkTo}}
 			</div>
 			<div id="navbar-collapse" class="collapse navbar-collapse">
 				<nav>

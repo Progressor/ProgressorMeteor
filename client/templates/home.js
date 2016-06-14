@@ -5,6 +5,8 @@
 	// INTRO ANIMATION //
 	/////////////////////
 
+	const introTexts = [i18n('layout.logo') + ' ', i18n('layout.explanation')];
+
 	Template.home.onRendered(function () {
 		this.introIndex = 0;
 		this.introInterval = Meteor.setInterval(() => {
@@ -30,7 +32,6 @@
 	////////////////////////////////////////
 
 	const cols = { xs: 6, sm: 4, md: 3, lg: 2 };
-	const introTexts = [i18n('layout.logo') + ' ', i18n('layout.explanation')];
 
 	function getSeparators(idx) {
 		return _.filter(_.map(cols, (no, cod) => (idx + 1) % (12 / no) === 0 ? cod : null), cod => !!cod);

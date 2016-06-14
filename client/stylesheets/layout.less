@@ -7,6 +7,7 @@
 // VARIABLES //
 ///////////////
 @header-height: 60px;
+@logo-width: 280px;
 @default-margin: 1em;
 ////////////
 // LAYOUT //
@@ -25,6 +26,12 @@ input[type="number"] { max-width: 7em; }
 // NAVIGATION BAR //
 ////////////////////
 #imageLogo { margin-top: -8px; }
+@media (max-width: (@logo-width + 75px)) {
+	#imageLogo { display: none; }
+}
+@media (min-width: (@logo-width + 76px)) {
+	#textLogo { display: none; }
+}
 .navbar .divider-vertical { height: @header-height; margin: 0 9px; border-right: 1px solid #FFFFFF; }
 .navbar-inverse .divider-vertical { border-right-color: #222222; border-left-color: #111111; }
 @media (max-width: @grid-float-breakpoint-max) {
