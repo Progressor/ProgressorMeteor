@@ -212,7 +212,13 @@
 				Meteor.call('startExecution', { _id: template.execution._id }, Progressor.handleError(() => {
 					Router.go('examinationExecutionView', { _id: template.execution._id });
 				}, false));
-			}
+			},
+
+			///////////////////
+			// EXPORT EVENTS //
+			///////////////////
+
+			'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(getExecution())
 		});
 
 })();

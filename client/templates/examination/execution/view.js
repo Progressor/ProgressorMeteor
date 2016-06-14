@@ -103,12 +103,13 @@
 			evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES
 		});
 
-	////////////
-	// EVENTS //
-	////////////
-
 	Template.examinationExecutionView.events(
 		{
+
+			//////////////
+			// DURATION //
+			//////////////
+
 			// 'click *': () => tmpl().extendDuration.set(false),
 			'click #input-extend-duration': e => e.stopPropagation(),
 			'click #show-extend-duration'(event, template) {
@@ -124,7 +125,15 @@
 					Meteor.call('saveExecution', execution, Progressor.handleError(() => Progressor.showAlert(`Successfully extended examination time by ${extendByMinutes} min`, 'success'), false));
 				} else
 					Progressor.showAlert(`Examination time not extended`, 'info');
-			}
+			},
+
+			///////////////////
+			// EXPORT EVENTS //
+			///////////////////
+
+			'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(getExecution()),
+			'click .btn-export-pdf-solved': (e, t) => Progressor.generateExecutionPDF(getExecution(), true),
+			'click .btn-export-csv': (e, t) => Progressor.generateExecutionCSV(getExecution())
 		});
 
 })();
