@@ -59,6 +59,19 @@
 									<td></td>
 								</tr>
 							</thead>
+							<tfoot>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="text-right"><label class="nomargin">{{i18n "examination.totalWeightLabel"}}:</label></td>
+									<td>{{totalWeight this}}</td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tfoot>
 							<tbody>
 								{{#each exercises}}
 									<tr>
@@ -78,17 +91,6 @@
 									</tr>
 								{{/each}}
 							</tbody>
-							<tfoot>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td class="text-right"><label>{{i18n "examination.totalWeightLabel"}}:</label></td>
-									<td>{{totalWeight this}}</td>
-								</tr>
-							</tfoot>
 						</table>
 					{{else}}
 						<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
