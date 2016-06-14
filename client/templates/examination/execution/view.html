@@ -1,6 +1,15 @@
 <template name="examinationExecutionView">
 	{{i18nTooltips}}
-	<h2>{{i18n "examination.overviewTitle" (i18nName this)}}</h2>
+	<header>
+		<nav>
+			<ol class="breadcrumb">
+				<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+				<li>{{#linkTo route="examinationTemplateEdit" data=examinationTemplateEditData}}{{i18nName examination}}{{/linkTo}}</li>
+				<li class="active">{{i18nName this}}</li>
+			</ol>
+		</nav>
+		<h2>{{i18n "examination.overviewTitle" (i18nName this)}}</h2>
+	</header>
 	<div class="well form-horizontal">
 		<p>{{i18nDescription this}}</p>
 		<div class="row">

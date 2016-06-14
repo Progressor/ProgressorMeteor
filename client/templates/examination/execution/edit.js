@@ -55,7 +55,7 @@
 			const examination = Progressor.examinations.findOne();
 			const detached = Tracker.nonreactive(() => this.execution.get());
 			if (!live || !detached || live._id !== detached._id)
-				this.execution.set(live || createExecution(examination) || getDefaultExecution());
+				this.execution.set(Progressor.joinExamination(live || createExecution(examination) || getDefaultExecution()));
 			else if (live.lastEditor_id !== Meteor.userId())
 				Progressor.showAlert(i18n('form.documentChangedMessage'));
 		});
@@ -78,6 +78,7 @@
 				tmpl().isCreate.set(!context || !context._id);
 				return tmpl().execution.get();
 			},
+			examinationTemplateEditData: () => ({ _id: Progressor.executions.findOne().examination_id }),
 			i18nExecutionNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
 				_id: id, language: name, isActive: id === i18n.getLanguage(),
 				name: i18n.getNameForLanguage(tmpl().execution.get(), id),
@@ -200,7 +201,7 @@
 
 			'click .btn-save'(event, template) {
 				if (testValidExecution(template.execution.get()))
-					Meteor.call('saveExecution', template.execution.get(), Progressor.handleError(result => {
+					Meteor.call('saveExecution', _.omit(template.execution.get(), 'examination'), Progressor.handleError(result => {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
 						Router.go('examinationExecutionEdit', { _id: result });
 					}, false));

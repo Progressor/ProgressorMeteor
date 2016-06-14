@@ -125,7 +125,8 @@
 		check(id, String);
 		check(isExecute, Boolean);
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
-		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
+		if (result)
+			publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute);
 	});
 
 	//examination exercises
@@ -270,6 +271,13 @@
 	Meteor.publish('examination', function (id) {
 		check(id, String);
 		publishExaminations.call(this, { _id: id });
+	});
+
+	Meteor.publish('examinationByExecution', function (id) {
+		check(id, String);
+		const result = Progressor.executions.findOne({ _id: id });
+		if (result)
+			publishExaminations.call(this, { _id: result.examination_id });
 	});
 
 	// executions //

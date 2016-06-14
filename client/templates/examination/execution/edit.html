@@ -5,7 +5,18 @@
 	{{i18nTooltips}}
 	{{#with safeExecution this}}
 		<header>
-			<h2>{{#if _id}}{{i18n "examination.editExecutionTitle" (i18nName this)}}{{else}}{{i18n "examination.createExecutionTitle"}}{{/if}}</h2>
+			{{#if _id}}
+				<nav>
+					<ol class="breadcrumb">
+						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+						<li>{{#linkTo route="examinationTemplateEdit" data=examinationTemplateEditData}}{{i18nName examination}}{{/linkTo}}</li>
+						<li class="active">{{i18nName this}}</li>
+					</ol>
+				</nav>
+				<h2>{{i18n "examination.editExecutionTitle" (i18nName this)}}</h2>
+			{{else}}
+				<h2>}{{i18n "examination.createExecutionTitle"}}</h2>
+			{{/if}}
 		</header>
 		<div class="row">
 			<section class="col-md-7">

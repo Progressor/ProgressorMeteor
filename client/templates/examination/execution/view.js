@@ -49,6 +49,12 @@
 	Template.examinationExecutionView.helpers(
 		{
 
+			/////////////////////
+			// GENERIC HELPERS //
+			/////////////////////
+
+			examinationTemplateEditData: () => ({ _id: getExecution().examination_id }),
+
 			////////////////////
 			// RESULT HELPERS //
 			////////////////////
