@@ -125,8 +125,7 @@
 		check(id, String);
 		check(isExecute, Boolean);
 		const result = Progressor.results.findOne({ user_id: this.userId, _id: id });
-		if (result)
-			publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute);
+		return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 	});
 
 	//examination exercises
