@@ -3,7 +3,7 @@
 </template>
 <template name="examinationExecutionEdit">
 	{{i18nTooltips}}
-	{{#with safeExecution}}
+	{{#with safeExecution this}}
 		<header>
 			{{#if _id}}
 				<nav>
@@ -78,7 +78,7 @@
 									<td></td>
 									<td></td>
 									<td class="text-right"><label class="nomargin">{{i18n "examination.totalWeightLabel"}}:</label></td>
-									<td>{{totalWeight}}</td>
+									<td>{{totalWeight this}}</td>
 									<td></td>
 									<td></td>
 								</tr>

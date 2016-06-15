@@ -51,13 +51,13 @@
 			exerciseTypes: Progressor.getExerciseTypes,
 			difficulties: Progressor.getDifficulties,
 			categories: () => Progressor.categories.find({ private: { $exists: false } }).fetch(),
-			evaluated() {
-				const result = Progressor.results.findOne({ exercise_id: this._id });
-				return result && Progressor.isExerciseEvaluated(this, result.results);
+			evaluated(exercise) {
+				const result = Progressor.results.findOne({ exercise_id: exercise._id });
+				return result && Progressor.isExerciseEvaluated(exercise, result.results);
 			},
-			success() {
-				const result = Progressor.results.findOne({ exercise_id: this._id });
-				return result && Progressor.isExerciseSuccess(this, result.results);
+			success(exercise) {
+				const result = Progressor.results.findOne({ exercise_id: exercise._id });
+				return result && Progressor.isExerciseSuccess(exercise, result.results);
 			},
 			i18nPageTitle (i, l, c) {
 				if (!i) return i18n.getProgrammingLanguage(l);

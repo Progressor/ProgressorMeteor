@@ -1,6 +1,6 @@
 <template name="programmingSolve">
 	{{i18nTooltips}}
-	{{#with safeExercise}}
+	{{#with safeExercise this}}
 		<header>
 			{{#unless execution_id}}
 				<nav class="row">
@@ -20,7 +20,7 @@
 							{{/unless}}
 						</ol>
 					</div>
-					{{#if canEdit}}
+					{{#if canEdit this}}
 						<div class="col-sm-4 text-right">
 							<ul class="breadcrumb">
 								<li>{{#linkTo route="exerciseEdit" data=this}}{{i18n "exercise.editButton"}}{{/linkTo}}</li>
@@ -112,30 +112,30 @@
 											<tr>
 												{{#if testCasesEvaluated}}
 													<td>
-														{{#if testCaseSuccess}}
+														{{#if testCaseSuccess this}}
 															<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.testCase.successMessage"}}" data-toggle="tooltip"></span>
 														{{else}}
 															<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.testCase.failureMessage"}}" data-toggle="tooltip"></span>
 														{{/if}}
 													</td>
 												{{/if}}
-												<td>{{testCaseSignature}}</td>
+												<td>{{testCaseSignature this}}</td>
 												<td>
-													<pre>{{testCaseExpectedOutput}}</pre>
+													<pre>{{testCaseExpectedOutput this}}</pre>
 													{{#if testCasesEvaluated}}
-														{{#unless testCaseSuccess}}
+														{{#unless testCaseSuccess this}}
 															<small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
-															<pre class="text-danger">{{testCaseActualOutput}}</pre>
+															<pre class="text-danger">{{testCaseActualOutput this}}</pre>
 														{{/unless}}
 													{{/if}}
 												</td>
-												{{!-- <td>{{testCaseExecutionTime}}</td> --}}
+												{{!-- <td>{{testCaseExecutionTime this}}</td> --}}
 											</tr>
 										{{else}}
 											<tr>
 												{{#if testCasesEvaluated}}
 													<td>
-														{{#if testCaseSuccess}}
+														{{#if testCaseSuccess this}}
 															<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.executionSuccessMessage"}}" data-toggle="tooltip"></span>
 														{{else}}
 															<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.executionFailureMessage"}}" data-toggle="tooltip"></span>

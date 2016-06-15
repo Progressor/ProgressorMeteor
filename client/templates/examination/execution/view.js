@@ -68,22 +68,14 @@
 					if (execution.examinees && execution.examinees.length) return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
 					else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).sortBy(u => Progressor.getUserName(u).toLowerCase()).value();
 			},
-			nofResults() {
-				return Progressor.results.find({ user_id: this._id, solved: { $exists: true } }).count();
-			},
-			exercises() {
-				return _.map(getExecution().exercises, exercise => _.extend(
-					{
-						weight: exercise.weight,
-						result: Progressor.results.findOne({ user_id: this._id, exercise_id: exercise.exercise_id })
-					}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id }))));
-			},
-			exerciseStatus() {
-				return !this.result ? 'not-solved' : !Progressor.isExerciseEvaluated(this, this.result.results) ? 'not-evaluated' : Progressor.isExerciseSuccess(this, this.result.results) ? 'success' : 'partial';
-			},
-			successPercentage() {
-				return Progressor.getExerciseSuccessPercentage(this, this.result ? this.result.results : null);
-			},
+			nofResults: u => u ? Progressor.results.find({ user_id: u._id, solved: { $exists: true } }).count() : 0,
+			exercises: user => _.map(getExecution().exercises, exercise => _.extend(
+				{
+					weight: exercise.weight,
+					result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null
+				}, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id })))),
+			exerciseStatus: e => !e.result ? 'not-solved' : !Progressor.isExerciseEvaluated(e, e.result.results) ? 'not-evaluated' : Progressor.isExerciseSuccess(e, e.result.results) ? 'success' : 'partial',
+			successPercentage: e => Progressor.getExerciseSuccessPercentage(e, e.result ? e.result.results : null),
 			totalSuccessPercentage(user) {
 				const execution = getExecution();
 				return _.chain(execution.exercises)
@@ -95,23 +87,23 @@
 			// LOG HELPERS //
 			/////////////////
 
-			hasActivity() {
+			hasActivity(user) {
 				tmpl().intervalDependency.depend();
-				return getResultLogs(this, ACTIVITY_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_STARTED_TYPE, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE).length;
+				return getResultLogs(user, ACTIVITY_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_STARTED_TYPE, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE).length;
 			},
-			logEvaluations() {
+			logEvaluations(user) {
 				tmpl().intervalDependency.depend();
-				return getResultLogs(this, EVALUATION_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_EVALUATED_TYPE).length;
+				return getResultLogs(user, EVALUATION_INTERVAL_MINUTES * 60, Progressor.RESULT_LOG_EVALUATED_TYPE).length;
 			},
-			logActivity() {
+			logActivity(user) {
 				tmpl().intervalDependency.depend();
-				const log = getResultLog(this, 30, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
+				const log = getResultLog(user, 30, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
 				return log ? log.intervalSeconds ? log.activities / log.intervalSeconds : log.activities : 0;
 			},
-			logDifference() {
+			logDifference(user) {
 				tmpl().intervalDependency.depend();
-				const log = getResultLog(this, 30, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
-				return log && log.difference ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
+				const log = getResultLog(user, 30, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
+				return log ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
 			},
 			activityIntervalMin: () => ACTIVITY_INTERVAL_MINUTES,
 			evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES

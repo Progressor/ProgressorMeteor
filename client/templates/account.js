@@ -33,24 +33,14 @@
 
 			currentUserEmail: () => Progressor.getUserEmail(Meteor.user()),
 			currentUserName: () => Progressor.getUserName(Meteor.user(), true),
-			results(){
-				return _.map(this.results, r => _.extend({ isExercise: true, isResult: true, result: _.omit(r, 'exercise') }, r.exercise));
-			},
-			createdExercises(){
-				return _.map(this.createdExercises, e => _.extend({ isExercise: true }, e));
-			},
-			createdExaminations(){
-				return _.map(this.createdExaminations, e => _.extend({ isExamination: true }, e));
-			},
-			createdExecutions(){
-				return _.map(this.createdExecutions, e => _.extend({ isExamination: true, isExecution: true }, e));
-			},
-			archive(){
-				return _.chain(_.map(this.archivedExercises, e => _.extend({ isArchive: true, isExercise: true }, e)))
-					.union(_.map(this.archivedExaminations, e => _.extend({ isArchive: true, isExamination: true }, e)),
-								 _.map(this.archivedExecutions, e => _.extend({ isArchive: true, isExamination: true, isExecution: true }, e)))
-					.sortBy(d => d.lastEdited).value().reverse();
-			},
+			results: c => _.map(c.results, r => _.extend({ isExercise: true, isResult: true, result: _.omit(r, 'exercise') }, r.exercise)),
+			createdExercises: c => _.map(c.createdExercises, e => _.extend({ isExercise: true }, e)),
+			createdExaminations: c => _.map(c.createdExaminations, e => _.extend({ isExamination: true }, e)),
+			createdExecutions: c => _.map(c.createdExecutions, e => _.extend({ isExamination: true, isExecution: true }, e)),
+			archive: c => _.chain(_.map(c.archivedExercises, e => _.extend({ isArchive: true, isExercise: true }, e)))
+				.union(_.map(c.archivedExaminations, e => _.extend({ isArchive: true, isExamination: true }, e)),
+							 _.map(c.archivedExecutions, e => _.extend({ isArchive: true, isExamination: true, isExecution: true }, e)))
+				.sortBy(d => d.lastEdited).value().reverse(),
 
 			// user search helpers //
 
@@ -128,12 +118,8 @@
 	Template.account_listPanel.helpers(
 		{
 			randomId: () => Random.id(),
-			evaluated() {
-				return Progressor.isExerciseEvaluated(this, this.result.results);
-			},
-			success() {
-				return Progressor.isExerciseSuccess(this, this.result.results);
-			}
+			evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
+			success: (e, r) => Progressor.isExerciseSuccess(e, r)
 		});
 
 	Template.account_listPanel.events(

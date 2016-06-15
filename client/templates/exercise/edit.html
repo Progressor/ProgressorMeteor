@@ -2,8 +2,8 @@
 	{{> exerciseEdit}}
 </template>
 <template name="exerciseEdit">
-	{{#if exerciseType}}
-		{{> Template.dynamic template=exerciseType}}
+	{{#if exerciseType this}}
+		{{> Template.dynamic template=(exerciseType this)}}
 	{{else}}
 		<div class="form-inline text-center separated-top">
 			<div class="form-group">

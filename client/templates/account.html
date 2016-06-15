@@ -6,11 +6,11 @@
 	<div class="row">
 		{{#if currentUser}}
 			<div class="col-md-8">
-				{{> account_listPanel title=(i18n "account.solvedExercisesSubtitle") exercises=results isExercise=true isResult=true}}
-				{{> account_listPanel title=(i18n "account.createdExercisesSubtitle") exercises=createdExercises isExercise=true}}
-				{{> account_listPanel title=(i18n "account.createdExaminationsSubtitle") exercises=createdExaminations isExamination=true}}
-				{{> account_listPanel title=(i18n "account.createdExecutionSubtitle") exercises=createdExecutions isExecution=true isExamination=true}}
-				{{> account_listPanel title=(i18n "account.archiveSubtitle") exercises=archive isArchive=true}}
+				{{> account_listPanel title=(i18n "account.solvedExercisesSubtitle") exercises=(results this) isExercise=true isResult=true}}
+				{{> account_listPanel title=(i18n "account.createdExercisesSubtitle") exercises=(createdExercises this) isExercise=true}}
+				{{> account_listPanel title=(i18n "account.createdExaminationsSubtitle") exercises=(createdExaminations this) isExamination=true}}
+				{{> account_listPanel title=(i18n "account.createdExecutionSubtitle") exercises=(createdExecutions this) isExecution=true isExamination=true}}
+				{{> account_listPanel title=(i18n "account.archiveSubtitle") exercises=(archive this) isArchive=true}}
 			</div>
 			<div class="col-md-4">
 				<section class="well form-horizontal">
@@ -103,8 +103,8 @@
 								<td>
 									{{#if isResult}}
 										{{#linkTo route="resultView" data=result}}{{i18nName this}}{{/linkTo}}
-										{{#if evaluated}}
-											{{#if success}}
+										{{#if evaluated this result.results}}
+											{{#if success this result.results}}
 												<span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.successMessage"}}" data-toggle="tooltip"></span>
 											{{else}}
 												<span class="glyphicon glyphicon-remove text-danger" title="{{i18n "exercise.failureMessage"}}" data-toggle="tooltip"></span>
