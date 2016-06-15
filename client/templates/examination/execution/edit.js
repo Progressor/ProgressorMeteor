@@ -210,7 +210,7 @@
 			// EXPORT EVENTS //
 			///////////////////
 
-			'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(getExecution())
+			'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(Progressor.executions.findOne())
 		});
 
 })();
