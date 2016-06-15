@@ -46,7 +46,7 @@ Meteor.startup(function () {
 						{ language: 'de', name: 'Hallo, Welt!' }
 					],
 					programmingLanguage: l._id,
-					category_id: Progressor.categories.findOne({ programmingLanguage: l._id })._id,
+					category_id: Progressor.categories.findOne({ programmingLanguage: l._id, private: { $exists: false } })._id,
 					difficulty: 1,
 					type: 1,
 					descriptions: [
