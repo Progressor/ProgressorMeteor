@@ -1,13 +1,13 @@
 (function () {
 	'use strict';
 
-	function getExecution() {
-		return Progressor.executions.findOne();
-	}
-
 	//////////////////////
 	// REACTIVE HELPERS //
 	//////////////////////
+
+	function getExecution() {
+		return Progressor.executions.findOne();
+	}
 
 	function getResult(exercise) {
 		return Progressor.results.findOne({ exercise_id: exercise._id });

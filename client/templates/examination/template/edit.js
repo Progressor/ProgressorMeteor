@@ -84,11 +84,9 @@
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id)
 			})),
-			i18nCategories() {
-				return Progressor.categories.find({ programmingLanguage: tmpl().filter.get('language') }).map(category => _.extend({}, category, {
-					name: i18n.getCategoryName(category, this && this.author_id ? this.author_id : Meteor.userId())
-				}));
-			},
+			i18nCategories: () => Progressor.categories.find({ programmingLanguage: tmpl().filter.get('language') }).map(category => _.extend({}, category, {
+				name: i18n.getCategoryName(category, tmpl().examination.get() && tmpl().examination.get().author_id ? tmpl().examination.get().author_id : Meteor.userId())
+			})),
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty)
 			})),
