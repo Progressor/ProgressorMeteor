@@ -132,6 +132,7 @@
 		this.blacklist = new ReactiveVar(null);
 		this.blacklistMatches = new ReactiveVar([]);
 		this.versionInformation = new ReactiveVar(null);
+		this.wasCreate = false;
 		this.fragmentTyped = false;
 		this.solutionTyped = false;
 		Session.set('fragment', null);
@@ -144,9 +145,9 @@
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
 			const detached = Tracker.nonreactive(() => this.exercise.get());
-			if (!live || !detached || live._id !== detached._id) {
+			if (!live || !detached || live._id !== detached._id || this.wasCreate !== this.isCreate.get()) {
 				let _exercise = live || getDefaultExercise();
-				if (this.isCreate.get())
+				if (this.wasCreate = this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
 				this.exercise.set(Progressor.joinCategory(_exercise));
 				this.executionResults.set([]);
