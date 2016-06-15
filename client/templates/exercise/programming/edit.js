@@ -172,7 +172,7 @@
 		// COLLAPSIBLE PANELS //
 		////////////////////////
 
-		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
+		this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon-collapse-up, .glyphicon-collapse-down').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
 
 		//////////////////////////////
 		// CODEMIRROR CONFIGURATION //
