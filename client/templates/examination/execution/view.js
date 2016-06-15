@@ -111,7 +111,7 @@
 			logDifference() {
 				tmpl().intervalDependency.depend();
 				const log = getResultLog(this, 30, Progressor.RESULT_LOG_EVALUATED_TYPE, Progressor.RESULT_LOG_PROGRESS_UPDATE_TYPE);
-				return log ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
+				return log && log.difference ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
 			},
 			activityIntervalMin: () => ACTIVITY_INTERVAL_MINUTES,
 			evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES
