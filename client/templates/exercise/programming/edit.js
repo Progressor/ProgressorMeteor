@@ -445,10 +445,12 @@
 					solution: Session.get('solution')
 				});
 				if ($this.hasClass('btn-release-request'))
-					if (Progressor.isExerciseSuccess(template.exercise.get(), template.executionResults.get()))
-						template.exercise.get().released = { requested: new Date() };
+					if (!Progressor.isExerciseSuccess(template.exercise.get(), template.executionResults.get()))
+						return Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
+					else if (!template.exercise.get().category || template.exercise.get().category.private)
+						return Progressor.showAlert(i18n('exercise.isNotValidMessage'));
 					else
-						Progressor.showAlert(i18n('exercise.isNotTestedMessage'));
+						template.exercise.get().released = { requested: new Date() };
 				if (testValidExercise(template.exercise.get()))
 					Meteor.call('saveExercise', _.omit(template.exercise.get(), 'category'), Progressor.handleError(result => {
 						Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
