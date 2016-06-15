@@ -81,9 +81,9 @@
 										<strong class="xsmall block">{{i18n "examination.logEvaluationsLabel"}}</strong>
 										<span class="log-overview-value">{{logEvaluations this}}</span>
 										<strong class="xsmall block">{{i18n "examination.logActivityLabel"}}</strong>
-										<span class="log-overview-value">{{round logActivity this}}</span>
+										<span class="log-overview-value">{{round (logActivity this)}}</span>
 										<strong class="xsmall block">{{i18n "examination.logDifferenceLabel"}}</strong>
-										<span class="log-overview-value">{{round logDifference this}}</span>
+										<span class="log-overview-value">{{round (logDifference this)}}</span>
 									{{else}}
 										<span class="glyphicon glyphicon-remove text-danger log-overview-no-activity"></span>
 									{{/if}}
