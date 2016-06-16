@@ -83,17 +83,29 @@
 					{{/unless}}
 				</div>
 				{{#if showSolution}}
-					<div class="col-md-6 width-auto">
-						<div class="text-result">
-							<label>{{i18n "exercise.solutionLabel"}}</label>
-							<ul class="list-group">
+					{{#if pattern}}
+						<div class="col-md-6 width-auto">
+							<div class="text-result">
+								<label>{{i18n "exercise.solutionLabel"}}</label>
+								<ul class="list-group">
+									{{#each solution}}
+										<li class="list-group-item">{{this}}</li>
+									{{/each}}
+								</ul>
+								<button id="button-close" class="btn btn-primary btn-sm">{{i18n "exercise.closeButton"}}</button>
+							</div>
+						</div>
+					{{else}}
+						<div class="col-md-6 width-auto">
+							<div class="text-result">
+								<label>{{i18n "exercise.solutionLabel"}}</label>
 								{{#each solution}}
-									<li class="list-group-item">{{this}}</li>
+									<textarea id="textarea-answer" class="form-control control-answer" rows="10" cols="60" autofocus disabled>{{this}}</textarea>
 								{{/each}}
-							</ul>
+							</div>
 							<button id="button-close" class="btn btn-primary btn-sm">{{i18n "exercise.closeButton"}}</button>
 						</div>
-					</div>
+					{{/if}}
 				{{/if}}
 			</div>
 		</section>
