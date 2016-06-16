@@ -24,7 +24,7 @@
 					throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
 				else if (_exercise._id && _exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
-				else if (_exercise._id && _exercise.released && _exercise.released.requested && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+				else if (_exercise._id && (_exercise.released && _exercise.released.requested || _exercise.execution_id) && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
 					throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
 
 				if (!exercise.author_id)
