@@ -4,11 +4,11 @@
 	<div class="well form-horizontal">
 		<p>{{i18nDescription this}}</p>
 		<div class="row">
-			<div class="col-md-2">
+			<div class="col-sm-6 col-md-4 col-lg-2">
 				<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
 				<label>{{i18n "examination.endTimeLabel"}}:</label> {{i18nDateTime (endTime startTime durationMinutes)}}
 			</div>
-			<div class="col-md-10">
+			<div class="col-sm-6 col-md-8 col-lg-4">
 				<label>{{i18n "examination.durationLabel"}}:</label> {{durationMinutes}} {{i18n "examination.durationUnitLabel"}}<br />
 				<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}
 			</div>

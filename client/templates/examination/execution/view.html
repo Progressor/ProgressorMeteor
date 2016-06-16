@@ -13,12 +13,12 @@
 	<div class="well form-horizontal">
 		<p>{{i18nDescription this}}</p>
 		<div class="row">
-			<div class="col-md-2">
+			<div class="col-sm-6 col-md-4 col-lg-2">
 				<label>{{i18n "examination.startTimeLabel"}}:</label> {{i18nDateTime startTime}}<br />
 				<label>{{i18n "examination.endTimeLabel"}}:</label> {{i18nDateTime (endTime startTime durationMinutes)}}<br />
 				<label>{{i18n "examination.numberOfExamineesLabel"}}:</label> {{examinees.length}}
 			</div>
-			<div class="col-md-4">
+			<div class="col-sm-6 col-md-8 col-lg-4">
 				<div class="form-inline">
 					<label for="input-extend-duration">{{i18n "examination.durationLabel"}}:</label>
 					{{#unless extendDuration}}
@@ -35,7 +35,7 @@
 				<label>{{i18n "examination.totalWeightLabel"}}:</label> {{totalWeight}}<br />
 				<label>{{i18n "examination.numberOfExercisesLabel"}}:</label> {{exercises.length}}
 			</div>
-			<div class="col-md-6">
+			<div class="col-sm-12 col-lg-6">
 				<div class="form-group">
 					<label for="input-examinee-link" class="control-label">{{i18n "examination.examineeViewLabel"}}</label>
 					<input type="text" id="input-examinee-link" class="form-control" readonly value="{{absoluteUrl (pathFor route="examinationExecutionExamineeView" data=this)}}" />
