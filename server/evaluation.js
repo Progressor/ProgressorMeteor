@@ -104,12 +104,13 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
+				const execution = Progressor.executions.findOne({ _id: exercise.execution_id });
+				if (execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date()))
+					throw new Meteor.Error('document-locked', i18n.forUser('error.locked.message', this.userId));
+
 				let results = _.map(exercise.options[0].options, (o, i) => ({ success: _.contains(exercise.solution, i) === _.contains(checkedOptions, i), checked: _.contains(checkedOptions, i) }));
 
-				const execution = Progressor.executions.findOne({ _id: exercise.execution_id });
-				const isLocked = execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date());
-
-				if (exercise._id && this.userId && !isLocked) {
+				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
 					const result = Progressor.results.findOne(query);
 					const lastLog = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE)
@@ -165,14 +166,15 @@
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
+				const execution = Progressor.executions.findOne({ _id: exercise.execution_id });
+				if (execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date()))
+					throw new Meteor.Error('document-locked', i18n.forUser('error.locked.message', this.userId));
+
 				let results = [];
 				if (exercise.pattern && exercise.solution)
 					results.push({ success: _.contains(exercise.solution, answer) });
 
-				const execution = Progressor.executions.findOne({ _id: exercise.execution_id });
-				const isLocked = execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date());
-
-				if (exercise._id && this.userId && !isLocked) {
+				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
 					const result = Progressor.results.findOne(query);
 					const lastLog = Progressor.getNewestResultLog(result ? result.log : null, Progressor.RESULT_LOG_EVALUATED_TYPE)
