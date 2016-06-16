@@ -290,7 +290,7 @@
 
 		function publishExecution(id, execution = getExecutions(id).fetch()[0]) {
 			if (this.userId !== execution.author_id && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN) //TODO: add robust time handling
-					&& ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, this.userId)) || !execution.startTime || execution.startTime > new Date() || (execution.startTime + execution.durationMinutes * 60 * 1000) < new Date()))
+					&& ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, this.userId)) || !execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date()))
 				return unpublishExecution.call(this, id);
 
 			const isPublished = _.contains(published, id);
