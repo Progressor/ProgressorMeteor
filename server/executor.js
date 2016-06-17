@@ -44,8 +44,8 @@
 						{ types: [ttypes.TypeBoolean], values: ['true', 'false'] },
 						{ types: [ttypes.TypeInt8, ttypes.TypeInt16, ttypes.TypeInt32, ttypes.TypeInt64], values: [-25, 0, 1, new Date().getYear()] },
 						{ types: [ttypes.TypeFloat32, ttypes.TypeFloat64, ttypes.TypeDecimal], values: [-3.141592653, 2, 3.141592653, 5.27e-9] },
-						{ types: [ttypes.TypeContainerArray, ttypes.TypeContainerList, ttypes.TypeContainerSet], values: ['-1,0,1,2', 'strut1,touwm1,weidj1'] },
-						{ types: [ttypes.TypeContainerMap], values: ['strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann'] }
+						{ types: [ttypes.TypeContainerArray, ttypes.TypeContainerList, ttypes.TypeContainerSet], values: ['{-1,0,1,2}', '{strut1,touwm1,weidj1}'] },
+						{ types: [ttypes.TypeContainerMap], values: ['{strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann}'] }
 					]
 				};
 			},
