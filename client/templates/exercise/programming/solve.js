@@ -56,7 +56,7 @@
 		////////////////////
 
 		this.autorun(() => {
-			const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
+			const result = Progressor.results.findOne(), exercise = getExercise();
 			if (!result && !exercise || (result ? result.exercise_id : exercise._id) !== this.exerciseId) {
 				if (result && result.fragment)
 					Session.set('fragment', result.fragment);
