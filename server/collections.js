@@ -214,13 +214,13 @@
 		check(id, String);
 		check(isExecute, Boolean);
 		check(includeDetails, Boolean);
-		publishResults.call(this, isExecute ? { _id: id } : { _id: id, 'exercise.category_id': { $exists: true } }, isExecute);
+		publishResults.call(this, _.extend({ _id: id /*, user_id: this.userId*/ }, isExecute ? {} : { 'exercise.category_id': { $exists: true } }), isExecute);
 	});
 	Meteor.publish('resultByExercise', function (exerciseId, isExecute = false, includeDetails = false) {
 		check(exerciseId, String);
 		check(isExecute, Boolean);
 		check(includeDetails, Boolean);
-		publishResults.call(this, isExecute ? { exercise_id: exerciseId } : { exercise_id: exerciseId, 'exercise.category_id': { $exists: true } }, isExecute);
+		publishResults.call(this, _.extend({ exercise_id: exerciseId, user_id: this.userId }, isExecute ? {} : { exercise_id: exerciseId, 'exercise.category_id': { $exists: true } }), isExecute);
 	});
 
 	Meteor.publish('resultsByExecution', function (executionId, isExecute = false, includeDetails = false) {
