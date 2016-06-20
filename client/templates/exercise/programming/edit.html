@@ -218,6 +218,9 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation"><a class="a-toggle-codemirror" href="#tab-fragment" aria-controls="tab-fragment" role="tab" data-toggle="tab">{{i18n "exercise.templateFragmentLabel"}}</a></li>
 					<li role="presentation" class="active"><a class="a-toggle-codemirror" href="#tab-solution" aria-controls="tab-solution" role="tab" data-toggle="tab">{{i18n "exercise.solutionFragmentLabel"}}</a></li>
+					{{#if blacklist}}
+						<li role="presentation"><a href="#tab-blacklist" aria-controls="tab-blacklist" role="tab" data-toggle="tab">{{i18n "exercise.blacklistLabel"}}</a></li>
+					{{/if}}
 				</ul>
 				<div class="tab-content">
 					<div role="tabpanel" id="tab-fragment" class="tab-pane fade">
@@ -242,6 +245,26 @@
 						</div>
 						<div class="text-muted separated-top">{{versionInformation}}</div>
 					</div>
+					{{#if blacklist}}
+						<div role="tabpanel" id="tab-blacklist" class="tab-pane fade">
+							<div class="help-block">
+								<em>{{i18n "exercise.help.blacklist"}}</em>
+								<div class="row">
+									{{#each blacklist.elementColumns}}
+										<div class="col-md-{{blacklistColumnWidth}}">
+											<ul>
+												{{#each elements}}
+													<li>{{this}}</li>
+												{{/each}}
+											</ul>
+										</div>
+									{{else}}
+										<div class="text-muted">{{i18n "form.noResultsMessage"}}</div>
+									{{/each}}
+								</div>
+							</div>
+						</div>
+					{{/if}}
 				</div>
 			</section>
 			<section class="col-md-7">

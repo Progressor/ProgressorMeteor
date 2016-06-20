@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	const NUMBER_OF_BLACKLIST_COLUMNS = 3;
+
 	function getDefaultExercise() {
 		return {
 			type: 1,
@@ -195,8 +197,18 @@
 			if (this.exercise.get() && this.exercise.get().programmingLanguage) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(this.exercise.get().programmingLanguage);
 				if (programmingLanguage) {
-					Meteor.call('getVersionInformation', programmingLanguage._id, Progressor.handleError(r => this.versionInformation.set(r), false));
 					this.$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
+					Meteor.call('getVersionInformation', programmingLanguage._id, Progressor.handleError(r => this.versionInformation.set(r), false));
+					if (!this.blacklist.get() || this.exercise.get().programmingLanguage !== this.blacklist.get().programmingLanguage) {
+						this.blacklist.set({ programmingLanguage: this.exercise.get().programmingLanguage });
+						Meteor.call('getBlacklist', this.exercise.get().programmingLanguage, Progressor.handleError((e, r) => {
+							const elementsSorted = _.sortBy(r, b => b.toLowerCase()), nofBlacklistElements = elementsSorted.length, elementsPerColumn = Math.ceil(nofBlacklistElements / NUMBER_OF_BLACKLIST_COLUMNS);
+							return this.blacklist.set(!e ? _.extend(this.blacklist.get(), {
+								elements: r,
+								elementColumns: _.map(_.range(0, NUMBER_OF_BLACKLIST_COLUMNS), c => ({ _id: c, elements: elementsSorted.slice(elementsPerColumn * c, elementsPerColumn * (c + 1)) }))
+							}) : null);
+						}));
+					}
 				}
 			}
 			if (!this.executionResults.get().length && result)
@@ -272,6 +284,8 @@
 			}),
 			executorTypes: () => tmpl().executorTypes.get() ? tmpl().executorTypes.get().types : [],
 			executorValues: () => tmpl().executorTypes.get() ? _.map(tmpl().executorTypes.get().values, v => _.extend({ typeLabels: v.types.join(', ') }, v)) : [],
+			blacklist: () => tmpl().blacklist.get(),
+			blacklistColumnWidth: () => 12 / NUMBER_OF_BLACKLIST_COLUMNS,
 
 			/////////////////////////////////
 			// TEST CASE EXECUTION HELPERS //
@@ -477,10 +491,7 @@
 				const solution = Session.get('solution');
 				if (!(template.solutionTyped = !!solution)) changeExercise(() => null).call(this, event, template);
 				if (template.exercise.get().programmingLanguage)
-					if (!template.blacklist.get() || template.exercise.get().programmingLanguage !== template.blacklist.get().programmingLanguage) {
-						template.blacklist.set({ programmingLanguage: template.exercise.get().programmingLanguage });
-						Meteor.call('getBlacklist', template.exercise.get().programmingLanguage, Progressor.handleError((e, r) => template.blacklist.set(!e ? _.extend(template.blacklist.get(), { elements: r }) : null)));
-					} else {
+					if (template.blacklist.get() && template.exercise.get().programmingLanguage === template.blacklist.get().programmingLanguage) {
 						template.blacklistMatches.set(_.filter(template.blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
 						template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
 					}
