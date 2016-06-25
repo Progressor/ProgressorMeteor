@@ -298,7 +298,9 @@
 			blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
 			versionInformation() {
 				const versionInformation = tmpl().versionInformation.get();
-				if (versionInformation) return i18n('exercise.help.versionInformationMessage', versionInformation.languageVersion, versionInformation.compilerName, versionInformation.compilerVersion, versionInformation.platformName, versionInformation.platformVersion, versionInformation.platformArchitecture);
+				if (versionInformation) return i18n('exercise.help.versionInformationMessage',
+																						versionInformation.languageVersion || i18n('form.notAvailable'), versionInformation.compilerName || i18n('form.notAvailable'), versionInformation.compilerVersion || i18n('form.notAvailable'),
+																						versionInformation.platformName || i18n('form.notAvailable'), versionInformation.platformVersion || i18n('form.notAvailable'), versionInformation.platformArchitecture || i18n('form.notAvailable'));
 			},
 			testCasesEvaluated: () => Progressor.isExerciseEvaluated(tmpl().exercise.get(), tmpl().executionResults.get()),
 			testCaseEvaluated: c => Progressor.isTestCaseEvaluated(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
