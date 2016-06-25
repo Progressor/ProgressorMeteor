@@ -89,12 +89,15 @@
 								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
 							</div>
 							<div class="form-group form-group-sm">
-								<label for="textarea-description-{{_id}}" class="control-label">{{i18n "exercise.descriptionLabel"}} ({{_id}})</label>
+								<label for="textarea-description-{{_id}}" class="control-label">
+									{{i18n "exercise.descriptionLabel"}} ({{_id}})
+									<span class="text-info font-weight-normal">
+										&mdash;
+										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
+										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="text-info">{{i18n "form.supportsMarkdown"}}</span></a>
+									</span>
+								</label>
 								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
-							</div>
-							<div class="help-block">
-								{{i18n "form.supportsMarkdown"}}
-								<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
 							</div>
 						</div>
 					{{/each}}
