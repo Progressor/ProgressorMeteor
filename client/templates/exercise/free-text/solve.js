@@ -80,7 +80,7 @@
 			});
 	});
 
-	Template.multipleSolve.onDestroyed(function () {
+	Template.textSolve.onDestroyed(function () {
 		Meteor.clearInterval(this.progressUpdateInterval);
 	});
 
