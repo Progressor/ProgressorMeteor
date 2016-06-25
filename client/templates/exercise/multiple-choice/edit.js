@@ -74,7 +74,7 @@
 			canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
 			exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
 			exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
-			categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id ? { _id: tmpl().exercise.get().category_id } : null),
+			categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
 			not: b => !b,
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),
