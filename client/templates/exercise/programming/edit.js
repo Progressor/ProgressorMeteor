@@ -135,8 +135,8 @@
 		this.blacklistMatches = new ReactiveVar([]);
 		this.versionInformation = new ReactiveVar(null);
 		this.wasCreate = false;
-		this.fragmentTyped = false;
-		this.solutionTyped = false;
+		// this.fragmentTyped = false;
+		// this.solutionTyped = false;
 		Session.set('fragment', null);
 		Session.set('solution', null);
 
@@ -153,8 +153,8 @@
 					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
 				this.exercise.set(Progressor.joinCategory(_exercise));
 				this.executionResults.set([]);
-				this.fragmentTyped = false;
-				this.solutionTyped = false;
+				// this.fragmentTyped = false;
+				// this.solutionTyped = false;
 				Session.set('fragment', null);
 				Session.set('solution', null);
 			} else if (live.lastEditor_id !== Meteor.userId())
@@ -182,9 +182,9 @@
 
 		this.autorun(() => {
 			const result = Progressor.results.findOne();
-			if (!this.fragmentTyped && (this.fragmentTyped = this.exercise.get() && this.exercise.get().fragment))
+			if (!_.isBoolean(this.fragmentTyped) && (this.fragmentTyped = this.exercise.get() && this.exercise.get().fragment))
 				Session.set('fragment', this.exercise.get().fragment);
-			if (!this.solutionTyped)
+			if (!_.isBoolean(this.solutionTyped))
 				if (this.solutionTyped = this.exercise.get() && this.exercise.get().solution)
 					Session.set('solution', this.exercise.get().solution);
 				else if (this.solutionTyped = result && result.fragment)
