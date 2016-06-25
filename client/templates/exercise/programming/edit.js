@@ -465,8 +465,10 @@
 						execute(template, { _id: result }, (error, results) => {
 							if (!error && Progressor.isExerciseSuccess(template.exercise.get(), results))
 								Router.go('exerciseSolve', { _id: result });
-							else
+							else {
+								Router.go('exerciseEdit', { _id: result });
 								Progressor.showAlert(i18n('exercise.executionFailureMessage'), 'warning');
+							}
 						});
 					}, false));
 				else
