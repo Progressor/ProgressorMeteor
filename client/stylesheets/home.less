@@ -32,9 +32,11 @@ i.language-logo { font-size: 10em; color: @brand-primary; }
 //
 // custom logos //
 //
-i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; height: 1em; width: 1em; background-repeat: no-repeat; -webkit-background-size: 1em; background-size: 1em; }
-.logo-custom(@lang) {
-	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-void-%s.svg")', @lang, replace('@{brand-primary}', '#', '')); }
-	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{lang}-void-ffffff.svg"); }
+i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; width: 100%; height: 1em; background-repeat: no-repeat; background-position: center; -webkit-background-size: 100% 1em; background-size: 100% 1em; }
+.logo-custom(@lang, @icon) {
+	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-%s.svg")', @icon, replace('@{brand-primary}', '#', '')); }
+	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{icon}-ffffff.svg"); }
 }
-.logo-custom(kotlin); //source: extracted from https://resources.jetbrains.com/assets/products/kotlin/kotlin_logos.zip (via https://www.jetbrains.com/company/press/)
+.logo-custom(kotlin, kotlin-void); //source: extracted from https://resources.jetbrains.com/assets/products/kotlin/kotlin_logos.zip (via https://www.jetbrains.com/company/press/)
+.logo-custom(swift, swift-wordmark); //source: https://upload.wikimedia.org/wikipedia/commons/2/20/Swift_logo_with_text.svg (via https://en.wikipedia.org/wiki/Swift_(programming_language))
+.logo-custom(lisp, lisp); //source: http://ergoemacs.org/emacs/lisp_logo/LISP_logo.svg (via http://ergoemacs.org/emacs/lisp_logo.html)
