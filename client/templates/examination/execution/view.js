@@ -61,7 +61,7 @@
 
 			extendDuration: () => tmpl().extendDuration.get(),
 			endTime: (t, d) => t ? new Date(t.getTime() + d * 60 * 1000) : t,
-			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + e.weight || 0, 0),
+			totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + (e.weight || 0), 0),
 			examinees() {
 				const execution = getExecution();
 				if (execution)
