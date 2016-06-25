@@ -27,15 +27,17 @@
 	// EXERCISE SEARCH FILTER //
 	////////////////////////////
 
-	function getFilter() {
+	function getFilter(includeVisibility = true) {
 		const flt = {};
 		if (tmpl().filter.get('name') && tmpl().filter.get('name').length > 2) flt.names = { $elemMatch: { name: new RegExp(tmpl().filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
 		if (tmpl().filter.get('type')) flt.type = tmpl().filter.get('type');
 		if (tmpl().filter.get('language')) flt.programmingLanguage = tmpl().filter.get('language');
 		if (tmpl().filter.get('category')) flt.category_id = tmpl().filter.get('category');
 		if (tmpl().filter.get('difficulty')) flt.difficulty = tmpl().filter.get('difficulty');
-		if (tmpl().filter.get('visibilityReleased') === false) flt.author_id = Meteor.userId();
-		if (tmpl().filter.get('visibilityUnreleased') === false) flt['released.confirmed'] = { $exists: true };
+		if (includeVisibility) {
+			if (tmpl().filter.get('visibilityReleased') === false) flt.author_id = Meteor.userId();
+			if (tmpl().filter.get('visibilityUnreleased') === false) flt['released.confirmed'] = { $exists: true };
+		}
 		return flt;
 	}
 
@@ -104,13 +106,12 @@
 			/////////////////////////////
 
 			results() {
-				const flt = getFilter();
-				if (!_.isEmpty(flt)) {
+				if (!_.isEmpty(getFilter(false))) {
 					const addedIds = _.map(tmpl().examination.get().exercises, e => e.exercise_id);
-					return _.chain(Progressor.exercises.find(_.extend(flt, { _id: { $nin: addedIds } }), { sort: [['lastEdited', 'desc']], limit: 25 }).fetch()).map(Progressor.joinCategory)/*.sortBy(i18n.getName)*/.value();
+					return _.chain(Progressor.exercises.find(_.extend(getFilter(), { _id: { $nin: addedIds } }), { sort: [['lastEdited', 'desc']], limit: 25 }).fetch()).map(Progressor.joinCategory)/*.sortBy(i18n.getName)*/.value();
 				}
 			},
-			message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`)
+			message: () => i18n(`form.no${!_.isEmpty(getFilter(false)) ? 'Results' : 'Filter'}Message`)
 		});
 
 	////////////////////
