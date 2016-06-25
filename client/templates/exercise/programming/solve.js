@@ -127,7 +127,8 @@
 				return _.extend({}, Progressor.getCodeMirrorConfiguration(), { //https://codemirror.net/doc/manual.html
 					autofocus: true,
 					readOnly: tmpl().isResult.get() || isSolution ? 'nocursor' : false,
-					mode: programmingLanguage ? programmingLanguage.codeMirror : 'text/plain'
+					mode: programmingLanguage && programmingLanguage.codeMirror ? programmingLanguage.codeMirror : 'text/plain',
+					firstLineNumber: programmingLanguage && programmingLanguage.templateOffset ? programmingLanguage.templateOffset + 1 : 1
 				});
 			},
 			executionDisabled: () => tmpl().executionStatus.get() !== 0x0,

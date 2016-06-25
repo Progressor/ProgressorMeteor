@@ -197,7 +197,10 @@
 			if (this.exercise.get() && this.exercise.get().programmingLanguage) {
 				const programmingLanguage = Progressor.getProgrammingLanguage(this.exercise.get().programmingLanguage);
 				if (programmingLanguage) {
-					this.$('.CodeMirror').each((i, c) => c.CodeMirror.setOption('mode', programmingLanguage.codeMirror));
+					this.$('.CodeMirror').each((i, c) => {
+						c.CodeMirror.setOption('mode', programmingLanguage.codeMirror ? programmingLanguage.codeMirror : 'text/plain');
+						c.CodeMirror.setOption('firstLineNumber', programmingLanguage && programmingLanguage.templateOffset ? programmingLanguage.templateOffset + 1 : 1);
+					});
 					Meteor.call('getVersionInformation', programmingLanguage._id, Progressor.handleError(r => this.versionInformation.set(r), false));
 					if (!this.blacklist.get() || this.exercise.get().programmingLanguage !== this.blacklist.get().programmingLanguage) {
 						this.blacklist.set({ programmingLanguage: this.exercise.get().programmingLanguage });
