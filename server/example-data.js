@@ -1,6 +1,16 @@
 Meteor.startup(function () {
 	'use strict';
 
+	const solutions = {
+		java: 'public String helloWorld() { return "Hello, World!"; }',
+		cpp: 'string helloWorld() { return "Hello, World!"; }',
+		csharp: 'public string helloWorld() => "Hello, World!";',
+		python: 'def helloWorld(): return "Hello, World!"',
+		javascript: 'function helloWorld() { return "Hello, World!"; }',
+		php: 'function helloWorld() : string { return "Hello, World!"; }',
+		kotlin: 'fun helloWorld() = "Hello, World!"'
+	};
+
 	_.each(Progressor.getProgrammingLanguages(), l => {
 		if (!Progressor.categories.find({ programmingLanguage: l._id, private: true }).count())
 			Progressor.categories.insert(
@@ -9,23 +19,8 @@ Meteor.startup(function () {
 					private: true,
 					lastEdited: new Date()
 				});
-	});
 
-	if (Progressor.categories.find({ private: { $exists: false } }).count() === 0
-			&& Progressor.exercises.find().count() === 0
-			&& Progressor.results.find().count() === 0
-			&& Progressor.examinations.find().count() === 0
-			&& Progressor.executions.find().count() === 0) {
-
-		const solutions = {
-			java: 'public String helloWorld() { return "Hello, World!"; }',
-			cpp: 'string helloWorld() { return "Hello, World!"; }',
-			csharp: 'public string helloWorld() => "Hello, World!";',
-			python: 'def helloWorld(): return "Hello, World!"',
-			kotlin: 'fun helloWorld() = "Hello, World!"'
-		};
-
-		_.each(Progressor.getProgrammingLanguages(), l => {
+		if (!Progressor.categories.find({ programmingLanguage: l._id, private: { $exists: false } }).count()) {
 			Progressor.categories.insert(
 				{
 					programmingLanguage: l._id,
@@ -39,6 +34,7 @@ Meteor.startup(function () {
 					],
 					lastEdited: new Date()
 				});
+
 			Progressor.exercises.insert(
 				{
 					names: [
@@ -78,8 +74,10 @@ Meteor.startup(function () {
 					},
 					lastEdited: new Date()
 				});
-		});
+		}
+	});
 
+	if (!Progressor.examinations.find().count()) {
 		Progressor.examinations.insert(
 			{
 				names: [
