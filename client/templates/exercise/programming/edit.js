@@ -147,7 +147,7 @@
 		this.autorun(() => {
 			const live = Progressor.exercises.findOne();
 			const detached = Tracker.nonreactive(() => this.exercise.get());
-			if (!live || !detached || live._id !== detached._id || this.wasCreate !== this.isCreate.get()) {
+			if (!live || !detached || live._id !== detached._id || Progressor.hasInvisibleTestCases(detached) || this.wasCreate !== this.isCreate.get()) {
 				let _exercise = live || getDefaultExercise();
 				if (this.wasCreate = this.isCreate.get())
 					_exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
