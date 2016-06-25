@@ -167,11 +167,13 @@
 				{{else}}
 					<span class="text-muted">{{i18n "examination.help.examinees"}}</span>
 				{{/if}}
-				<hr />
-				<div class="form-group">
-					<label for="input-examinee-link" class="control-label">{{i18n "examination.examineeViewLabel"}}</label>
-					<input type="text" id="input-examinee-link" class="form-control" readonly value="{{absoluteUrl (pathFor route="examinationExecutionExamineeView" data=this)}}" />
-				</div>
+				{{#if _id}}
+					<hr />
+					<div class="form-group">
+						<label for="input-examinee-link" class="control-label">{{i18n "examination.examineeViewLabel"}}</label>
+						<input type="text" id="input-examinee-link" class="form-control" readonly value="{{absoluteUrl (pathFor route="examinationExecutionExamineeView" data=this)}}" />
+					</div>
+				{{/if}}
 			</section>
 		</div>
 	{{/with}}
