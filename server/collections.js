@@ -49,7 +49,7 @@
 											 && (assumeReleased || !_.some(getResults(exercise._id).fetch(), r => Progressor.isExerciseSuccess(exercise, r.results))))  //or it has to be solved
 				return unpublishExercise.call(this, id);
 
-			//delete sensitive information
+			//remove sensitive information
 			if (assumeUnauthorised || !isAuthorised) {
 				if (exercise.execution_id)
 					delete exercise.solutionVisible;
@@ -174,6 +174,16 @@
 					result.results = _.map(result.results, r => _.omit(r, 'success'));
 				else if (!isAuthorised && Progressor.hasInvisibleTestCases(result.exercise))
 					result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
+
+			//remove sensitive information
+			if (assumeUnauthorised || !isAuthorised) {
+				if (result.exercise.execution_id)
+					delete result.exercise.solutionVisible;
+				if (!result.exercise.solutionVisible)
+					delete result.exercise.solution;
+				if (Progressor.hasInvisibleTestCases(result.exercise))
+					result.exercise.testCases = _.flatten([Progressor.getVisibleTestCases(result.exercise), { invisible: true }]);
+			}
 
 			const isPublished = _.contains(published, id);
 			if (!isPublished)
