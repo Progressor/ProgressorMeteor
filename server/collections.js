@@ -176,7 +176,7 @@
 					result.results = _.flatten([Progressor.getVisibleResults(result.exercise, result.results), { invisible: true, success: Progressor.isInvisibleSuccess(result.exercise, result.results) }]);
 
 			//remove sensitive information
-			if (assumeUnauthorised || !isAuthorised) {
+			if ((assumeUnauthorised || !isAuthorised) && result.exercise) {
 				if (result.exercise.execution_id)
 					delete result.exercise.solutionVisible;
 				if (!result.exercise.solutionVisible)
