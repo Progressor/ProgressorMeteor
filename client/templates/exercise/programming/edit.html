@@ -359,8 +359,10 @@
 			{{#if canSave}}
 				<div class="btn-group">
 					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if _id}}{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}{{/if}}
-					<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
+					{{#if _id}}
+						{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+						<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
+					{{/if}}
 				</div>
 			{{/if}}
 			{{#if _id}}

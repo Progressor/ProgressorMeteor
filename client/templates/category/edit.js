@@ -52,7 +52,6 @@
 	Template.categoryEdit.helpers(
 		{
 			category: () => tmpl().category.get(),
-			exists: () => tmpl().category.get() && tmpl().category.get()._id,
 			exerciseSearchData: () => ({ _id: tmpl().category.get().programmingLanguage }),
 			i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
 				name: i18n.getProgrammingLanguage(language._id),

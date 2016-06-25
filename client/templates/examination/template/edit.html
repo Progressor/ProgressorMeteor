@@ -163,7 +163,9 @@
 				<div class="btn-toolbar separated-top separated-bottom">
 					<div class="btn-group">
 						<button class="btn btn-success btn-save" value="save">{{i18n "form.saveButton"}}</button>
-						<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
+						{{#if _id}}
+							<button class="btn btn-danger btn-delete" value="delete">{{i18n "form.deleteButton"}}</button>
+						{{/if}}
 					</div>
 					{{#if _id}}
 						<div class="btn-group">
