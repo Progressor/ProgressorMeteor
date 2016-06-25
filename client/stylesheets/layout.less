@@ -7,13 +7,18 @@
 // VARIABLES //
 ///////////////
 @header-height: 60px;
+@footer-height: 30px;
 @logo-width: 280px;
 @default-margin: 1em;
 ////////////
 // LAYOUT //
 ////////////
 .container-fluid { padding: 0 @header-height / 2; }
-body { padding-top: @header-height + 10px; }
+body { margin-top: @header-height + 10px; margin-bottom: @footer-height + 5px; }
+header { z-index: 2; }
+.container-main { position: relative; z-index: 2; background-color: #FFFFFF; }
+footer { position: fixed; bottom: 0; width: 100%; z-index: 1; }
+footer.well { margin-bottom: 0; white-space: nowrap; }
 .spinner { margin-top: @header-height * 2.5; }
 h2, .well > h3 { margin-top: 0; }
 td, th { vertical-align: middle !important; }

@@ -93,16 +93,19 @@
 				</div>
 			</div>
 		</header>
-		<div class="container-fluid">
+		<div class="container-fluid container-main">
 			{{#unless layout_customTitle}}
 				<h1 class="hidden">{{i18n "layout.title"}}</h1>
 			{{/unless}}
-			<div>
-				<main>
-					{{> yield}}
-				</main>
-				<div id="global-alerts" class="fixed top-right"></div>
-			</div>
+			<main>
+				{{> yield}}
+			</main>
+			<div id="global-alerts" class="fixed top-right"></div>
 		</div>
+		<footer class="well well-sm text-muted small">
+			developed at the <a class="text-muted" href="http://www.ti.bfh.ch/">Bern University of Applied Sciences</a> &mdash;
+			development team: <a class="text-muted" href="mailto:strut1@bfh.ch">Thomas Strub</a>, Marc Touw, and Janick Weidmann (BSc graduates) &mdash;
+			advisors: <a class="text-muted" href="mailto:hsm4@bfh.ch">Prof Marcus Hudritsch</a>, Michael Luggen (<a class="text-muted" href="http://www.cpvrlab.ti.bfh.ch/">cpvrLab</a>)
+		</footer>
 	</div>
 </template>
