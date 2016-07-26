@@ -33,10 +33,11 @@ i.language-logo { font-size: 10em; color: @brand-primary; }
 // custom logos //
 //
 i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; width: 1em; height: 1em; background-repeat: no-repeat; background-position: center; -webkit-background-size: 1em 1em; background-size: 1em 1em; }
-.logo-custom(@lang, @icon) {
+.logo-custom(@lang, @icon: @lang) {
 	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-%s.svg")', @icon, replace('@{brand-primary}', '#', '')); }
 	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{icon}-ffffff.svg"); }
 }
 .logo-custom(kotlin, kotlin-void); //source: extracted from https://resources.jetbrains.com/assets/products/kotlin/kotlin_logos.zip (via https://www.jetbrains.com/company/press/)
-.logo-custom(swift, swift-wordmark); //source: https://upload.wikimedia.org/wikipedia/commons/2/20/Swift_logo_with_text.svg (via https://en.wikipedia.org/wiki/Swift_(programming_language))
-.logo-custom(lisp, lisp); //source: http://ergoemacs.org/emacs/lisp_logo/LISP_logo.svg (via http://ergoemacs.org/emacs/lisp_logo.html)
+//.logo-custom(swift, swift-wordmark); //source: https://upload.wikimedia.org/wikipedia/commons/2/20/Swift_logo_with_text.svg (via https://en.wikipedia.org/wiki/Swift_(programming_language))
+//.logo-custom(lisp); //source: http://ergoemacs.org/emacs/lisp_logo/LISP_logo.svg (via http://ergoemacs.org/emacs/lisp_logo.html)
+.logo-custom(upcoming);
