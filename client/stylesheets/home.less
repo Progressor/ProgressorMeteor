@@ -32,7 +32,7 @@ i.language-logo { font-size: 10em; color: @brand-primary; }
 //
 // custom logos //
 //
-i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; width: 1em; height: 1em; background-repeat: no-repeat; background-position: center; -webkit-background-size: 1em 1em; background-size: 1em 1em; }
+i.logo-custom /*:extend(i.language-logo)*/ { display: inline-block; width: 1em; height: 1em; background-repeat: no-repeat; background-position: center; -webkit-background-size: 1em; background-size: 1em; }
 .logo-custom(@lang, @icon: @lang) {
 	i.logo-@{lang}:extend(i.logo-custom) { background-image: %(~'url("/images/logo-%s-%s.svg")', @icon, replace('@{brand-primary}', '#', '')); }
 	.panel-primary i.logo-@{lang} { background-image: url("/images/logo-@{icon}-ffffff.svg"); }
