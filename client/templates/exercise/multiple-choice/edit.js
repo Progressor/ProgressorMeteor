@@ -80,10 +80,10 @@
 				name: i18n.getProgrammingLanguage(language._id),
 				isActive: language._id === tmpl().exercise.get().programmingLanguage
 			})),
-			i18nCategories: () => Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).map(category => _.extend({}, category, {
+			i18nCategories: () => _.chain(Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).fetch()).map(category => _.extend({}, category, {
 				name: i18n.getCategoryName(category, tmpl().exercise.get() && tmpl().exercise.get().author_id ? tmpl().exercise.get().author_id : Meteor.userId()),
 				isActive: category._id === tmpl().exercise.get().category_id
-			})),
+			})).sortBy(c => c.private ? null : c.name).value(),
 			i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
 				_id: difficulty, name: i18n.getDifficulty(difficulty),
 				isActive: difficulty === tmpl().exercise.get().difficulty

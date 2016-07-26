@@ -35,10 +35,17 @@
 		if (tmpl().filter.get('category')) flt.category_id = tmpl().filter.get('category');
 		if (tmpl().filter.get('difficulty')) flt.difficulty = tmpl().filter.get('difficulty');
 		if (includeVisibility) {
-			if (tmpl().filter.get('visibilityReleased') === false) flt.author_id = Meteor.userId();
-			if (tmpl().filter.get('visibilityUnreleased') === false) flt['released.confirmed'] = { $exists: true };
+			if (tmpl().filter.get('visibilityReleased') === false) combineFilter(flt, 'released.confirmed', { $exists: false });
+			if (tmpl().filter.get('visibilityUnreleased') === false) combineFilter(flt, 'released.confirmed', { $exists: true });
 		}
 		return flt;
+	}
+
+	function combineFilter(filter, property, value) {
+		if (filter[property]) {
+			if (filter[property]['$and']) filter[property]['$and'].push(value);
+			else filter[property] = { $and: [filter[property], value] };
+		} else filter[property] = value;
 	}
 
 	Template.examinationTemplateEdit.onCreated(function () {
