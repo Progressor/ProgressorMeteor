@@ -4,13 +4,33 @@
 	const executors = Progressor.getConfiguration().executors;
 	let executorIndex = 0;
 
-	function connectExecutor() {
+	function invokeExecutor(functionName, ...argumentValues) {
+
+		this.unblock();
 
 		//const instance = Random.choice(executors); //random
 		const instance = executors[executorIndex = ++executorIndex % executors.length]; //round-robin
-		const connection = thrift.createConnection(instance.host, instance.port);
-		const client = thrift.createClient(Executor, connection);
-		return { connection, client };
+
+		try {
+			const Future = Npm.require('fibers/future');
+			const future = new Future();
+
+			const connection = thrift.createConnection(instance.host, instance.port);
+			connection.on('error', error => future.throw(error));
+
+			const client = thrift.createClient(Executor, connection);
+
+			try {
+				client[functionName](...argumentValues, (error, result) => error ? future.throw(error) : future.return(result));
+				return future.wait();
+
+			} finally {
+				connection.end();
+			}
+
+		} catch (ex) {
+			throw new Meteor.Error(`executor-${ex.errno}`, ex.code, String(ex));
+		}
 	}
 
 	Meteor.methods(
@@ -58,13 +78,7 @@
 			getVersionInformation(language) {
 				check(language, String);
 
-				this.unblock();
-
-				const { connection, client } = connectExecutor();
-				const versionInfo = Meteor.wrapAsync(client.getVersionInformation, client)(language);
-				connection.end();
-
-				return versionInfo;
+				return invokeExecutor.call(this, 'getVersionInformation', language);
 			},
 
 			/**
@@ -75,13 +89,7 @@
 			getBlacklist(language) {
 				check(language, String);
 
-				this.unblock();
-
-				const { connection, client } = connectExecutor();
-				const blacklist = Meteor.wrapAsync(client.getBlacklist, client)(language);
-				connection.end();
-
-				return blacklist;
+				return invokeExecutor.call(this, 'getBlacklist', language);
 			},
 
 			/**
@@ -102,18 +110,12 @@
 							functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })]
 						})));
 
-				this.unblock();
-
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
 				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 
-				const { connection, client } = connectExecutor();
-				const fragment = Meteor.wrapAsync(client.getFragment, client)(language, functions);
-				connection.end();
-
-				return fragment;
+				return invokeExecutor.call(this, 'getFragment', language, functions);
 			},
 
 			/**
@@ -139,8 +141,6 @@
 				check(fragment, String);
 				check(includeInvisible, Boolean);
 
-				this.unblock();
-
 				if (exercise._id)
 					exercise = Progressor.exercises.findOne({ _id: exercise._id });
 
@@ -151,9 +151,7 @@
 				const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
 					testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
 
-				const { connection, client } = connectExecutor();
-				const results = Meteor.wrapAsync(client.execute, client)(language, fragment, functions, testCases);
-				connection.end();
+				const results = invokeExecutor.call(this, 'execute', language, fragment, functions, testCases);
 
 				if (exercise._id && this.userId) {
 					const query = { user_id: this.userId, exercise_id: exercise._id };
