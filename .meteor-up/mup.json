@@ -1,0 +1,19 @@
+{
+	"servers": [
+		{
+			"host": "<meteor-host>",
+			"username": "<meteor-user>",
+			"password": "<meteor-password>"
+		}
+	],
+	"setupMongo": true,
+	"enableUploadProgressBar": true,
+	"appName": "progressor",
+	"app": "..",
+	"env": {
+		"ROOT_URL": "<meteor-url>",
+		"PORT": 80,
+		"MONGO_URL": "<mongo-url>"
+	},
+	"deployCheckWaitTime": 150
+}

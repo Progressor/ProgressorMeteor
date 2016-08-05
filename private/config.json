@@ -1,0 +1,11 @@
+{
+	"releaseNotifier": {
+		"schedule": "every 30 minutes except every weekend"
+	},
+	"executors": [
+		{
+			"host": "<executor-host>",
+			"port": 9090
+		}
+	]
+}

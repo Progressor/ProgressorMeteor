@@ -59,7 +59,7 @@ It also depends on a number of third-party *Meteor* packages.
 
 ### Configuration
 
-The configuration is stored in the file `private/config.json` which is loaded in `server/config.json`.
+The configuration is stored in the files `private/config.json` and `private/secret.json` which are loaded in `server/config.json`.
 
 ### Monitoring
 
