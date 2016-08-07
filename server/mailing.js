@@ -12,15 +12,15 @@
 const templates = {
   releaseNotifier: 'templates/release-notifier/dist/template.html',
   verifyEmail: 'templates/verify-email/dist/template.html',
-  resetPassword: 'templates/reset-password/dist/template.html'
+  resetPassword: 'templates/reset-password/dist/template.html',
 };
 
 _.each(templates, (f, n) => SSR.compileTemplate(n, Assets.getText(f)));
 
 function i18nForUser(callback) {
-  return function(user, ...rest) {
+  return function i18nSetup(user, ...rest) {
     i18n.setLanguage(i18n.getLanguageForUser(user));
-    let result = callback.call(this, user, ...rest);
+    const result = callback.call(this, user, ...rest);
     i18n.setLanguage(i18n.getDefaultLanguage());
     return result;
   };
@@ -48,41 +48,32 @@ _.extend(Progressor, {
    */
   sendReleaseNotification() {
     const selector = {
-      'released.requested': {
-        $exists: true
-      },
-      'released.confirmed': {
-        $exists: false
-      },
-      'released.notified': {
-        $exists: false
-      }
+      'released.requested': { $exists: true },
+      'released.confirmed': { $exists: false },
+      'released.notified': { $exists: false },
     };
     const requestedExercises = Progressor.exercises.find(selector).fetch();
     if (requestedExercises.length) {
-      Meteor.users.find({
-        roles: Progressor.ROLE_ADMIN
-      }).forEach(i18nForUser(user => {
-        Email.send({
-          from: Accounts.emailTemplates.from,
-          to: Progressor.getUserEmail(user),
-          subject: i18n('email.releaseNotifier.subject'),
-          text: releaseNotifierPlainText(user, requestedExercises),
-          html: SSR.render('releaseNotifier', {
-            address: Progressor.getUserName(user, true) || Progressor.getUserEmail(user),
-            requestedExercises: requestedExercises
-          })
-        });
-      }));
-      _.each(requestedExercises, exercise => Progressor.exercises.update({
-        _id: exercise._id
-      }, {
-        $set: {
-          'released.notified': new Date()
-        }
-      }));
+      Meteor.users.find({ roles: Progressor.ROLE_ADMIN })
+        .forEach(i18nForUser(user => {
+          Email.send({
+            from: Accounts.emailTemplates.from,
+            to: Progressor.getUserEmail(user),
+            subject: i18n('email.releaseNotifier.subject'),
+            text: releaseNotifierPlainText(user, requestedExercises),
+            html: SSR.render('releaseNotifier', {
+              address: Progressor.getUserName(user, true) || Progressor.getUserEmail(user),
+              requestedExercises,
+            }),
+          });
+        }));
+
+      _.each(requestedExercises, exercise => Progressor.exercises.update(
+        { _id: exercise._id },
+        { $set: { 'released.notified': new Date() } }
+      ));
     }
-  }
+  },
 });
 
 /*
@@ -99,12 +90,12 @@ function verifyEmailPlainText(user, verifyURL) {
 }
 
 Accounts.emailTemplates.verifyEmail = {
-  subject: i18nForUser(user => i18n('email.verifyEmail.subject')),
+  subject: i18nForUser(() => i18n('email.verifyEmail.subject')),
   text: i18nForUser((user, url) => verifyEmailPlainText(user, url)),
   html: i18nForUser((user, url) => SSR.render('verifyEmail', {
     address: Progressor.getUserName(user, true) || Progressor.getUserEmail(user),
-    verifyURL: url
-  }))
+    verifyURL: url,
+  })),
 };
 
 /*
@@ -120,10 +111,10 @@ function resetPasswordPlainText(user, resetpwdURL) {
 }
 
 Accounts.emailTemplates.resetPassword = {
-  subject: i18nForUser(user => i18n('email.resetPassword.subject')),
+  subject: i18nForUser(() => i18n('email.resetPassword.subject')),
   text: i18nForUser((user, url) => resetPasswordPlainText(user, url)),
   html: i18nForUser((user, url) => SSR.render('resetPassword', {
     address: Progressor.getUserName(user, true) || Progressor.getUserEmail(user),
-    resetpwdURL: url
-  }))
+    resetpwdURL: url,
+  })),
 };

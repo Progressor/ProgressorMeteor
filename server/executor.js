@@ -2,11 +2,10 @@ const executors = Progressor.getConfiguration().executors;
 let executorIndex = 0;
 
 function invokeExecutor(functionName, ...argumentValues) {
-
   this.unblock();
 
-  //const instance = Random.choice(executors); //random
-  const instance = executors[executorIndex = ++executorIndex % executors.length]; //round-robin
+  // const instance = Random.choice(executors); // random
+  const instance = executors[executorIndex = ++executorIndex % executors.length]; // round-robin
 
   try {
     const Future = Npm.require('fibers/future');
@@ -18,13 +17,11 @@ function invokeExecutor(functionName, ...argumentValues) {
     const client = thrift.createClient(Executor, connection);
 
     try {
-      client[functionName](...argumentValues, (error, result) => error ? future.throw(error) : future.return(result));
+      client[functionName](...argumentValues, (error, result) => (error ? future.throw(error) : future.return(result)));
       return future.wait();
-
     } finally {
       connection.end();
     }
-
   } catch (ex) {
     throw new Meteor.Error(`executor-${ex.errno}`, ex.code, String(ex));
   }
@@ -36,7 +33,8 @@ Meteor.methods({
    * @returns {{types: {_id: string, label: string, parameterCount: number, pattern: string, max: number}[], values: {types: string[], values: *[]}[]}}
    */
   getExecutorTypes() {
-    const integerPattern = '[-+]?[0-9]+', floatingPointPattern = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
+    const integerPattern = '[-+]?[0-9]+';
+    const floatingPointPattern = '[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?';
     return {
       types: [
         { _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },
@@ -52,7 +50,7 @@ Meteor.methods({
         { _id: ttypes.TypeContainerArray, label: `${ttypes.TypeContainerArray}<T>`, parameterCount: 1 },
         { _id: ttypes.TypeContainerList, label: `${ttypes.TypeContainerList}<T>`, parameterCount: 1 },
         { _id: ttypes.TypeContainerSet, label: `${ttypes.TypeContainerSet}<T>`, parameterCount: 1 },
-        { _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2 }
+        { _id: ttypes.TypeContainerMap, label: `${ttypes.TypeContainerMap}<K, V>`, parameterCount: 2 },
       ],
       values: [
         { types: [ttypes.TypeString], values: ['Progressor', 'Bern University of Applied Sciences'] },
@@ -61,8 +59,8 @@ Meteor.methods({
         { types: [ttypes.TypeInt8, ttypes.TypeInt16, ttypes.TypeInt32, ttypes.TypeInt64], values: [-25, 0, 1, new Date().getYear()] },
         { types: [ttypes.TypeFloat32, ttypes.TypeFloat64, ttypes.TypeDecimal], values: [-3.141592653, 2, 3.141592653, 5.27e-9] },
         { types: [ttypes.TypeContainerArray, ttypes.TypeContainerList, ttypes.TypeContainerSet], values: ['{-1,0,1,2}', '{strut1,touwm1,weidj1}'] },
-        { types: [ttypes.TypeContainerMap], values: ['{strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann}'] }
-      ]
+        { types: [ttypes.TypeContainerMap], values: ['{strut1:Thomas Strub,touwm1:Marc Touw,weidj1:Janick Weidmann}'] },
+      ],
     };
   },
 
@@ -97,17 +95,24 @@ Meteor.methods({
   getFragment(language, exercise) {
     check(language, String);
     check(exercise, Match.OneOf(
-      Match.ObjectIncluding(
-        {
-          _id: String
-        }),
-      Match.ObjectIncluding(
-        {
-          functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })]
-        })));
+        Match.ObjectIncluding({ _id: String }),
+        Match.ObjectIncluding({
+          functions: [
+            Match.ObjectIncluding({
+              name: String,
+              inputNames: [String],
+              inputTypes: [String],
+              outputNames: [String],
+              outputTypes: [String]
+            }),
+          ],
+        })
+      )
+    );
 
-    if (exercise._id)
+    if (exercise._id) {
       exercise = Progressor.exercises.findOne({ _id: exercise._id });
+    }
 
     const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
 
@@ -125,27 +130,39 @@ Meteor.methods({
   execute(language, exercise, fragment, includeInvisible = false) {
     check(language, String);
     check(exercise, Match.OneOf(
-      Match.ObjectIncluding(
-        {
-          _id: String
-        }),
-      Match.ObjectIncluding(
-        {
-          functions: [Match.ObjectIncluding({ name: String, inputNames: [String], inputTypes: [String], outputNames: [String], outputTypes: [String] })],
-          testCases: [Match.ObjectIncluding({ functionName: String, inputValues: [String], expectedOutputValues: [String] })]
-        })));
+      Match.ObjectIncluding({ _id: String }),
+      Match.ObjectIncluding({
+        functions: [
+          Match.ObjectIncluding({
+            name: String,
+            inputNames: [String],
+            inputTypes: [String],
+            outputNames: [String],
+            outputTypes: [String],
+          })
+        ],
+        testCases: [
+          Match.ObjectIncluding({
+            functionName: String,
+            inputValues: [String],
+            expectedOutputValues: [String],
+          })
+        ],
+      })));
     check(fragment, String);
     check(includeInvisible, Boolean);
 
-    if (exercise._id)
+    if (exercise._id) {
       exercise = Progressor.exercises.findOne({ _id: exercise._id });
+    }
 
     const execution = Progressor.executions.findOne({ _id: exercise.execution_id });
-    if (execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date()))
+    if (execution && (!execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date())) {
       throw new Meteor.Error('document-locked', i18n.forUser('error.locked.message', this.userId));
+    }
 
-    const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f)),
-      testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
+    const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
+    const testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
 
     const results = invokeExecutor.call(this, 'execute', language, fragment, functions, testCases);
 
@@ -158,29 +175,36 @@ Meteor.methods({
 
       const now = new Date();
       const updateFields = _.extend(query, { exercise: _.omit(exercise, '_id'), fragment, results, solved: now });
-      const logEntries = [], logEvaluated = {
-        type: Progressor.RESULT_LOG_EVALUATED_TYPE, timestamp: now,
+      const logEntries = [];
+      const logEvaluated = {
+        type: Progressor.RESULT_LOG_EVALUATED_TYPE,
+        timestamp: now,
         success: Progressor.isExerciseSuccess(exercise, results),
-        successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results)
+        successPercentage: Progressor.getExerciseSuccessPercentage(exercise, results),
       };
       if (lastLog) logEvaluated.intervalSeconds = (now.getTime() - lastLog.timestamp.getTime()) / 1e3;
       if (result && result.fragment) logEvaluated.difference = fragment.length - result.fragment.length;
       logEntries.push(logEvaluated);
 
       if (Progressor.isExerciseSuccess(exercise, results)) {
-        if (!result || !result.completed) updateFields.completed = now;
-        if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_COMPLETED_TYPE)) logEntries.push({ type: Progressor.RESULT_LOG_COMPLETED_TYPE, timestamp: now });
+        if (!result || !result.completed) {
+          updateFields.completed = now;
+        }
+        if (!result || !Progressor.getNewestResultLog(result.log, Progressor.RESULT_LOG_COMPLETED_TYPE)) {
+          logEntries.push({ type: Progressor.RESULT_LOG_COMPLETED_TYPE, timestamp: now });
+        }
       }
 
       Progressor.results.upsert(result ? result._id : null, {
         $set: updateFields,
-        $push: { log: { $each: logEntries } }
+        $push: { log: { $each: logEntries } },
       });
     }
 
-    if (Progressor.hasInvisibleTestCases(exercise) && (!includeInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)))
+    if (Progressor.hasInvisibleTestCases(exercise) && (!includeInvisible || exercise._id && exercise.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))) {
       return _.flatten([Progressor.getVisibleResults(exercise, results), { invisible: true, success: Progressor.isInvisibleSuccess(exercise, results) }]);
-    else
+    } else {
       return results;
-  }
+    }
+  },
 });

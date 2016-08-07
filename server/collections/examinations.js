@@ -5,21 +5,22 @@ Meteor.methods({
    * @returns {number} the unique identifier of the examination
    */
   saveExamination(examination){
-    check(examination, Match.ObjectIncluding(
-      {
-        durationMinutes: Match.Integer,
-        exercises: [Match.ObjectIncluding({ exercise_id: String, weight: Number })]
-      }));
+    check(examination, Match.ObjectIncluding({
+      durationMinutes: Match.Integer,
+      exercises: [Match.ObjectIncluding({ exercise_id: String, weight: Number })],
+    }));
 
     const _examination = examination._id ? Progressor.examinations.findOne({ _id: examination._id }) : examination;
 
-    if (!this.userId)
+    if (!this.userId) {
       throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
-    else if (_examination._id && _examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+    } else if (_examination._id && _examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) {
       throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+    }
 
-    if (!examination.author_id)
+    if (!examination.author_id) {
       examination.author_id = this.userId;
+    }
     examination.lastEditor_id = this.userId;
     examination.lastEdited = new Date();
 
@@ -38,8 +39,9 @@ Meteor.methods({
 
     examination = Progressor.examinations.findOne({ _id: examination._id });
 
-    if (examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+    if (examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) {
       throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+    }
 
     return Progressor.examinations.update(examination._id, { $set: { archived } }).rowsAffected;
   },
@@ -54,11 +56,12 @@ Meteor.methods({
 
     examination = Progressor.examinations.findOne({ _id: examination._id });
 
-    if (!this.userId)
+    if (!this.userId) {
       throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
-    else if (examination._id && examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN))
+    } else if (examination._id && examination.author_id !== this.userId && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) {
       throw new Meteor.Error('not-owner', i18n.forUser('error.notAuthor.message', this.userId));
+    }
 
     return Progressor.examinations.remove(examination._id).rowsAffected;
-  }
+  },
 });
