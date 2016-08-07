@@ -1,4 +1,4 @@
-//language codes are in \lib\application-constants.js
+// language codes are in lib/application-constants.js
 
 const themes = ['3024-day', '3024-night',
                 'ambiance-mobile', 'ambiance',
@@ -17,11 +17,11 @@ const themes = ['3024-day', '3024-night',
 const defaultTheme = 'eclipse';
 const defaultMode = 'text/plain';
 
-const config = { //https://codemirror.net/doc/manual.html
+const config = { // https://codemirror.net/doc/manual.html
   lineNumbers: true,
   lineWrapping: true,
   theme: defaultTheme,
-  mode: defaultMode
+  mode: defaultMode,
 };
 
 _.extend(Progressor, {
@@ -51,8 +51,9 @@ _.extend(Progressor, {
   getCodeMirrorConfiguration() {
     const user = Meteor.user();
     let ret = config;
-    if (user && user.profile && user.profile.codeMirrorTheme)
+    if (user && user.profile && user.profile.codeMirrorTheme) {
       ret = _.extend({}, ret, { theme: user.profile.codeMirrorTheme });
+    }
     return ret;
-  }
+  },
 });

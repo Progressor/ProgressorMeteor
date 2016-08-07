@@ -2,19 +2,20 @@ function getDefaultExecution() {
   return {
     names: [],
     descriptions: [],
-    exercises: []
+    exercises: [],
   };
 }
 
 function createExecution(examination) {
-  if (examination)
+  if (examination) {
     return {
       examination_id: examination._id,
       names: examination.names,
       descriptions: [],
       durationMinutes: examination.durationMinutes,
-      exercises: _.map(examination.exercises, e => ({ weight: e.weight, base_id: e.exercise_id }))
+      exercises: _.map(examination.exercises, e => ({ weight: e.weight, base_id: e.exercise_id })),
     };
+  }
 }
 
 function tmpl() {
@@ -50,10 +51,11 @@ Template.examinationExecutionEdit.onCreated(function () {
     const live = Progressor.executions.findOne();
     const examination = Progressor.examinations.findOne();
     const detached = Tracker.nonreactive(() => this.execution.get());
-    if (!live || !detached || live._id !== detached._id)
+    if (!live || !detached || live._id !== detached._id) {
       this.execution.set(Progressor.joinExamination(live || createExecution(examination) || getDefaultExecution()));
-    else if (live.lastEditor_id !== Meteor.userId())
+    } else if (live.lastEditor_id !== Meteor.userId()) {
       Progressor.showAlert(i18n('form.documentChangedMessage'));
+    }
   });
 });
 
@@ -78,13 +80,12 @@ Template.examinationExecutionEdit.helpers({
     name: i18n.getNameForLanguage(tmpl().execution.get(), id),
     description: i18n.getDescriptionForLanguage(tmpl().execution.get(), id)
   })),
-  exercises: () => _.map(tmpl().execution.get().exercises, (exercise, index) => _.extend(
-    {
-      exerciseIndex: index,
-      isFirst: index === 0,
-      isLast: index === tmpl().execution.get().exercises.length - 1,
-      weight: exercise.weight
-    }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
+  exercises: () => _.map(tmpl().execution.get().exercises, (exercise, index) => _.extend({
+    exerciseIndex: index,
+    isFirst: index === 0,
+    isLast: index === tmpl().execution.get().exercises.length - 1,
+    weight: exercise.weight,
+  }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
   totalWeight: e => _.reduce(e.exercises, (w, f) => w + (f.weight || 0), 0),
 
   /////////////////////////
@@ -96,7 +97,7 @@ Template.examinationExecutionEdit.helpers({
     return _.map(Meteor.users.find({ _id: { $nin: addedIds } }).fetch(), user => {
       const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
       tmpl().userValues[value] = user;
-      return { value: value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
+      return { value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
     });
   }
 });
@@ -132,8 +133,9 @@ function changeExecutionCollection(collectionName, propertySupplier) {
 
 function addExecutionCollection(collectionName, itemSupplier) {
   return changeExecution(function (event, template, $this) {
-    if (!template.execution.get()[`${collectionName}s`])
+    if (!template.execution.get()[`${collectionName}s`]) {
       template.execution.get()[`${collectionName}s`] = [];
+    }
     template.execution.get()[`${collectionName}s`].splice(this[`${collectionName}Index`] + 1, 0, itemSupplier.call(this, event, template, $this, this));
   });
 }
@@ -141,8 +143,10 @@ function addExecutionCollection(collectionName, itemSupplier) {
 function removeExecutionCollection(collectionName) {
   return changeExecution(function (event, template) {
     template.execution.get()[`${collectionName}s`].splice(this[`${collectionName}Index`], 1);
-    if (!template.execution.get()[`${collectionName}s`].length)
+    if (!template.execution.get()[`${collectionName}s`].length) {
+      // TODO: remove `delete`
       delete template.execution.get()[`${collectionName}s`];
+    }
   });
 }
 
@@ -161,7 +165,8 @@ Template.examinationExecutionEdit.events({
   'click .btn-move-exercise-up': reorderExecutionCollection('exercise', -1),
   'click .btn-move-exercise-down': reorderExecutionCollection('exercise', +1),
   'click #button-add-examinee': addExecutionCollection('examinee', (event, template) => {
-    const $input = template.$('#input-add-examinee'), user = template.userValues[$input.val()];
+    const $input = template.$('#input-add-examinee');
+    const user = template.userValues[$input.val()];
     $input.val(null);
     return user._id;
   }),
@@ -173,21 +178,22 @@ Template.examinationExecutionEdit.events({
 
   'change [id^="input-name-"]': changeExecutionTranslation('name'),
   'change [id^="textarea-description-"]': changeExecutionTranslation('description'),
-  'change #input-duration': changeExecution((event, template, $this) => template.execution.get().durationMinutes = parseInt($this.val())),
-  'change .input-weight': changeExecutionCollection('exercise', (e, t, $) => ({ weight: parseInt($.val()) })),
+  'change #input-duration': changeExecution((event, template, $this) => template.execution.get().durationMinutes = parseInt($this.val(), 10)),
+  'change .input-weight': changeExecutionCollection('exercise', (e, t, $) => ({ weight: parseInt($.val(), 10) })),
 
   ////////////////////////
   // PERSISTENCE EVENTS //
   ////////////////////////
 
   'click .btn-save'(event, template) {
-    if (testValidExecution(template.execution.get()))
+    if (testValidExecution(template.execution.get())) {
       Meteor.call('saveExecution', _.omit(template.execution.get(), 'examination'), Progressor.handleError(result => {
         Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
         Router.go('examinationExecutionEdit', { _id: result });
       }, false));
-    else
+    } else {
       Progressor.showAlert(i18n('examination.executionIsNotValidMessage'));
+    }
   },
   'click .btn-delete': (e, t) => Meteor.call('deleteExecution', { _id: t.execution.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
   'click .btn-start-execution'(event, template) {
@@ -200,5 +206,5 @@ Template.examinationExecutionEdit.events({
   // EXPORT EVENTS //
   ///////////////////
 
-  'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(Progressor.executions.findOne())
-  });
+  'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(Progressor.executions.findOne()),
+});

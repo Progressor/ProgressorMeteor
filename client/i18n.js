@@ -7,16 +7,15 @@ function setLanguage(local = false) {
 }
 
 Meteor.startup(function () {
-
   const languages = navigator.languages || [navigator.language, navigator.userLanguage, navigator.browserLanguage, navigator.systemLanguage];
 
-  //set default language (don't save yet)
+  // set default language (don't save yet)
   _.some(languages, setLanguage(true));
 
   Tracker.autorun(() => {
     const usr = Meteor.user();
-    if (!usr || !usr.profile || !usr.profile.language || !setLanguage(true)(usr.profile.language)) //set profile language (don't overwrite)
-      _.some(languages, setLanguage()); //save default language
+    if (!usr || !usr.profile || !usr.profile.language || !setLanguage(true)(usr.profile.language)) { // set profile language (don't overwrite)
+      _.some(languages, setLanguage()); // save default language
+    }
   });
-
 });

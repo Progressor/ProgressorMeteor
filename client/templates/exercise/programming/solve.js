@@ -11,22 +11,25 @@ function getExercise(forceRefresh = false) {
 }
 
 function getResult() {
-  if (tmpl().isResult.get())
+  if (tmpl().isResult.get()) {
     return Progressor.results.findOne();
+  }
 }
 
 function getExecutionResults() {
-  if (tmpl().isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+  if (tmpl().isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime())) {
     return Progressor.results.findOne().results;
-  else
+  } else {
     return tmpl().executionResults.get();
+  }
 }
 
 function getExecutionExercise(offset) {
   const execution = Progressor.executions.findOne();
   let exerciseIndex = -1;
-  if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset])
+  if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset]) {
     return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
+  }
 }
 
 Template.programmingSolve.onCreated(function () {
@@ -53,19 +56,21 @@ Template.programmingSolve.onCreated(function () {
   ////////////////////
 
   this.autorun(() => {
-    const result = Progressor.results.findOne(), exercise = getExercise();
+    const result = Progressor.results.findOne();
+    const exercise = getExercise();
     if (!result && !exercise || (result ? result.exercise_id : exercise._id) !== this.exerciseId) {
-      if (result && result.fragment)
+      if (result && result.fragment) {
         Session.set('fragment', result.fragment);
-      else if (exercise && exercise.fragment)
+      } else if (exercise && exercise.fragment) {
         Session.set('fragment', exercise.fragment);
-      else
+      } else {
         Meteor.call('getFragment', exercise.programmingLanguage, { _id: exercise._id }, Progressor.handleError((e, r) => Session.set('fragment', !e ? r : null)));
+      }
       this.exerciseId = result ? result.exercise_id : exercise._id;
     }
   });
 
-  if (!tmpl().isResult.get())
+  if (!tmpl().isResult.get()) {
     this.autorun(() => {
       const exercise = getExercise(true);
       if (exercise) {
@@ -81,16 +86,18 @@ Template.programmingSolve.onCreated(function () {
       Meteor.clearInterval(this.progressUpdateInterval);
       this.progressUpdateInterval = Meteor.setInterval(() => {
         if (exercise) {
-          const fragment = Session.get('fragment'), length = fragment ? fragment.length : 0;
+          const fragment = Session.get('fragment');
+          const length = fragment ? fragment.length : 0;
           Meteor.call('updateExerciseProgress', exercise, {
             activities: this.progress.activities,
-            difference: fragment ? length - this.progress.length : 0
+            difference: fragment ? length - this.progress.length : 0,
           }, Progressor.handleError());
           this.progress.activities = 0;
           this.progress.length = length;
         }
       }, Progressor.RESULT_LOG_PROGRESS_UPDATE_INTERVAL);
     });
+  }
 });
 
 Template.programmingSolve.onDestroyed(function () {
@@ -115,25 +122,34 @@ Template.programmingSolve.helpers({
   changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
   resultSolved: () => getResult().solved,
   codeMirrorThemes() {
-    const user = Meteor.user(), userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
+    const user = Meteor.user();
+    const userTheme = user && user.profile && user.profile.codeMirrorTheme ? user.profile.codeMirrorTheme : Progressor.getCodeMirrorDefaultTheme();
     return _.map(Progressor.getCodeMirrorThemes(), theme => ({ _id: theme, isActive: theme === userTheme }));
   },
   codeMirrorOptions(isSolution = false) {
     const programmingLanguage = Progressor.getProgrammingLanguage(getExercise().programmingLanguage);
-    return _.extend({}, Progressor.getCodeMirrorConfiguration(), { //https://codemirror.net/doc/manual.html
+    return _.extend({}, Progressor.getCodeMirrorConfiguration(), { // https://codemirror.net/doc/manual.html
       autofocus: true,
       readOnly: tmpl().isResult.get() || isSolution ? 'nocursor' : false,
       mode: programmingLanguage && programmingLanguage.codeMirror ? programmingLanguage.codeMirror : 'text/plain',
-      firstLineNumber: programmingLanguage && programmingLanguage.templateOffset ? programmingLanguage.templateOffset + 1 : 1
+      firstLineNumber: programmingLanguage && programmingLanguage.templateOffset ? programmingLanguage.templateOffset + 1 : 1,
     });
   },
   executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
-  blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
+  blackListMessage: () => (tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null),
   versionInformation() {
     const versionInformation = tmpl().versionInformation.get();
-    if (versionInformation) return i18n('exercise.help.versionInformationMessage',
-                                        versionInformation.languageVersion || i18n('form.notAvailable'), versionInformation.compilerName || i18n('form.notAvailable'), versionInformation.compilerVersion || i18n('form.notAvailable'),
-                                        versionInformation.platformName || i18n('form.notAvailable'), versionInformation.platformVersion || i18n('form.notAvailable'), versionInformation.platformArchitecture || i18n('form.notAvailable'));
+    if (versionInformation) {
+      return i18n(
+        'exercise.help.versionInformationMessage',
+        versionInformation.languageVersion || i18n('form.notAvailable'),
+        versionInformation.compilerName || i18n('form.notAvailable'),
+        versionInformation.compilerVersion || i18n('form.notAvailable'),
+        versionInformation.platformName || i18n('form.notAvailable'),
+        versionInformation.platformVersion || i18n('form.notAvailable'),
+        versionInformation.platformArchitecture || i18n('form.notAvailable'),
+      );
+    }
   },
   testCaseSignature: c => Progressor.getTestCaseSignature(getExercise(), c),
   testCaseExpectedOutput: c => Progressor.getExpectedTestCaseOutput(getExercise(), c),
@@ -142,7 +158,7 @@ Template.programmingSolve.helpers({
   testCaseActualOutput: c => Progressor.getActualTestCaseOutput(getExercise(), c, getExecutionResults()),
   testCaseExecutionTime: c => Progressor.getTestCaseExecutionTime(getExercise(), c, getExecutionResults()),
   executionFatal: () => Progressor.isExerciseFatal(getExercise(), getExecutionResults()),
-  showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
+  showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get(),
 });
 
 Template.programmingSolve.events({
@@ -208,5 +224,5 @@ Template.programmingSolve.events({
     Session.set('solution', getExercise().solution);
     template.showSolution.set(true);
   },
-  'click #button-close': (e, t) => t.showSolution.set(false)
+  'click #button-close': (event, templateInstance) => templateInstance.showSolution.set(false),
 });

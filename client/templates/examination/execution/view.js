@@ -58,16 +58,18 @@ Template.examinationExecutionView.helpers({
   totalWeight: () => _.reduce(getExecution().exercises, (w, e) => w + (e.weight || 0), 0),
   examinees() {
     const execution = getExecution();
-    if (execution)
-      if (execution.examinees && execution.examinees.length) return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
-      else return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).sortBy(u => Progressor.getUserName(u).toLowerCase()).value();
+    if (execution) {
+      if (execution.examinees && execution.examinees.length) {
+        return _.map(execution.examinees, e => Meteor.users.findOne({ _id: e }));
+      }
+      return _.chain(Progressor.results.find({ 'exercise.execution_id': execution._id }).fetch()).groupBy('user_id').map((g, u) => Meteor.users.findOne({ _id: u })).sortBy(u => Progressor.getUserName(u).toLowerCase()).value();
+    }
   },
   nofResults: u => u ? Progressor.results.find({ user_id: u._id, solved: { $exists: true } }).count() : 0,
-  exercises: user => _.map(getExecution().exercises, exercise => _.extend(
-    {
-      weight: exercise.weight,
-      result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null
-    }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id })))),
+  exercises: user => _.map(getExecution().exercises, exercise => _.extend({
+    weight: exercise.weight,
+    result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null
+  }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id })))),
   exerciseStatus: e => !e.result ? 'not-solved' : !Progressor.isExerciseEvaluated(e, e.result.results) ? 'not-evaluated' : Progressor.isExerciseSuccess(e, e.result.results) ? 'success' : 'partial',
   successPercentage: e => Progressor.getExerciseSuccessPercentage(e, e.result ? e.result.results : null),
   totalSuccessPercentage(user) {

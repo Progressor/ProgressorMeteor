@@ -24,25 +24,47 @@ function testValidExamination({ names, durationMinutes, exercises }) {
 // EXERCISE SEARCH FILTER //
 ////////////////////////////
 
-function getFilter(includeVisibility = true) {
-  const flt = {};
-  if (tmpl().filter.get('name') && tmpl().filter.get('name').length > 2) flt.names = { $elemMatch: { name: new RegExp(tmpl().filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
-  if (tmpl().filter.get('type')) flt.type = tmpl().filter.get('type');
-  if (tmpl().filter.get('language')) flt.programmingLanguage = tmpl().filter.get('language');
-  if (tmpl().filter.get('category')) flt.category_id = tmpl().filter.get('category');
-  if (tmpl().filter.get('difficulty')) flt.difficulty = tmpl().filter.get('difficulty');
-  if (includeVisibility) {
-    if (tmpl().filter.get('visibilityReleased') === false) combineFilter(flt, 'released.confirmed', { $exists: false });
-    if (tmpl().filter.get('visibilityUnreleased') === false) combineFilter(flt, 'released.confirmed', { $exists: true });
-  }
-  return flt;
-}
 
 function combineFilter(filter, property, value) {
   if (filter[property]) {
-    if (filter[property]['$and']) filter[property]['$and'].push(value);
-    else filter[property] = { $and: [filter[property], value] };
-  } else filter[property] = value;
+    if (filter[property].$and) {
+      filter[property].$and.push(value);
+    } else {
+      filter[property] = {
+        $and: [filter[property], value],
+      };
+    }
+  } else {
+    filter[property] = value;
+  }
+}
+
+function getFilter(includeVisibility = true) {
+  const flt = {};
+  if (tmpl().filter.get('name') && tmpl().filter.get('name').length > 2) {
+    flt.names = { $elemMatch: { name: new RegExp(tmpl().filter.get('name').replace(/[^a-z0-9]+/i, '.*'), 'i') } };
+  }
+  if (tmpl().filter.get('type')) {
+    flt.type = tmpl().filter.get('type');
+  }
+  if (tmpl().filter.get('language')) {
+    flt.programmingLanguage = tmpl().filter.get('language');
+  }
+  if (tmpl().filter.get('category')) {
+    flt.category_id = tmpl().filter.get('category');
+  }
+  if (tmpl().filter.get('difficulty')) {
+    flt.difficulty = tmpl().filter.get('difficulty');
+  }
+  if (includeVisibility) {
+    if (tmpl().filter.get('visibilityReleased') === false) {
+      combineFilter(flt, 'released.confirmed', { $exists: false });
+    }
+    if (tmpl().filter.get('visibilityUnreleased') === false) {
+      combineFilter(flt, 'released.confirmed', { $exists: true });
+    }
+  }
+  return flt;
 }
 
 Template.examinationTemplateEdit.onCreated(function () {
@@ -61,10 +83,11 @@ Template.examinationTemplateEdit.onCreated(function () {
   this.autorun(() => {
     const live = Progressor.examinations.findOne();
     const detached = Tracker.nonreactive(() => this.examination.get());
-    if (!live || !detached || live._id !== detached._id)
+    if (!live || !detached || live._id !== detached._id) {
       this.examination.set(live || getDefaultExamination());
-    else if (live.lastEditor_id !== Meteor.userId())
+    } else if (live.lastEditor_id !== Meteor.userId()) {
       Progressor.showAlert(i18n('form.documentChangedMessage'));
+    }
   });
 });
 
@@ -80,7 +103,9 @@ Template.examinationTemplateEdit.helpers({
   },
   executionCreateQuery: () => ({ examination: tmpl().examination.get()._id }),
   i18nExaminationNames: () => _.map(i18n.getLanguages(), (name, id) => ({
-    _id: id, language: name, isActive: id === i18n.getLanguage(),
+    _id: id,
+    language: name,
+    isActive: id === i18n.getLanguage(),
     name: i18n.getNameForLanguage(tmpl().examination.get(), id)
   })),
   exerciseTypes: Progressor.getExerciseTypes,
@@ -130,12 +155,18 @@ function changeExamination(callback) {
 
 function changeExaminationTranslation(translationName) {
   return changeExamination(function (event, template, $this) {
-    const value = $this.val(), elements = template.examination.get()[`${translationName}s`], language = this._id;
+    const value = $this.val();
+    const elements = template.examination.get()[`${translationName}s`];
+    const language = this._id;
     let elementIndex = -1;
     const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
-    if (!value) elements.splice(elementIndex, 1);
-    else if (element) element[translationName] = value;
-    else elements.push({ language, [translationName]: value });
+    if (!value) {
+      elements.splice(elementIndex, 1);
+    } else if (element) {
+      element[translationName] = value;
+    } else {
+      elements.push({ language, [translationName]: value });
+    }
   });
 }
 

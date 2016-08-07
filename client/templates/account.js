@@ -34,16 +34,20 @@ Template.account.helpers({
   createdExaminations: c => _.map(c.createdExaminations, e => _.extend({ isExamination: true }, e)),
   createdExecutions: c => _.map(c.createdExecutions, e => _.extend({ isExamination: true, isExecution: true }, e)),
   archive: c => _.chain(_.map(c.archivedExercises, e => _.extend({ isArchive: true, isExercise: true }, e)))
-    .union(_.map(c.archivedExaminations, e => _.extend({ isArchive: true, isExamination: true }, e)),
-           _.map(c.archivedExecutions, e => _.extend({ isArchive: true, isExamination: true, isExecution: true }, e)))
-    .sortBy(d => d.lastEdited).value().reverse(),
+    .union(
+      _.map(c.archivedExaminations, e => _.extend({ isArchive: true, isExamination: true }, e)),
+      _.map(c.archivedExecutions, e => _.extend({ isArchive: true, isExamination: true, isExecution: true }, e))
+    )
+    .sortBy(d => d.lastEdited)
+    .value()
+    .reverse(),
 
   // user search helpers //
 
   users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), user => {
     const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
     tmpl().userValues[value] = user;
-    return { value: value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
+    return { value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
   })
 });
 
@@ -51,22 +55,25 @@ Template.account.events({
 
   // account management events //
 
-  'click #at-btn'(event, template) { //inject custom messaging into accounts UI
+  'click #at-btn'(event, template) { // inject custom messaging into accounts UI
     if (AccountsTemplates.getState() === 'resetPwd') {
       event.preventDefault();
-      let newPassword = template.$('#at-field-password').val(), confirmPassword = template.$('#at-field-password_again').val();
+      const newPassword = template.$('#at-field-password').val();
+      const confirmPassword = template.$('#at-field-password_again').val();
       if (newPassword && newPassword === confirmPassword) {
-        let { token, done } = Session.get('onResetPasswordLink_arguments');
+        const { token, done } = Session.get('onResetPasswordLink_arguments');
         Accounts.resetPassword(token, newPassword, error => {
           if (!error) {
             Progressor.showAlert(i18n('account.passwordResetSuccessMessage'), 'success');
             done();
             Session.set('onResetPasswordLink_arguments', undefined);
-          } else
+          } else {
             Progressor.showAlert(i18n('account.passwordResetErrorMessage'), 'danger');
+          }
         });
-      } else
+      } else {
         Progressor.showAlert(i18n('account.passwordMismatchMessage'));
+      }
     }
   },
   'click #button-logout': () => Meteor.logout(),
@@ -75,7 +82,8 @@ Template.account.events({
   // account settings events //
 
   'change #input-name'(event) {
-    const $this = $(event.currentTarget), $group = $this.closest('.form-group');
+    const $this = $(event.currentTarget);
+    const $group = $this.closest('.form-group');
     Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, error => {
       $group.addClass(!error ? 'has-success' : 'has-error');
       Meteor.setTimeout(() => $group.removeClass('has-success has-error'), 500);
@@ -85,8 +93,10 @@ Template.account.events({
   // admin authorisation events //
 
   'click #button-make-admin'(event, template) {
-    const $input = template.$('#input-make-admin'), $group = $input.closest('.form-group'), user = template.userValues[$input.val()];
-    if (user)
+    const $input = template.$('#input-make-admin');
+    const $group = $input.closest('.form-group');
+    const user = template.userValues[$input.val()];
+    if (user) {
       Meteor.call('toggleUsersRoles', [user._id], [Progressor.ROLE_ADMIN], true, Progressor.handleError(error => {
         $group.addClass(!error ? 'has-success' : 'has-error');
         Meteor.setTimeout(() => {
@@ -94,9 +104,10 @@ Template.account.events({
           $input.val(null);
         }, 500);
       }));
-    else
+    } else {
       Progressor.showAlert(i18n('form.noSelectionMessage'));
-  }
+    }
+  },
 });
 
 ////////////////////////////////
@@ -113,10 +124,10 @@ function toggleArchiveExercise(archive) {
 Template.account_listPanel.helpers({
   randomId: () => Random.id(),
   evaluated: (e, r) => Progressor.isExerciseEvaluated(e, r),
-  success: (e, r) => Progressor.isExerciseSuccess(e, r)
+  success: (e, r) => Progressor.isExerciseSuccess(e, r),
 });
 
 Template.account_listPanel.events({
   'click .a-archive': toggleArchiveExercise(true),
-  'click .a-unarchive': toggleArchiveExercise(false)
+  'click .a-unarchive': toggleArchiveExercise(false),
 });

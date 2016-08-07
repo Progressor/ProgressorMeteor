@@ -5,11 +5,11 @@ function getDefaultExercise() {
     descriptions: [],
     options: [{
       language: i18n.getLanguage(),
-      options: [null]
+      options: [null],
     }],
     solution: [],
     multipleSolutions: true,
-    solutionVisible: false
+    solutionVisible: false,
   };
 }
 
@@ -24,12 +24,22 @@ function tmpl() {
 function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, options, released }) {
   const category = Progressor.categories.findOne({ _id: category_id });
   const notEmpty = /[^\s]+/;
-  return programmingLanguage && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
-         && category_id && category && !(category.private && released)
-         && difficulty && _.contains(Progressor.getDifficulties(), difficulty)
-         && names && names.length && _.some(names, n => n.name && notEmpty.test(n.name))
-         && descriptions && descriptions.length && _.some(descriptions, d => d.description && notEmpty.test(d.description))
-         && options && options.length && _.chain(_.chain(_.map(options, o => o.options.length)).max().value()).range().every(i => _.some(options, o => o.options[i] && notEmpty.test(o.options[i]))).value();
+  return programmingLanguage
+    && _.some(Progressor.getProgrammingLanguages(), l => l._id === programmingLanguage)
+    && category_id
+    && category
+    && !(category.private && released)
+    && difficulty
+    && _.contains(Progressor.getDifficulties(), difficulty)
+    && names
+    && names.length
+    && _.some(names, n => n.name && notEmpty.test(n.name))
+    && descriptions
+    && descriptions.length
+    && _.some(descriptions, d => d.description && notEmpty.test(d.description))
+    && options
+    && options.length
+    && _.chain(_.chain(_.map(options, o => o.options.length)).max().value()).range().every(i => _.some(options, o => o.options[i] && notEmpty.test(o.options[i]))).value();
 }
 
 Template.multipleEdit.onCreated(function () {
@@ -50,11 +60,13 @@ Template.multipleEdit.onCreated(function () {
     const detached = Tracker.nonreactive(() => this.exercise.get());
     if (!live || !detached || live._id !== detached._id) {
       let _exercise = live || getDefaultExercise();
-      if (this.isCreate.get())
+      if (this.isCreate.get()) {
         _exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
+      }
       this.exercise.set(Progressor.joinCategory(_exercise));
-    } else if (live.lastEditor_id !== Meteor.userId())
+    } else if (live.lastEditor_id !== Meteor.userId()) {
       Progressor.showAlert(i18n('form.documentChangedMessage'));
+    }
   });
 });
 

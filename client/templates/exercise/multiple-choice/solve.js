@@ -11,22 +11,25 @@ function getExercise(forceRefresh = false) {
 }
 
 function getResult() {
-  if (tmpl().isResult.get())
+  if (tmpl().isResult.get()) {
     return Progressor.results.findOne();
+  }
 }
 
 function getEvaluationResults() {
-  if (tmpl().isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime()))
+  if (tmpl().isResult.get() || (Progressor.results.find().count() && Progressor.exercises.findOne().lastEdited.getTime() === Progressor.results.findOne().exercise.lastEdited.getTime())) {
     return Progressor.results.findOne().results;
-  else
+  } else {
     return tmpl().evaluationResults.get();
+  }
 }
 
 function getExecutionExercise(offset) {
   const execution = Progressor.executions.findOne();
   let exerciseIndex = -1;
-  if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset])
+  if (execution && _.any(execution.exercises, (e, i) => (exerciseIndex = e.exercise_id === getExercise()._id ? i : exerciseIndex) >= 0) && execution.exercises[exerciseIndex + offset]) {
     return { _id: execution.exercises[exerciseIndex + offset].exercise_id };
+  }
 }
 
 Template.multipleSolve.onCreated(function () {
@@ -46,8 +49,9 @@ Template.multipleSolve.onCreated(function () {
   if (!tmpl().isResult.get())
     this.autorun(() => {
       const exercise = getExercise(true);
-      if (exercise)
+      if (exercise) {
         Meteor.call('openedExercise', exercise, Progressor.handleError());
+      }
 
       Meteor.clearInterval(this.progressUpdateInterval);
       this.progressUpdateInterval = Meteor.setInterval(() => {
@@ -85,14 +89,16 @@ Template.multipleSolve.helpers({
     const exercise = getExercise();
     if (!exercise.execution_id) {
       const status = Progressor.getResultStatus(exercise, index, getEvaluationResults());
-      if (status !== 0)
+      if (status !== 0) {
         return `has-${status > 0 ? 'success' : 'error'}`;
+      }
     }
   },
   checkedStatus(index) {
     const result = Progressor.results.findOne();
-    if (result && result.results && result.results[index] && result.results[index].checked)
+    if (result && result.results && result.results[index] && result.results[index].checked) {
       return 'checked';
+    }
   }
 });
 
@@ -119,8 +125,9 @@ Template.multipleSolve.events({
     const exercise = getExercise();
     Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((error, result) => {
       template.evaluationResults.set(!error ? result : []);
-      if (!error && exercise.execution_id)
+      if (!error && exercise.execution_id) {
         Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
+      }
     }));
   }
 });

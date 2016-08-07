@@ -1,7 +1,7 @@
 function getDefaultCategory() {
   return {
     names: [],
-    descriptions: []
+    descriptions: [],
   };
 }
 
@@ -34,10 +34,11 @@ Template.categoryEdit.onCreated(function () {
   this.autorun(() => {
     const live = Progressor.categories.findOne();
     const detached = Tracker.nonreactive(() => this.category.get());
-    if (!live || !detached || live._id !== detached._id)
+    if (!live || !detached || live._id !== detached._id) {
       this.category.set(live || getDefaultCategory());
-    else if (live.lastEditor_id !== Meteor.userId())
+    } else if (live.lastEditor_id !== Meteor.userId()) {
       Progressor.showAlert(i18n('form.documentChangedMessage'));
+    }
   });
 });
 
@@ -73,12 +74,18 @@ function changeCategory(callback) {
 
 function changeCategoryTranslation(translationName) {
   return changeCategory(function (event, template, $this) {
-    const value = $this.val(), elements = template.category.get()[`${translationName}s`], language = this._id;
+    const value = $this.val();
+    const elements = template.category.get()[`${translationName}s`];
+    const language = this._id;
     let elementIndex = -1;
     const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
-    if (!value) elements.splice(elementIndex, 1);
-    else if (element) element[translationName] = value;
-    else elements.push({ language, [translationName]: value });
+    if (!value) {
+      elements.splice(elementIndex, 1);
+    } else if (element) {
+      element[translationName] = value;
+    } else {
+      elements.push({ language, [translationName]: value });
+    }
   });
 }
 
@@ -96,10 +103,11 @@ Template.categoryEdit.events({
   ////////////////////////
 
   'click .btn-save'(event, template) {
-    if (testValidCategory(template.category.get()))
+    if (testValidCategory(template.category.get())) {
       Meteor.call('saveCategory', template.category.get(), Progressor.handleError(r => Router.go('categoryExercises', { _id: r }), false));
-    else
+    } else {
       Progressor.showAlert(i18n('category.isNotValidMessage'));
+    }
   },
-  'click .btn-delete': () => Meteor.call('deleteCategory', template.category.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.category.get().programmingLanguage }), false))
+  'click .btn-delete': () => Meteor.call('deleteCategory', template.category.get(), Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.category.get().programmingLanguage }), false)),
 });

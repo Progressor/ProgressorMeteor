@@ -9,16 +9,16 @@ function getDefaultExercise() {
       inputNames: [],
       inputTypes: [],
       outputNames: ['return'],
-      outputTypes: [null]
+      outputTypes: [null],
     }],
     testCases: [{
       inputValues: [],
       expectedOutputValues: [],
-      visible: false
+      visible: false,
     }],
     fragment: null,
     solution: null,
-    solutionVisible: false
+    solutionVisible: false,
   };
 }
 
@@ -37,21 +37,23 @@ function testExecutorIdentifier(value) {
 function testExecutorType(type, isRecursive = false) {
   const executorType = tmpl().executorTypes.get() ? _.find(tmpl().executorTypes.get().types, t => type.substr(0, t._id.length) === t._id) : null;
   let index = executorType ? executorType._id.length : 0;
-  if (!executorType) return false; //^: find the (outermost) type object and skip its name //verify a type has been found
-  else if (executorType.parameterCount > 0) { //if the type has parameters
-    if (type.substr(index, 1) !== "<") return false; //verify the next character is the generic open bracket
-    index++; //move index forward
-    for (let i = 0; i < executorType.parameterCount; i++) { //repeat check for each type parameter
-      const separator = i === executorType.parameterCount - 1 ? '>' : ','; //determine the separator expected after this type parameter
-      if (i > 0) index += type.substr(index).match(/^\s?/)[0].length; //skip optional whitespace after separator
+  if (!executorType) {
+    return false; // ^: find the (outermost) type object and skip its name // verify a type has been found
+  }
+  else if (executorType.parameterCount > 0) { // if the type has parameters
+    if (type.substr(index, 1) !== "<") return false; // verify the next character is the generic open bracket
+    index++; // move index forward
+    for (let i = 0; i < executorType.parameterCount; i++) { // repeat check for each type parameter
+      const separator = i === executorType.parameterCount - 1 ? '>' : ','; // determine the separator expected after this type parameter
+      if (i > 0) index += type.substr(index).match(/^\s?/)[0].length; // skip optional whitespace after separator
       let subLength = testExecutorType(type.substr(index), true);
-      if (subLength === false) return false; //verify parameter is a valid type
-      index += subLength; //move index forward
-      if (type.substr(index, 1) !== separator) return false; //verify the next character is the defined separator
-      index += separator.length; //move index forward
+      if (subLength === false) return false; // verify parameter is a valid type
+      index += subLength; // move index forward
+      if (type.substr(index, 1) !== separator) return false; // verify the next character is the defined separator
+      index += separator.length; // move index forward
     }
   }
-  return isRecursive ? index : index === type.length; //recursive: return new index, otherwise: verify end is reached
+  return isRecursive ? index : index === type.length; // recursive: return new index, otherwise: verify end is reached
 }
 
 const openDelimiterPattern = '{\\s?', closeDelimiterPattern = '\\s?}', separatorPatterns = [',\\s?', ':\\s?'];
@@ -59,34 +61,34 @@ const openDelimiterPattern = '{\\s?', closeDelimiterPattern = '\\s?}', separator
 function testExecutorValue(value, type, isRecursive = false, ...delimiters) {
   const executorType = tmpl().executorTypes.get() ? _.find(tmpl().executorTypes.get().types, t => type && type.substr(0, t._id.length) === t._id) : null;
   let typeIndex = executorType ? executorType._id.length : 0, valueIndex = 0, match, number;
-  if (executorType.pattern) { //^: find the (outermost) type object and skip its name //if a pattern is specified
-    if (!(match = value.match(delimiters.length ? `^(${executorType.pattern}?(?=(${delimiters.join(')|(')}))|${executorType.pattern})` : `^${executorType.pattern}`))) return false; //verify the pattern
-    valueIndex += match[0].length; //move index forward //_: verify the number range
+  if (executorType.pattern) { // ^: find the (outermost) type object and skip its name // if a pattern is specified
+    if (!(match = value.match(delimiters.length ? `^(${executorType.pattern}?(?=(${delimiters.join(')|(')}))|${executorType.pattern})` : `^${executorType.pattern}`))) return false; // verify the pattern
+    valueIndex += match[0].length; // move index forward // _: verify the number range
     if (executorType.max && !(Number.isFinite(number = (Number.isInteger(executorType.max) ? parseInt : parseFloat)(match[0])) && -executorType.max - 1 <= number && number <= executorType.max)) return false;
   }
-  if (executorType.parameterCount > 0) { //if the type as parameters
-    typeIndex++; //skip generic open bracket
-    const _typeIndex = typeIndex; //remember initial type index position
-    if (!(match = value.substr(valueIndex).match(`^${openDelimiterPattern}`))) return false; //verify open delimiter
-    valueIndex += match[0].length; //move index forward
-    for (let i = 0; true; i++) { //repeat until all collection items have been processed
-      if ((match = value.substr(valueIndex).match(`^${closeDelimiterPattern}`)) && (valueIndex += match[0].length)) break; //verify close delimiter, move index forward
-      else if (i > 0 && !((match = value.substr(valueIndex).match(`^${separatorPatterns[0]}`)) && (valueIndex += match[0].length))) return false; //verify item separator / move index forward
-      typeIndex = _typeIndex; //reset type index
-      for (let j = 0; j < executorType.parameterCount; j++) { //repeat check for each type parameter
-        if (j > 0) typeIndex += type.substr(typeIndex).match(/^\s?/)[0].length; //skip optional whitespace after separator //_: recursive call (pass next separator)
+  if (executorType.parameterCount > 0) { // if the type as parameters
+    typeIndex++; // skip generic open bracket
+    const _typeIndex = typeIndex; // remember initial type index position
+    if (!(match = value.substr(valueIndex).match(`^${openDelimiterPattern}`))) return false; // verify open delimiter
+    valueIndex += match[0].length; // move index forward
+    for (let i = 0; true; i++) { // repeat until all collection items have been processed
+      if ((match = value.substr(valueIndex).match(`^${closeDelimiterPattern}`)) && (valueIndex += match[0].length)) break; // verify close delimiter, move index forward
+      else if (i > 0 && !((match = value.substr(valueIndex).match(`^${separatorPatterns[0]}`)) && (valueIndex += match[0].length))) return false; // verify item separator / move index forward
+      typeIndex = _typeIndex; // reset type index
+      for (let j = 0; j < executorType.parameterCount; j++) { // repeat check for each type parameter
+        if (j > 0) typeIndex += type.substr(typeIndex).match(/^\s?/)[0].length; // skip optional whitespace after separator // _: recursive call (pass next separator)
         const subLength = testExecutorValue(value.substr(valueIndex), type.substr(typeIndex), true, closeDelimiterPattern, separatorPatterns[j < executorType.parameterCount - 1 ? 1 : 0]);
-        typeIndex += subLength.typIdx; //move index forward
-        valueIndex += subLength.valIdx; //move index forward
-        typeIndex++; //skip separator
-        if (j < executorType.parameterCount - 1) { //if there are more parameters to come //_: verify internal separator
+        typeIndex += subLength.typIdx; // move index forward
+        valueIndex += subLength.valIdx; // move index forward
+        typeIndex++; // skip separator
+        if (j < executorType.parameterCount - 1) { // if there are more parameters to come // _: verify internal separator
           if (!(match = value.substr(valueIndex).match(`^${separatorPatterns[1]}`))) return false;
-          valueIndex += match[0].length; //move index forward
+          valueIndex += match[0].length; // move index forward
         }
       }
     }
   }
-  return isRecursive ? { typIdx: typeIndex, valIdx: valueIndex } : (typeIndex === type.length || executorType.parameterCount > 0) && valueIndex === value.length; //recursive: return new indexes, otherwise: verify end is reached
+  return isRecursive ? { typIdx: typeIndex, valIdx: valueIndex } : (typeIndex === type.length || executorType.parameterCount > 0) && valueIndex === value.length; // recursive: return new indexes, otherwise: verify end is reached
 }
 
 function testValidExercise(exercise) {
@@ -103,17 +105,28 @@ function testValidExercise(exercise) {
 }
 
 function testValidFunctions({ functions }) {
-  return _.every(functions, f => f.name && testExecutorIdentifier(f.name)
-                                 && f.inputNames.length === f.inputTypes.length && _.every(f.inputNames, n => n && testExecutorIdentifier(n)) && _.every(f.inputTypes, t => t && testExecutorType(t))
-                                 && f.outputNames.length === f.outputTypes.length && _.every(f.outputNames, n => n && testExecutorIdentifier(n)) && _.every(f.outputTypes, t => t && testExecutorType(t)));
+  return _.every(functions, f =>
+    f.name
+    && testExecutorIdentifier(f.name)
+    && f.inputNames.length === f.inputTypes.length
+    && _.every(f.inputNames, n => n && testExecutorIdentifier(n))
+    && _.every(f.inputTypes, t => t && testExecutorType(t))
+
+    && f.outputNames.length === f.outputTypes.length
+    && _.every(f.outputNames, n => n && testExecutorIdentifier(n))
+    && _.every(f.outputTypes, t => t && testExecutorType(t))
+  );
 }
 
 function testValidTestCases({ functions, testCases }) {
   return _.every(testCases, testCase => {
     const _function = _.findWhere(functions, { name: testCase.functionName });
-    return testCase.functionName && _function
-           && _function.inputTypes.length === testCase.inputValues.length && _.every(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
-           && _function.outputTypes.length === testCase.expectedOutputValues.length && _.every(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
+    return testCase.functionName
+      && _function
+      && _function.inputTypes.length === testCase.inputValues.length
+      && _.every(testCase.inputValues, (v, i) => testExecutorValue(v, _function.inputTypes[i]))
+      && _function.outputTypes.length === testCase.expectedOutputValues.length
+      && _.every(testCase.expectedOutputValues, (v, i) => testExecutorValue(v, _function.outputTypes[i]));
   });
 }
 
@@ -146,16 +159,18 @@ Template.programmingEdit.onCreated(function () {
     const detached = Tracker.nonreactive(() => this.exercise.get());
     if (!live || !detached || live._id !== detached._id || Progressor.hasInvisibleTestCases(detached) || this.wasCreate !== this.isCreate.get()) {
       let _exercise = live || getDefaultExercise();
-      if (this.wasCreate = this.isCreate.get())
+      if (this.wasCreate = this.isCreate.get()) {
         _exercise = _.omit(_exercise, '_id', 'released', 'archived', 'author_id', 'lastEditor_id', 'lastEdited');
+      }
       this.exercise.set(Progressor.joinCategory(_exercise));
       this.executionResults.set([]);
       // this.fragmentTyped = false;
       // this.solutionTyped = false;
       Session.set('fragment', null);
       Session.set('solution', null);
-    } else if (live.lastEditor_id !== Meteor.userId())
+    } else if (live.lastEditor_id !== Meteor.userId()) {
       Progressor.showAlert(i18n('form.documentChangedMessage'));
+    }
   });
 
   ////////////////////
@@ -170,7 +185,13 @@ Template.programmingEdit.onRendered(function () {
   // COLLAPSIBLE PANELS //
   ////////////////////////
 
-  this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon-collapse-up, .glyphicon-collapse-down').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
+  this.$('.panel-collapse').on(
+    'show.bs.collapse hide.bs.collapse',
+    e => $(e.currentTarget)
+        .siblings()
+        .find('.glyphicon-collapse-up, .glyphicon-collapse-down')
+        .toggleClass('glyphicon-collapse-up glyphicon-collapse-down')
+      );
 
   //////////////////////////////
   // CODEMIRROR CONFIGURATION //
@@ -178,18 +199,26 @@ Template.programmingEdit.onRendered(function () {
 
   this.autorun(() => {
     const result = Progressor.results.findOne();
-    if (!_.isBoolean(this.fragmentTyped) && (this.fragmentTyped = this.exercise.get() && this.exercise.get().fragment))
+    if (!_.isBoolean(this.fragmentTyped) && (this.fragmentTyped = this.exercise.get() && this.exercise.get().fragment)) {
       Session.set('fragment', this.exercise.get().fragment);
-    if (!_.isBoolean(this.solutionTyped))
-      if (this.solutionTyped = this.exercise.get() && this.exercise.get().solution)
+    }
+    if (!_.isBoolean(this.solutionTyped)) {
+      if (this.solutionTyped = this.exercise.get() && this.exercise.get().solution) {
         Session.set('solution', this.exercise.get().solution);
-      else if (this.solutionTyped = result && result.fragment)
+      } else if (this.solutionTyped = result && result.fragment) {
         Session.set('solution', result.fragment);
-    if ((!this.fragmentTyped || !this.solutionTyped) && this.exercise.get() && this.exercise.get().programmingLanguage && testValidFunctions(this.exercise.get()))
+      }
+    }
+    if ((!this.fragmentTyped || !this.solutionTyped) && this.exercise.get() && this.exercise.get().programmingLanguage && testValidFunctions(this.exercise.get())) {
       Meteor.call('getFragment', this.exercise.get().programmingLanguage, _.omit(this.exercise.get(), '_id', 'category'), Progressor.handleError((error, result) => {
-        if (!this.fragmentTyped) Session.set('fragment', !error ? result : null);
-        if (!this.solutionTyped) Session.set('solution', !error ? result : null);
+        if (!this.fragmentTyped) {
+          Session.set('fragment', !error ? result : null);
+        }
+        if (!this.solutionTyped) {
+          Session.set('solution', !error ? result : null);
+        }
       }));
+    }
     if (this.exercise.get() && this.exercise.get().programmingLanguage) {
       const programmingLanguage = Progressor.getProgrammingLanguage(this.exercise.get().programmingLanguage);
       if (programmingLanguage) {
@@ -227,7 +256,7 @@ Template.programmingEdit.helpers({
   canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
   exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
   exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
-  categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
+  categoryEditData: () => (tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
   i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
     name: i18n.getProgrammingLanguage(language._id),
     isActive: language._id === tmpl().exercise.get().programmingLanguage
@@ -246,7 +275,7 @@ Template.programmingEdit.helpers({
     name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
     description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
   })),
-  //hasSingleFunction: () => _.filter(tmpl().exercise.get().functions, f => f.name).length === 1,
+  // hasSingleFunction: () => _.filter(tmpl().exercise.get().functions, f => f.name).length === 1,
   functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
     original: _function, functionIndex,
     isActive: testCase && testCase.functionName === _function.name,

@@ -3,8 +3,9 @@ Accounts.onEmailVerificationLink((token, done) => {
     if (!error) {
       Progressor.showAlert(i18n('account.verificationSuccessMessage'), 'success');
       done();
-    } else
+    } else {
       Progressor.showAlert(i18n('account.verificationErrorMessage'), 'danger');
+    }
   });
 });
 
