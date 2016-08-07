@@ -2,9 +2,7 @@ function tmpl() {
   return Template.instance();
 }
 
-//////////////////////
 // REACTIVE HELPERS //
-//////////////////////
 
 function getExercise(forceRefresh = false) {
   return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -33,18 +31,14 @@ function getExecutionExercise(offset) {
 }
 
 Template.multipleSolve.onCreated(function () {
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.isResult = new ReactiveVar(false);
   this.evaluationResults = new ReactiveVar([]);
   this.progressUpdateInterval = -1;
   this.progress = { started: false, activities: 0 };
 
-  /////////////
   // LOGGING //
-  /////////////
 
   if (!tmpl().isResult.get())
     this.autorun(() => {
@@ -67,9 +61,7 @@ Template.multipleSolve.onDestroyed(function () {
   Meteor.clearInterval(this.progressUpdateInterval);
 });
 
-/////////////
 // HELPERS //
-/////////////
 
 Template.multipleSolve.helpers({
   safeExercise(exerciseOrResult) {
@@ -99,29 +91,25 @@ Template.multipleSolve.helpers({
     if (result && result.results && result.results[index] && result.results[index].checked) {
       return 'checked';
     }
-  }
+  },
 });
 
 Template.multipleSolve.events({
 
-  /////////////
   // LOGGING //
-  /////////////
 
   'click #button-solution': (e, t) => t.$('.input-option').each((i, o) => $(o).prop('checked', _.contains(getExercise().solution, i))),
 
-  /////////////////
   // SAVE ANSWER //
-  /////////////////
 
-  'change .input-option'(event, template) {
+  'change .input-option': function (event, template) {
     if (!template.progress.started) {
       template.progress.started = true;
       Meteor.call('startedExercise', getExercise(), Progressor.handleError());
     }
     template.progress.activities++;
   },
-  'click #button-save-answer'(event, template) {
+  'click #button-save-answer': function (event, template) {
     const exercise = getExercise();
     Meteor.call('evaluateMultipleChoice', exercise, template.$('.input-option:checked').map((i, e) => parseInt($(e).val())).get(), Progressor.handleError((error, result) => {
       template.evaluationResults.set(!error ? result : []);
@@ -129,5 +117,5 @@ Template.multipleSolve.events({
         Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'info');
       }
     }));
-  }
+  },
 });

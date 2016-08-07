@@ -1,6 +1,4 @@
-///////////////////
 // SUBSCRIPTIONS //
-///////////////////
 
 // users //
 
@@ -79,7 +77,7 @@ function publishExercises(query, assumeReleased = false, assumeUnauthorised = fa
     removed: e => unpublishExercise.call(this, e._id),
   });
 
-  //include results, programming exercises have to be tested
+  // include results, programming exercises have to be tested
   const handleResults = !assumeReleased ? getResults().observe({
     added: r => publishExercise.call(this, r.exercise_id),
     changed: r => publishExercise.call(this, r.exercise_id),
@@ -127,7 +125,7 @@ Meteor.publish('exerciseByResult', function exerciseByResult(id, isExecute = fal
   return result ? publishExercises.call(this, { _id: result.exercise_id, category_id: { $exists: true } }, false, isExecute) : [];
 });
 
-//examination exercises
+// examination exercises
 
 Meteor.publish('exercisesByExecution', function exercisesByExecution(executionId, isExecute = false) {
   check(executionId, String);
@@ -135,17 +133,17 @@ Meteor.publish('exercisesByExecution', function exercisesByExecution(executionId
   publishExercises.call(this, { execution_id: executionId }, true, isExecute);
 });
 
-//release request count
+// release request count
 
 Meteor.publish('numberOfExercisesToRelease', function numberOfExercisesToRelease() {
   if (!Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN)) return [];
 
   const unique = 0;
   let count = 0;
-  this.added('numberOfExercisesToRelease', unique, { count: count });
+  this.added('numberOfExercisesToRelease', unique, { count });
   const handle = Progressor.exercises.find({ category_id: { $exists: true }, 'released.requested': { $exists: true }, 'released.confirmed': { $exists: false } }).observeChanges({
     added: id => this.changed('numberOfExercisesToRelease', unique, { count: ++count }),
-    removed: id => this.changed('numberOfExercisesToRelease', unique, { count: --count })
+    removed: id => this.changed('numberOfExercisesToRelease', unique, { count: --count }),
   });
 
   this.ready();
@@ -227,7 +225,7 @@ Meteor.publish('result', function result(id, isExecute = false, includeDetails =
   check(id, String);
   check(isExecute, Boolean);
   check(includeDetails, Boolean);
-  publishResults.call(this, _.extend({ _id: id /*, user_id: this.userId*/ }, isExecute ? {} : { 'exercise.category_id': { $exists: true } }), isExecute);
+  publishResults.call(this, _.extend({ _id: id /* , user_id: this.userId*/ }, isExecute ? {} : { 'exercise.category_id': { $exists: true } }), isExecute);
 });
 Meteor.publish('resultByExercise', function resultByExercise(exerciseId, isExecute = false, includeDetails = false) {
   check(exerciseId, String);
@@ -271,7 +269,7 @@ function publishExaminations(query) {
   const handleExaminations = Progressor.examinations.find(query).observe({
     added: e => publishExamination.call(this, e._id, e),
     changed: e => publishExamination.call(this, e._id, e),
-    removed: e => unpublishExamination.call(this, e._id)
+    removed: e => unpublishExamination.call(this, e._id),
   });
 
   this.ready();
@@ -304,7 +302,7 @@ function publishExecutions(query) {
   }
 
   function publishExecution(id, execution = getExecutions(id).fetch()[0]) {
-    if (this.userId !== execution.author_id && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN) //TODO: add robust time handling
+    if (this.userId !== execution.author_id && !Roles.userIsInRole(this.userId, Progressor.ROLE_ADMIN) // TODO: add robust time handling
         && ((execution.examinees && execution.examinees.length && !_.contains(execution.examinees, this.userId)) || !execution.startTime || execution.startTime > new Date() || new Date(execution.startTime.getTime() + execution.durationMinutes * 60 * 1000) < new Date())) {
       return unpublishExecution.call(this, id);
     }
@@ -351,9 +349,7 @@ Meteor.publish('executionsByExamination', function executionsByExamination(exami
   publishExecutions.call(this, { examination_id: examinationId });
 });
 
-///////////////////////////
 // HOUSTON CONFIGURATION //
-///////////////////////////
 
 Houston.add_collection(Meteor.users);
 Houston.add_collection(Meteor.roles);
@@ -372,7 +368,7 @@ function toggleFlag(collection, flag, elementName, setName, unsetName) {
 
 Houston.methods(Progressor.exercises, {
   'Archive/Restore': toggleFlag('exercises', 'archived', 'Exercise', 'archived', 'restored'),
-  'Release/Hide'(document) {
+  'Release/Hide': function (document) {
     check(document, Match.ObjectIncluding({ _id: String }));
 
     const release = !document.released || !document.released.confirmed;
@@ -383,5 +379,5 @@ Houston.methods(Progressor.exercises, {
     return result === 1
       ? `Exercise '${document._id}' successfully ${release ? 'released' : 'hidden'}.`
       : `Exercise '${document._id}' could NOT successfully be ${release ? 'released' : 'hidden'}!`;
-  }
+  },
 });

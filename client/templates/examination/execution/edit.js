@@ -22,9 +22,7 @@ function tmpl() {
   return Template.instance();
 }
 
-/////////////////////////
 // TEST ENTERED VALUES //
-/////////////////////////
 
 function testValidExecution({ names, descriptions, durationMinutes, exercises }) {
   const notEmpty = /[^\s]+/;
@@ -35,17 +33,13 @@ function testValidExecution({ names, descriptions, durationMinutes, exercises })
 }
 
 Template.examinationExecutionEdit.onCreated(function () {
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.isCreate = new ReactiveVar(false);
   this.execution = new ReactiveVar(getDefaultExecution());
   this.userValues = [];
 
-  ////////////////////////////////
   // REACTIVE (LOCAL) EXECUTION //
-  ////////////////////////////////
 
   this.autorun(() => {
     const live = Progressor.executions.findOne();
@@ -59,16 +53,12 @@ Template.examinationExecutionEdit.onCreated(function () {
   });
 });
 
-///////////////////////
 // USER AUTOCOMPLETE //
-///////////////////////
 
 Template.examinationExecutionEdit.onRendered(() => Meteor.typeahead.inject());
 
 Template.examinationExecutionEdit.helpers({
-  ///////////////////////
   // EXECUTION HELPERS //
-  ///////////////////////
 
   safeExecution(context) {
     tmpl().isCreate.set(!context || !context._id);
@@ -78,7 +68,7 @@ Template.examinationExecutionEdit.helpers({
   i18nExecutionNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
     _id: id, language: name, isActive: id === i18n.getLanguage(),
     name: i18n.getNameForLanguage(tmpl().execution.get(), id),
-    description: i18n.getDescriptionForLanguage(tmpl().execution.get(), id)
+    description: i18n.getDescriptionForLanguage(tmpl().execution.get(), id),
   })),
   exercises: () => _.map(tmpl().execution.get().exercises, (exercise, index) => _.extend({
     exerciseIndex: index,
@@ -88,9 +78,7 @@ Template.examinationExecutionEdit.helpers({
   }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.base_id })))),
   totalWeight: e => _.reduce(e.exercises, (w, f) => w + (f.weight || 0), 0),
 
-  /////////////////////////
   // USER SEARCH HELPERS //
-  /////////////////////////
 
   users() {
     const addedIds = tmpl().execution.get().examinees || [];
@@ -99,12 +87,10 @@ Template.examinationExecutionEdit.helpers({
       tmpl().userValues[value] = user;
       return { value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
     });
-  }
+  },
 });
 
-////////////////////
 // EVENT WRAPPERS //
-////////////////////
 
 function changeExecution(callback) {
   return function (event, template) {
@@ -158,9 +144,7 @@ function reorderExecutionCollection(collectionName, offset) {
 }
 
 Template.examinationExecutionEdit.events({
-  ///////////////////////
   // COLLECTION EVENTS //
-  ///////////////////////
 
   'click .btn-move-exercise-up': reorderExecutionCollection('exercise', -1),
   'click .btn-move-exercise-down': reorderExecutionCollection('exercise', +1),
@@ -172,20 +156,16 @@ Template.examinationExecutionEdit.events({
   }),
   'click .btn-remove-examinee': removeExecutionCollection('examinee'),
 
-  ////////////////////////
   // DATA CHANGE EVENTS //
-  ////////////////////////
 
   'change [id^="input-name-"]': changeExecutionTranslation('name'),
   'change [id^="textarea-description-"]': changeExecutionTranslation('description'),
   'change #input-duration': changeExecution((event, template, $this) => template.execution.get().durationMinutes = parseInt($this.val(), 10)),
   'change .input-weight': changeExecutionCollection('exercise', (e, t, $) => ({ weight: parseInt($.val(), 10) })),
 
-  ////////////////////////
   // PERSISTENCE EVENTS //
-  ////////////////////////
 
-  'click .btn-save'(event, template) {
+  'click .btn-save': function (event, template) {
     if (testValidExecution(template.execution.get())) {
       Meteor.call('saveExecution', _.omit(template.execution.get(), 'examination'), Progressor.handleError(result => {
         Progressor.showAlert(i18n('form.saveSuccessfulMessage'), 'success');
@@ -196,15 +176,13 @@ Template.examinationExecutionEdit.events({
     }
   },
   'click .btn-delete': (e, t) => Meteor.call('deleteExecution', { _id: t.execution.get()._id }, Progressor.handleError(() => Router.go('home'), false)),
-  'click .btn-start-execution'(event, template) {
+  'click .btn-start-execution': function (event, template) {
     Meteor.call('startExecution', { _id: template.execution.get()._id }, Progressor.handleError(() => {
       Router.go('examinationExecutionView', { _id: template.execution.get()._id });
     }, false));
   },
 
-  ///////////////////
   // EXPORT EVENTS //
-  ///////////////////
 
   'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(Progressor.executions.findOne()),
 });

@@ -55,7 +55,7 @@ Meteor.methods({
     check(exercise, Match.ObjectIncluding({ _id: String }));
     check(update, Match.ObjectIncluding({
       activities: Match.Integer,
-      difference: Match.Optional(Match.Integer)
+      difference: Match.Optional(Match.Integer),
     }));
 
     if (this.userId && (update.activities || update.difference)) {
@@ -221,5 +221,5 @@ Meteor.methods({
     }
 
     return results;
-  }
+  },
 });

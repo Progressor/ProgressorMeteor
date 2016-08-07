@@ -1,6 +1,4 @@
-//////////////////////
 // REACTIVE HELPERS //
-//////////////////////
 
 function getExecution() {
   return Progressor.executions.findOne();
@@ -17,9 +15,7 @@ function getResults(exercise) {
   }
 }
 
-/////////////
 // HELPERS //
-/////////////
 
 Template.examinationExecutionExamineeView.helpers({
   exercises: () => _.map(getExecution().exercises, (e, i) => _.extend({ weight: e.weight }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: e.exercise_id })))),
@@ -27,5 +23,5 @@ Template.examinationExecutionExamineeView.helpers({
   hasResult: e => getResult(e),
   evaluated: e => e.type === 1 && Progressor.isExerciseEvaluated(e, getResults(e)),
   endTime: (t, d) => new Date(t.getTime() + d * 60000),
-  successPercentage: e => Progressor.getExerciseSuccessPercentage(e, getResults(e))
+  successPercentage: e => Progressor.getExerciseSuccessPercentage(e, getResults(e)),
 });

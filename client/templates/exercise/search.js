@@ -4,9 +4,7 @@ function tmpl() {
   return Template.instance();
 }
 
-///////////////////
 // SEARCH FILTER //
-///////////////////
 
 function getFilter() {
   const flt = {};
@@ -25,18 +23,14 @@ function getFilter() {
   return flt;
 }
 
-////////////////////////
 // TEMPLATE VARIABLES //
-////////////////////////
 
 Template.exerciseSearch.onCreated(function templateExerciseSearchOnCreated() {
   this.filter = new ReactiveDict();
 });
 
 Template.exerciseSearch.helpers({
-  //////////////////////
   // EXERCISE HELPERS //
-  //////////////////////
 
   columnWidth: () => 12 / NUMBER_OF_COLUMNS,
   exerciseSearchData: l => () => ({ _id: l }),
@@ -74,9 +68,7 @@ Template.exerciseSearch.helpers({
     return (!i) ? i18n.getProgrammingLanguage(l) : `${i18n.getProgrammingLanguage(l)} '${i18n.getName(c[0])}'`;
   },
 
-  ////////////////////
   // SEARCH HELPERS //
-  ////////////////////
 
   results() {
     const flt = getFilter();
@@ -88,9 +80,7 @@ Template.exerciseSearch.helpers({
   message: () => i18n(`form.no${!_.isEmpty(getFilter()) ? 'Results' : 'Filter'}Message`),
 });
 
-///////////////////
 // SEARCH EVENTS //
-///////////////////
 
 Template.exerciseSearch.events({
   'keyup #input-name': _.debounce((event, templateInstance) => templateInstance.filter.set('name', $(event.currentTarget).val()), 250),

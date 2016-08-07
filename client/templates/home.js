@@ -1,6 +1,4 @@
-/////////////////////
 // INTRO ANIMATION //
-/////////////////////
 
 const introTexts = [
   `${i18n('layout.logo')} `,
@@ -28,9 +26,7 @@ Template.home.onDestroyed(function templateHomeOnDestroyed() {
   Meteor.clearInterval(this.introInterval);
 });
 
-////////////////////////////////////////
 // PROGRAMMING LANGUAGE VISUALISATION //
-////////////////////////////////////////
 
 const cols = { xs: 6, sm: 4, md: 3, lg: 2 };
 
@@ -63,7 +59,7 @@ Template.home.helpers({
 });
 
 Template.home.events({
-  'mouseup .language-link'(event) {
+  'mouseup .language-link': function (event) {
     event.preventDefault();
     if (event.which === 2 || event.which === 4 || (event.which === 1 && event.ctrlKey)) {
       window.open(Router.path('exerciseSearch', { _id: this._id }));

@@ -105,7 +105,7 @@ Meteor.startup(() => {
         base_id: exercise.exercise_id,
         exercise_id: Progressor.exercises.insert(_.extend(_.omit(Progressor.exercises.findOne({ _id: exercise.exercise_id }), '_id', 'category_id', 'difficulty', 'released', 'archived'), {
           execution_id: 'Xh3YGewf9JT5AGoav',
-        }))
+        })),
       })).sortBy(() => Random.fraction()).value(),
       lastEdited: new Date(),
     }));

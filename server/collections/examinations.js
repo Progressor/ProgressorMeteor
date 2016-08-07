@@ -4,7 +4,7 @@ Meteor.methods({
    * @param examination {{durationMinutes: number, exercises: {base_id: string, weight: number}[]}} examination to save
    * @returns {number} the unique identifier of the examination
    */
-  saveExamination(examination){
+  saveExamination(examination) {
     check(examination, Match.ObjectIncluding({
       durationMinutes: Match.Integer,
       exercises: [Match.ObjectIncluding({ exercise_id: String, weight: Number })],

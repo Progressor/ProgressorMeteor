@@ -2,9 +2,7 @@ function tmpl() {
   return Template.instance();
 }
 
-//////////////////////
 // REACTIVE HELPERS //
-//////////////////////
 
 function getExercise(forceRefresh = false) {
   return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -33,10 +31,7 @@ function getExecutionExercise(offset) {
 }
 
 Template.programmingSolve.onCreated(function () {
-
-  //////////////////////////////////
   // TEMPLATE & SESSION VARIABLES //
-  //////////////////////////////////
 
   this.isResult = new ReactiveVar(false);
   this.executionStatus = new ReactiveVar(0x0);
@@ -51,9 +46,7 @@ Template.programmingSolve.onCreated(function () {
   Session.set('fragment', '');
   Session.set('solution', '');
 
-  ////////////////////
   // INITIALISATION //
-  ////////////////////
 
   this.autorun(() => {
     const result = Progressor.results.findOne();
@@ -76,9 +69,7 @@ Template.programmingSolve.onCreated(function () {
       if (exercise) {
         Meteor.call('getVersionInformation', exercise.programmingLanguage, Progressor.handleError(r => this.versionInformation.set(r), false));
 
-        /////////////
         // LOGGING //
-        /////////////
 
         Meteor.call('openedExercise', exercise, Progressor.handleError());
       }
@@ -104,9 +95,7 @@ Template.programmingSolve.onDestroyed(function () {
   Meteor.clearInterval(this.progressUpdateInterval);
 });
 
-/////////////
 // HELPERS //
-/////////////
 
 Template.programmingSolve.helpers({
   safeExercise(exerciseOrResult) {
@@ -163,11 +152,9 @@ Template.programmingSolve.helpers({
 
 Template.programmingSolve.events({
 
-  /////////////
   // LOGGING //
-  /////////////
 
-  'keyup .CodeMirror'(event, template) {
+  'keyup .CodeMirror': function (event, template) {
     if (!template.progress.started) {
       template.progress.started = true;
       Meteor.call('startedExercise', getExercise(), Progressor.handleError());
@@ -175,9 +162,7 @@ Template.programmingSolve.events({
     template.progress.activities++;
   },
 
-  ///////////////
   // BLACKLIST //
-  ///////////////
 
   'keypress .CodeMirror': _.throttle(function (event, template) {
     if (!template.blacklist.get()) {
@@ -190,11 +175,9 @@ Template.programmingSolve.events({
     }
   }, 500),
 
-  //////////////////
   // EXECUTE CODE //
-  //////////////////
 
-  'click #button-execute'(event, template) {
+  'click #button-execute': function (event, template) {
     template.showSolution.set(false);
     const exercise = getExercise();
     setTimeout(() => template.$('.execute-result').css('opacity', 1 / 3), 1);
@@ -206,21 +189,17 @@ Template.programmingSolve.events({
     }));
   },
 
-  /////////////////
   // CODE MIRROR //
-  /////////////////
 
-  'change #select-codemirror-themes'(event, template) {
+  'change #select-codemirror-themes': function (event, template) {
     const theme = $(event.currentTarget).val();
     template.$('.CodeMirror')[0].CodeMirror.setOption('theme', theme);
     Meteor.users.update(Meteor.userId(), { $set: { 'profile.codeMirrorTheme': theme } });
   },
 
-  //////////////
   // SOLUTION //
-  //////////////
 
-  'click #button-solution'(event, template)  {
+  'click #button-solution': function (event, template) {
     Session.set('solution', getExercise().solution);
     template.showSolution.set(true);
   },

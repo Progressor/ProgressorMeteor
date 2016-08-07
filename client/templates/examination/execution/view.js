@@ -4,9 +4,7 @@ function tmpl() {
   return Template.instance();
 }
 
-//////////////////////
 // REACTIVE HELPERS //
-//////////////////////
 
 function getExecution() {
   return Progressor.executions.findOne();
@@ -23,18 +21,14 @@ function getResultLog(user, logTimeoutSeconds, ...logTypes) {
 }
 
 Template.examinationExecutionView.onCreated(function () {
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.extendDuration = new ReactiveVar(false);
   this.intervalDependency = new Tracker.Dependency();
 
-  ///////////////////////
   // FALLBACK INTERVAL //
-  ///////////////////////
 
-  //this interval is needed if there are no more updates to the results
+  // this interval is needed if there are no more updates to the results
   this.interval = Meteor.setInterval(() => this.intervalDependency.changed(), 15 * 1000);
 });
 
@@ -43,15 +37,11 @@ Template.examinationExecutionView.onDestroyed(function () {
 });
 
 Template.examinationExecutionView.helpers({
-  /////////////////////
   // GENERIC HELPERS //
-  /////////////////////
 
   examinationTemplateEditData: () => ({ _id: getExecution().examination_id }),
 
-  ////////////////////
   // RESULT HELPERS //
-  ////////////////////
 
   extendDuration: () => tmpl().extendDuration.get(),
   endTime: (t, d) => t ? new Date(t.getTime() + d * 60 * 1000) : t,
@@ -68,7 +58,7 @@ Template.examinationExecutionView.helpers({
   nofResults: u => u ? Progressor.results.find({ user_id: u._id, solved: { $exists: true } }).count() : 0,
   exercises: user => _.map(getExecution().exercises, exercise => _.extend({
     weight: exercise.weight,
-    result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null
+    result: user ? Progressor.results.findOne({ user_id: user._id, exercise_id: exercise.exercise_id }) : null,
   }, Progressor.joinCategory(Progressor.exercises.findOne({ _id: exercise.exercise_id })))),
   exerciseStatus: e => !e.result ? 'not-solved' : !Progressor.isExerciseEvaluated(e, e.result.results) ? 'not-evaluated' : Progressor.isExerciseSuccess(e, e.result.results) ? 'success' : 'partial',
   successPercentage: e => Progressor.getExerciseSuccessPercentage(e, e.result ? e.result.results : null),
@@ -79,9 +69,7 @@ Template.examinationExecutionView.helpers({
              .reduce((p, j) => p + Progressor.getExerciseSuccessPercentage(j.exercise, j.result ? j.result.results : null), 0).value() / execution.exercises.length;
   },
 
-  /////////////////
   // LOG HELPERS //
-  /////////////////
 
   hasActivity(user) {
     tmpl().intervalDependency.depend();
@@ -102,21 +90,19 @@ Template.examinationExecutionView.helpers({
     return log && log.difference ? log.intervalSeconds ? log.difference / log.intervalSeconds : log.difference : 0;
   },
   activityIntervalMin: () => ACTIVITY_INTERVAL_MINUTES,
-  evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES
+  evaluationsIntervalMin: () => EVALUATION_INTERVAL_MINUTES,
 });
 
 Template.examinationExecutionView.events({
-  //////////////
   // DURATION //
-  //////////////
 
   // 'click *': () => tmpl().extendDuration.set(false),
   'click #input-extend-duration': e => e.stopPropagation(),
-  'click #show-extend-duration'(event, template) {
+  'click #show-extend-duration': function (event, template) {
     tmpl().extendDuration.set(true);
     Meteor.setTimeout(() => template.$('#input-extend-duration').focus(), 1);
   },
-  'click #extend-duration'(event, template) {
+  'click #extend-duration': function (event, template) {
     const extendByMinutes = parseInt(template.$('#input-extend-duration').val());
     tmpl().extendDuration.set(false);
     if (extendByMinutes) {
@@ -124,14 +110,12 @@ Template.examinationExecutionView.events({
       execution.durationMinutes += extendByMinutes;
       Meteor.call('saveExecution', execution, Progressor.handleError(() => Progressor.showAlert(`Successfully extended examination time by ${extendByMinutes} min`, 'success'), false));
     } else
-      Progressor.showAlert(`Examination time not extended`, 'info');
+      Progressor.showAlert('Examination time not extended', 'info');
   },
 
-  ///////////////////
   // EXPORT EVENTS //
-  ///////////////////
 
   'click .btn-export-pdf-empty': (e, t) => Progressor.generateExecutionPDF(getExecution()),
   'click .btn-export-pdf-solved': (e, t) => Progressor.generateExecutionPDF(getExecution(), true),
-  'click .btn-export-csv': (e, t) => Progressor.generateExecutionCSV(getExecution())
+  'click .btn-export-csv': (e, t) => Progressor.generateExecutionCSV(getExecution()),
 });

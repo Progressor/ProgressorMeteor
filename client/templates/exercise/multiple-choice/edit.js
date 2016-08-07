@@ -17,9 +17,7 @@ function tmpl() {
   return Template.instance();
 }
 
-/////////////////////////
 // TEST ENTERED VALUES //
-/////////////////////////
 
 function testValidExercise({ programmingLanguage, category_id, difficulty, names, descriptions, options, released }) {
   const category = Progressor.categories.findOne({ _id: category_id });
@@ -43,17 +41,12 @@ function testValidExercise({ programmingLanguage, category_id, difficulty, names
 }
 
 Template.multipleEdit.onCreated(function () {
-
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.isCreate = new ReactiveVar(false);
   this.exercise = new ReactiveVar(getDefaultExercise());
 
-  ///////////////////////////////
   // REACTIVE (LOCAL) EXERCISE //
-  ///////////////////////////////
 
   this.autorun(() => {
     const live = Progressor.exercises.findOne();
@@ -70,9 +63,7 @@ Template.multipleEdit.onCreated(function () {
   });
 });
 
-//////////////////////
 // EXERCISE HELPERS //
-//////////////////////
 
 Template.multipleEdit.helpers(
   {
@@ -83,19 +74,19 @@ Template.multipleEdit.helpers(
     canSave: () => !tmpl().exercise.get() || !tmpl().exercise.get()._id || !tmpl().exercise.get().released || !tmpl().exercise.get().released.requested || Roles.userIsInRole(Meteor.userId(), Progressor.ROLE_ADMIN),
     exerciseSearchData: () => ({ _id: tmpl().exercise.get().programmingLanguage }),
     exerciseDuplicateQuery: () => ({ duplicate: tmpl().exercise.get()._id }),
-    categoryEditData: () => ( tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
+    categoryEditData: () => (tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
     not: b => !b,
     i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
       name: i18n.getProgrammingLanguage(language._id),
-      isActive: language._id === tmpl().exercise.get().programmingLanguage
+      isActive: language._id === tmpl().exercise.get().programmingLanguage,
     })),
     i18nCategories: () => _.chain(Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).fetch()).map(category => _.extend({}, category, {
       name: i18n.getCategoryName(category, tmpl().exercise.get() && tmpl().exercise.get().author_id ? tmpl().exercise.get().author_id : Meteor.userId()),
-      isActive: category._id === tmpl().exercise.get().category_id
+      isActive: category._id === tmpl().exercise.get().category_id,
     })).sortBy(c => c.private ? null : c.name).value(),
     i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
       _id: difficulty, name: i18n.getDifficulty(difficulty),
-      isActive: difficulty === tmpl().exercise.get().difficulty
+      isActive: difficulty === tmpl().exercise.get().difficulty,
     })),
     i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), function (name, id) {
       const nofOptions = _.chain([1, _.map(tmpl().exercise.get().options, o => o.options.length)]).flatten().max().value();
@@ -105,14 +96,12 @@ Template.multipleEdit.helpers(
         _id: id, language: name, isActive: id === i18n.getLanguage(),
         name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
         description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id),
-        options
+        options,
       };
-    })
+    }),
   });
 
-////////////////////
 // EVENT WRAPPERS //
-////////////////////
 
 function changeExercise(callback) {
   return function (event, template) {
@@ -135,9 +124,7 @@ function changeExerciseTranslation(translationName) {
 
 Template.multipleEdit.events({
 
-  ///////////////////////
   // COLLECTION EVENTS //
-  ///////////////////////
 
   'click .btn-add-option': changeExercise(function (event, template, $this) {
     _.each(template.exercise.get().options, e => e.options.splice(this.optionIndex + 1, 0, getDefaultExercise().options[0].options[0]));
@@ -146,9 +133,7 @@ Template.multipleEdit.events({
     _.each(template.exercise.get().options, e => e.options.splice(this.optionIndex, 1));
   }),
 
-  ////////////////////////
   // DATA CHANGE EVENTS //
-  ////////////////////////
 
   'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? t.exercise.get().programmingLanguage = $.val() : null),
   'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
@@ -170,9 +155,7 @@ Template.multipleEdit.events({
   'change #checkbox-multiple-solutions': changeExercise((e, t, $) => t.exercise.get().multipleSolutions = $.prop('checked')),
   'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
 
-  ////////////////////////
   // PERSISTENCE EVENTS //
-  ////////////////////////
 
   'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
     if ($this.hasClass('btn-release-request'))
@@ -182,5 +165,5 @@ Template.multipleEdit.events({
     else
       Progressor.showAlert(i18n('exercise.isNotValidMessage'));
   }),
-  'click .btn-delete': (event, template) => Meteor.call('deleteExercise', { _id: template.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.exercise.get().programmingLanguage }), false))
+  'click .btn-delete': (event, template) => Meteor.call('deleteExercise', { _id: template.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.exercise.get().programmingLanguage }), false)),
 });

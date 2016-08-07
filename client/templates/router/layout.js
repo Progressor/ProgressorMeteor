@@ -24,7 +24,7 @@ Template.layout.helpers({
 
 Template.layout.events({
   'click #link-logout': () => Meteor.logout(),
-  'click .i18n.lang'(event) {
+  'click .i18n.lang': function (event) {
     event.preventDefault();
     i18n.setLanguage(this._id);
   },

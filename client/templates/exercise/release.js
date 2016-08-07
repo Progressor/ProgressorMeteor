@@ -1,6 +1,4 @@
-///////////////////
 // MAIN TEMPLATE //
-///////////////////
 
 Template.exerciseRelease.onRendered(function () {
   this.$('.panel-collapse').on(
@@ -12,9 +10,7 @@ Template.exerciseRelease.onRendered(function () {
   );
 });
 
-////////////////////////////////
 // SUB-TEMPLATE EXERCISE LIST //
-////////////////////////////////
 
 function toggleReleaseExercise(release) {
   return function () {

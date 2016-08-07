@@ -38,12 +38,12 @@ Meteor.methods({
     return {
       types: [
         { _id: ttypes.TypeString, label: ttypes.TypeString, parameterCount: 0, pattern: '.*' },
-        { _id: ttypes.TypeCharacter, label: ttypes.TypeCharacter, parameterCount: 0, pattern: '.{1,1}' }, //cannot use single dot, non-greedy operator will be appended
-        { _id: ttypes.TypeBoolean, label: ttypes.TypeBoolean, parameterCount: 0, pattern: '([tT][rR][uU][eE]|[fF][aA][lL][sS][eE])' }, //true or false (case insensitive)
+        { _id: ttypes.TypeCharacter, label: ttypes.TypeCharacter, parameterCount: 0, pattern: '.{1,1}' }, // cannot use single dot, non-greedy operator will be appended
+        { _id: ttypes.TypeBoolean, label: ttypes.TypeBoolean, parameterCount: 0, pattern: '([tT][rR][uU][eE]|[fF][aA][lL][sS][eE])' }, // true or false (case insensitive)
         { _id: ttypes.TypeInt8, label: ttypes.TypeInt8, parameterCount: 0, pattern: integerPattern, max: 127 },
         { _id: ttypes.TypeInt16, label: ttypes.TypeInt16, parameterCount: 0, pattern: integerPattern, max: 32767 },
         { _id: ttypes.TypeInt32, label: ttypes.TypeInt32, parameterCount: 0, pattern: integerPattern, max: 2147483647 },
-        { _id: ttypes.TypeInt64, label: ttypes.TypeInt64, parameterCount: 0, pattern: integerPattern, max: 9223372036854775807 }, //will round to 9223372036854776000
+        { _id: ttypes.TypeInt64, label: ttypes.TypeInt64, parameterCount: 0, pattern: integerPattern, max: 9223372036854775807 }, // will round to 9223372036854776000
         { _id: ttypes.TypeFloat32, label: ttypes.TypeFloat32, parameterCount: 0, pattern: floatingPointPattern, max: 3.402823E+38 },
         { _id: ttypes.TypeFloat64, label: ttypes.TypeFloat64, parameterCount: 0, pattern: floatingPointPattern, max: Number.MAX_VALUE },
         { _id: ttypes.TypeDecimal, label: ttypes.TypeDecimal, parameterCount: 0, pattern: floatingPointPattern },
@@ -103,7 +103,7 @@ Meteor.methods({
               inputNames: [String],
               inputTypes: [String],
               outputNames: [String],
-              outputTypes: [String]
+              outputTypes: [String],
             }),
           ],
         })
@@ -139,14 +139,14 @@ Meteor.methods({
             inputTypes: [String],
             outputNames: [String],
             outputTypes: [String],
-          })
+          }),
         ],
         testCases: [
           Match.ObjectIncluding({
             functionName: String,
             inputValues: [String],
             expectedOutputValues: [String],
-          })
+          }),
         ],
       })));
     check(fragment, String);

@@ -6,7 +6,7 @@ Meteor.methods({
    */
   saveCategory(category) {
     check(category, Match.ObjectIncluding({
-      programmingLanguage: String
+      programmingLanguage: String,
     }));
 
     const _category = category._id ? Progressor.categories.findOne({ _id: category._id }) : category;
@@ -18,7 +18,7 @@ Meteor.methods({
     }
 
     if (!category.author_id) {
-     category.author_id = this.userId;
+      category.author_id = this.userId;
     }
     category.lastEditor_id = this.userId;
     category.lastEdited = new Date();

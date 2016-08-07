@@ -1,6 +1,4 @@
-///////////////////
 // MAIN TEMPLATE //
-///////////////////
 
 function tmpl() {
   return Template.instance();
@@ -13,7 +11,6 @@ Template.account.onCreated(function () {
 });
 
 Template.account.onRendered(function () {
-
   // collapsible panels //
 
   this.$('.panel-collapse').on('show.bs.collapse hide.bs.collapse', e => $(e.currentTarget).siblings().find('.glyphicon-collapse-up, .glyphicon-collapse-down').toggleClass('glyphicon-collapse-up glyphicon-collapse-down'));
@@ -48,14 +45,14 @@ Template.account.helpers({
     const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
     tmpl().userValues[value] = user;
     return { value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
-  })
+  }),
 });
 
 Template.account.events({
 
   // account management events //
 
-  'click #at-btn'(event, template) { // inject custom messaging into accounts UI
+  'click #at-btn': function (event, template) { // inject custom messaging into accounts UI
     if (AccountsTemplates.getState() === 'resetPwd') {
       event.preventDefault();
       const newPassword = template.$('#at-field-password').val();
@@ -81,7 +78,7 @@ Template.account.events({
 
   // account settings events //
 
-  'change #input-name'(event) {
+  'change #input-name': function (event) {
     const $this = $(event.currentTarget);
     const $group = $this.closest('.form-group');
     Meteor.users.update(Meteor.userId(), { $set: { 'profile.name': $this.val() } }, error => {
@@ -92,7 +89,7 @@ Template.account.events({
 
   // admin authorisation events //
 
-  'click #button-make-admin'(event, template) {
+  'click #button-make-admin': function (event, template) {
     const $input = template.$('#input-make-admin');
     const $group = $input.closest('.form-group');
     const user = template.userValues[$input.val()];
@@ -110,9 +107,7 @@ Template.account.events({
   },
 });
 
-////////////////////////////////
 // SUB-TEMPLATE EXERCISE LIST //
-////////////////////////////////
 
 function toggleArchiveExercise(archive) {
   return function () {

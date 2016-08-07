@@ -26,9 +26,7 @@ function tmpl() {
   return Template.instance();
 }
 
-/////////////////////////
 // TEST ENTERED VALUES //
-/////////////////////////
 
 function testExecutorIdentifier(value) {
   return !value || /^[A-Z_][A-Z0-9_]*$/i.test(value);
@@ -41,12 +39,12 @@ function testExecutorType(type, isRecursive = false) {
     return false; // ^: find the (outermost) type object and skip its name // verify a type has been found
   }
   else if (executorType.parameterCount > 0) { // if the type has parameters
-    if (type.substr(index, 1) !== "<") return false; // verify the next character is the generic open bracket
+    if (type.substr(index, 1) !== '<') return false; // verify the next character is the generic open bracket
     index++; // move index forward
     for (let i = 0; i < executorType.parameterCount; i++) { // repeat check for each type parameter
       const separator = i === executorType.parameterCount - 1 ? '>' : ','; // determine the separator expected after this type parameter
       if (i > 0) index += type.substr(index).match(/^\s?/)[0].length; // skip optional whitespace after separator
-      let subLength = testExecutorType(type.substr(index), true);
+      const subLength = testExecutorType(type.substr(index), true);
       if (subLength === false) return false; // verify parameter is a valid type
       index += subLength; // move index forward
       if (type.substr(index, 1) !== separator) return false; // verify the next character is the defined separator
@@ -131,10 +129,7 @@ function testValidTestCases({ functions, testCases }) {
 }
 
 Template.programmingEdit.onCreated(function () {
-
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.isCreate = new ReactiveVar(false);
   this.exercise = new ReactiveVar(getDefaultExercise());
@@ -150,9 +145,7 @@ Template.programmingEdit.onCreated(function () {
   Session.set('fragment', null);
   Session.set('solution', null);
 
-  ///////////////////////////////
   // REACTIVE (LOCAL) EXERCISE //
-  ///////////////////////////////
 
   this.autorun(() => {
     const live = Progressor.exercises.findOne();
@@ -173,17 +166,13 @@ Template.programmingEdit.onCreated(function () {
     }
   });
 
-  ////////////////////
   // INITIALISATION //
-  ////////////////////
 
   Meteor.call('getExecutorTypes', Progressor.handleError(r => this.executorTypes.set(r), false));
 });
 
 Template.programmingEdit.onRendered(function () {
-  ////////////////////////
   // COLLAPSIBLE PANELS //
-  ////////////////////////
 
   this.$('.panel-collapse').on(
     'show.bs.collapse hide.bs.collapse',
@@ -193,9 +182,7 @@ Template.programmingEdit.onRendered(function () {
         .toggleClass('glyphicon-collapse-up glyphicon-collapse-down')
       );
 
-  //////////////////////////////
   // CODEMIRROR CONFIGURATION //
-  //////////////////////////////
 
   this.autorun(() => {
     const result = Progressor.results.findOne();
@@ -233,7 +220,7 @@ Template.programmingEdit.onRendered(function () {
             const elementsSorted = _.sortBy(r, b => b.toLowerCase()), nofBlacklistElements = elementsSorted.length, elementsPerColumn = Math.ceil(nofBlacklistElements / NUMBER_OF_BLACKLIST_COLUMNS);
             return this.blacklist.set(!e ? _.extend(this.blacklist.get(), {
               elements: r,
-              elementColumns: _.map(_.range(0, NUMBER_OF_BLACKLIST_COLUMNS), c => ({ _id: c, elements: elementsSorted.slice(elementsPerColumn * c, elementsPerColumn * (c + 1)) }))
+              elementColumns: _.map(_.range(0, NUMBER_OF_BLACKLIST_COLUMNS), c => ({ _id: c, elements: elementsSorted.slice(elementsPerColumn * c, elementsPerColumn * (c + 1)) })),
             }) : null);
           }));
         }
@@ -245,9 +232,7 @@ Template.programmingEdit.onRendered(function () {
 });
 
 Template.programmingEdit.helpers({
-  //////////////////////
   // EXERCISE HELPERS //
-  //////////////////////
 
   safeExercise(context) {
     tmpl().isCreate.set(!context || !context._id);
@@ -259,21 +244,21 @@ Template.programmingEdit.helpers({
   categoryEditData: () => (tmpl().exercise.get() && tmpl().exercise.get().category_id && !Progressor.categories.findOne({ _id: tmpl().exercise.get().category_id }).private ? { _id: tmpl().exercise.get().category_id } : null),
   i18nProgrammingLanguages: () => _.map(Progressor.getProgrammingLanguages(), language => _.extend({}, language, {
     name: i18n.getProgrammingLanguage(language._id),
-    isActive: language._id === tmpl().exercise.get().programmingLanguage
+    isActive: language._id === tmpl().exercise.get().programmingLanguage,
   })),
   i18nCategories: () => _.chain(Progressor.categories.find({ programmingLanguage: tmpl().exercise.get().programmingLanguage }).fetch()).map(category => _.extend({}, category, {
     name: i18n.getCategoryName(category, tmpl().exercise.get() && tmpl().exercise.get().author_id ? tmpl().exercise.get().author_id : Meteor.userId()),
-    isActive: category._id === tmpl().exercise.get().category_id
+    isActive: category._id === tmpl().exercise.get().category_id,
   })).sortBy(c => c.private ? null : c.name).value(),
   i18nDifficulties: () => _.map(Progressor.getDifficulties(), difficulty => ({
     _id: difficulty, name: i18n.getDifficulty(difficulty),
-    isActive: difficulty === tmpl().exercise.get().difficulty
+    isActive: difficulty === tmpl().exercise.get().difficulty,
   })),
   codeMirrorOptions: () => Progressor.getCodeMirrorConfiguration(),
   i18nExerciseNamesDescriptions: () => _.map(i18n.getLanguages(), (name, id) => ({
     _id: id, language: name, isActive: id === i18n.getLanguage(),
     name: i18n.getNameForLanguage(tmpl().exercise.get(), id),
-    description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id)
+    description: i18n.getDescriptionForLanguage(tmpl().exercise.get(), id),
   })),
   // hasSingleFunction: () => _.filter(tmpl().exercise.get().functions, f => f.name).length === 1,
   functions: testCase => _.map(tmpl().exercise.get().functions, (_function, functionIndex) => _.extend({}, _function, {
@@ -283,8 +268,8 @@ Template.programmingEdit.helpers({
     inputs: _.chain(_function.inputNames.length > _function.inputTypes.length ? _function.inputNames.length : _function.inputTypes.length || 1).range().map(i => ({
       functionIndex, inputNameIndex: i, inputTypeIndex: i,
       name: _function.inputNames ? _function.inputNames[i] : null,
-      type: _function.inputTypes ? _function.inputTypes[i] : null
-    })).value()
+      type: _function.inputTypes ? _function.inputTypes[i] : null,
+    })).value(),
   })),
   testCases: () => _.map(tmpl().exercise.get().testCases, (testCase, testCaseIndex) => {
     function adjustValues(valueProperty, nameProperty, typeProperty) {
@@ -296,7 +281,7 @@ Template.programmingEdit.helpers({
       }
       return _.map(values, (v, i) => ({
         testCaseIndex, functionIndex, [`${valueProperty}Index`]: i,
-        value: v, name: names ? names[i] : null, type: types ? types[i] : null
+        value: v, name: names ? names[i] : null, type: types ? types[i] : null,
       }));
     }
 
@@ -305,7 +290,7 @@ Template.programmingEdit.helpers({
     return _.extend({}, testCase, {
       original: testCase, testCaseIndex, functionIndex,
       inputValues: adjustValues('inputValue', 'inputName', 'inputType'),
-      expectedOutputValues: adjustValues('expectedOutputValue', 'outputName', 'outputType')
+      expectedOutputValues: adjustValues('expectedOutputValue', 'outputName', 'outputType'),
     });
   }),
   executorTypes: () => tmpl().executorTypes.get() ? tmpl().executorTypes.get().types : [],
@@ -313,9 +298,7 @@ Template.programmingEdit.helpers({
   blacklist: () => tmpl().blacklist.get(),
   blacklistColumnWidth: () => 12 / NUMBER_OF_BLACKLIST_COLUMNS,
 
-  /////////////////////////////////
   // TEST CASE EXECUTION HELPERS //
-  /////////////////////////////////
 
   executionDisabled: () => tmpl().executionStatus.get() !== 0x0,
   blackListMessage: () => tmpl().blacklistMatches.get().length ? i18n('exercise.blacklistMatchMessage', tmpl().blacklistMatches.get().join(', ')) : null,
@@ -329,12 +312,10 @@ Template.programmingEdit.helpers({
   testCaseEvaluated: c => Progressor.isTestCaseEvaluated(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
   testCaseSuccess: c => Progressor.isTestCaseSuccess(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
   testCaseActualOutput: c => Progressor.getActualTestCaseOutput(tmpl().exercise.get(), c.original, tmpl().executionResults.get()),
-  executionFatal: () => Progressor.isExerciseFatal(tmpl().exercise.get(), tmpl().executionResults.get())
+  executionFatal: () => Progressor.isExerciseFatal(tmpl().exercise.get(), tmpl().executionResults.get()),
 });
 
-////////////////////
 // EVENT WRAPPERS //
-////////////////////
 
 function changeExercise(callback) {
   return function (event, template) {
@@ -396,38 +377,34 @@ function execute(template, exercise, callback, rethrow = true) {
 
 Template.programmingEdit.events({
 
-  ///////////////////////
   // VALIDATION EVENTS //
-  ///////////////////////
 
-  'keyup .input-function-name'(event, template) {
+  'keyup .input-function-name': function (event, template) {
     const $this = $(event.currentTarget), $group = $this.closest('.form-group');
     const $groups = template.$('.input-function-name').closest('.form-group').removeClass('has-error').end();
     if (!testExecutorIdentifier($this.val()))
       $group.addClass('has-error');
     _.chain($groups).groupBy(g => $(g).val()).filter(g => g.length > 1).flatten().each(g => $(g).closest('.form-group').addClass('has-error'));
   },
-  'keyup .input-parameter-name'(event) {
+  'keyup .input-parameter-name': function (event) {
     const $this = $(event.currentTarget), $group = $this.closest('.form-group'), $function = $this.closest('.container-function');
     const $groups = $function.find('.input-parameter-name').closest('.form-group').removeClass('has-error').end();
     if (!testExecutorIdentifier($this.val()))
       $group.addClass('has-error');
     _.chain($groups).groupBy(g => $(g).val()).filter(g => g.length > 1).flatten().each(g => $(g).closest('.form-group').addClass('has-error'));
   },
-  'keyup .exec-type'(event) {
+  'keyup .exec-type': function (event) {
     const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
     if (!testExecutorType($this.val()))
       $group.addClass('has-error');
   },
-  'keyup .exec-value'(event) {
+  'keyup .exec-value': function (event) {
     const $this = $(event.currentTarget), $group = $this.closest('.form-group').removeClass('has-error');
     if (!testExecutorValue($this.val(), this.type))
       $group.addClass('has-error');
   },
 
-  ///////////////////////
   // COLLECTION EVENTS //
-  ///////////////////////
 
   'click .btn-add-function': addExerciseCollection('function', () => getDefaultExercise().functions[0]),
   'click .btn-remove-function': removeExerciseCollection('function'),
@@ -448,9 +425,7 @@ Template.programmingEdit.events({
       _.chain(exercise.testCases).where({ functionName: _function.name }).each(t => t.inputValues.splice(this.inputNameIndex, 1));
   }),
 
-  ////////////////////////
   // DATA CHANGE EVENTS //
-  ////////////////////////
 
   'change #select-language': changeExercise((e, t, $) => !t.exercise.get()._id ? _.extend(t.exercise.get(), { programmingLanguage: $.val(), category_id: null }) : null),
   'change #select-category': changeExercise((e, t, $) => t.exercise.get().category_id = $.val()),
@@ -467,14 +442,12 @@ Template.programmingEdit.events({
   'change .input-testcase-expectedoutput': changeExerciseSubcollection('testCase', 'expectedOutputValue'),
   'change #checkbox-solution-visible': changeExercise((e, t, $) => t.exercise.get().solutionVisible = $.prop('checked')),
 
-  ////////////////////////
   // PERSISTENCE EVENTS //
-  ////////////////////////
 
   'click .btn-save, click .btn-release-request': changeExercise(function (event, template, $this) {
     _.extend(template.exercise.get(), {
       fragment: Session.get('fragment'),
-      solution: Session.get('solution')
+      solution: Session.get('solution'),
     });
     if ($this.hasClass('btn-release-request'))
       if (!Progressor.isExerciseSuccess(template.exercise.get(), template.executionResults.get()))
@@ -500,17 +473,15 @@ Template.programmingEdit.events({
   }),
   'click .btn-delete': (e, t) => Meteor.call('deleteExercise', { _id: t.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: t.exercise.get().programmingLanguage }), false)),
 
-  ////////////////////////////////
   // TEST CASE EXECUTION EVENTS //
-  ////////////////////////////////
 
-  'click #button-execute'(event, template) {
+  'click #button-execute': function (event, template) {
     execute(template, _.omit(template.exercise.get(), '_id', 'category'), (error, result) => {
       const success = !error && Progressor.isExerciseSuccess(template.exercise.get(), result);
       Progressor.showAlert(i18n(`exercise.execution${success ? 'Success' : 'Failure'}Message`), success ? 'success' : 'danger', 3000);
     });
   },
-  'shown.bs.tab .a-toggle-codemirror'(event, template) {
+  'shown.bs.tab .a-toggle-codemirror': function (event, template) {
     template.$(`#${$(event.currentTarget).attr('aria-controls')}`).find('.CodeMirror')[0].CodeMirror.refresh();
   },
   'keyup #tab-fragment>.CodeMirror': _.throttle(function (event, template) {
@@ -524,5 +495,5 @@ Template.programmingEdit.events({
         template.blacklistMatches.set(_.filter(template.blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
         template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
       }
-  }, 500)
+  }, 500),
 });

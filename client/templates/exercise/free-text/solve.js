@@ -2,9 +2,7 @@ function tmpl() {
   return Template.instance();
 }
 
-//////////////////////
 // REACTIVE HELPERS //
-//////////////////////
 
 function getExercise(forceRefresh = false) {
   return tmpl().isResult.get() && !forceRefresh ? Progressor.results.findOne().exercise : Progressor.exercises.findOne();
@@ -33,10 +31,7 @@ function getExecutionExercise(offset) {
 }
 
 Template.textSolve.onCreated(function () {
-
-  ////////////////////////
   // TEMPLATE VARIABLES //
-  ////////////////////////
 
   this.isResult = new ReactiveVar(false);
   this.validationResult = new ReactiveVar(null);
@@ -45,9 +40,7 @@ Template.textSolve.onCreated(function () {
   this.progressUpdateInterval = -1;
   this.progress = { started: false, activities: 0, length: 0 };
 
-  ////////////////////
   // INITIALISATION //
-  ////////////////////
 
   this.autorun(() => {
     const result = Progressor.results.findOne(), exercise = Tracker.nonreactive(getExercise);
@@ -56,9 +49,7 @@ Template.textSolve.onCreated(function () {
     }
   });
 
-  /////////////
   // LOGGING //
-  /////////////
 
   if (!tmpl().isResult.get()) {
     this.autorun(() => {
@@ -87,9 +78,7 @@ Template.textSolve.onDestroyed(function () {
   Meteor.clearInterval(this.progressUpdateInterval);
 });
 
-/////////////
 // HELPERS //
-/////////////
 
 Template.textSolve.helpers({
   safeExercise(exerciseOrResult) {
@@ -104,7 +93,7 @@ Template.textSolve.helpers({
   nextExerciseSolveData: () => getExecutionExercise(+1),
   changedAfterSolved: () => getExercise(true) && getResult() && getExercise(true).lastEdited > getResult().solved,
   resultSolved: () => getResult().solved,
-  answer()  {
+  answer() {
     const result = Progressor.results.findOne();
     if (result)
       return result.answer;
@@ -123,16 +112,14 @@ Template.textSolve.helpers({
     if (!exercise.execution_id && Progressor.isExerciseEvaluated(exercise, getEvaluationResults()))
       return `glyphicon glyphicon-${Progressor.isExerciseSuccess(exercise, getEvaluationResults()) ? 'ok' : 'remove'}`;
   },
-  showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get()
+  showSolution: () => getExercise().solutionVisible && tmpl().showSolution.get(),
 });
 
 Template.textSolve.events({
 
-  /////////////
   // LOGGING //
-  /////////////
 
-  'keyup .control-answer'(event, template) {
+  'keyup .control-answer': function (event, template) {
     if (!template.progress.started) {
       template.progress.started = true;
       Meteor.call('startedExercise', getExercise(), Progressor.handleError());
@@ -140,18 +127,14 @@ Template.textSolve.events({
     template.progress.activities++;
   },
 
-  ////////////////
   // VALIDATION //
-  ////////////////
 
   'submit #form-answer': e => e.preventDefault(),
   'change .control-answer': (e, t) => t.validationResult.set(t.$('.control-answer')[0].checkValidity()),
 
-  /////////////////
   // SAVE ANSWER //
-  /////////////////
 
-  'click #button-save-answer'(event, template) {
+  'click #button-save-answer': function (event, template) {
     const $control = template.$('.control-answer');
     if ($control[0].checkValidity()) {
       const exercise = getExercise();
@@ -163,10 +146,8 @@ Template.textSolve.events({
     }
   },
 
-  //////////////
   // SOLUTION //
-  //////////////
 
   'click #button-solution': (e, t) => t.showSolution.set(true),
-  'click #button-close': (e, t) => t.showSolution.set(false)
+  'click #button-close': (e, t) => t.showSolution.set(false),
 });
