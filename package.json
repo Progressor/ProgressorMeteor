@@ -1,0 +1,28 @@
+{
+  "name": "progressor",
+  "version": "1.0.0",
+  "description": "The Programming Professor",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint --silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StrubT/ProgressorMeteor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StrubT/ProgressorMeteor/issues"
+  },
+  "homepage": "https://github.com/StrubT/ProgressorMeteor#readme",
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb-base": "^5.0.1",
+    "eslint-import-resolver-meteor": "^0.3.1",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-meteor": "^4.0.0"
+  }
+}
