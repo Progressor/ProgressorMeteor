@@ -4,34 +4,34 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-base                   # Packages every Meteor app needs to have
-mobile-experience             # Packages for a great mobile UX
-mongo                         # The database Meteor supports right now
-blaze-html-templates          # Compile .html files into Meteor Blaze views
-session                       # Client-side reactive dictionary for your app
-jquery                        # Helpful client-side library
-tracker                       # Meteor's client-side reactive programming library
+meteor-base@1.0.4                   # Packages every Meteor app needs to have
+mobile-experience@1.0.4             # Packages for a great mobile UX
+mongo@1.1.10                         # The database Meteor supports right now
+blaze-html-templates@1.0.4          # Compile .html files into Meteor Blaze views
+session@1.1.6                       # Client-side reactive dictionary for your app
+jquery@1.11.9                        # Helpful client-side library
+tracker@1.1.0                       # Meteor's client-side reactive programming library
 
-standard-minifier-css         # This package provides a minifier plugin used for Meteor apps by default.
-standard-minifier-js          # This package provides a minifier plugin used for Meteor apps by default.
-es5-shim                      # ECMAScript 5 compatibility for older browsers.
-ecmascript                    # Enable ECMAScript2015+ syntax in app code
+standard-minifier-css@1.1.8         # This package provides a minifier plugin used for Meteor apps by default.
+standard-minifier-js@1.1.8          # This package provides a minifier plugin used for Meteor apps by default.
+es5-shim@4.6.13                      # ECMAScript 5 compatibility for older browsers.
+ecmascript@0.5.7                    # Enable ECMAScript2015+ syntax in app code
 
 # autopublish                 # Publish all data to the clients (for prototyping)
 # insecure                    # Allow all DB writes from clients (for prototyping)
 
-random                        # The random package provides several functions for generating random numbers.
-check                         # enables method arguments checks
-audit-argument-checks         # This package causes Meteor to require that all arguments passed to methods and publish functions are checked.
-reactive-var                  # This package provide ReactiveVar, a general-purpose reactive datatype for use with tracker.
-reactive-dict                 # This package provide ReactiveDict, a general-purpose reactive datatype for use with tracker.
+random@1.0.10                        # The random package provides several functions for generating random numbers.
+check@1.2.3                         # enables method arguments checks
+audit-argument-checks@1.0.7         # This package causes Meteor to require that all arguments passed to methods and publish functions are checked.
+reactive-var@1.0.10                  # This package provide ReactiveVar, a general-purpose reactive datatype for use with tracker.
+reactive-dict@1.1.8                 # This package provide ReactiveDict, a general-purpose reactive datatype for use with tracker.
 iron:router                   # A router that works on the server and the browser, designed specifically for Meteor
-accounts-password             # email - password login provider
+accounts-password@1.2.12             # email - password login provider
 # accounts-ui                 # A turn-key user interface for Meteor Accounts.
-underscore                    # underscore.js library
-less                          # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
+underscore@1.0.9                    # underscore.js library
+less@2.7.4                          # LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.
 # markdown                    # basic markdown support
-email                         # The email package allows sending email from a Meteor app.
+email@1.1.16                         # The email package allows sending email from a Meteor app.
 
 anti:i18n                     # A simple (The simplest possible? Perhaps) i18n package for Meteor.
 momentjs:moment               # A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.
@@ -52,3 +52,4 @@ meteorhacks:ssr               # Server Side Rendering for Meteor with Blaze
 pascoual:pdfkitx              # Create PDF with PDFKit Node.js package in your Meteor application, server-side and browser-side.
 
 thrift                        # custom wrapper for Apache Thrift npm-package + Progressor implementation
+npm-bcrypt@0.8.7
