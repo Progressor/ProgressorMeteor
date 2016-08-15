@@ -1,3 +1,5 @@
+import { tmpl, changeExercise, changeExerciseTranslation } from '/imports/utilities';
+
 function getDefaultExercise() {
   return {
     type: 3,
@@ -6,10 +8,6 @@ function getDefaultExercise() {
     solution: [null],
     solutionVisible: false,
   };
-}
-
-function tmpl() {
-  return Template.instance();
 }
 
 // TEST ENTERED VALUES //
@@ -91,25 +89,6 @@ Template.textEdit.helpers({
 });
 
 // EVENT WRAPPERS //
-
-function changeExercise(callback) {
-  return function (event, template) {
-    const ret = callback.call(this, event, template, event && event.currentTarget ? $(event.currentTarget) : null, this);
-    template.exercise.dep.changed();
-    return ret;
-  };
-}
-
-function changeExerciseTranslation(translationName) {
-  return changeExercise(function (event, template, $this) {
-    const value = $this.val(), elements = template.exercise.get()[`${translationName}s`], language = this._id;
-    let elementIndex = -1;
-    const element = _.find(elements, (e, i) => (elementIndex = e.language === language ? i : elementIndex) >= 0);
-    if (!value) elements.splice(elementIndex, 1);
-    else if (element) element[translationName] = value;
-    else elements.push({ language, [translationName]: value });
-  });
-}
 
 function changeExerciseCollection(collectionName, itemSupplier) {
   return changeExercise(function (event, template, $this) {

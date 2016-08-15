@@ -1,8 +1,6 @@
-const NUMBER_OF_COLUMNS = 3;
+import { tmpl } from '/imports/utilities';
 
-function tmpl() {
-  return Template.instance();
-}
+const NUMBER_OF_COLUMNS = 3;
 
 // SEARCH FILTER //
 

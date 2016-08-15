@@ -1,12 +1,10 @@
+import { tmpl } from '/imports/utilities';
+
 function getDefaultCategory() {
   return {
     names: [],
     descriptions: [],
   };
-}
-
-function tmpl() {
-  return Template.instance();
 }
 
 // TEST ENTERED VALUES //

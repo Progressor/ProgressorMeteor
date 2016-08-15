@@ -1,6 +1,4 @@
-function tmpl() {
-  return Template.instance();
-}
+import { tmpl } from '/imports/utilities';
 
 // REACTIVE HELPERS //
 

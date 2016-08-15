@@ -1,9 +1,6 @@
+import { tmpl } from '/imports/utilities';
+
 // MAIN TEMPLATE //
-
-function tmpl() {
-  return Template.instance();
-}
-
 // template variables //
 
 Template.account.onCreated(function () {
