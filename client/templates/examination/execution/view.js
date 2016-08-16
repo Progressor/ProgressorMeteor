@@ -1,8 +1,7 @@
-const ACTIVITY_INTERVAL_MINUTES = 1, EVALUATION_INTERVAL_MINUTES = 5;
+import { tmpl } from '/imports/utilities';
 
-function tmpl() {
-  return Template.instance();
-}
+const ACTIVITY_INTERVAL_MINUTES = 1;
+const EVALUATION_INTERVAL_MINUTES = 5;
 
 // REACTIVE HELPERS //
 

@@ -1,6 +1,4 @@
-function tmpl() {
-  return Template.instance();
-}
+import { tmpl } from '/imports/utilities';
 
 // only functionality:
 // delegation to correct exercise type;

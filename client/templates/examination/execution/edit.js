@@ -1,3 +1,5 @@
+import { tmpl } from '/imports/utilities';
+
 function getDefaultExecution() {
   return {
     names: [],
@@ -16,10 +18,6 @@ function createExecution(examination) {
       exercises: _.map(examination.exercises, e => ({ weight: e.weight, base_id: e.exercise_id })),
     };
   }
-}
-
-function tmpl() {
-  return Template.instance();
 }
 
 // TEST ENTERED VALUES //

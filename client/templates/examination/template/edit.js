@@ -1,12 +1,10 @@
+import { tmpl } from '/imports/utilities';
+
 function getDefaultExamination() {
   return {
     names: [],
     exercises: [],
   };
-}
-
-function tmpl() {
-  return Template.instance();
 }
 
 // TEST ENTERED VALUES //
