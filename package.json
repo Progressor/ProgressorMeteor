@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/StrubT/ProgressorMeteor.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Thomas Strub, Marc Touw, Janick Weidmann",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/StrubT/ProgressorMeteor/issues"
   },
