@@ -2,6 +2,10 @@
 
 This is the web component of the project **Progressor - The Programming Professor**.
 
+## Deployment & Installation
+
+...
+
 ## Meteor
 
 This repository contains a reactive [*Meteor*](https://www.meteor.com/) web application created using [*WebStorm*](https://www.jetbrains.com/webstorm/).
