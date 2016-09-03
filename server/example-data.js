@@ -22,19 +22,19 @@ Meteor.startup(() => {
       Progressor.categories.insert({
         programmingLanguage: l._id,
         names: [
-          { language: 'en', name: 'Basics' },
+          { language: 'en', name: 'Basics' }, //TODO: translate
           { language: 'de', name: 'Grundlagen' },
         ],
         descriptions: [
-          { language: 'en', description: 'The basic syntax of a programming language is shown by means of a simple Hello World exercise.' },
-          { language: 'en', description: 'Die Grundlagen einer Programmiersprache werden am besten mit einer einfachen Hallo Welt-Aufgabe gezeigt.' },
+          { language: 'en', description: 'The basic syntax of a programming language is shown by means of a simple Hello World exercise.' }, //TODO: translate
+          { language: 'de', description: 'Die Grundlagen einer Programmiersprache werden am besten mit einer einfachen Hallo Welt-Aufgabe gezeigt.' },
         ],
         lastEdited: new Date(),
       });
 
-      Progressor.exercises.insert({
+      Progressor.exercises.insert({ //TODO: add string, array, for loop
         names: [
-          { language: 'en', name: 'Hello, World!' },
+          { language: 'en', name: 'Hello, World!' }, //TODO: translate
           { language: 'de', name: 'Hallo, Welt!' },
         ],
         programmingLanguage: l._id,
@@ -42,7 +42,7 @@ Meteor.startup(() => {
         difficulty: 1,
         type: 1,
         descriptions: [
-          { language: 'en', description: 'Return **Hello, World!**.' },
+          { language: 'en', description: 'Return **Hello, World!**.' }, //TODO: translate
           { language: 'de', description: 'Gib __Hello, World!__ zurück.' },
         ],
         functions: [
