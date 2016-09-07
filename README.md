@@ -13,8 +13,9 @@ Note: you may have to prepend some or all of the commands with `sudo` depending 
 3. Deploy the [*Meteor*](https://www.meteor.com/) web application to the server. _(Instructions adapted from official mup instructions at GitHub.)_
    1. Go to the `.deploy` folder inside the application source.
    2. Configure your server(s) including user names and passwords in `.deploy/mup.js` as instructed.
-   3. Set up the server by executing `mup setup` on the development machine.
-   4. After the setup finished, deploy both the [*Node.js*](https://nodejs.org/) application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy` on the development machine.
+   3. Configure the application using `private/config.json` and `private/secret.json` as instructed.
+   4. Set up the server by executing `mup setup` on the development machine.
+   5. After the setup finished, deploy both the [*Node.js*](https://nodejs.org/) application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy` on the development machine.
    * **Additional Information**
      * The user you want to use to log on to the server needs to be in the `sudo` group and have `NOPASSWD` enabled. 
      * If you want to re-deploy the application without the database, you can remove the servers from `module.exports.mongo.servers` in `.deploy/mup.js`.
