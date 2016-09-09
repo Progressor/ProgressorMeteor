@@ -13,14 +13,13 @@ These instructions are written for *Ubuntu* 16.04.1 LTS.
 ### On your development computer
 
 1. [Install Meteor](https://www.meteor.com/install)
-1. Install [*meteor-up (mup)*](https://www.npmjs.com/package/mup) [[*GitHub*]](https://github.com/kadirahq/meteor-up) with `npm i -g mup`.
+1. Install [*meteor-up (mup)*](https://www.npmjs.com/package/mup) globally: `npm install --global mup`
 1. Clone this repository or navigate to the folder where you cloned it.
-1. Deploy the [*Meteor*](https://www.meteor.com/) web application to the server. _(Instructions adapted from official mup instructions at GitHub.)_
-   1. Go to the `.deploy` folder in this repo.
+1. Deploy the [*Meteor*](https://www.meteor.com/) web application to the server. _(Instructions adapted from meteor-up documentation.)_
    1. Configure your server(s) including usernames and passwords in `.deploy/mup.js` as instructed.
    1. Configure the application using `private/config.json` and `private/secret.json` as instructed.
-   1. Set up the server by executing `mup setup` in `.deploy`.
-   1. After the setup finished, deploy web application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy`
+   1. Go to `.deploy` and set up the server by executing `mup setup`
+   1. After the setup finished, deploy the web application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy`
    * **Additional Information**
      * The user you want to use to deploy Progressor to the server needs to be in the `docker` and `sudo` groups and have `NOPASSWD` enabled.
      * If you want to re-deploy the application without the database, you can remove the servers from `module.exports.mongo.servers` in `.deploy/mup.js`.
