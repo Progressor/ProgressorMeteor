@@ -111,23 +111,6 @@ The available test files (to use in place of `<filename>`) are:
 
 The available tests are documented in our project documentation.
 
-### Deployment
-
-The application can be deployed using [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx) (short: *mupx*),
-which is the current stable version of the tool [*Meteor UP*](https://github.com/arunoda/meteor-up) (short: *mup*).
-
-It is planned for the two versions to be merged at some point both at *GitHub* and in *npm*.
-
-#### Instructions
-
-To deploy, please follow these simple steps:
-
-1. Install the latest version of [*Node.js*](https://nodejs.org/) (if needed).
-2. Install [*Meteor Up X*](https://www.npmjs.com/package/mupx) using `npm install --global mupx`
-3. Inside the directory `.meteor-up`, execute `mupx deploy`
-
-Please note that the mentioned steps only work if you have already configured your server.
-For instruction how to configure your server, please refer to our project documentation.
 
 ## Apache Thrift
 
@@ -144,7 +127,7 @@ The [package documentation](packages/thrift/README.md) contains the instructions
 This application uses the included *MongoDB* engine.
 
 The default / example documents are [included](server/example-data.js) in the application.
-To initialise and inspect the database, simply perform the following steps.
+To initialize and inspect the database, simply perform the following steps.
 
 1. Run the *Meteor* application.
    1. Go the the login page and register yourself.
@@ -163,4 +146,4 @@ You need to run the **Executor** to be able to solve exercises.
 * You can either clone the repository and build the project yourself
 * or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
   * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
-    otherwise *Meteor* will recognise the files temporarily created and continuously restart the server.
+    otherwise *Meteor* will recognize the files temporarily created and continuously restart the server.
