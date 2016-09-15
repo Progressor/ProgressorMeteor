@@ -26,7 +26,7 @@ module.exports = {
     oplog: true,
     port: 27017,
     servers: {
-      one: {},
+      one: {}
     },
   },
 };
