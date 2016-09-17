@@ -242,7 +242,7 @@ Meteor.startup(() => {
       javascript: 'function swapEncrypt(toSwap, length) {\n\tfor (let i = 0, tmp; i + 1 < length; i += 2) {\n\t\ttmp = toSwap[i]\n\t\ttoSwap[i] = toSwap[i + 1]\n\t\ttoSwap[i + 1] = tmp\n\t}\n\treturn toSwap\n}',
       php: 'function swapEncrypt(array $toSwap, int $length) : array {\n\tfor ($i = 0, $tmp; $i + 1 < $length; $i += 2) {\n\t\t$tmp = $toSwap[$i];\n\t\t$toSwap[$i] = $toSwap[$i + 1];\n\t\t$toSwap[$i + 1] = $tmp;\n\t}\n\treturn $toSwap;\n}',
       kotlin: 'fun swapEncrypt(toSwap: CharArray, length: Int) : CharArray {\n\tfor (i in 0 .. length - 2 step 2) {\n\t\tval tmp = toSwap[i]\n\t\ttoSwap[i] = toSwap[i + 1]\n\t\ttoSwap[i + 1] = tmp\n\t}\n\treturn toSwap\n}',
-      vbnet: 'Public Function swapEncrypt(toSwap As Char(), length As Integer) As Char()\n\tFor i = 0 to length - 2 Step 2\n\t\tDim tmp = toSwap(i)\n\t\ttoSwap(i) = toSwap(i + 1)\n\t\ttoSwap(i + 1) = tmp\n\tNext\n\tReturn toSwap\n\tEnd Function',
+      vbnet: 'Public Function swapEncrypt(toSwap As Char(), length As Integer) As Char()\n\tFor i = 0 to length - 2 Step 2\n\t\tDim tmp = toSwap(i)\n\t\ttoSwap(i) = toSwap(i + 1)\n\t\ttoSwap(i + 1) = tmp\n\tNext\n\tReturn toSwap\nEnd Function',
     },
     loop: {
       java: 'public boolean isPalindrome(String palindrome) {\n\tString clean = Pattern.compile("[^A-Za-z]").matcher(palindrome).replaceAll("").toLowerCase();\n\tfor (int i = 0, j = clean.length() - 1; i < j; i++, j--)\n\t\tif (clean.charAt(i) != clean.charAt(j)) return false;\n\treturn true;\n}',
