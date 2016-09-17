@@ -1,29 +1,33 @@
 # Progressor - Meteor
 
-This is the web component of the project **Progressor - The Programming Professor**.
+This is the runnable component of the project **Progressor - The Programming Professor**. It contains both the web application and the [executor](https://github.com/progressor/executor) jar.
 
 ## Deployment & Installation
 
 These instructions are written for *Ubuntu* 16.04.1 LTS.
 
-Note: you may have to prepend some or all of the commands with `sudo` depending on your environment.
+### Prepare the server
 
 1. Install [*Docker*](https://www.docker.com/) by executing `curl -sSL https://get.docker.com/ | sh` on the server.
-2. Install the [*npm*](https://www.npmjs.com/)-package [*meteor-up (mup)*](https://www.npmjs.com/) [[*GitHub*]](https://github.com/kadirahq/meteor-up) by executing `npm i -g mup` on the development machine.
-3. Deploy the [*Meteor*](https://www.meteor.com/) web application to the server. _(Instructions adapted from official mup instructions at GitHub.)_
-   1. Go to the `.deploy` folder inside the application source.
-   2. Configure your server(s) including user names and passwords in `.deploy/mup.js` as instructed.
-   3. Configure the application using `private/config.json` and `private/secret.json` as instructed.
-   4. Set up the server by executing `mup setup` on the development machine.
-   5. After the setup finished, deploy both the [*Node.js*](https://nodejs.org/) application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy` on the development machine.
+
+### On your development computer
+
+1. [Install Meteor](https://www.meteor.com/install)
+1. Install [*meteor-up (mup)*](https://www.npmjs.com/package/mup) globally: `npm install --global mup`
+1. Clone this repository or navigate to the folder where you cloned it.
+1. Deploy the [*Meteor*](https://www.meteor.com/) web application to the server. _(Instructions adapted from meteor-up documentation.)_
+   1. Configure your server(s) including usernames and passwords in `.deploy/mup.js` as instructed.
+   1. Configure the application using `private/config.json` and `private/secret.json` as instructed.
+   1. Go to `.deploy` and set up the server by executing `mup setup`
+   1. After the setup finished, deploy the web application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy`
    * **Additional Information**
-     * The user you want to use to log on to the server needs to be in the `sudo` group and have `NOPASSWD` enabled. 
+     * The user you want to use to deploy Progressor to the server needs to be in the `docker` and `sudo` groups and have `NOPASSWD` enabled.
      * If you want to re-deploy the application without the database, you can remove the servers from `module.exports.mongo.servers` in `.deploy/mup.js`.
-     * More information can be found on the official [*GitHub*](https://github.com/kadirahq/meteor-up/blob/master/README.md) site.
+     * More information can be found in the official [*meteor-up documentation*](https://github.com/kadirahq/meteor-up/blob/master/README.md).
 
 ## Meteor
 
-This repository contains a reactive [*Meteor*](https://www.meteor.com/) web application created using [*WebStorm*](https://www.jetbrains.com/webstorm/).
+This repository contains a reactive [*Meteor*](https://www.meteor.com/) web application.
 
 ### Introduction
 
@@ -107,23 +111,6 @@ The available test files (to use in place of `<filename>`) are:
 
 The available tests are documented in our project documentation.
 
-### Deployment
-
-The application can be deployed using [*Meteor Up X*](https://github.com/arunoda/meteor-up/tree/mupx) (short: *mupx*),
-which is the current stable version of the tool [*Meteor UP*](https://github.com/arunoda/meteor-up) (short: *mup*).
-
-It is planned for the two versions to be merged at some point both at *GitHub* and in *npm*.
-
-#### Instructions
-
-To deploy, please follow these simple steps:
-
-1. Install the latest version of [*Node.js*](https://nodejs.org/) (if needed).
-2. Install [*Meteor Up X*](https://www.npmjs.com/package/mupx) using `npm install --global mupx`
-3. Inside the directory `.meteor-up`, execute `mupx deploy`
-
-Please note that the mentioned steps only work if you have already configured your server.
-For instruction how to configure your server, please refer to our project documentation.
 
 ## Apache Thrift
 
@@ -140,7 +127,7 @@ The [package documentation](packages/thrift/README.md) contains the instructions
 This application uses the included *MongoDB* engine.
 
 The default / example documents are [included](server/example-data.js) in the application.
-To initialise and inspect the database, simply perform the following steps.
+To initialize and inspect the database, simply perform the following steps.
 
 1. Run the *Meteor* application.
    1. Go the the login page and register yourself.
@@ -159,4 +146,4 @@ You need to run the **Executor** to be able to solve exercises.
 * You can either clone the repository and build the project yourself
 * or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
   * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
-    otherwise *Meteor* will recognise the files temporarily created and continuously restart the server.
+    otherwise *Meteor* will recognize the files temporarily created and continuously restart the server.
