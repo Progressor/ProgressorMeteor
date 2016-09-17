@@ -23,7 +23,7 @@ env:
   node: true
 
 rules:
-  max-len: [2, 150, 2, {ignoreUrls: true, ignoreComments: false}]
+  # max-len: [2, 150, 2, {ignoreUrls: true, ignoreComments: false}]
 
   no-unexpected-multiline: 2
   no-throw-literal: 0
@@ -34,3 +34,5 @@ rules:
   # eslint-plugin-meteor
   meteor/no-session: [0] # allow Session
   meteor/prefer-session-equals: [2] # prefer Session.equals instead
+
+  linebreak-style: "off"
