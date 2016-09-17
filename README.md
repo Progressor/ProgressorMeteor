@@ -1,16 +1,17 @@
 # Progressor - Meteor
 
-This is the runnable component of the project **Progressor - The Programming Professor**. It contains both the web application and the [executor](https://github.com/progressor/executor) jar.
+This is the runnable component of the project **Progressor - The Programming Professor**.
+It contains both the web application and a compiled [**Executor**](https://github.com/progressor/executor) JAR.
 
 ## Deployment & Installation
 
 These instructions are written for *Ubuntu* 16.04.1 LTS.
 
-### Prepare the server
+### Prepare the Server
 
 1. Install [*Docker*](https://www.docker.com/) by executing `curl -sSL https://get.docker.com/ | sh` on the server.
 
-### On your development computer
+### On Your Development Machine
 
 1. [Install Meteor](https://www.meteor.com/install)
 1. Install [*meteor-up (mup)*](https://www.npmjs.com/package/mup) globally: `npm install --global mup`
@@ -21,129 +22,55 @@ These instructions are written for *Ubuntu* 16.04.1 LTS.
    1. Go to `.deploy` and set up the server by executing `mup setup`
    1. After the setup finished, deploy the web application and the [*MongoDB*](https://www.mongodb.org/) database by executing `mup deploy`
    * **Additional Information**
-     * The user you want to use to deploy Progressor to the server needs to be in the `docker` and `sudo` groups and have `NOPASSWD` enabled.
+     * The user you want to use to deploy **Progressor** to the server needs to be in the `docker` and `sudo` groups and have `NOPASSWD` enabled.
      * If you want to re-deploy the application without the database, you can remove the servers from `module.exports.mongo.servers` in `.deploy/mup.js`.
-     * More information can be found in the official [*meteor-up documentation*](https://github.com/kadirahq/meteor-up/blob/master/README.md).
+     * More information about *mup* can be found in the official [*meteor-up documentation*](https://github.com/kadirahq/meteor-up/blob/master/README.md).
+     * More information about the configuration of **Progressor** can be found in the [advanced configuration options](doc/MeteorConfig.md)
 
-## Meteor
+### Executor
+
+You need to run the [**Executor**](https://github.com/Progressor/ProgressorExecutor) to be able to solve exercises.
+
+* You can either clone the repository and build the project yourself
+* or simply use the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
+  * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
+    otherwise *Meteor* will recognize the files temporarily created and continuously restart the server.
+
+## Introduction
 
 This repository contains a reactive [*Meteor*](https://www.meteor.com/) web application.
-
-### Introduction
 
 *Meteor* is an app platform.
 Web application run on a [*Node.js*](https://nodejs.org/) web server and use a [*MongoDB*](https://www.mongodb.org/) document-oriented database.
 
-*Meteor* applications require activated *JavaScript* on the client side (in the web browser).
+Note: *Meteor* applications require activated *JavaScript* on the client side (in the web browser) or nothing is displayed.
 
-### Dependencies
+## Background
 
-You need to install *Meteor* to develop this website.
-You can download the latest version from [their website](https://www.meteor.com/install).
+This project **Progressor - The Programming Professor** was started by three BSc students at the
+[*Bern University of Applied Sciences'*](http://www.ti.bfh.ch/en/) (BUAS / [@bfh](https://github.com/bfh))
+[*Computer Perception & Virtual Reality Lab*](https://www.cpvrlab.ti.bfh.ch/) ([@cpvrLab](https://github.com/cpvrLab)).
 
-This application depends on the official packages
-`mongo`, `blaze-html-templates`, `session`, `tracker`, `ecmascript`, `es5-shim`, `standard-minifiers`,
-`random`, `check`, `audit-argument-checks`, `reactive-var`, `reactive-dict`, `iron:router`,
-`accounts-password`, `accounts-ui`, `underscore`, `jquery` and `less`.
+It has since been provided as open-source in order to encourage other educational institutions, enterprises and individuals to get involved and set up their own installation.
 
-It also depends on a number of third-party *Meteor* packages.
+### Features
 
-1.  [anti:i18n](https://atmospherejs.com/anti/i18n)
-    for internationalisation (translation)
-2.  [momentjs:moment](https://atmospherejs.com/momentjs/moment)
-    for internationalisation (date & time formatting)
-3.  [alanning:roles](https://atmospherejs.com/alanning/roles)
-    for role-based authorisation
-4.  [zimme:iron-router-auth](https://atmospherejs.com/zimme/iron-router-auth)
-    for authentication- and authorisation-based routing
-5.  [huttonr:bootstrap3](https://atmospherejs.com/huttonr/bootstrap3)
-    for the newest highly configurable `less` version of [Bootstrap](http://getbootstrap.com/)
-    * The [Flatly](http://bootswatch.com/flatly/) design is provided by [Bootswatch](http://bootswatch.com/).
-6.  [useraccounts:bootstrap](https://atmospherejs.com/useraccounts/bootstrap)
-    for the unified design of the login & register page
-7.  [sacha:spin](https://atmospherejs.com/sacha/spin)
-    for the loading spinner
-8.  [chuangbo:marked](https://atmospherejs.com/chuangbo/marked)
-    for [GitHub Flavoured Markdown](https://guides.github.com/features/mastering-markdown/)
-9.  [houston:admin](https://atmospherejs.com/houston/admin)
-    for the *MongoDB* admin frontend
-10. [perak:codemirror](https://atmospherejs.com/perak/codemirror)
-    for syntax highlighting using *CodeMirror*
-11. [meteorhacks:kadira](https://atmospherejs.com/meteorhacks/kadira)
-    for monitoring using [*Kadira*](https://kadira.io/) (see Monitoring section)
-12. [sergeyt:typeahead](https://atmospherejs.com/sergeyt/typeahead)
-    for autocomplete support using *typeahead.js*
-13. [percolate:synced-cron](https://atmospherejs.com/percolate/synced-cron)
-    for jobs similar to *Cron* (or scheduled tasks)
-14. [meteorhacks:ssr](https://atmospherejs.com/meteorhacks/ssr)
-    provides Server Side Rendering capabilities in order to send emails
-15. [pascoual:pdfkitx](https://atmospherejs.com/pascoual/pdfkitx)
-    for generating PDF documents using [PDFKit](http://pdfkit.org/)
+![home page](doc/images/home.png)
 
-### Configuration
+**Progressor** offers two basic features.
 
-The configuration is stored in the files `private/config.json` and `private/secret.json` which are loaded in `server/config.json`.
+* You can create and solve exercises on your own and improve your programming skills.
+* Or you can create examinations for your students to take and evaluate their achievements.
 
-### Monitoring
+|                    Example Examination                   |            Student Examination Dashboard           |
+|:--------------------------------------------------------:|:--------------------------------------------------:|
+| ![example exercise](doc/images/programming-exercise.png) | ![examination dashboard](doc/images/execution.png) |
 
-The tool [*Kadira*](https://kadira.io/) is used to monitor the application performance.
-More information can be found in the official [academy page](https://kadira.io/academy/meteor-performance-101/content/getting-started-with-kadira).
+### Architecture
 
-### Load Testing
+The system is composed of two components.
 
-This application can be tested under heavy load using [*MeteorDown*](https://github.com/meteorhacks/meteor-down).
+1. The *Meteor* web application that runs on a *Node.js* web server and uses a *MongoDB* database.
+2. The **Executor**, which is a seperate *Java* application that communicates with the web application using *Apache Thrift* and executed the code fragments entered by the users.
 
-#### Instructions
-
-To run a load test, please follow these simple steps:
-
-1. Install the latest version of [*Node.js*](https://nodejs.org/) (if needed).
-2. Install the [*meteor-down*](https://www.npmjs.com/package/meteor-down) *npm* package using `npm install --global meteor-down`.
-3. Inside the directory `.meteor-down`, execute `meteor-down <filename>` to run a specific load test.
-
-There is also a [*Meteor* package](https://atmospherejs.com/meteorhacks/meteor-down) which is not currently used in this project.
-
-#### Available Tests
-
-The available test files (to use in place of `<filename>`) are:
-
-* `executor.js`
-
-The available tests are documented in our project documentation.
-
-
-## Apache Thrift
-
-[*Thrift*](https://thrift.apache.org/) is a software framework for scalable cross-language services development.
-
-It is used for the communication with the **Executor** component.
-The corresponding interface definition file is included in the **Executor** project.
-
-A custom *Meteor* package called `thrift` wraps the [*npm*](https://www.npmjs.com/) package `thrift` ([source](https://www.npmjs.com/package/thrift)).
-The [package documentation](packages/thrift/README.md) contains the instructions to update the package.
-
-## MongoDB
-
-This application uses the included *MongoDB* engine.
-
-The default / example documents are [included](server/example-data.js) in the application.
-To initialize and inspect the database, simply perform the following steps.
-
-1. Run the *Meteor* application.
-   1. Go the the login page and register yourself.
-   2. Stop the application.
-2. Run the application again.
-   1. This time, the documents get inserted into the database;
-      they will reference the user you just created.
-   2. Go the *MongoDB* admin page (`<root>/admin`) and claim administrator rights for your user.
-      You are now the administrator of your own local *MongoDB*.
-      You can log in at any time and view, edit or remove documents and whole collections.
-
-## Executor
-
-You need to run the **Executor** to be able to solve exercises.
-
-* You can either clone the repository and build the project yourself
-* or simply execute the [*JAR* file](bin/ProgressorExecutor.jar) included in the directory `bin`.
-  * In this case, run the **Executor** with a working directory outside the *Meteor* projects,
-    otherwise *Meteor* will recognize the files temporarily created and continuously restart the server.
+![system architecture](doc/images/ArchitectureAdvanced.png)
