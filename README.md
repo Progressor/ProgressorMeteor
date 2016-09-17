@@ -45,7 +45,7 @@ Web application run on a [*Node.js*](https://nodejs.org/) web server and use a [
 
 Note: *Meteor* applications require activated *JavaScript* on the client side (in the web browser) or nothing is displayed.
 
-## Background
+### Background
 
 This project **Progressor - The Programming Professor** was started by three BSc students at the
 [*Bern University of Applied Sciences'*](http://www.ti.bfh.ch/en/) (BUAS / [@bfh](https://github.com/bfh))
