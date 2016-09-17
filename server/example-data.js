@@ -31,7 +31,7 @@ Meteor.startup(() => {
     },
     string: {
       type: 1,
-      difficulty: 1,
+      difficulty: 2,
       names: [
         { language: 'en', name: 'Alternating Concatenation' }, // TODO: translate
         { language: 'de', name: 'Abwechselnde Verkettung' },
@@ -60,7 +60,7 @@ Meteor.startup(() => {
     },
     array: {
       type: 1,
-      difficulty: 1,
+      difficulty: 2,
       names: [
         { language: 'en', name: 'Swapping Encryption/Decryption' }, // TODO: translate
         { language: 'de', name: 'Ver- & Entschlüsselung durch Vertauschung' },
@@ -73,7 +73,7 @@ Meteor.startup(() => {
         {
           name: 'swapEncrypt',
           inputNames: ['toSwap', 'length'],
-          inputTypes: ['array<char>', 'int'],
+          inputTypes: ['array<char>', 'int32'],
           outputNames: ['return'],
           outputTypes: ['array<char>'],
         },
@@ -81,21 +81,21 @@ Meteor.startup(() => {
       testCases: [
         {
           functionName: 'swapEncrypt',
-          inputValues: ['{H,e,l,l,o, ,W,o,r,l,d}'],
-          expectedOutputValues: ['{e,H,l,l, ,o,o,W,l,r,d}'],
+          inputValues: ['{H,e,l,l,o,_,W,o,r,l,d}', '11'],
+          expectedOutputValues: ['{e,H,l,l,_,o,o,W,l,r,d}'],
           visible: true,
         },
         {
           functionName: 'swapEncrypt',
-          inputValues: ['{e,H,l,l, ,o,o,W,l,r,d}'],
-          expectedOutputValues: ['{H,e,l,l,o, ,W,o,r,l,d}'],
+          inputValues: ['{e,H,l,l,_,o,o,W,l,r,d}', '11'],
+          expectedOutputValues: ['{H,e,l,l,o,_,W,o,r,l,d}'],
           visible: true,
         },
       ],
     },
     loop: {
       type: 1,
-      difficulty: 1,
+      difficulty: 3,
       names: [
         { language: 'en', name: 'Palindrome' }, // TODO: translate
         { language: 'de', name: 'Palindrom' },
@@ -123,14 +123,14 @@ Meteor.startup(() => {
         {
           functionName: 'isPalindrome',
           inputValues: ['A Santa dog lived as a devil God at NASA.'],
-          expectedOutputValues: ['false'],
+          expectedOutputValues: ['true'],
           visible: true,
         },
       ],
     },
     recursion: {
       type: 1,
-      difficulty: 1,
+      difficulty: 3,
       names: [
         { language: 'en', name: 'Fibonacci' }, // TODO: translate
         { language: 'de', name: 'Fibonacci' },
@@ -143,9 +143,9 @@ Meteor.startup(() => {
         {
           name: 'fibonacci',
           inputNames: ['num'],
-          inputTypes: ['int'],
+          inputTypes: ['int32'],
           outputNames: ['return'],
-          outputTypes: ['int'],
+          outputTypes: ['int32'],
         },
       ],
       testCases: [
