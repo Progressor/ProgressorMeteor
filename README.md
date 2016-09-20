@@ -1,7 +1,7 @@
 # Progressor - Meteor
 
 This is the runnable component of the project **Progressor - The Programming Professor**.
-It contains both the web application and a compiled [**Executor**](https://github.com/progressor/executor) JAR.
+It contains both the web application and a compiled [**Executor**](https://github.com/Progressor/ProgressorExecutor) JAR.
 
 ## Deployment & Installation
 
