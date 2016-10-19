@@ -30,6 +30,7 @@ rules:
   no-underscore-dangle: 0
   import/no-unresolved: 0
   no-console: 0
+  quotes: ["error", "single", { "avoidEscape": true }]
 
   # eslint-plugin-meteor
   meteor/no-session: [0] # allow Session
