@@ -44,13 +44,11 @@ Template.home.helpers({
         name: i18n.getProgrammingLanguage(lng._id),
         description: i18n.getProgrammingLanguageDescription(lng._id),
         separators: getSeparators(idx),
-        exerciseSearchData: { _id: lng._id },
       }, lng)),
       _.map(upc, (lng, idx) => _.extend({
         name: i18n.getProgrammingLanguage(lng._id),
         description: i18n.getProgrammingLanguageDescription(lng._id),
         separators: getSeparators(cur.length + idx),
-        exerciseSearchData: { _id: lng._id },
         isUpcoming: true,
       }, lng)));
   },
@@ -61,14 +59,6 @@ Template.home.helpers({
 });
 
 Template.home.events({
-  /*'mouseup .language-link': function (event) {
-    event.preventDefault();
-    if (event.which === 2 || event.which === 4 || (event.which === 1 && event.ctrlKey)) {
-      window.open(Router.path('exerciseSearch', { _id: this._id }));
-    } else if (event.which === 1) {
-      Router.go('exerciseSearch', { _id: this._id });
-    }
-  },*/
   'mouseover .panel-default:not(.disabled)': event => $(event.currentTarget).removeClass('panel-default').addClass('panel-primary'),
   'mouseout .panel-primary': event => $(event.currentTarget).removeClass('panel-primary').addClass('panel-default'),
 });

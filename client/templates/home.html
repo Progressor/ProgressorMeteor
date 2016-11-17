@@ -1,33 +1,41 @@
 <template name="home">
-	<header>
-		<div class="jumbotron intro">
-			<h1 id="intro">&nbsp;</h1>
-		</div>
-	</header>
-	<section class="row">
-		{{#each programmingLanguages}}
-			<div class="col-xs-{{nofColumns "xs"}} col-sm-{{nofColumns "sm"}} col-md-{{nofColumns "md"}} col-lg-{{nofColumns "lg"}}">
-				{{#linkTo route="exerciseSearch" class="language-link" data=exerciseSearchData}}
-					<div class="panel panel-default">
-						<div class="panel-heading language-logo">
-							<i class="{{devicon}} language-logo"></i>
-						</div>
-						<div class="panel-body">
-							<div class="panel-title">{{name}}</div>
-							<p class="language-description">{{description}}</p>
-							{{#if isUpcoming}}
-								<em>{{i18n "exercise.upcoming"}}</em>
-							{{/if}}
-						</div>
-						{{#unless isUpcoming}}
-							<div class="panel-footer">{{nofExercises _id}}</div>
-						{{/unless}}
-					</div>
-				{{/linkTo}}
-			</div>
-			{{#each separators}}
-				<div class="clearfix visible-{{this}}-block"></div>
-			{{/each}}
-		{{/each}}
-	</section>
+  <header>
+    <div class="jumbotron intro">
+      <h1 id="intro">&nbsp;</h1>
+    </div>
+  </header>
+  <section class="row">
+    {{#each programmingLanguages}}
+      <div class="col-xs-{{nofColumns "xs"}} col-sm-{{nofColumns "sm"}} col-md-{{nofColumns "md"}} col-lg-{{nofColumns "lg"}}">
+        {{#unless isUpcoming}}
+          {{#linkTo route="exerciseSearch" class="language-link"}}
+            <div class="panel panel-default language-link">
+              <div class="panel-heading language-logo">
+                <i class="{{devicon}} language-logo"></i>
+              </div>
+              <div class="panel-body">
+                <div class="panel-title">{{name}}</div>
+                <p class="language-description">{{description}}</p>
+              </div>
+              <div class="panel-footer">{{nofExercises _id}}</div>
+            </div>
+          {{/linkTo}}
+        {{else}}
+          <div class="panel panel-default disabled">
+            <div class="panel-heading language-logo">
+              <i class="{{devicon}} language-logo"></i>
+            </div>
+            <div class="panel-body">
+              <div class="panel-title">{{name}}</div>
+              <p>{{description}}</p>
+              <em>{{i18n "exercise.upcoming"}}</em>
+            </div>
+          </div>
+        {{/unless}}
+      </div>
+      {{#each separators}}
+        <div class="clearfix visible-{{this}}-block"></div>
+      {{/each}}
+    {{/each}}
+  </section>
 </template>
