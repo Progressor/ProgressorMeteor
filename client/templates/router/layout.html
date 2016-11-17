@@ -1,122 +1,111 @@
 <template name="layout">
-  <div class="template-{{currentTemplate}} {{#if currentUser}}user-authenticated{{/if}} {{#if isAdmin}}user-authorized-admin{{/if}} {{#if layout_examinationTheme}}theme-examination{{/if}}">
-    <header class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
-            <span class="sr-only">{{i18n "layout.toggleNavigationButton"}}</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          {{#linkTo route="home" class="navbar-brand"}}
-            <span id="textLogo" class="navbar-link">{{i18n "layout.logo"}}</span>
-            <img src="/images/logo-progressor.png" alt="{{i18n "layout.title"}}" id="imageLogo" width="280" height="46" />
-          {{/linkTo}}
-        </div>
-        <div id="navbar-collapse" class="collapse navbar-collapse">
-          <nav>
-            <ul class="nav navbar-nav">
-              {{! <li>{#linkTo route="home"}{i18n "layout.homeTitle"}{/linkTo}</li> }}
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  {{i18n "layout.programmingLanguagesTitle"}}
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  {{#each i18nProgrammingLanguages}}
-                    <li>{{#linkTo route="exerciseSearch" data=this}}{{name}}{{/linkTo}}</li>
-                  {{/each}}
-                </ul>
-              </li>
-              {{#if currentUser}}
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {{i18n "exercise.createTitle"}}
-                    <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    {{#each i18nExerciseTypes}}
-                      <li>{{#linkTo route="exerciseCreate" query=(exerciseCreateQuery this)}}{{name}}{{/linkTo}}</li>
-                    {{/each}}
-                  </ul>
-                </li>
-                <li>{{#linkTo route="examinationTemplateCreate"}}{{i18n "examination.createTemplateTitle"}}{{/linkTo}}</li>
-              {{/if}}
-              {{#if isAdmin}}
-                <li>
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {{i18n "layout.adminTitle"}}
-                    {{#if nofExercisesToRelease}}
-                      <span class="badge">{{nofExercisesToRelease}}</span>
-                    {{/if}}
-                    <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li>
-                      {{#linkTo route="exerciseRelease"}}
-                        {{i18n "exercise.releaseTitle"}}
-                        {{#if nofExercisesToRelease}}
-                          <span class="badge">{{nofExercisesToRelease}}</span>
-                        {{/if}}
-                      {{/linkTo}}
-                    </li>
-                    <li><a href="/admin">{{i18n "layout.mongoDBAdminTitle"}}</a></li>
-                  </ul>
-                </li>
-              {{/if}}
-            </ul>
-          </nav>
-          <div class="navbar-right">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <span class="glyphicon glyphicon-globe"></span>
-                  {{language}}
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  {{#each languages}}
-                    <li class="{{#if isActive}}active{{/if}}">
-                      <a href="?lang={{_id}}" class="i18n lang">{{name}}</a>
-                    </li>
-                  {{/each}}
-                </ul>
-              </li>
-              <li role="separator" class="divider-vertical"></li>
-              <li>
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  {{#if currentUser}}{{i18n "account.title"}}{{else}}{{i18n "account.loginTitle"}}{{/if}}
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  {{#if currentUser}}
-                    <li>{{#linkTo route="account"}}{{currentUserEmail}}{{/linkTo}}</li>
-                    <li>{{#linkTo route="home" query="action=logout" id="link-logout"}}{{i18n "account.logoutButton"}}{{/linkTo}}</li>
-                  {{else}}
-                    <li>{{#linkTo route="account" query="state=signIn"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
-                    <li>{{#linkTo route="account" query="state=signUp"}}{{i18n "account.registerButton"}}{{/linkTo}}</li>
-                  {{/if}}
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </header>
-    <div class="container-fluid container-main">
-      {{#unless layout_customTitle}}
-        <h1 class="hidden">{{i18n "layout.title"}}</h1>
-      {{/unless}}
-      <main>
-        {{> yield}}
-      </main>
-      <div id="global-alerts" class="fixed top-right"></div>
-    </div>
-    {{!--<footer class="well well-sm text-muted small">
+	<div class="template-{{currentTemplate}} {{#if layout_examinationTheme}}theme-examination{{/if}}">
+		<header class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+						<span class="sr-only">{{i18n "layout.toggleNavigationButton"}}</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					{{#linkTo route="home" class="navbar-brand"}}
+						<span id="textLogo" class="navbar-link">{{i18n "layout.logo"}}</span>
+						<img src="/images/logo-progressor.png" alt="{{i18n "layout.title"}}" id="imageLogo" width="280" height="46" />
+					{{/linkTo}}
+				</div>
+				<div id="navbar-collapse" class="collapse navbar-collapse">
+					<nav>
+						<ul class="nav navbar-nav">
+							{{! <li>{#linkTo route="home"}{i18n "layout.homeTitle"}{/linkTo}</li> }}
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									{{i18n "layout.programmingLanguagesTitle"}}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									{{#each i18nProgrammingLanguages}}
+										<li>{{#linkTo route="exerciseSearch" data=this}}{{name}}{{/linkTo}}</li>
+									{{/each}}
+								</ul>
+							</li>
+							{{#if currentUser}}
+								<li class="dropdown">
+									<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+										{{i18n "exercise.createTitle"}}
+										<span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu">
+										{{#each i18nExerciseTypes}}
+											<li>{{#linkTo route="exerciseCreate" query=(exerciseCreateQuery this)}}{{name}}{{/linkTo}}</li>
+										{{/each}}
+									</ul>
+								</li>
+								<li>{{#linkTo route="examinationTemplateCreate"}}{{i18n "examination.createTemplateTitle"}}{{/linkTo}}</li>
+							{{/if}}
+							{{#if isAdmin}}
+								<li>
+									{{#linkTo route="exerciseRelease"}}
+										{{i18n "exercise.releaseTitle"}}
+										{{#if nofExercisesToRelease}}
+											<span class="badge">{{nofExercisesToRelease}}</span>
+										{{/if}}
+									{{/linkTo}}
+								</li>
+								<li><a href="/admin">{{i18n "layout.mongoDBAdminTitle"}}</a></li>
+							{{/if}}
+						</ul>
+					</nav>
+					<div class="navbar-right">
+						<ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									<span class="glyphicon glyphicon-globe"></span>
+									{{language}}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									{{#each languages}}
+										<li class="{{#if isActive}}active{{/if}}">
+											<a href="?lang={{_id}}" class="i18n lang">{{name}}</a>
+										</li>
+									{{/each}}
+								</ul>
+							</li>
+							<li role="separator" class="divider-vertical"></li>
+							<li>
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									{{#if currentUser}}{{i18n "account.title"}}{{else}}{{i18n "account.loginTitle"}}{{/if}}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									{{#if currentUser}}
+										<li>{{#linkTo route="account"}}{{currentUserEmail}}{{/linkTo}}</li>
+										<li>{{#linkTo route="home" query="action=logout" id="link-logout"}}{{i18n "account.logoutButton"}}{{/linkTo}}</li>
+									{{else}}
+										<li>{{#linkTo route="account" query="state=signIn"}}{{i18n "account.loginButton"}}{{/linkTo}}</li>
+										<li>{{#linkTo route="account" query="state=signUp"}}{{i18n "account.registerButton"}}{{/linkTo}}</li>
+									{{/if}}
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="container-fluid container-main">
+			{{#unless layout_customTitle}}
+				<h1 class="hidden">{{i18n "layout.title"}}</h1>
+			{{/unless}}
+			<main>
+				{{> yield}}
+			</main>
+			<div id="global-alerts" class="fixed top-right"></div>
+		</div>
+		{{!--<footer class="well well-sm text-muted small">
 			developed at the <a class="text-muted" href="http://www.ti.bfh.ch/">Bern University of Applied Sciences</a> &mdash;
 			development team: <a class="text-muted" href="mailto:strut1@bfh.ch">Thomas Strub</a>, Marc Touw, and Janick Weidmann (BSc graduates) &mdash;
 			advisors: <a class="text-muted" href="mailto:hsm4@bfh.ch">Prof Marcus Hudritsch</a>, Michael Luggen (<a class="text-muted" href="http://www.cpvrlab.ti.bfh.ch/">cpvrLab</a>)
 		</footer>--}}
-  </div>
+	</div>
 </template>
