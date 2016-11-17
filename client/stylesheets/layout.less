@@ -32,16 +32,18 @@ input[type="number"] { max-width: 7em; }
 ////////////////////
 #imageLogo { margin-top: -8px; }
 @media (max-width: (@logo-width + 75px)) {
-	#imageLogo { display: none; }
+  #imageLogo { display: none; }
 }
 @media (min-width: (@logo-width + 76px)) {
-	#textLogo { display: none; }
+  #textLogo { display: none; }
 }
 .navbar .divider-vertical { height: @header-height; margin: 0 9px; border-right: 1px solid #FFFFFF; }
 .navbar-inverse .divider-vertical { border-right-color: #222222; border-left-color: #111111; }
 @media (max-width: @grid-float-breakpoint-max) {
-	.navbar-collapse .nav > .divider-vertical { display: none; }
+  .navbar-collapse .nav > .divider-vertical { display: none; }
 }
+.navbar li.open ul.dropdown-menu .badge { color: #FFFFFF; background-color: @brand-primary; }
+.navbar li.open ul.dropdown-menu > li > a:hover .badge { color: @brand-primary; background-color: #FFFFFF; }
 ///////////////////
 // MISCELLANEOUS //
 ///////////////////
@@ -56,21 +58,21 @@ input[type="number"] { max-width: 7em; }
 // POSITIONING //
 /////////////////
 .absolute {
-	position: absolute;
-	&.top-left { top: @default-margin; left: @default-margin; }
-	&.top-right { top: @default-margin; right: @default-margin; }
-	&-container { position: relative; }
+  position: absolute;
+  &.top-left { top: @default-margin; left: @default-margin; }
+  &.top-right { top: @default-margin; right: @default-margin; }
+  &-container { position: relative; }
 }
 .fixed {
-	position: fixed;
-	&.top-left { top: @header-height + (@default-margin * @font-size-base * 2.5); left: @default-margin; }
-	&.top-right { top: @header-height + (@default-margin * @font-size-base * 2.5); right: @default-margin; }
+  position: fixed;
+  &.top-left { top: @header-height + (@default-margin * @font-size-base * 2.5); left: @default-margin; }
+  &.top-right { top: @header-height + (@default-margin * @font-size-base * 2.5); right: @default-margin; }
 }
 ////////////////
 // SEPARATORS //
 ////////////////
 .separated(@dir) {
-	.separated-@{dir} { margin-@{dir}: @default-margin; }
+  .separated-@{dir} { margin-@{dir}: @default-margin; }
 }
 .separated(top);
 .separated(left);
