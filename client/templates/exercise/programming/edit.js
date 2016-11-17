@@ -196,11 +196,13 @@ Template.programmingEdit.onRendered(function () {
     }
     if ((!this.fragmentTyped || !this.solutionTyped) && this.exercise.get() && this.exercise.get().programmingLanguage && testValidFunctions(this.exercise.get())) {
       Meteor.call('getFragment', this.exercise.get().programmingLanguage, _.omit(this.exercise.get(), '_id', 'category'), Progressor.handleError((error, result) => {
-        if (!this.fragmentTyped) {
-          Session.set('fragment', !error ? result : null);
-        }
-        if (!this.solutionTyped) {
-          Session.set('solution', !error ? result : null);
+        if ((!this.fragmentTyped || !this.solutionTyped) && this.exercise.get() && this.exercise.get().programmingLanguage) {
+          if (!this.fragmentTyped) {
+            Session.set('fragment', !error ? result : null);
+          }
+          if (!this.solutionTyped) {
+            Session.set('solution', !error ? result : null);
+          }
         }
       }));
     }
