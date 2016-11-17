@@ -77,7 +77,7 @@ Meteor.methods({
 
   /**
    * Fetches the blacklist for a specific programming language from the Executor.
-   * @param language {string} identifier of programming language to get version information for
+   * @param language {string} identifier of programming language to get the blacklist for
    * @returns {string[]}
    */
   getBlacklist(language) {
@@ -88,8 +88,8 @@ Meteor.methods({
 
   /**
    * Fetches a generated code fragment for a specific exercise from the Executor.
-   * @param language {string} identifier of programming language to get version information for
-   * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[]}} exercise to generate code fragment for
+   * @param language {string} identifier of programming language to fetch the generated code fragment for
+   * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[]}} exercise fetch the generated code fragment for
    * @returns {string}
    */
   getFragment(language, exercise) {
@@ -106,8 +106,8 @@ Meteor.methods({
               outputTypes: [String],
             }),
           ],
-        })
-      )
+        }),
+      ),
     );
 
     if (exercise._id) {
@@ -120,9 +120,45 @@ Meteor.methods({
   },
 
   /**
+   * Fetches the generated content of the code file that will be executed for a specific exercise from the Executor.
+   * @param language {string} identifier of programming language to fetch the generated code file for
+   * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[], testCases: {functionName: string, inputValues: string[], expectedOutputValues: string[]}[]}} exercise to fetch the generated code file for
+   * @param fragment {string} code fragment to execute
+   * @returns {string}
+   */
+  getCodeFile(language, exercise, fragment) {
+    check(language, String);
+    check(exercise, Match.OneOf(
+        Match.ObjectIncluding({ _id: String }),
+        Match.ObjectIncluding({
+          functions: [
+            Match.ObjectIncluding({
+              name: String,
+              inputNames: [String],
+              inputTypes: [String],
+              outputNames: [String],
+              outputTypes: [String],
+            }),
+          ],
+        }),
+      ),
+    );
+    check(fragment, String);
+
+    if (exercise._id) {
+      exercise = Progressor.exercises.findOne({ _id: exercise._id });
+    }
+
+    const functions = _.map(exercise.functions, f => new ttypes.FunctionSignature(f));
+    const testCases = _.map(exercise.testCases, c => new ttypes.TestCase(c));
+
+    return invokeExecutor.call(this, 'getCodeFile', language, fragment, functions, testCases);
+  },
+
+  /**
    * Fetches the programming exercise evaluation from the Executor.
-   * @param language {string} identifier of programming language to get version information for
-   * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[], testCases: {functionName: string, inputValues: string[], expectedOutputValues: string[]}[]}} exercise to generate code fragment for
+   * @param language {string} identifier of programming language the code fragment is written in
+   * @param exercise {{_id: string}|{functions: {name: string, inputNames: string[], inputTypes: string[], outputNames: string[], outputTypes: string[]}[], testCases: {functionName: string, inputValues: string[], expectedOutputValues: string[]}[]}} exercise to execute
    * @param fragment {string} code fragment to execute
    * @param includeInvisible {boolean} whether to include invisible test cases in the results
    * @returns {{success: boolean, fatal: boolean, result: string, performance: {}}[]}
