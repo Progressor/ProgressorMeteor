@@ -150,4 +150,5 @@ Template.textEdit.events({
       Progressor.showAlert(i18n('exercise.isNotValidMessage'));
   }),
   'click .btn-delete': (event, template) => Meteor.call('deleteExercise', { _id: template.exercise.get()._id }, Progressor.handleError(() => Router.go('exerciseSearch', { _id: template.exercise.get().programmingLanguage }), false)),
+  'click .btn-export': (event, template) => Progressor.generateExerciseJson(template.exercise.get()),
 });

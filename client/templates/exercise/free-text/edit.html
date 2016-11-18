@@ -1,176 +1,179 @@
 <template name="textEdit">
-	{{i18nTooltips}}
-	{{#with safeExercise this}}
-		<header>
-			{{#if _id}}
-				<nav>
-					<ol class="breadcrumb">
-						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
-						<li class="active">{{i18nDifficulty difficulty}}</li>
-						<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
-						<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
-					</ol>
-				</nav>
-				<h2>{{i18n "exercise.editTitle" (i18nName this)}}</h2>
-			{{else}}
-				<h2>{{i18n "exercise.createTitle"}}</h2>
-			{{/if}}
-		</header>
-		{{#if _id}}
-			<div class="help-block">
-				<small class="text-muted">
-					{{i18n "form.createdBy"}} {{userName author_id}}
-					{{#if lastEditor_id}}
-						&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
-					{{/if}}
-				</small>
-			</div>
-		{{/if}}
-		<div class="row visible-md-block visible-lg-block">
-			<div class="col-md-offset-5 col-md-7">
-				<ul class="nav nav-tabs" role="tablist">
-					{{#each i18nExerciseNamesDescriptions}}
-						<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-					{{/each}}
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-5">
-				<div class="form-group form-group-sm">
-					<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-					<select id="select-language" class="form-control" disabled={{_id}}>
-						<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nProgrammingLanguages}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
-				</div>
-				<div class="form-group form-group-sm">
-					<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
-					{{#if isAdmin}}
-						{{#if categoryEditData}}
-							&mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
-						{{/if}}
-						&mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
-					{{/if}}
-					<select id="select-category" class="form-control">
-						<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nCategories}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
-				</div>
-				<div class="form-group form-group-sm">
-					<label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
-					<select id="select-difficulty" class="form-control">
-						<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
-						{{#each i18nDifficulties}}
-							<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-						{{/each}}
-					</select>
-				</div>
-			</div>
-			<div class="col-md-7">
-				<div class="visible-xs-block visible-sm-block">
-					<ul class="nav nav-tabs" role="tablist">
-						{{#each i18nExerciseNamesDescriptions}}
-							<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-						{{/each}}
-					</ul>
-				</div>
-				<div class="tab-content">
-					{{#each i18nExerciseNamesDescriptions}}
-						<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
-							<div class="form-group form-group-sm">
-								<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-								<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
-							</div>
-							<div class="form-group form-group-sm">
-								<label for="textarea-description-{{_id}}" class="control-label">
-									{{i18n "exercise.descriptionLabel"}} ({{_id}})
-									<span class="text-info font-weight-normal">
+  {{i18nTooltips}}
+  {{#with safeExercise this}}
+    <header>
+      {{#if _id}}
+        <nav>
+          <ol class="breadcrumb">
+            <li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+            <li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+            <li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
+            <li class="active">{{i18nDifficulty difficulty}}</li>
+            <li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
+            <li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
+          </ol>
+        </nav>
+        <h2>{{i18n "exercise.editTitle" (i18nName this)}}</h2>
+      {{else}}
+        <h2>{{i18n "exercise.createTitle"}}</h2>
+      {{/if}}
+    </header>
+    {{#if _id}}
+      {{#if author_id}}
+        <div class="help-block">
+          <small class="text-muted">
+            {{i18n "form.createdBy"}} {{userName author_id}}
+            {{#if lastEditor_id}}
+              &mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+            {{/if}}
+          </small>
+        </div>
+      {{/if}}
+    {{/if}}
+    <div class="row visible-md-block visible-lg-block">
+      <div class="col-md-offset-5 col-md-7">
+        <ul class="nav nav-tabs" role="tablist">
+          {{#each i18nExerciseNamesDescriptions}}
+            <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group form-group-sm">
+          <label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
+          <select id="select-language" class="form-control" disabled={{_id}}>
+            <option value="">{{i18n "form.selectPleaseChoose"}}</option>
+            {{#each i18nProgrammingLanguages}}
+              <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group form-group-sm">
+          <label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
+          {{#if isAdmin}}
+            {{#if categoryEditData}}
+              &mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
+            {{/if}}
+            &mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
+          {{/if}}
+          <select id="select-category" class="form-control">
+            <option value="">{{i18n "form.selectPleaseChoose"}}</option>
+            {{#each i18nCategories}}
+              <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group form-group-sm">
+          <label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
+          <select id="select-difficulty" class="form-control">
+            <option value="0">{{i18n "form.selectPleaseChoose"}}</option>
+            {{#each i18nDifficulties}}
+              <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="visible-xs-block visible-sm-block">
+          <ul class="nav nav-tabs" role="tablist">
+            {{#each i18nExerciseNamesDescriptions}}
+              <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+            {{/each}}
+          </ul>
+        </div>
+        <div class="tab-content">
+          {{#each i18nExerciseNamesDescriptions}}
+            <div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+              <div class="form-group form-group-sm">
+                <label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+                <input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
+              </div>
+              <div class="form-group form-group-sm">
+                <label for="textarea-description-{{_id}}" class="control-label">
+                  {{i18n "exercise.descriptionLabel"}} ({{_id}})
+                  <span class="text-info font-weight-normal">
 										&mdash;
-										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
-										<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="text-info">{{i18n "form.supportsMarkdown"}}</span></a>
+                    <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
+                    <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="text-info">{{i18n "form.supportsMarkdown"}}</span></a>
 									</span>
-								</label>
-								<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
-							</div>
-						</div>
-					{{/each}}
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<section class="col-md-5">
-				<h3>{{i18n "exercise.solutionSubtitle"}}</h3>
-				<div class="form-group form-group-sm">
-					<label for="input-pattern" class="control-label">
-						{{i18n "exercise.solutionPatternLabel"}}
-						<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
-					</label>
-					<input type="text" id="input-pattern" class="form-control" value="{{pattern}}" />
-				</div>
-				{{#if pattern}}
-					<label class="control-label">
-						{{i18n "exercise.solutionLabel"}}
-					</label>
-					{{#each solution}}
-						<div class="row">
-							<div class="col-sm-10">
-								<div class="form-group form-group-sm">
-									<input type="text" class="input-solution form-control" value="{{value}}" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<button class="btn btn-success btn-sm btn-add-solution" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
-								<button class="btn btn-danger btn-sm btn-remove-solution" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
-							</div>
-						</div>
-					{{/each}}
-				{{else}}
-					<div class="form-group form-group-sm">
-						<label for="textarea-solution" class="control-label">
-							{{i18n "exercise.solutionLabel"}}
-						</label>
-						{{#with (solution.[0])}}
-							<textarea id="textarea-solution" class="input-solution form-control" rows="5" cols="40">{{value}}</textarea>
-						{{/with}}
-					</div>
-				{{/if}}
-				<div class="text-right">
-					<div class="checkbox nomargin">
-						<label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
-					</div>
-				</div>
-			</section>
-		</div>
-		<div class="btn-toolbar separated-top separated-bottom">
-			{{#if canSave}}
-				<div class="btn-group">
-					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if _id}}
-						{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
-						<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
-					{{/if}}
-				</div>
-			{{/if}}
-			{{#if _id}}
-				<div class="btn-group">
-					{{#if canSave}}
-						{{#unless (released.requested)}}
-							<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
-						{{/unless}}
-					{{/if}}
-					{{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
-				</div>
-			{{/if}}
-		</div>
-		{{#unless canSave}}
-			<div class="separated-top text-muted">{{i18n "form.cannotSaveMessage"}}</div>
-		{{/unless}}
-	{{/with}}
+                </label>
+                <textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <section class="col-md-5">
+        <h3>{{i18n "exercise.solutionSubtitle"}}</h3>
+        <div class="form-group form-group-sm">
+          <label for="input-pattern" class="control-label">
+            {{i18n "exercise.solutionPatternLabel"}}
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
+          </label>
+          <input type="text" id="input-pattern" class="form-control" value="{{pattern}}" />
+        </div>
+        {{#if pattern}}
+          <label class="control-label">
+            {{i18n "exercise.solutionLabel"}}
+          </label>
+          {{#each solution}}
+            <div class="row">
+              <div class="col-sm-10">
+                <div class="form-group form-group-sm">
+                  <input type="text" class="input-solution form-control" value="{{value}}" />
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-success btn-sm btn-add-solution" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button class="btn btn-danger btn-sm btn-remove-solution" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
+              </div>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="form-group form-group-sm">
+            <label for="textarea-solution" class="control-label">
+              {{i18n "exercise.solutionLabel"}}
+            </label>
+            {{#with (solution.[0])}}
+              <textarea id="textarea-solution" class="input-solution form-control" rows="5" cols="40">{{value}}</textarea>
+            {{/with}}
+          </div>
+        {{/if}}
+        <div class="text-right">
+          <div class="checkbox nomargin">
+            <label><input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}}> {{i18n "exercise.showSolutionLabel"}}</label>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="btn-toolbar separated-top separated-bottom">
+      {{#if canSave}}
+        <div class="btn-group">
+          <button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
+          {{#if _id}}
+            {{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+            <button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if _id}}
+        <div class="btn-group">
+          {{#if canSave}}
+            {{#unless (released.requested)}}
+              <button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
+            {{/unless}}
+          {{/if}}
+          {{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
+          <button class="btn btn-info btn-export">{{i18n "exercise.exportButton"}}</button>
+        </div>
+      {{/if}}
+    </div>
+    {{#unless canSave}}
+      <div class="separated-top text-muted">{{i18n "form.cannotSaveMessage"}}</div>
+    {{/unless}}
+  {{/with}}
 </template>

@@ -1,383 +1,386 @@
 <template name="programmingEdit">
-	{{i18nTooltips}}
-	{{#with safeExercise this}}
-		<header>
-			{{#if _id}}
-				<nav>
-					<ol class="breadcrumb">
-						<li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
-						<li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
-						<li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
-						<li class="active">{{i18nDifficulty difficulty}}</li>
-						<li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
-						<li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
-					</ol>
-				</nav>
-				<h2>{{i18n "exercise.editTitle" (i18nName this)}}</h2>
-			{{else}}
-				<h2>{{i18n "exercise.createTitle"}}</h2>
-			{{/if}}
-		</header>
-		{{#if _id}}
-			<div class="help-block">
-				<small class="text-muted">
-					{{i18n "form.createdBy"}} {{userName author_id}}
-					{{#if lastEditor_id}}
-						&mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
-					{{/if}}
-				</small>
-			</div>
-		{{/if}}
-		<section class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#collapseConfig"><span class="glyphicon glyphicon-collapse-up" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
-					<a role="button" data-toggle="collapse" href="#collapseConfig">{{i18n "exercise.exerciseSubtitle"}}</a>
-				</h3>
-			</div>
-			<div id="collapseConfig" class="panel-body panel-collapse collapse in">
-				<div class="row visible-md-block visible-lg-block">
-					<div class="col-md-offset-5 col-md-7">
-						<ul class="nav nav-tabs" role="tablist">
-							{{#each i18nExerciseNamesDescriptions}}
-								<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-							{{/each}}
-						</ul>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-5">
-						<div class="form-group form-group-sm">
-							<label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
-							<select id="select-language" class="form-control" disabled={{_id}}>
-								<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-								{{#each i18nProgrammingLanguages}}
-									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-								{{/each}}
-							</select>
-						</div>
-						<div class="form-group form-group-sm">
-							<label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
-							{{#if isAdmin}}
-								{{#if categoryEditData}}
-									&mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
-								{{/if}}
-								&mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
-							{{/if}}
-							<select id="select-category" class="form-control">
-								<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-								{{#each i18nCategories}}
-									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-								{{/each}}
-							</select>
-						</div>
-						<div class="form-group form-group-sm">
-							<label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
-							<select id="select-difficulty" class="form-control">
-								<option value="0">{{i18n "form.selectPleaseChoose"}}</option>
-								{{#each i18nDifficulties}}
-									<option value="{{_id}}" selected={{isActive}}>{{name}}</option>
-								{{/each}}
-							</select>
-						</div>
-					</div>
-					<div class="col-md-7">
-						<div class="visible-xs-block visible-sm-block">
-							<ul class="nav nav-tabs" role="tablist">
-								{{#each i18nExerciseNamesDescriptions}}
-									<li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
-								{{/each}}
-							</ul>
-						</div>
-						<div class="tab-content">
-							{{#each i18nExerciseNamesDescriptions}}
-								<div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
-									<div class="form-group form-group-sm">
-										<label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
-										<input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
-									</div>
-									<div class="form-group form-group-sm">
-										<label for="textarea-description-{{_id}}" class="control-label">
-											{{i18n "exercise.descriptionLabel"}} ({{_id}})
-											<span class="text-info font-weight-normal">
+  {{i18nTooltips}}
+  {{#with safeExercise this}}
+    <header>
+      {{#if _id}}
+        <nav>
+          <ol class="breadcrumb">
+            <li>{{#linkTo route="home"}}{{i18n "layout.homeTitle"}}{{/linkTo}}</li>
+            <li>{{#linkTo route="exerciseSearch" data=exerciseSearchData}}{{i18nProgrammingLanguage programmingLanguage}}{{/linkTo}}</li>
+            <li>{{#linkTo route="categoryExercises" data=category}}{{i18nCategoryName category author_id}}{{/linkTo}}</li>
+            <li class="active">{{i18nDifficulty difficulty}}</li>
+            <li>{{#linkTo route="exerciseSolve" data=this}}{{i18nName this}}{{/linkTo}}</li>
+            <li class="active">{{i18n "exercise.editBreadcrumb"}}</li>
+          </ol>
+        </nav>
+        <h2>{{i18n "exercise.editTitle" (i18nName this)}}</h2>
+      {{else}}
+        <h2>{{i18n "exercise.createTitle"}}</h2>
+      {{/if}}
+    </header>
+    {{#if _id}}
+      {{#if author_id}}
+        <div class="help-block">
+          <small class="text-muted">
+            {{i18n "form.createdBy"}} {{userName author_id}}
+            {{#if lastEditor_id}}
+              &mdash; {{i18n "form.editedBy"}} {{userName lastEditor_id}} {{i18n "form.actionAt"}} {{i18nDateTime lastEdited}}
+            {{/if}}
+          </small>
+        </div>
+      {{/if}}
+    {{/if}}
+    <section class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a role="button" data-toggle="collapse" href="#collapseConfig"><span class="glyphicon glyphicon-collapse-up" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
+          <a role="button" data-toggle="collapse" href="#collapseConfig">{{i18n "exercise.exerciseSubtitle"}}</a>
+        </h3>
+      </div>
+      <div id="collapseConfig" class="panel-body panel-collapse collapse in">
+        <div class="row visible-md-block visible-lg-block">
+          <div class="col-md-offset-5 col-md-7">
+            <ul class="nav nav-tabs" role="tablist">
+              {{#each i18nExerciseNamesDescriptions}}
+                <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group form-group-sm">
+              <label for="select-language" class="control-label">{{i18n "exercise.programmingLanguageLabel"}}</label>
+              <select id="select-language" class="form-control" disabled={{_id}}>
+                <option value="">{{i18n "form.selectPleaseChoose"}}</option>
+                {{#each i18nProgrammingLanguages}}
+                  <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group form-group-sm">
+              <label for="select-category" class="control-label">{{i18n "exercise.categoryLabel"}}</label>
+              {{#if isAdmin}}
+                {{#if categoryEditData}}
+                  &mdash; {{#linkTo route="categoryEdit" data=categoryEditData}}{{i18n "category.editButton"}}{{/linkTo}}
+                {{/if}}
+                &mdash; {{#linkTo route="categoryCreate"}}{{i18n "category.createButton"}}{{/linkTo}}
+              {{/if}}
+              <select id="select-category" class="form-control">
+                <option value="">{{i18n "form.selectPleaseChoose"}}</option>
+                {{#each i18nCategories}}
+                  <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group form-group-sm">
+              <label for="select-difficulty" class="control-label">{{i18n "exercise.difficultyLabel"}}</label>
+              <select id="select-difficulty" class="form-control">
+                <option value="0">{{i18n "form.selectPleaseChoose"}}</option>
+                {{#each i18nDifficulties}}
+                  <option value="{{_id}}" selected={{isActive}}>{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="visible-xs-block visible-sm-block">
+              <ul class="nav nav-tabs" role="tablist">
+                {{#each i18nExerciseNamesDescriptions}}
+                  <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="#tab-{{_id}}" aria-controls="tab-{{_id}}" role="tab" data-toggle="tab">{{language}}</a></li>
+                {{/each}}
+              </ul>
+            </div>
+            <div class="tab-content">
+              {{#each i18nExerciseNamesDescriptions}}
+                <div role="tabpanel" id="tab-{{_id}}" class="tab-pane fade {{#if isActive}}active in{{/if}}">
+                  <div class="form-group form-group-sm">
+                    <label for="input-name-{{_id}}" class="control-label">{{i18n "exercise.nameLabel"}} ({{_id}})</label>
+                    <input type="text" id="input-name-{{_id}}" class="form-control" value="{{name}}" />
+                  </div>
+                  <div class="form-group form-group-sm">
+                    <label for="textarea-description-{{_id}}" class="control-label">
+                      {{i18n "exercise.descriptionLabel"}} ({{_id}})
+                      <span class="text-info font-weight-normal">
 												&mdash;
-												<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
-												<a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="text-info">{{i18n "form.supportsMarkdown"}}</span></a>
+                        <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a> {{! https://help.github.com/articles/basic-writing-and-formatting-syntax/#styling-text }}
+                        <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank"><span class="text-info">{{i18n "form.supportsMarkdown"}}</span></a>
 											</span>
-										</label>
-										<textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
-									</div>
-								</div>
-							{{/each}}
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<div id="collapseHelp" class="panel-collapse collapse">
-			<aside class="panel panel-info">
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-collapse-up" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
-						<a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a>
-					</h3>
-				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-5">
-							<div class="help-block">
-								<em>{{i18n "exercise.help.types"}}</em>
-								<ul>
-									{{#each executorTypes}}
-										<li>{{label}}</li>
-									{{/each}}
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-7">
-							<div class="help-block">
-								<em>{{i18n "exercise.help.values"}}</em>
-								<dl class="dl-horizontal">
-									{{#each executorValues}}
-										<dt>{{typeLabels}}</dt>
-										{{#each values}}
-											<dd>{{this}}</dd>
-										{{/each}}
-									{{/each}}
-								</dl>
-							</div>
-						</div>
-					</div>
-				</div>
-			</aside>
-		</div>
-		<div class="row">
-			<section class="col-md-5">
-				<h3>{{i18n "exercise.functionsSubtitle"}}</h3>
-				<div class="row">
-					<div class="col-sm-5">
-						<label class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
-					</div>
-					<div class="col-sm-5">
-						<label class="control-label">
-							{{i18n "exercise.function.returnTypeLabel"}}
-							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
-						</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-offset-1 col-sm-4">
-						<label class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
-					</div>
-					<div class="col-sm-5">
-						<label class="control-label">
-							{{i18n "exercise.function.parameterTypeLabel"}}
-							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
-						</label>
-					</div>
-				</div>
-				{{#each functions}}
-					<div class="container-function">
-						<div class="row">
-							<div class="col-sm-5">
-								<div class="form-group form-group-sm">
-									<input type="text" value="{{name}}" class="input-function-name form-control" placeholder="{{i18n "exercise.function.namePlaceholder"}}" />
-								</div>
-							</div>
-							<div class="col-sm-5">
-								<div class="form-group form-group-sm">
-									<input type="text" value="{{outputType}}" class="input-function-type form-control exec-type" placeholder="{{i18n "exercise.function.returnTypePlaceholder"}}" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<button class="btn btn-success btn-sm btn-add-function" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
-								<button class="btn btn-danger btn-sm btn-remove-function" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
-							</div>
-						</div>
-						{{#each inputs}}
-							<div class="row">
-								<div class="col-sm-offset-1 col-sm-4">
-									<div class="form-group form-group-sm">
-										<input type="text" value="{{name}}" class="input-parameter-name form-control" placeholder="{{i18n "exercise.function.parameterNamePlaceholder"}}" />
-									</div>
-								</div>
-								<div class="col-sm-5">
-									<div class="form-group form-group-sm">
-										<input type="text" value="{{type}}" class="input-parameter-type form-control exec-type" placeholder="{{i18n "exercise.function.parameterTypePlaceholder"}}" />
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<button class="btn btn-success btn-sm btn-add-parameter" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
-									<button class="btn btn-danger btn-sm btn-remove-parameter" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
-								</div>
-							</div>
-						{{/each}}
-					</div>
-				{{/each}}
-				<hr />
-				<ul class="nav nav-tabs" role="tablist">
-					<li role="presentation"><a class="a-toggle-codemirror" href="#tab-fragment" aria-controls="tab-fragment" role="tab" data-toggle="tab">{{i18n "exercise.templateFragmentLabel"}}</a></li>
-					<li role="presentation" class="active"><a class="a-toggle-codemirror" href="#tab-solution" aria-controls="tab-solution" role="tab" data-toggle="tab">{{i18n "exercise.solutionFragmentLabel"}}</a></li>
-					{{#if blacklist}}
-						<li role="presentation"><a href="#tab-blacklist" aria-controls="tab-blacklist" role="tab" data-toggle="tab">{{i18n "exercise.blacklistLabel"}}</a></li>
-					{{/if}}
-				</ul>
-				<div class="tab-content">
-					<div role="tabpanel" id="tab-fragment" class="tab-pane fade">
-						{{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
-					</div>
-					<div role="tabpanel" id="tab-solution" class="tab-pane fade active in">
-						{{> CodeMirror id="textarea-solution" options=codeMirrorOptions reactiveVar="solution"}}
-						<div class="row separated-top">
-							<div class="col-sm-4">
-								<button id="button-execute" class="btn btn-primary btn-sm" disabled={{executionDisabled}}>{{i18n "exercise.executeTestsButton"}}</button>
-							</div>
-							<div class="col-sm-8 text-right">
-								<div class="checkbox nomargin">
-									<label>
-										<input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}} />
-										{{i18n "exercise.showSolutionLabel"}}
-										<span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.solutionVisibleMessage"}}" data-toggle="tooltip"></span>
-									</label>
-								</div>
-								<div class="text-danger">{{blackListMessage}}</div>
-							</div>
-						</div>
-						<div class="text-muted separated-top">{{versionInformation}}</div>
-					</div>
-					{{#if blacklist}}
-						<div role="tabpanel" id="tab-blacklist" class="tab-pane fade">
-							<div class="help-block">
-								<em>{{i18n "exercise.help.blacklist"}}</em>
-								<div class="row">
-									{{#each blacklist.elementColumns}}
-										<div class="col-md-{{blacklistColumnWidth}}">
-											<ul>
-												{{#each elements}}
-													<li>{{this}}</li>
-												{{/each}}
-											</ul>
-										</div>
-									{{else}}
-										<div class="text-muted">{{i18n "form.noResultsMessage"}}</div>
-									{{/each}}
-								</div>
-							</div>
-						</div>
-					{{/if}}
-				</div>
-			</section>
-			<section class="col-md-7">
-				<h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
-				<div class="row">
-					<div class="col-sm-2">
-						<label class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
-					</div>
-					<div class="col-sm-1">
-						<label class="control-label"><span class="glyphicon glyphicon-eye-open" title="{{i18n "exercise.help.testCaseVisibleMessage"}}" data-toggle="tooltip"></span></label>
-					</div>
-					<div class="col-sm-4">
-						<label class="control-label">
-							{{i18n "exercise.testCase.inputLabel"}}
-							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
-						</label>
-					</div>
-					<div class="col-sm-3">
-						<label class="control-label">
-							{{i18n "exercise.testCase.expectedOutputLabel"}}
-							<a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
-						</label>
-					</div>
-				</div>
-				{{#each testCases}}
-					<div class="row">
-						<div class="col-sm-2">
-							<div class="form-group form-group-sm">
-								<select class="select-testcase-function form-control">
-									{{! #unless hasSingleFunction}}
-									<option value="">{{i18n "form.selectPleaseChoose"}}</option>
-									{{! /unless}}
-									{{#each functions this}}
-										{{#if name}}
-											<option selected={{isActive}}>{{name}}</option>
-										{{/if}}
-									{{/each}}
-								</select>
-							</div>
-						</div>
-						<div class="col-sm-1">
-							<input type="checkbox" class="checkbox-testcase-visible" checked={{visible}} />
-						</div>
-						<div class="col-sm-4">
-							{{#each inputValues}}
-								<div class="form-group form-group-sm">
-									<input type="text" value="{{value}}" placeholder="{{name}}" class="input-testcase-input form-control exec-value" />
-								</div>
-							{{else}}
-								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
-							{{/each}}
-						</div>
-						<div class="col-sm-3">
-							{{#each expectedOutputValues}}
-								<div class="form-group form-group-sm">
-									<input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" />
-								</div>
-							{{else}}
-								<span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
-							{{/each}}
-							{{#if testCaseEvaluated this}}
-								{{#unless executionFatal}}
-									{{#unless testCaseSuccess this}}
-										<small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
-										<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
-									{{/unless}}
-								{{/unless}}
-							{{/if}}
-						</div>
-						<div class="col-sm-2">
-							<button class="btn btn-success btn-sm btn-add-testcase" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
-							<button class="btn btn-danger btn-sm btn-remove-testcase" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
-							{{#if testCaseEvaluated this}}
-							{{! #unless executionFatal}}
-								<span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
-							{{! /unless}}
-							{{/if}}
-						</div>
-					</div>
-				{{/each}}
-				{{#if testCasesEvaluated}}
-					{{#if executionFatal}}
-						<div class="testcase-result">
-							<strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
-							<pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
-						</div>
-					{{/if}}
-				{{/if}}
-			</section>
-		</div>
-		<div class="btn-toolbar separated-top separated-bottom">
-			{{#if canSave}}
-				<div class="btn-group">
-					<button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
-					{{#if _id}}
-						{{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
-						<button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
-					{{/if}}
-				</div>
-			{{/if}}
-			{{#if _id}}
-				<div class="btn-group">
-					{{#if canSave}}
-						{{#unless (released.requested)}}
-							<button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
-						{{/unless}}
-					{{/if}}
-					{{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
-				</div>
-			{{/if}}
-		</div>
-		{{#unless canSave}}
-			<div class="separated-top separated-bottom text-muted">{{i18n "form.cannotSaveMessage"}}</div>
-		{{/unless}}
-	{{/with}}
+                    </label>
+                    <textarea id="textarea-description-{{_id}}" rows="5" cols="40" class="form-control">{{description}}</textarea>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="collapseHelp" class="panel-collapse collapse">
+      <aside class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-collapse-up" title="{{i18n "form.togglePanelButton"}}" data-toggle="tooltip"></span></a>
+            <a role="button" data-toggle="collapse" href="#collapseHelp">{{i18n "exercise.help.title"}}</a>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="help-block">
+                <em>{{i18n "exercise.help.types"}}</em>
+                <ul>
+                  {{#each executorTypes}}
+                    <li>{{label}}</li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="help-block">
+                <em>{{i18n "exercise.help.values"}}</em>
+                <dl class="dl-horizontal">
+                  {{#each executorValues}}
+                    <dt>{{typeLabels}}</dt>
+                    {{#each values}}
+                      <dd>{{this}}</dd>
+                    {{/each}}
+                  {{/each}}
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <div class="row">
+      <section class="col-md-5">
+        <h3>{{i18n "exercise.functionsSubtitle"}}</h3>
+        <div class="row">
+          <div class="col-sm-5">
+            <label class="control-label">{{i18n "exercise.function.nameLabel"}}</label>
+          </div>
+          <div class="col-sm-5">
+            <label class="control-label">
+              {{i18n "exercise.function.returnTypeLabel"}}
+              <a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-1 col-sm-4">
+            <label class="control-label">{{i18n "exercise.function.parameterNameLabel"}}</label>
+          </div>
+          <div class="col-sm-5">
+            <label class="control-label">
+              {{i18n "exercise.function.parameterTypeLabel"}}
+              <a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
+            </label>
+          </div>
+        </div>
+        {{#each functions}}
+          <div class="container-function">
+            <div class="row">
+              <div class="col-sm-5">
+                <div class="form-group form-group-sm">
+                  <input type="text" value="{{name}}" class="input-function-name form-control" placeholder="{{i18n "exercise.function.namePlaceholder"}}" />
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group form-group-sm">
+                  <input type="text" value="{{outputType}}" class="input-function-type form-control exec-type" placeholder="{{i18n "exercise.function.returnTypePlaceholder"}}" />
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-success btn-sm btn-add-function" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button class="btn btn-danger btn-sm btn-remove-function" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
+              </div>
+            </div>
+            {{#each inputs}}
+              <div class="row">
+                <div class="col-sm-offset-1 col-sm-4">
+                  <div class="form-group form-group-sm">
+                    <input type="text" value="{{name}}" class="input-parameter-name form-control" placeholder="{{i18n "exercise.function.parameterNamePlaceholder"}}" />
+                  </div>
+                </div>
+                <div class="col-sm-5">
+                  <div class="form-group form-group-sm">
+                    <input type="text" value="{{type}}" class="input-parameter-type form-control exec-type" placeholder="{{i18n "exercise.function.parameterTypePlaceholder"}}" />
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <button class="btn btn-success btn-sm btn-add-parameter" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                  <button class="btn btn-danger btn-sm btn-remove-parameter" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+        <hr />
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation"><a class="a-toggle-codemirror" href="#tab-fragment" aria-controls="tab-fragment" role="tab" data-toggle="tab">{{i18n "exercise.templateFragmentLabel"}}</a></li>
+          <li role="presentation" class="active"><a class="a-toggle-codemirror" href="#tab-solution" aria-controls="tab-solution" role="tab" data-toggle="tab">{{i18n "exercise.solutionFragmentLabel"}}</a></li>
+          {{#if blacklist}}
+            <li role="presentation"><a href="#tab-blacklist" aria-controls="tab-blacklist" role="tab" data-toggle="tab">{{i18n "exercise.blacklistLabel"}}</a></li>
+          {{/if}}
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" id="tab-fragment" class="tab-pane fade">
+            {{> CodeMirror id="textarea-fragment" options=codeMirrorOptions reactiveVar="fragment"}}
+          </div>
+          <div role="tabpanel" id="tab-solution" class="tab-pane fade active in">
+            {{> CodeMirror id="textarea-solution" options=codeMirrorOptions reactiveVar="solution"}}
+            <div class="row separated-top">
+              <div class="col-sm-4">
+                <button id="button-execute" class="btn btn-primary btn-sm" disabled={{executionDisabled}}>{{i18n "exercise.executeTestsButton"}}</button>
+              </div>
+              <div class="col-sm-8 text-right">
+                <div class="checkbox nomargin">
+                  <label>
+                    <input type="checkbox" id="checkbox-solution-visible" checked={{solutionVisible}} />
+                    {{i18n "exercise.showSolutionLabel"}}
+                    <span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.solutionVisibleMessage"}}" data-toggle="tooltip"></span>
+                  </label>
+                </div>
+                <div class="text-danger">{{blackListMessage}}</div>
+              </div>
+            </div>
+            <div class="text-muted separated-top">{{versionInformation}}</div>
+          </div>
+          {{#if blacklist}}
+            <div role="tabpanel" id="tab-blacklist" class="tab-pane fade">
+              <div class="help-block">
+                <em>{{i18n "exercise.help.blacklist"}}</em>
+                <div class="row">
+                  {{#each blacklist.elementColumns}}
+                    <div class="col-md-{{blacklistColumnWidth}}">
+                      <ul>
+                        {{#each elements}}
+                          <li>{{this}}</li>
+                        {{/each}}
+                      </ul>
+                    </div>
+                  {{else}}
+                    <div class="text-muted">{{i18n "form.noResultsMessage"}}</div>
+                  {{/each}}
+                </div>
+              </div>
+            </div>
+          {{/if}}
+        </div>
+      </section>
+      <section class="col-md-7">
+        <h3>{{i18n "exercise.testCasesSubtitle"}}</h3>
+        <div class="row">
+          <div class="col-sm-2">
+            <label class="control-label">{{i18n "exercise.testCase.functionLabel"}}</label>
+          </div>
+          <div class="col-sm-1">
+            <label class="control-label"><span class="glyphicon glyphicon-eye-open" title="{{i18n "exercise.help.testCaseVisibleMessage"}}" data-toggle="tooltip"></span></label>
+          </div>
+          <div class="col-sm-4">
+            <label class="control-label">
+              {{i18n "exercise.testCase.inputLabel"}}
+              <a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
+            </label>
+          </div>
+          <div class="col-sm-3">
+            <label class="control-label">
+              {{i18n "exercise.testCase.expectedOutputLabel"}}
+              <a role="button" data-toggle="collapse" href="#collapseHelp"><span class="glyphicon glyphicon-info-sign text-info" title="{{i18n "exercise.help.showButton"}}" data-toggle="tooltip"></span></a>
+            </label>
+          </div>
+        </div>
+        {{#each testCases}}
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="form-group form-group-sm">
+                <select class="select-testcase-function form-control">
+                  {{! #unless hasSingleFunction}}
+                  <option value="">{{i18n "form.selectPleaseChoose"}}</option>
+                  {{! /unless}}
+                  {{#each functions this}}
+                    {{#if name}}
+                      <option selected={{isActive}}>{{name}}</option>
+                    {{/if}}
+                  {{/each}}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-1">
+              <input type="checkbox" class="checkbox-testcase-visible" checked={{visible}} />
+            </div>
+            <div class="col-sm-4">
+              {{#each inputValues}}
+                <div class="form-group form-group-sm">
+                  <input type="text" value="{{value}}" placeholder="{{name}}" class="input-testcase-input form-control exec-value" />
+                </div>
+              {{else}}
+                <span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+              {{/each}}
+            </div>
+            <div class="col-sm-3">
+              {{#each expectedOutputValues}}
+                <div class="form-group form-group-sm">
+                  <input type="text" value="{{value}}" class="input-testcase-expectedoutput form-control exec-value" />
+                </div>
+              {{else}}
+                <span class="text-muted">{{i18n "form.noResultsMessage"}}</span>
+              {{/each}}
+              {{#if testCaseEvaluated this}}
+                {{#unless executionFatal}}
+                  {{#unless testCaseSuccess this}}
+                    <small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
+                    <pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+                  {{/unless}}
+                {{/unless}}
+              {{/if}}
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-success btn-sm btn-add-testcase" title="{{i18n "form.addButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-plus-sign"></span></button>
+              <button class="btn btn-danger btn-sm btn-remove-testcase" title="{{i18n "form.removeButton"}}" data-toggle="tooltip"><span class="glyphicon glyphicon-minus-sign"></span></button>
+              {{#if testCaseEvaluated this}}
+              {{! #unless executionFatal}}
+                <span class="btn btn-sm cursor-default testcase-result"><span class="glyphicon glyphicon-{{#if testCaseSuccess this}}ok{{else}}remove{{/if}} text-{{#if testCaseSuccess this}}success{{else}}danger{{/if}}"></span></span>
+              {{! /unless}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+        {{#if testCasesEvaluated}}
+          {{#if executionFatal}}
+            <div class="testcase-result">
+              <strong>{{i18n "exercise.testCase.resultLabel"}}:</strong>
+              <pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+            </div>
+          {{/if}}
+        {{/if}}
+      </section>
+    </div>
+    <div class="btn-toolbar separated-top separated-bottom">
+      {{#if canSave}}
+        <div class="btn-group">
+          <button class="btn btn-success btn-save">{{i18n "form.saveButton"}}</button>
+          {{#if _id}}
+            {{#linkTo route="exerciseSolve" data=this class="btn btn-warning"}}{{i18n "form.cancelButton"}}{{/linkTo}}
+            <button class="btn btn-danger btn-delete">{{i18n "form.deleteButton"}}</button>
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if _id}}
+        <div class="btn-group">
+          {{#if canSave}}
+            {{#unless (released.requested)}}
+              <button class="btn btn-info btn-release-request">{{i18n "exercise.releaseRequestButton"}}</button>
+            {{/unless}}
+          {{/if}}
+          {{#linkTo route="exerciseCreate" query=exerciseDuplicateQuery class="btn btn-info"}}{{i18n "exercise.duplicateButton"}}{{/linkTo}}
+          <button class="btn btn-info btn-export">{{i18n "exercise.exportButton"}}</button>
+        </div>
+      {{/if}}
+    </div>
+    {{#unless canSave}}
+      <div class="separated-top separated-bottom text-muted">{{i18n "form.cannotSaveMessage"}}</div>
+    {{/unless}}
+  {{/with}}
 </template>
