@@ -28,8 +28,29 @@ Meteor.startup(() => {
   }
 
   if (config.smtp) {
-    process.env.MAIL_URL = 'smtp://' + encodeURIComponent(config.smtp.user) + ':' + encodeURIComponent(config.smtp.password) + '@' + encodeURIComponent(config.smtp.server) + ':' + config.smtp.port;
-    Accounts.emailTemplates.from = `Progressor <${config.smtp.address}>`;
+    let mailUrl = 'smtp://';
+    if (config.smtp.user) {
+      mailUrl += encodeURIComponent(config.smtp.user);
+      if (config.smtp.password) {
+        mailUrl += `:${encodeURIComponent(config.smtp.password)}`;
+      }
+    }
+    if (config.smtp.server) {
+      if (config.smtp.user) {
+        mailUrl += '@';
+      }
+      mailUrl += encodeURIComponent(config.smtp.server);
+    }
+    if (config.smtp.port) {
+      mailUrl += `:${config.smtp.port}`;
+    }
+    process.env.MAIL_URL = mailUrl;
+    console.log(mailUrl);
+
+    if (config.smtp.address) {
+      Accounts.emailTemplates.from = `Progressor <${config.smtp.address}>`;
+    }
+
     Accounts.emailTemplates.siteName = `${i18n('layout.title')} - ${i18n('layout.explanation')}`;
   }
 
