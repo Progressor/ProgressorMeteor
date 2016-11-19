@@ -1,12 +1,15 @@
 <template name="home">
   <header>
-    <div class="jumbotron intro">
-      <h1 id="intro">&nbsp;</h1>
-    </div>
+    &nbsp;
   </header>
   <section class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+      <h1 id="intro"><small id="introExplanation">&nbsp;</small></h1>
+      <br>
+      <p>{{{i18n "layout.homeIntro"}}}</p>
+    </div>
     {{#each programmingLanguages}}
-      <div class="col-xs-{{nofColumns "xs"}} col-sm-{{nofColumns "sm"}} col-md-{{nofColumns "md"}} col-lg-{{nofColumns "lg"}}">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         {{#unless isUpcoming}}
           {{#linkTo route="exerciseSearch" class="language-link"}}
             <div class="panel panel-default language-link">
@@ -33,9 +36,6 @@
           </div>
         {{/unless}}
       </div>
-      {{#each separators}}
-        <div class="clearfix visible-{{this}}-block"></div>
-      {{/each}}
     {{/each}}
   </section>
 </template>

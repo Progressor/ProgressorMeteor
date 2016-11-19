@@ -3,13 +3,20 @@
 //////////////////////
 @import "../lib/bootstrap-variables.less";
 @import "../lib/bootstrap-mixins.less";
+
+@font-face {
+	font-family: OCRAEXT;
+	src: url('/fonts/OCRA.woff') format('woff'), url("/fonts/OCRA.ttf") format("truetype"); //source: http://ansuz.sooke.bc.ca/page/fonts#ocra  (open source)
+}
+////////////
+// HEADER //
+////////////
+
+#logo { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; min-width: 230px; display: block; }
+.logo { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; }
 ///////////
 // INTRO //
 ///////////
-@font-face {
-	font-family: OCRAEXT;
-	src: url("/fonts/OCRAEXT.TTF") format("truetype"); //source: http://fontzone.net/font-details/ocr-a-extended
-}
 #intro, #textLogo { font-family: OCRAEXT, Consolas, "Lucida Console", monospace; }
 .jumbotron.intro { margin-top: 14px; padding-top: 30px; padding-bottom: 30px; }
 .pulsate { .animation(pulsate 1s infinite linear); }

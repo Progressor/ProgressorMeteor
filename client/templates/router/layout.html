@@ -10,8 +10,7 @@
             <span class="icon-bar"></span>
           </button>
           {{#linkTo route="home" class="navbar-brand"}}
-            <span id="textLogo" class="navbar-link">{{i18n "layout.logo"}}</span>
-            <img src="/images/logo-progressor.png" alt="{{i18n "layout.title"}}" id="imageLogo" width="280" height="46" />
+            <span id="logo">&lt;{Progressor}&gt;</span>
           {{/linkTo}}
         </div>
         <div id="navbar-collapse" class="collapse navbar-collapse">
@@ -71,8 +70,9 @@
             <ul class="nav navbar-nav">
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  {{language}}&nbsp;
                   <span class="glyphicon glyphicon-globe"></span>
-                  {{language}}
+                  &nbsp;
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -82,6 +82,11 @@
                     </li>
                   {{/each}}
                 </ul>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="//progressor.io/">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </a>
               </li>
               <li role="separator" class="divider-vertical"></li>
               <li>
@@ -114,9 +119,8 @@
       <div id="global-alerts" class="fixed top-right"></div>
     </div>
     {{!--<footer class="well well-sm text-muted small">
-			developed at the <a class="text-muted" href="http://www.ti.bfh.ch/">Bern University of Applied Sciences</a> &mdash;
-			development team: <a class="text-muted" href="mailto:strut1@bfh.ch">Thomas Strub</a>, Marc Touw, and Janick Weidmann (BSc graduates) &mdash;
-			advisors: <a class="text-muted" href="mailto:hsm4@bfh.ch">Prof Marcus Hudritsch</a>, Michael Luggen (<a class="text-muted" href="http://www.cpvrlab.ti.bfh.ch/">cpvrLab</a>)
-		</footer>--}}
+      developed at the <a class="text-muted" href="http://www.ti.bfh.ch/">Bern University of Applied Sciences</a> &mdash;
+      (<a class="text-muted" href="http://www.cpvrlab.ti.bfh.ch/">cpvrLab</a>)
+    </footer>--}}
   </div>
 </template>
