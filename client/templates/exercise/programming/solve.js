@@ -1,4 +1,4 @@
-import { tmpl } from '/imports/utilities';
+import { tmpl, escapeRegExp } from '/imports/utilities';
 
 // REACTIVE HELPERS //
 
@@ -162,13 +162,14 @@ Template.programmingSolve.events({
 
   // BLACKLIST //
 
-  'keypress .CodeMirror': _.throttle(function (event, template) {
+  'keyup *.CodeMirror': _.throttle(function (event, template) {
     if (!template.blacklist.get()) {
       template.blacklist.set([]);
       Meteor.call('getBlacklist', getExercise().programmingLanguage, Progressor.handleError((e, r) => template.blacklist.set(!e ? r : null)));
     } else {
       const fragment = Session.get('fragment');
-      template.blacklistMatches.set(_.filter(template.blacklist.get(), blk => fragment.indexOf(blk) >= 0));
+      console.log(fragment);
+      template.blacklistMatches.set(_.filter(template.blacklist.get(), b => new RegExp(`\\b${escapeRegExp(b)}\\b`).test(fragment)));
       template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
     }
   }, 500),

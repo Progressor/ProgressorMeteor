@@ -474,7 +474,7 @@ Template.programmingEdit.events({
     if (!(template.solutionTyped = !!solution)) changeExercise(() => null).call(this, event, template);
     if (template.exercise.get().programmingLanguage)
       if (template.blacklist.get() && template.exercise.get().programmingLanguage === template.blacklist.get().programmingLanguage) {
-        template.blacklistMatches.set(_.filter(template.blacklist.get().elements, blk => solution.indexOf(blk) >= 0));
+        template.blacklistMatches.set(_.filter(template.blacklist.get().elements, b => new RegExp(`\\b${escapeRegExp(b)}\\b`).test(solution)));
         template.executionStatus.set(template.blacklistMatches.get().length ? template.executionStatus.get() | 0x2 : template.executionStatus.get() & ~0x2);
       }
   }, 500),
