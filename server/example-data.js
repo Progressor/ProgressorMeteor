@@ -295,7 +295,7 @@ Meteor.startup(() => {
       if (!Progressor.exercises.find({ programmingLanguage: language._id, example: exerciseId }).count()) {
         Progressor.exercises.insert(_.extend({
           programmingLanguage: language._id,
-          category_id: Progressor.categories.findOne({ programmingLanguage: language._id, private: { $exists: false } })._id,
+          category_id: Progressor.categories.findOne({ programmingLanguage: language._id, example: true })._id,
           example: exerciseId,
           solution: solutions[exerciseId][language._id],
           solutionVisible: true,
@@ -316,7 +316,7 @@ Meteor.startup(() => {
         { language: 'en', name: 'Basics' }, // TODO: translate
         { language: 'de', name: 'Grundlagen' },
       ],
-      exercises: _.map(Progressor.exercises.find().fetch(), exercise => ({
+      exercises: _.map(Progressor.exercises.find({ example: { $exists: true } }).fetch(), exercise => ({
         exercise_id: exercise._id,
         weight: Math.floor((Random.fraction() * 12) + 1),
       })),
@@ -324,7 +324,7 @@ Meteor.startup(() => {
       lastEdited: new Date(),
     });
 
-    _.each(Progressor.examinations.find().fetch(), e => Progressor.executions.insert({
+    _.each(Progressor.examinations.find({ example: true }).fetch(), e => Progressor.executions.insert({
       _id: 'Xh3YGewf9JT5AGoav',
       examination_id: e._id,
       example: true,
