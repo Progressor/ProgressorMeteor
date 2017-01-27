@@ -45,7 +45,6 @@ Meteor.startup(() => {
       mailUrl += `:${config.smtp.port}`;
     }
     process.env.MAIL_URL = mailUrl;
-    console.log(mailUrl);
 
     if (config.smtp.address) {
       Accounts.emailTemplates.from = `Progressor <${config.smtp.address}>`;
