@@ -1,48 +1,44 @@
 {
   "dependencies": {
+    "commander": {
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/commander/-/commander-2.1.0.tgz",
+      "from": "commander@>=2.1.0 <2.2.0"
+    },
+    "nan": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/nan/-/nan-1.0.0.tgz",
+      "from": "nan@>=1.0.0 <1.1.0"
+    },
+    "node-int64": {
+      "version": "0.3.3",
+      "resolved": "https://registry.npmjs.org/node-int64/-/node-int64-0.3.3.tgz",
+      "from": "node-int64@>=0.3.0 <0.4.0"
+    },
+    "options": {
+      "version": "0.0.6",
+      "resolved": "https://registry.npmjs.org/options/-/options-0.0.6.tgz",
+      "from": "options@>=0.0.5"
+    },
+    "q": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/q/-/q-1.0.1.tgz",
+      "from": "q@>=1.0.0 <1.1.0"
+    },
     "thrift": {
-      "version": "0.9.3",
-      "resolved": "https://registry.npmjs.org/thrift/-/thrift-0.9.3.tgz",
-      "from": "thrift@0.9.3",
-      "dependencies": {
-        "node-int64": {
-          "version": "0.3.3",
-          "resolved": "https://registry.npmjs.org/node-int64/-/node-int64-0.3.3.tgz",
-          "from": "node-int64@0.3.3"
-        },
-        "q": {
-          "version": "1.0.1",
-          "resolved": "https://registry.npmjs.org/q/-/q-1.0.1.tgz",
-          "from": "q@1.0.1"
-        },
-        "ws": {
-          "version": "0.4.32",
-          "resolved": "https://registry.npmjs.org/ws/-/ws-0.4.32.tgz",
-          "from": "ws@0.4.32",
-          "dependencies": {
-            "commander": {
-              "version": "2.1.0",
-              "resolved": "https://registry.npmjs.org/commander/-/commander-2.1.0.tgz",
-              "from": "commander@2.1.0"
-            },
-            "nan": {
-              "version": "1.0.0",
-              "resolved": "https://registry.npmjs.org/nan/-/nan-1.0.0.tgz",
-              "from": "nan@1.0.0"
-            },
-            "options": {
-              "version": "0.0.6",
-              "resolved": "https://registry.npmjs.org/options/-/options-0.0.6.tgz",
-              "from": "options@0.0.6"
-            },
-            "tinycolor": {
-              "version": "0.0.1",
-              "resolved": "https://registry.npmjs.org/tinycolor/-/tinycolor-0.0.1.tgz",
-              "from": "tinycolor@0.0.1"
-            }
-          }
-        }
-      }
+      "version": "0.10.0",
+      "resolved": "https://registry.npmjs.org/thrift/-/thrift-0.10.0.tgz",
+      "from": "thrift@0.10.0"
+    },
+    "tinycolor": {
+      "version": "0.0.1",
+      "resolved": "https://registry.npmjs.org/tinycolor/-/tinycolor-0.0.1.tgz",
+      "from": "tinycolor@>=0.0.0 <1.0.0"
+    },
+    "ws": {
+      "version": "0.4.32",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-0.4.32.tgz",
+      "from": "ws@>=0.4.32 <0.5.0"
     }
   }
 }

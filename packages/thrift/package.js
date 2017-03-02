@@ -1,16 +1,12 @@
-Npm.depends({ thrift: '0.9.3' }); // https://www.npmjs.com/package/thrift
+Npm.depends({ thrift: '0.10.0' }); // https://www.npmjs.com/package/thrift
 
 Package.describe({
   name: 'thrift',
-  version: '0.9.3',
+  version: '0.10.0',
   documentation: 'README.md',
 });
 
-Package.onUse(function (api) {
-
-  // api.versionsFrom('1.2.0.2');
-  // api.use('ecmascript');
-
+Package.onUse((api) => {
   api.addFiles('lib/executor_types.js', 'server');
   api.addFiles('ExecutorService.js', 'server');
 
