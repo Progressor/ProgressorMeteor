@@ -12,6 +12,7 @@ session                       # Client-side reactive dictionary for your app
 jquery                        # Helpful client-side library
 tracker                       # Meteor's client-side reactive programming library
 shell-server                  # ???
+dynamic-import                # ???
 
 standard-minifier-css         # This package provides a minifier plugin used for Meteor apps by default.
 standard-minifier-js          # This package provides a minifier plugin used for Meteor apps by default.
