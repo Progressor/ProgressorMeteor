@@ -180,13 +180,15 @@
 	{{/let}}
 </template>
 <template name="account_makeAdminItem">
-	{{#if name}}
-		{{#if email}}
-			{{name}} <em>({{email}})</em>
-		{{else}}
-			{{name}}
-		{{/if}}
-	{{else}}
-		{{email}}
-	{{/if}}
+  <div class="{{#if admin}}disabled{{/if}}">
+    {{#if name}}
+      {{#if email}}
+        {{name}} <em>({{email}})</em>
+      {{else}}
+        {{name}}
+      {{/if}}
+    {{else}}
+      {{email}}
+    {{/if}}
+  </div>
 </template>

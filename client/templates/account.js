@@ -38,10 +38,13 @@ Template.account.helpers({
 
   // user search helpers //
 
-  users: () => _.map(Meteor.users.find({ roles: { $ne: Progressor.ROLE_ADMIN } }).fetch(), user => {
-    const value = [Progressor.getUserName(user, true), Progressor.getUserEmail(user)].join(' ');
+  users: () => _.map(Meteor.users.find({ /*roles: { $ne: Progressor.ROLE_ADMIN }*/ }).fetch(), user => {
+    const name = Progressor.getUserName(user, true);
+    const email = Progressor.getUserEmail(user);
+    const admin = _.contains(user.roles, Progressor.ROLE_ADMIN);
+    const value = [name, email].join(' ');
     tmpl().userValues[value] = user;
-    return { value, name: Progressor.getUserName(user, true), email: Progressor.getUserEmail(user) };
+    return { value, name, email, admin };
   }),
 });
 
@@ -90,14 +93,18 @@ Template.account.events({
     const $input = template.$('#input-make-admin');
     const $group = $input.closest('.form-group');
     const user = template.userValues[$input.val()];
-    if (user) {
-      Meteor.call('toggleUsersRoles', [user._id], [Progressor.ROLE_ADMIN], true, Progressor.handleError(error => {
-        $group.addClass(!error ? 'has-success' : 'has-error');
-        Meteor.setTimeout(() => {
-          $group.removeClass('has-success has-error');
-          $input.val(null);
-        }, 500);
-      }));
+    if (user ){
+      if (!_.contains(user.roles, Progressor.ROLE_ADMIN)) {
+        Meteor.call('toggleUsersRoles', [user._id], [Progressor.ROLE_ADMIN], true, Progressor.handleError(error => {
+          $group.addClass(!error ? 'has-success' : 'has-error');
+          Meteor.setTimeout(() => {
+            $group.removeClass('has-success has-error');
+            $input.val(null);
+          }, 500);
+        }));
+      } else {
+        $input.val(null);
+      }
     } else {
       Progressor.showAlert(i18n('form.noSelectionMessage'));
     }
