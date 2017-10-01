@@ -3,6 +3,7 @@
 	{{> exerciseRelease_listPanel title=(i18n "exercise.releasedSubtitle") exercises=released isReleased=true}}
 </template>
 <template name="exerciseRelease_listPanel">
+  <h2 class="sr-only">{{i18n "exercise.releaseTitle"}}</h2>
 	{{#let id=randomId}}
 		<section class="panel panel-default">
 			<div class="panel-heading">

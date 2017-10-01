@@ -38,6 +38,8 @@
                     {{#each i18nExerciseTypes}}
                       <li>{{#linkTo route="exerciseCreate" query=(exerciseCreateQuery this)}}{{name}}{{/linkTo}}</li>
                     {{/each}}
+                    <li role="separator" class="divider"></li>
+                    <li>{{#linkTo route="exerciseImport"}}{{i18n "exercise.importTitle"}}{{/linkTo}}</li>
                   </ul>
                 </li>
                 <li>{{#linkTo route="examinationTemplateCreate"}}{{i18n "examination.createTemplateTitle"}}{{/linkTo}}</li>
