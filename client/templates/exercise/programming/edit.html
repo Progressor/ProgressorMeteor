@@ -331,7 +331,7 @@
                 {{#unless executionFatal}}
                   {{#unless testCaseSuccess this}}
                     <small><strong>{{i18n "exercise.testCase.resultLabel"}}:</strong></small>
-                    <pre class="text-danger">{{testCaseActualOutput testCases.[0]}}</pre>
+                    <pre class="text-danger">{{testCaseActualOutput this}}</pre>
                   {{/unless}}
                 {{/unless}}
               {{/if}}
