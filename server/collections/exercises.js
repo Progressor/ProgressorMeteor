@@ -13,7 +13,7 @@ Meteor.methods({
       type: Match.Integer,
     }));
 
-    const _exercise = exercise._id ? Progressor.exercises.findOne({ _id: exercise._id }) : exercise;
+    const _exercise = (exercise._id ? Progressor.exercises.findOne({ _id: exercise._id }) : undefined) || exercise;
 
     if (!this.userId) {
       throw new Meteor.Error('not-authenticated', i18n.forUser('error.notAuthenticated.message', this.userId));
@@ -23,7 +23,7 @@ Meteor.methods({
       throw new Meteor.Error('not-admin', i18n.forUser('error.notAdmin.message', this.userId));
     }
 
-    if (!exercise.author_id) {
+    if (!exercise.author_id || !Meteor.user(exercise.author_id)) {
       exercise.author_id = this.userId;
     }
     exercise.lastEditor_id = this.userId;

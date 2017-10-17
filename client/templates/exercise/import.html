@@ -1,4 +1,89 @@
 <template name="exerciseImport">
-  <h2>{{i18n "exercise.importTitle"}}</h2>
-  <input type="file" id="input-file" multiple="multiple" />
+  <h2 class="sr-only">{{i18n "exercise.importTitle"}}</h2>
+  <div class="row">
+    <section class="col-sm-4 col-sm-push-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{i18n "exercise.importFileSubtitle"}}</h3>
+        </div>
+        <div class="panel-body">
+          <input type="file" id="input-file" multiple="multiple" />
+        </div>
+        <table class="table table-condensed table-striped">
+          <thead>
+            <tr>
+              <th>{{i18n "exercise.exportedLabel"}}</th>
+              <th>{{i18n "exercise.numberOfCategoriesLabel"}}</th>
+              <th>{{i18n "exercise.numberOfExercisesLabel"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if files}}
+              {{#each files}}
+                <tr>
+                  <td>{{i18nDateTime exported}}</td>
+                  <td>{{categories.length}}</td>
+                  <td>{{exercises.length}}</td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="4"><span class="text-muted">{{i18n "form.noResultsMessage"}}</span></td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="col-sm-8 col-sm-pull-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{i18n "exercise.importTableSubtitle"}}</h3>
+        </div>
+        <table class="table table-condensed table-striped">
+          <thead>
+            <tr>
+              <th scope="col">{{i18n "exercise.exportedLabel"}}</th>
+              <th scope="col">{{i18n "exercise.nameLabel"}}</th>
+              <th scope="col">{{i18n "exercise.typeLabel"}}</th>
+              <th scope="col">{{i18n "exercise.programmingLanguageLabel"}}</th>
+              <th scope="col">{{i18n "exercise.categoryLabel"}}</th>
+              <th scope="col">{{i18n "exercise.difficultyLabel"}}</th>
+              <th scope="col">{{i18n "exercise.importStatusLabel"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if exercises}}
+              {{#each exercises}}
+                <tr>
+                  <td>{{i18nDateTime exported}}</td>
+                  <td>{{i18nName this}}</td>
+                  <td>{{i18nExerciseType type}}</td>
+                  <td>{{i18nProgrammingLanguage programmingLanguage}}</td>
+                  <td>{{i18nCategoryName category null}}</td>
+                  <td>{{i18nDifficulty difficulty}}</td>
+                  <td>
+                    {{#if imported}}
+                      <span class="glyphicon glyphicon-ok text-success" title="{{i18n "exercise.importedMessage"}}" data-toggle="tooltip"></span>
+                    {{else}}
+                      <span class="glyphicon glyphicon-option-horizontal text-danger" title="{{i18n "exercise.notYetImportedMessage"}}" data-toggle="tooltip"></span>
+                    {{/if}}
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="7"><span class="text-muted">{{i18n "form.noResultsMessage"}}</span></td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+        {{#if exercises}}
+          <div class="panel-footer">
+            <button id="btn-import" class="btn btn-default btn-sm" data-toggle="tooltip">{{i18n "exercise.importButton"}}</button>
+          </div>
+        {{/if}}
+      </div>
+    </section>
+  </div>
 </template>
